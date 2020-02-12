@@ -1,0 +1,109 @@
+<html>
+   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+   </head>
+   <body>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <form class="" >
+                  <fieldset>
+                    <div id="legend">
+                      <legend class="">Onboarding</legend>
+                    </div>
+
+                    <div class="row ">
+                      <!-- Username -->
+                      <div class="controls col-md-6">
+                        <label class="control-label"  for="username">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="" class=" form-control">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <!-- Password-->
+                      <div class="controls  col-md-6">
+                        <label class="control-label" for="password">Telefono</label>
+                        <input type="text" id="tel" name="tel" placeholder="" class="form-control">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Password-->
+                        <div class="controls  col-md-6">
+                          <label class="control-label" for="password">Correo</label>
+                          <input type="text" id="mail" name="mail" placeholder="" class="form-control">
+                        </div>
+                      </div>
+
+                    <br/>
+                </fieldset>
+                </form>
+                    <div class="col-md-6">
+                      <!-- Button -->
+                      <div class="controls">
+                        <button class="btn btn-success" id="btnEnviar">Login</button>
+                      </div>
+                    </div>
+                  
+              
+            </div>
+        </div>
+    </div>
+
+   </body>
+   
+  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+   
+<script>
+   $( document ).ready(function() {
+       $("#btnEnviar").click(function() {
+          enviar();
+        });
+    }); 
+    function enviar(){
+        $.ajax({
+            // la URL para la petición
+            url : 'http://localhost:3030/CrearWallet',
+
+            // la información a enviar
+            // (también es posible utilizar una cadena de datos)
+            contentType: "application/json",
+            data : { id : 123 },
+
+            // especifica si será una petición POST o GET
+            type : 'POST',
+
+            // el tipo de información que se espera de respuesta
+            //dataType : 'json',
+
+            // código a ejecutar si la petición es satisfactoria;
+            // la respuesta es pasada como argumento a la función
+            success : function(json) {
+                console.log(json);
+            },
+
+            // código a ejecutar si la petición falla;
+            // son pasados como argumentos a la función
+            // el objeto de la petición en crudo y código de estatus de la petición
+            error : function(xhr, status) {
+                console.log(xhr);
+            },
+
+            // código a ejecutar sin importar si la petición falló o no
+            complete : function(xhr, status) {
+                //console.log(status);
+                //console.log(xhr);
+            }
+    });
+
+
+    }
+</script>
+</html>
