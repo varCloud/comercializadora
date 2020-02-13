@@ -14,5 +14,7 @@ namespace lluviaBackEnd.Models
         [Display(Name = "Constraseña")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public string Contrasena { get; set; }
+
+        public string Token { get; set; }
     }
 }
