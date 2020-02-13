@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lluviaBackEnd.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,14 @@ namespace lluviaBackEnd.Controllers
         // GET: Login
         public ActionResult Login()
         {
-            return View();
+            return View(new Sesion());
+        }
+
+       [HttpPost]
+        public ActionResult ValidarUsuario(Sesion sesion)
+        {
+
+            return View("Login",sesion); 
         }
     }
 }
