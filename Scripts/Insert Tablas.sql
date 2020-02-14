@@ -1,7 +1,6 @@
 delete from  CatRoles
 DBCC CHECKIDENT ('[CatRoles]', RESEED, 0);
-insert into CatRoles (descripcion) values ('Gerente')
-insert into CatRoles (descripcion) values ('SubGerente')
+insert into CatRoles (descripcion) values ('Administrador')
 insert into CatRoles (descripcion) values ('Encargo de Almacen')
 insert into CatRoles (descripcion) values ('Cajero')
 select * from CatRoles
@@ -38,6 +37,7 @@ insert into  [dbo].[CatLineaProducto] (descripcion) values ('Linea CORPORAL')
 
 select * from [dbo].[CatLineaProducto]
 
+-------------------------------------------------------
 
 delete from  [dbo].[CatTipoAlmacen]
 DBCC CHECKIDENT ('[CatTipoAlmacen]', RESEED, 0);
@@ -46,7 +46,40 @@ insert into  [dbo].[CatTipoAlmacen] (descripcion) values ('Almacen General')
 insert into  [dbo].[CatTipoAlmacen] (descripcion) values ('Sub Almacen')
 insert into  [dbo].[CatTipoAlmacen] (descripcion) values ('Punto Venta')
 
+--------------------------------------------------------------------------
 
-select * from  [CatTipoAlmacen]
+delete from  [dbo].CatPasillo
+DBCC CHECKIDENT ('CatPasillo', RESEED, 0);
+go
+insert into CatPasillo (descripcion) 
+sELECT Char(number+65)  as pasillo  FROM master.dbo.spt_values WHERE name IS NULL AND   number < 26
+select * from CatPasillo
 
-select * from [dbo].[Ubicacion]
+------------------------------------------------------------------------------
+
+delete from  [dbo].CatRaq
+DBCC CHECKIDENT ('CatRaq', RESEED, 0);
+insert into CatRaq (descripcion) SELECT DISTINCT n ='Raq: ' +cast(number as varchar) FROM master..[spt_values] WHERE number BETWEEN 1 AND 9
+
+select * from CatRaq
+
+-----------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+
+delete from  [dbo].CatPiso
+DBCC CHECKIDENT ('CatPiso', RESEED, 0);
+insert into CatPiso (descripcion) SELECT DISTINCT n ='Piso del Raq: ' +cast(number as varchar) FROM master..[spt_values] WHERE number BETWEEN 1 AND 9
+
+select * from CatPiso
+
+-----------------------------------------------------------------------------
+if exists (select 1 from CatSucursales)
+begin
+	delete from  [dbo].CatSucursales
+	DBCC CHECKIDENT ('CatSucursales', RESEED, 0);
+end
+
+insert into CatSucursales (descripcion) values('sucursal principal')
+select * from CatSucursales
+-----------------------------------------------------------------------------
