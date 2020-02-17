@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.Models;
+using lluviaBackEnd.DAO;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace lluviaBackEnd.Controllers
 {
     public class LoginController : Controller
     {
+        public LoginDAO loginDAO;
+        
+
+
         // GET: Login
         public ActionResult Login()
         {
@@ -21,11 +26,33 @@ namespace lluviaBackEnd.Controllers
        [HttpPost]
         public ActionResult ValidarUsuario(Sesion sesion)
         {
-            if (!ReCaptchaPassed(sesion.Token))
+            try
             {
-                ModelState.AddModelError(string.Empty, "You failed the CAPTCHA.");
+                if (!ReCaptchaPassed(sesion.Token))
+                {
+                    ModelState.AddModelError(string.Empty, "You failed the CAPTCHA.");
+                }
+
+                loginDAO = new LoginDAO();
+                loginDAO.ValidaUsuario(sesion);
+
+                if ( sesion.usuarioValido )
+                {
+                    //return RedirectToAction("index", "DashBoard");
+                    //return Redirect("~/DashBoard/index");
+                    return Json(sesion, JsonRequestBehavior.AllowGet);
+
+                    //return View("Inicio");
+                }
+
+                //return View("Login", sesion);
             }
-            return View("Login", sesion);
+            catch (Exception ex)
+            {
+                throw /*new FaultException(ex.Message)*/;
+            }
+            return View("Login");        
+
         }
 
 
