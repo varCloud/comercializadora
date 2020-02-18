@@ -6,9 +6,17 @@ function onCompleteSubmit() {
     console.log("onCompleteSubmit");
 }
 
-function onSuccessResult() {
+function onSuccessResult(data) {
     console.log("onSuccessResult");
+    //location.href = 'Dashboard/Index/';
+    //alert(data.usuarioValido);
+   
+    if (data.usuarioValido) {
+        location.href = 'Dashboard/Index/';
+    } else {
 
+
+    }
 }
 
 function onFailureResult() {

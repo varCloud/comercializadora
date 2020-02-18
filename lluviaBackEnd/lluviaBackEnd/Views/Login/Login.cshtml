@@ -43,12 +43,12 @@
                                      OnFailure = "onFailureResult",
                                      OnSuccess = "onSuccessResult",
                                  },
-                                 new { id = "AjaxForm" }))
+                                 new { id = "frmLogin" }))
                                 {
                                     <div class="form-group">
                                         <label for="email">Usuario</label>
-                                        @Html.TextBoxFor(x => x.NumeroUsuario, null, new { @class = "form-control", @tabindex = "1" })
-                                        @Html.ValidationMessageFor(m => m.NumeroUsuario, null, new { @class = "text-danger was" })
+                                        @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @tabindex = "1" })
+                                        @Html.ValidationMessageFor(m => m.nombre, null, new { @class = "text-danger was" })
 
                                     </div>
                                     <div class="form-group">
@@ -61,8 +61,8 @@
                                             </div>
                                         </div>
                                         @Html.HiddenFor(x => x.Token)
-                                        @Html.PasswordFor(x => x.Contrasena, new { @class = "form-control", @tabindex = "2" })
-                                        @Html.ValidationMessageFor(m => m.Contrasena, null, new { @class = "text-danger" })
+                                        @Html.PasswordFor(x => x.contrasena, new { @class = "form-control", @tabindex = "2" })
+                                        @Html.ValidationMessageFor(m => m.contrasena, null, new { @class = "text-danger" })
 
                                     </div>
 
