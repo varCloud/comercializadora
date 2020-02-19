@@ -18,7 +18,7 @@ status			200 = ok
 
 create proc SP_VALIDA_CONTRASENA
 
-	@nombre		varchar(200),
+	@usuario	varchar(200),
 	@contrasena	varchar(40)
 
 as
@@ -38,7 +38,7 @@ as
 
 			begin -- principal
 
-				if not exists ( select contrasena from usuarios where nombre = @nombre and contrasena = @contrasena ) 
+				if not exists ( select contrasena from usuarios where usuario = @usuario and contrasena = @contrasena ) 
 				begin
 					select @mensaje = 'La contraseña es incorrecta.'
 					raiserror (@mensaje, 11, -1)
@@ -74,7 +74,7 @@ as
 							idAlmacen,
 							idSucursal
 					from	usuarios 
-					where	nombre = @nombre 
+					where	usuario = @usuario 
 						and contrasena = @contrasena
 				end
 			else

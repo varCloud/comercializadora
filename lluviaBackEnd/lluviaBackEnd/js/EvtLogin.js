@@ -12,7 +12,7 @@ function onSuccessResult(data) {
     //alert(data.usuarioValido);
    
     if (data.usuarioValido) {
-        location.href = '~/Dashboard/Index/';
+        location.href = 'Dashboard/Index/';
     } else {
 
 
