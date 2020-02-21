@@ -77,13 +77,15 @@
                     <ul class="sidebar-menu">
                         @*<li class="menu-header">Main</li>*@
                         <li class="dropdown active">
-                            <a href="~/DashBoard/index">
+                            @*<a href="~/DashBoard/index">*@
+                            <a href="@Url.Action("index", "DashBoard")"> @*<i class="nav-icon ti ti-comment"></i><span class="nav-title">Socios</span>*@@*</a>*@ 
                                 <i data-feather="monitor"></i><span>Dashboard</span>
                             </a>
 
                         </li>
                         <li>
-                            <a href="~/Usuarios/Usuarios">
+                            @*<a href="~/Usuarios/Usuarios">*@
+                            <a href="@Url.Action("Usuarios", "Usuarios")">
                                 <i data-feather="users"></i><span>Usuarios</span>
                             </a>
                         </li>

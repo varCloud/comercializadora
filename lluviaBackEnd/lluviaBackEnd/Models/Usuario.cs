@@ -6,27 +6,17 @@ using System.Web;
 
 namespace lluviaBackEnd.Models
 {
-    public class Sesion
+    public class Usuario
     {
         public Boolean usuarioValido { get; set; }
-        [Display(Name ="Usuario")]
-        [Required(ErrorMessage ="Este campo no puede estar vacio")]
-        public string usuario { get; set; }
-
-        //public int NumeroUsuario { get; set; }
-        [Display(Name = "Constraseña")]
-        [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public string contrasena { get; set; }
-
-        public string Token { get; set; }
-
         public int idUsuario { get; set; }
+        public string usuario { get; set; }
+        public string contrasena { get; set; }
         public int idRol { get; set; }
         public string nombre { get; set; }
         public string apellidoPaterno { get; set; }
         public string apellidoMaterno { get; set; }
         public string telefono { get; set; }
-        //public string contrasena { get; set; }
         public int idAlmacen { get; set; }
         public int idSucursal { get; set; }
         public string Sucursal { get; set; }

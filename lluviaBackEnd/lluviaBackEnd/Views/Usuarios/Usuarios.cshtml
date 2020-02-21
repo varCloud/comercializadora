@@ -1,8 +1,9 @@
-﻿
+﻿@model lluviaBackEnd.Models.Usuario
 @{
-    /**/
 
     ViewBag.Title = "Usuarios";
+    List<lluviaBackEnd.Models.Usuario> lstUsuario = ViewBag.lstUsuario;
+
 }
 
 @section Styles {
@@ -13,67 +14,8 @@
 
 <h2>Usuarios</h2>
 
-<div class="section-body">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Basic DataTables</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-
-                        <table class="table table-striped" id="tablaUsuarios">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">
-                                        #
-                                    </th>
-                                    <th>Nombre</th>
-                                    <th>Sucursal</th>
-                                    <th>Almacen</th>
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>admin</td>
-                                    <td>sucursal 1</td>
-                                    <td>Almacen 1</td>
-                                    <td>
-                                        <div class="badge badge-success badge-shadow">Admin</div>
-                                    </td>
-                                    <td>
-                                        <a href="#"><i data-feather="eye"></i><span></span></a>
-                                        <a href="#"><i data-feather="edit"></i><span></span></a>
-                                        <a href="#"><i data-feather="user-x"></i><span></span></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>admin</td>
-                                    <td>sucursal 1</td>
-                                    <td>Almacen 1</td>
-                                    <td>
-                                        <div class="badge badge-success badge-shadow">Admin</div>
-                                    </td>
-                                    <td><a href="#" class="btn btn-primary">Editar</a></td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<div id="rowTblUsuario">
+    @Html.Partial("_ObtenerUsuario", lstUsuario)
 </div>
 
 
