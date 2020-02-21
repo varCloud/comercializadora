@@ -10,8 +10,11 @@
     <link rel="stylesheet" href="~/assets/css/style.css">
     <link rel="stylesheet" href="~/assets/css/components.css">
     <link rel="stylesheet" href="~/assets/css/custom.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='~/assets/img/favicon.ico' />
 
+    @RenderSection("Styles", false)
 </head>
 <body>
     <div class="loader"></div>
@@ -74,7 +77,7 @@
                     <ul class="sidebar-menu">
                         @*<li class="menu-header">Main</li>*@
                         <li class="dropdown active">
-                            <a href="#" >
+                            <a href="~/DashBoard/index">
                                 <i data-feather="monitor"></i><span>Dashboard</span>
                             </a>
 
@@ -140,6 +143,10 @@
     <script src="~/assets/js/scripts.js"></script>
     <!-- Custom JS File -->
     <script src="~/assets/js/custom.js"></script>
+
+
+
+
 
     @RenderSection("scripts", required: false)
 </body>

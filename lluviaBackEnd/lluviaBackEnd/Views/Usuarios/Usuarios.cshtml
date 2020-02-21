@@ -1,7 +1,15 @@
 ﻿
 @{
+    /**/
+
     ViewBag.Title = "Usuarios";
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+}
+
 
 <h2>Usuarios</h2>
 
@@ -15,7 +23,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table class="table table-striped" id="table-1999">
+                        <table class="table table-striped" id="tablaUsuarios">
                             <thead>
                                 <tr>
                                     <th class="text-center">
@@ -57,7 +65,7 @@
                                     </td>
                                     <td><a href="#" class="btn btn-primary">Editar</a></td>
                                 </tr>
-                              
+
                             </tbody>
                         </table>
                     </div>
@@ -65,5 +73,17 @@
             </div>
         </div>
     </div>
-   
+
 </div>
+
+
+
+@section scripts {
+
+    @*<script src="~/assets/bundles/jquery-ui/jquery-ui.min.js"></script>*@
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/js/EvtUsuarios.js"></script>
+}
+

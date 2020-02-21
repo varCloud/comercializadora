@@ -11,7 +11,7 @@ namespace lluviaBackEnd.Models
         public Boolean usuarioValido { get; set; }
         [Display(Name ="Usuario")]
         [Required(ErrorMessage ="Este campo no puede estar vacio")]
-        public string nombre { get; set; }
+        public string usuario { get; set; }
 
         //public int NumeroUsuario { get; set; }
         [Display(Name = "Constraseña")]
@@ -22,6 +22,7 @@ namespace lluviaBackEnd.Models
 
         public int idUsuario { get; set; }
         public int idRol { get; set; }
+        public string nombre { get; set; }
         public string apellidoPaterno { get; set; }
         public string apellidoMaterno { get; set; }
         public string telefono { get; set; }

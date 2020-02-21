@@ -26,7 +26,7 @@ namespace lluviaBackEnd.DAO
                 {
                     db.Open();
                     db.CreateParameters(2);
-                    db.AddParameters(0, "nombre", sesion.nombre);
+                    db.AddParameters(0, "usuario", sesion.usuario);
                     db.AddParameters(1, "contrasena", sesion.contrasena);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_VALIDA_CONTRASENA");
                     if (db.DataReader.Read())
