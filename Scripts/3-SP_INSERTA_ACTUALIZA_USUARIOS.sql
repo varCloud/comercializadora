@@ -55,7 +55,7 @@ as
 					end
 					
 				-- si es modificacion
-				if	( @idUsuario is not null )
+				if	( (@idUsuario is not null) and (@idUsuario > 0) )
 					begin
 						
 						if not exists ( select 1 from usuarios where idUsuario = @idUsuario ) 
