@@ -75,35 +75,37 @@
                         </div>
                     </div>
                     <ul class="sidebar-menu">
-                        @*<li class="menu-header">Main</li>*@
-                        <li class="dropdown active">
-                            @*<a href="~/DashBoard/index">*@
-                            <a href="@Url.Action("index", "DashBoard")"> @*<i class="nav-icon ti ti-comment"></i><span class="nav-title">Socios</span>*@@*</a>*@ 
+
+                        <li class="@(ViewBag.Title.ToString() == "Dashboard" ? "dropdown active" : "")">
+                            <a href="@Url.Action("index", "DashBoard")">
                                 <i data-feather="monitor"></i><span>Dashboard</span>
                             </a>
-
                         </li>
-                        <li>
-                            @*<a href="~/Usuarios/Usuarios">*@
+
+                        <li class="@(ViewBag.Title.ToString() == "Usuarios" ? "dropdown active" : "")">
                             <a href="@Url.Action("Usuarios", "Usuarios")">
                                 <i data-feather="users"></i><span>Usuarios</span>
                             </a>
                         </li>
+
                         <li>
                             <a href="#">
                                 <i data-feather="truck"></i><span>Proveedores</span>
                             </a>
                         </li>
+
                         <li>
                             <a href="#">
                                 <i data-feather="briefcase"></i><span>Clientes</span>
                             </a>
                         </li>
+
                         <li>
                             <a href="#">
                                 <i data-feather="package"></i><span>Linea de Productos</span>
                             </a>
                         </li>
+                        
                         <li>
                             <a href="#">
                                 <i data-feather="file"></i><span>Facturación</span>

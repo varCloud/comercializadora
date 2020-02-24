@@ -3,29 +3,133 @@
 
     ViewBag.Title = "Usuarios";
     List<lluviaBackEnd.Models.Usuario> lstUsuario = ViewBag.lstUsuario;
+    List<SelectListItem> lstRoles = (List<SelectListItem>)ViewBag.lstRoles;
+    List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
+    List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
 
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+
 }
 
 
 <h2>Usuarios</h2>
 
 <div id="rowTblUsuario">
-    @Html.Partial("_ObtenerUsuario", lstUsuario)
+    @Html.Partial("_ObtenerUsuarios")
+</div>
+
+
+
+
+<div class="modal fade bd-example-modal-lg" id="EditarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalUsuario"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*<form id="frmUsuario">*@
+                @using (Ajax.BeginForm("GuardarUsuario", "Usuarios",
+
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitGuardarUsuario",
+                    OnComplete = "onCompleteSubmitGuardarUsuario",
+                    OnFailure = "onFailureResultGuardarUsuario",
+                    OnSuccess = "onSuccessResultGuardarUsuario",
+                },
+                new { id = "frmUsuario" }))
+                {
+                    @Html.HiddenFor(x => x.idUsuario, new { @id = "idUsuario" })
+                    @Html.HiddenFor(x => x.idRol, new { @id = "idRol" })
+                    @Html.HiddenFor(x => x.usuario, new { @id = "usuario" })
+                    @Html.HiddenFor(x => x.contrasena, new { @id = "contrasena" })
+                    @Html.HiddenFor(x => x.idAlmacen, new { @id = "idAlmacen" })
+                    @Html.HiddenFor(x => x.idSucursal, new { @id = "idSucursal" })
+                    @Html.HiddenFor(x => x.activo, new { @id = "activo" })
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido Paterno</label>
+                                @Html.TextBoxFor(x => x.apellidoPaterno, null, new { @class = "form-control", @id = "apellidoPaterno" })
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido Materno</label>
+                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno" })
+                            </div>
+                            <div class="form-group">
+                                <label>Telefono</label>
+                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Rol</label>
+                                @Html.DropDownListFor(model => model.idRolGuardar, lstRoles, new { id = "idRolGuardar", @class = "form-control", data_val = "true" })
+                            </div>
+                            <div class="form-group">
+                                <label>Almacen</label>
+                                @Html.DropDownListFor(model => model.idAlmacenGuardar, lstAlmacenes, new { id = "idAlmacenGuardar", @class = "form-control", data_val = "true" })
+                            </div>
+                            <div class="form-group">
+                                <label>Sucursal</label>
+                                @Html.DropDownListFor(model => model.idSucursalGuardar, lstSucursales, new { id = "idSucursalGuardar", @class = "form-control", data_val = "true" })
+                            </div>
+                            <div class="form-group mb-0">
+                                @*<div class="pretty p-icon p-smooth">
+                                        @Html.CheckBoxFor(x => x.activo, new { id = "activo", value = "false" })
+                                        <div class="state p-success">
+                                            <i class="icon fa fa-check"></i>
+                                            <label> Activo</label>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarUsuario" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*</form>*@
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 @section scripts {
 
-    @*<script src="~/assets/bundles/jquery-ui/jquery-ui.min.js"></script>*@
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+
     <script src="~/js/EvtUsuarios.js"></script>
+
 }
 

@@ -64,9 +64,14 @@ as
 							raiserror (@mensaje, 11, -1)
 						end
 
-						if ( (@existeUsuario = cast(1 as bit)) and ( @activo is null ) )
+						if ( (@existeUsuario = cast(1 as bit)) and ( (@activo is null) or (@activo = 0) ) )
 							begin
-								select @activo=activo from usuarios where nombre like @nombre and apellidoPaterno like @apellidoPaterno and apellidoMaterno like @apellidoMaterno
+								select	@activo=activo,
+										@contrasena = contrasena 
+								from	usuarios 
+								where	nombre like @nombre 
+									and apellidoPaterno like @apellidoPaterno 
+									and apellidoMaterno like @apellidoMaterno
 							end
 							
 						update	usuarios 

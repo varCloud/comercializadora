@@ -138,6 +138,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Almacen.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\Rol.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Sesion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -996,7 +999,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Dashboard\index.cshtml" />
     <Content Include="Views\Usuarios\Usuarios.cshtml" />
-    <Content Include="Views\Usuarios\_ObtenerUsuario.cshtml" />
+    <Content Include="Views\Usuarios\_ObtenerUsuarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,9 +1,9 @@
 use DB_A552FA_comercializadora
 go
 
--- se crea procedimiento SP_CONSULTA_USUARIOS
-if exists (select * from sysobjects where name like 'SP_CONSULTA_USUARIOS' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
-	drop proc SP_CONSULTA_USUARIOS
+-- se crea procedimiento SP_CONSULTA_ROLES
+if exists (select * from sysobjects where name like 'SP_CONSULTA_ROLES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+	drop proc SP_CONSULTA_ROLES
 go
 
 /*
@@ -16,9 +16,9 @@ status			200 = ok
 				-1	= error
 */
 
-create proc SP_CONSULTA_USUARIOS
+create proc SP_CONSULTA_ROLES
 
-	@idUsuario		int
+	@idRol	int
 
 as
 
@@ -38,15 +38,16 @@ as
 
 			begin -- principal
 				
-				if not exists ( select 1 from Usuarios )
+				if exists ( select 1 from Usuarios )
 					begin
-						select @mensaje = 'No existen usuarios registrados.'
-						raiserror (@mensaje, 11, -1)
+						
+						if ( @idRol = 1 )
+							begin
+								select @valido = cast(1 as bit)
+							end
+
 					end
-				else
-					begin
-						select @valido = cast(1 as bit)
-					end
+					
 
 			end -- principal
 
@@ -67,27 +68,13 @@ as
 			if ( @valido = cast(1 as bit) )
 				begin
 						
-					select	distinct 
-							@status status,
+					select	@status status,
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							u.*,
-							r.descripcion as descripcionRol,
-							s.descripcion as descripcionSucursal,
-							a.descripcion as descripcionAlmacen
-					from	Usuarios u
-								left join catRoles r
-									on r.idRol = u.idRol
-								left join CatSucursales s
-									on s.idSucursal = u.idSucursal
-								left join Almacenes a
-									on a.idAlmacen = u.idAlmacen
-					where	u.idUsuario =	case
-												when @idUsuario > 0 then @idUsuario
-												else u.idUsuario
-											end
-						and	u.activo = cast(1 as bit)
+							*
+					from	catRoles
+					where	activo = cast(1 as bit)
 
 				end
 			else
@@ -96,7 +83,7 @@ as
 					select	-1 status,
 							@error_procedure error_procedure,
 							@error_line error_line,
-							@mensaje as  mensaje
+							'No existen roles en la base.' as  mensaje
 							
 				end
 
@@ -106,7 +93,7 @@ as
 	end  -- principal
 go
 
-grant exec on SP_CONSULTA_USUARIOS to public
+grant exec on SP_CONSULTA_ROLES to public
 go
 
 

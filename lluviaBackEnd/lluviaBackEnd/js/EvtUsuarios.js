@@ -1,12 +1,40 @@
-﻿
-
-var table;
+﻿var table;
 var iframe;
+
+
+function onBeginSubmitGuardarUsuario() {
+    console.log("onBeginSubmit___");
+}
+
+function onCompleteSubmitGuardarUsuario() {
+    console.log("onCompleteSubmit___");
+}
+
+function onSuccessResultGuardarUsuario(data) {
+    console.log("onSuccessResult___");
+
+    if (data.status == 200) {
+
+        mensajeOK(data.mensaje);
+        PintarTabla();
+
+    } else {
+        mensajeERROR(data.mensaje);
+    }
+
+    $('#EditarUsuarioModal').modal('hide');
+
+}
+
+function onFailureResultGuardarUsuario() {
+    console.log("onFailureResult___");
+}
+
 
 function PintarTabla() {
     $.ajax({
-        url: rootUrl("/Socio/_ObtenerSocio"),
-        data: { idSocio: 0 },
+        url: "/Usuarios/_ObtenerUsuarios",
+        data: { idUsuario: 0 },
         method: 'post',
         dataType: 'html',
         async: false,
@@ -14,11 +42,11 @@ function PintarTabla() {
         },
         success: function (data) {
             table.destroy();
-            $('#rowTblSocio').html(data);
+            $('#rowTblUsuario').html(data);
             InitDataTable();
         },
         error: function (xhr, status) {
-            console.log('Disculpe, existió un problema');
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
             console.log(xhr);
             console.log(status);
         }
@@ -87,8 +115,8 @@ function InitDataTable() {
             "infoFiltered": "(filtered from _MAX_ total records)",
             "search": "Buscar:",
             "paginate": {
-                "first": "First",
-                "last": "Last",
+                "first": "Primero",
+                "last": "Ultimo",
                 "next": "Siguiente",
                 "previous": "Anterior"
             },
@@ -96,21 +124,22 @@ function InitDataTable() {
         "dom": 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fa fa-copy" style="font-size:20px"></i>',
-                className: 'btn btn-icon btn-round btn-outline-warning',
-                titleAttr: 'Copiar',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
-                },
-            },
+            //{
+            //    extend: 'copy',
+            //    text: '<i class="fa fa-copy" style="font-size:20px"></i>',
+            //    className: 'btn btn-icon btn-round btn-outline-warning',
+            //    titleAttr: 'Copiar',
+            //    exportOptions: {
+            //        columns: [0, 1, 2, 3, 4, 5]
+            //    },
+            //},
             {
                 extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o"  style="font-size:20px"></i>',
-                className: 'btn btn-icon btn-round btn-outline-info',
+                text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
+                //className: 'btn btn-icon btn-round btn-outline-info',
+                className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Socios Cedicoop",
+                title: "Usuarios",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
                     doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
@@ -123,13 +152,16 @@ function InitDataTable() {
             },
             {
                 extend: 'excel',
-                text: '<i class="fa fa-file-excel-o"  style="font-size:20px"></i>',
-                className: 'btn btn-icon btn-round btn-outline-success',
+                //text: '<i class="fa fa-file-excel-o"  style="font-size:20px"></i>',
+                text: '<i class="fas fa-file-excel" style="font-size:20px;"></i>',
+                //className: 'btn btn-icon btn-round btn-outline-success',
+                className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5]
                 },
             },
+
 
         ],
 
@@ -137,25 +169,52 @@ function InitDataTable() {
     });
 
     //$('#tablaUsuarios').addClass('form-control');
-   // $('#tablaUsuarios').append('&nbsp;&nbsp;<button value=""  title="Agregar" data-toggle="tooltip"  class="tooltip-wrapper btn btn-icon btn-round btn-outline-dark" name="" id="btnAgregarSocio"><i class="fa fa-plus"></i></button>');
-    //InitBtnAgregar();
+    //$('#tablaUsuarios').append('&nbsp;&nbsp;<button value=""  title="Agregar" data-toggle="tooltip"  class="tooltip-wrapper btn btn-icon btn-round btn-outline-dark" name="" id="btnAgregarSocio"><i class="fa fa-plus"></i></button>');
+    $('#tablaUsuarios_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarUsuario" data-toggle="tooltip" title="Agregar Usuario"><i class="fas fa-user-plus"></i></a>');
+    InitBtnAgregar();
 }
 
 function InitBtnAgregar() {
-    $('#btnAgregarSocio').click(function (e) {
-        $('#idSocio').val(0)
-        satDropzone.removeAllFiles();
-        $('#dropZoneExpediente').css('display', '');
-        $('#rowExpedientes').css('display', 'none');
-        $('#Nombre').prop('disabled', false);
-        $('#Apellidos').prop('disabled', false);
-        $('#Telefono').prop('disabled', false);
-        $('#Mail').prop('disabled', false);
-        $('#NumeroSocioCMV').prop('disabled', false);
-        $('#idSocio').val('');
-        $('#btnReseFrm').trigger('click');
-        $('#verticalCenter').modal({ backdrop: 'static', keyboard: false, show: true });
-        $('#verticalCenterTitle').html("Agregar Usuario")
+    $('#btnAgregarUsuario').click(function (e) {
+
+
+        $('#btnGuardarUsuario').prop('disabled', false);
+
+        $('#idUsuario').val(0);
+        $('#idRol').val(0);
+        $('#usuario').val('');
+        $('#contrasena').val('');
+        $('#idAlmacen').val(0);
+        $('#idSucursal').val(0);
+        $('#activo').val(0);
+
+        $('#nombre').val('').prop('disabled', false);
+        $('#apellidoPaterno').val('').prop('disabled', false);
+        $('#apellidoMaterno').val('').prop('disabled', false);
+        $('#telefono').val('').prop('disabled', false);
+        //$('#idRolGuardar').val('').change().prop('disabled', false);
+        //$('#idAlmacenGuardar').val('').change().prop('disabled', false);
+        //$('#idSucursalGuardar').val('').change().prop('disabled', false);
+
+        //$('#activo').trigger('click');
+
+        //para abrir el modal
+        $('#EditarUsuarioModal').modal({ backdrop: 'static', keyboard: false, show: true });
+        $('#TituloModalUsuario').html("Agregar Usuario");
+
+        //$('#idSocio').val(0)
+        //satDropzone.removeAllFiles();
+        //$('#dropZoneExpediente').css('display', '');
+        //$('#rowExpedientes').css('display', 'none');
+        //$('#Nombre').prop('disabled', false);
+        //$('#Apellidos').prop('disabled', false);
+        //$('#Telefono').prop('disabled', false);
+        //$('#Mail').prop('disabled', false);
+        //$('#NumeroSocioCMV').prop('disabled', false);
+        //$('#idSocio').val('');
+        //$('#btnReseFrm').trigger('click');
+        //$('#verticalCenter').modal({ backdrop: 'static', keyboard: false, show: true });
+        //$('#verticalCenterTitle').html("Agregar Usuario")
     });
 }
 
@@ -294,24 +353,25 @@ function EliminarExpediente(idSocio, file) {
 
 }
 
-function ObtenerSocio(idSocio) {
+
+function ObtenerUsuario(idUsuario) {
 
     var result = '';
     $.ajax({
-        url: rootUrl("/Socio/ObtenerSocio"),
-        data: { idSocio: idSocio },
+        url: "/Usuarios/ObtenerUsuario",
+        data: { idUsuario: idUsuario },
         method: 'post',
         dataType: 'json',
         async: false,
         beforeSend: function (xhr) {
-            console.log("Antes de enviar")
+            console.log("Antes")
         },
         success: function (data) {
 
             result = data;
         },
         error: function (xhr, status) {
-            console.log('Disculpe, existió un problema');
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }
@@ -320,119 +380,193 @@ function ObtenerSocio(idSocio) {
     return result;
 }
 
-function EditarSocio(idSocio) {
+//function actualizaStatusUsuario(idUsuario, estatus) {
 
-    var data = ObtenerSocio(idSocio);
-    $('#idSocio').val(0)
-    $('#btnReseFrm').trigger('click');
-    $('#Nombre').val(data.Nombre).prop('disabled', false);
-    $('#Apellidos').val(data.Apellidos).prop('disabled', false);
-    $('#Telefono').val(data.Telefono).prop('disabled', false);
-    $('#Mail').val(data.Mail).prop('disabled', false);
-    $('#NumeroSocioCMV').val(data.NumeroSocioCMV).prop('disabled', false);
-    satDropzone.removeAllFiles();
-    $('#idSocio').val(data.IdSocio).prop('disabled', false);
-    $.each(data.Expedientes, function (index, value) {
+//    var result = '';
+//    //$.ajax({
+//    //    url: "/Usuarios/ActualizarEstatusUsuario",
+//    //    data: { idUsuario: idUsuario },
+//    //    method: 'post',
+//    //    dataType: 'json',
+//    //    async: false,
+//    //    beforeSend: function (xhr) {
+//    //        console.log("Antes")
+//    //    },
+//    //    success: function (data) {
 
-        var URLdomainImage = "http://" + window.location.host + value.pathExpediente;
-        var mockFile = { name: value.nombreDoc, size: value.pesoByte, id: value.id, pathExpediente: value.pathExpediente };
-        satDropzone.emit("addedfile", mockFile);
-        satDropzone.files.push(mockFile);
-        satDropzone.options.thumbnail.call(satDropzone, mockFile, URLdomainImage);
-        satDropzone.emit("complete", mockFile);
-    });
-    $('#dropZoneExpediente').css('display', '');
-    $('#rowExpedientes').css('display', 'none');
-    // para abrir el modal 
-    $('#verticalCenter').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#verticalCenterTitle').html("Editar Socio");
+//    //        result = data;
+//    //    },
+//    //    error: function (xhr, status) {
+//    //        console.log('hubo un problema pongase en contacto con el administrador del sistema');
+//    //        console.log(xhr);
+//    //        console.log(status);
+//    //    }
+//    //});
+
+//    //$.ajax({
+//    //    url: "/Usuarios/ActualizarEstatusUsuario",
+//    //    data: { idUsuario: idUsuario, activo: estatus },
+//    //    method: 'post',
+//    //    dataType: 'json',
+//    //    async: false,
+//    //    beforeSend: function (xhr) {
+//    //        console.log("Antes ")
+//    //    },
+//    //    success: function (data) {
+//    //        result = data;
+//    //        mensajeOK(data.mensaje);
+//    //        PintarTabla();
+//    //    },
+//    //    error: function (xhr, status) {
+//    //        //mensajeERROR(data.mensaje);
+//    //        console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+//    //        console.log(xhr);
+//    //        console.log(status);
+//    //    }
+//    //});
+//    return result;
+//}
+
+
+//function GuardarUsuario(dataUsr) {
+
+//    var result = '';
+//    $.ajax({
+//        url: "/Usuarios/GuardarUsuario",
+//        data: { dataUsr: dataUsr },
+//        method: 'post',
+//        dataType: 'json',
+//        async: false,
+//        beforeSend: function (xhr) {
+//            console.log("Antes")
+//        },
+//        success: function (data) {
+//            result = data;
+//        },
+//        error: function (xhr, status) {
+//            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+//            console.log(xhr);
+//            console.log(status);
+//        }
+//    });
+
+//    return result;
+//}
+
+//function pregunta(msg) {
+
+
+
+//}
+
+function mensajeOK(mensaje) {
+    swal(mensaje, 'Presione OK para continuar.', 'success');
+}
+
+function mensajeERROR(mensaje) {
+    swal(mensaje, 'Presione OK para continuar.', 'error');
+}
+
+function EditarUsuario(idUsuario) {
+
+    $('#btnGuardarUsuario').prop('disabled', false);
+
+    var data = ObtenerUsuario(idUsuario);
+    
+    $('#idUsuario').val(idUsuario);
+    $('#idRol').val(data.idRol);
+    $('#usuario').val(data.usuario);
+    $('#contrasena').val(data.contrasena);
+    $('#idAlmacen').val(data.idAlmacen);
+    $('#idSucursal').val(data.idSucursal);
+    $('#activo').val(data.activo);
+
+    $('#nombre').val(data.nombre).prop('disabled', false);
+    $('#apellidoPaterno').val(data.apellidoPaterno).prop('disabled', false);
+    $('#apellidoMaterno').val(data.apellidoMaterno).prop('disabled', false);
+    $('#telefono').val(data.telefono).prop('disabled', false);
+    $('#idRolGuardar').val(data.idRol).change().prop('disabled', false);
+    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', false);
+    $('#idSucursalGuardar').val(data.idSucursal).change().prop('disabled', false);
+
+    //$('#activo').trigger('click');
+
+    //para abrir el modal
+    $('#EditarUsuarioModal').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#TituloModalUsuario').html("Editar Usuario");
 
 }
 
-function EliminarSocio(idSocio) {
+function EliminarUsuario(idUsuario) {
 
     swal({
-        title: "Mensaje",
-        text: "Estas seguro que deseas eliminar al socio?",
-        type: 'question',
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: 'Si, Eliminar!',
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: rootUrl("/Socio/ActualizarEstatusSocio"),
-                data: { idSocio: idSocio, estatus: false },
-                method: 'post',
-                dataType: 'json',
-                beforeSend: function (xhr) {
-                    console.log("Antes de enviar")
-                },
-                success: function (data) {
-                    swal({
-                        type: data.TipoAlerta,
-                        title: 'Notificación',
-                        text: data.mensaje,
-                    })
-                    PintarTabla();
-                },
-                error: function (xhr, status) {
-                    console.log('Disculpe, existió un problema');
-                    console.log(xhr);
-                    console.log(status);
-                }
-            });
+        title: 'Mensaje',
+        text: 'Estas seguro que deseas eliminar a este usuario?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Usuarios/ActualizarEstatusUsuario",
+                    data: { idUsuario: idUsuario, activo: false },
+                    method: 'post',
+                    dataType: 'json',
+                    async: false,
+                    beforeSend: function (xhr) {
+                        console.log("Antes ")
+                    },
+                    success: function (data) {
+                        mensajeOK(data.mensaje);
+                        PintarTabla();
+                    },
+                    error: function (xhr, status) {
+                        //mensajeERROR(data.mensaje);
+                        console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+                        console.log(xhr);
+                        console.log(status);
+                    }
+                });
 
-        } else {
-            console.log("cancelar" + result);
-        }
-    });
+            } else {
+                console.log("cancelar");
+            }
+        });
+    
 
 }
 
-function VerExpediente(idSocio) {
-    var data = ObtenerSocio(idSocio);
-    var cuadro = '';
-    console.log(data);
+function VerUsuario(idUsuario) {
 
-    $('#Nombre').val(data.Nombre).prop('disabled', true);
-    $('#Apellidos').val(data.Apellidos).prop('disabled', true);
-    $('#Telefono').val(data.Telefono).prop('disabled', true);
-    $('#Mail').val(data.Mail).prop('disabled', true);
-    $('#NumeroSocioCMV').val(data.NumeroSocioCMV).prop('disabled', true);
-    $.each(data.Expedientes, function (index, value) {
-        var mockFile = { nombreDoc: value.nombreDoc, id: value.id, indice: index, pathExpediente: value.pathExpediente };
-        satDropzone.files.push(mockFile);
-        var ext = (value.nombreDoc).split('.')[1];
-        var img = '';
-        if (ext === 'pdf')
-            img = "/assets/img/file-icon/pdf.png";
-        else
-            img = value.pathExpediente;
+    $('#btnGuardarUsuario').prop('disabled', true);
+
+    
+    var data = ObtenerUsuario(idUsuario);
+
+    $('#idUsuario').val(idUsuario);
+    $('#idRol').val(data.idRol);
+    $('#usuario').val(data.usuario);
+    $('#contrasena').val(data.contrasena);
+    $('#idAlmacen').val(data.idAlmacen);
+    $('#idSucursal').val(data.idSucursal);
+    $('#activo').val(data.activo);
+
+    $('#nombre').val(data.nombre).prop('disabled', true);
+    $('#apellidoPaterno').val(data.apellidoPaterno).prop('disabled', true);
+    $('#apellidoMaterno').val(data.apellidoMaterno).prop('disabled', true);
+    $('#telefono').val(data.telefono).prop('disabled', true);
+    $('#idRolGuardar').val(data.idRol).change().prop('disabled', true);
+    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', true);
+    $('#idSucursalGuardar').val(data.idSucursal).change().prop('disabled', true);
+
+    //$('#activo').trigger('click');
+
+    //para abrir el modal
+    $('#EditarUsuarioModal').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#TituloModalUsuario').html("Información del Usuario");
 
 
-        cuadro += '<div class="col-xl-3 col-sm-6">';
-        cuadro += '<div class="card card-statistics" >';
-        cuadro += '<div class="card-body">';
-        cuadro += '<div class="text-center p-2">';
-        cuadro += '<div class="mb-2">';
-
-        //cuadro += '<img src="/assets/img/file-icon/' + img + '" alt="png-img"></div>';
-        cuadro += '<img src="' + img + '" alt="png-img" style="width:120px"></div>';
-
-        cuadro += '<h4 class="mb-0" style="font-size:12px">' + value.nombreDoc + '</h4>';
-        //cuadro += '<p class="mb-2">28.8 kb</p>';
-        cuadro += "<button onclick='PDFView(\"" + value.pathExpediente + "\" , " + index + ")' class='btn btn-light'>Ver</button>";
-        cuadro += '</div>';
-        cuadro += '</div>';
-        cuadro += '</div>';
-        cuadro += ' </div >';
-    });
-    $('#dropZoneExpediente').css('display', 'none');
-    $('#rowExpedientes').css('display', '');
-    $('#rowExpedientes').html(cuadro);
-    $('#verticalCenter').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#verticalCenterTitle').html("Información del socio");
 }
 
 function PDFView(url, indice) {
@@ -449,12 +583,21 @@ $(document).ready(function () {
     InitDataTable();
 
 
-    //$('#btnGuardarSocio').click(function (e) {
-    //    if ($("#frmSocio").valid()) {
-    //        console.log('btnGuardarSocio');
-    //        satDropzone.processQueue();
-    //    } else
-    //        console.log("IN-valido")
+    //$('#swallll').click(function (e) {
+
+    //    mensajeOK("correcto");
+
+
+    //});
+
+    
+    //$('#btnGuardarUsuario').click(function (e) {
+    //    //if ($("#frmUsuario").valid()) {
+    //        console.log('btnGuardarUsuario');
+    //        GuardarUsuario(dataUsr);
+
+    //    //} else
+    //    //    console.log("ocurrio un error")
     //});
 
     //$('#btnPdfViewSieguinte').click(function (e) {

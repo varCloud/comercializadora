@@ -9,6 +9,7 @@ namespace lluviaBackEnd.Models
     public class Usuario
     {
         public Boolean usuarioValido { get; set; }
+        public Boolean activo { get; set; }
         public int idUsuario { get; set; }
         public string usuario { get; set; }
         public string contrasena { get; set; }
@@ -22,6 +23,9 @@ namespace lluviaBackEnd.Models
         public string Sucursal { get; set; }
         public string Almacen { get; set; }
         public string Rol { get; set; }
-
+        public string[] idRolGuardar { get; set; }
+        public string[] idAlmacenGuardar { get; set; }
+        public string[] idSucursalGuardar { get; set; }
+        
     }
 }

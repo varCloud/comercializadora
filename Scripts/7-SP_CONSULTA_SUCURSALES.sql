@@ -1,9 +1,9 @@
 use DB_A552FA_comercializadora
 go
 
--- se crea procedimiento SP_CONSULTA_USUARIOS
-if exists (select * from sysobjects where name like 'SP_CONSULTA_USUARIOS' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
-	drop proc SP_CONSULTA_USUARIOS
+-- se crea procedimiento SP_CONSULTA_SUCURSALES
+if exists (select * from sysobjects where name like 'SP_CONSULTA_SUCURSALES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+	drop proc SP_CONSULTA_SUCURSALES
 go
 
 /*
@@ -11,14 +11,12 @@ go
 Autor			Ernesto Aguilar
 UsuarioRed		auhl373453
 Fecha			2020/02/17
-Objetivo		Consulta los diferentes usuarios del sistema
+Objetivo		Consulta los diferentes sucursales del sistema
 status			200 = ok
 				-1	= error
 */
 
-create proc SP_CONSULTA_USUARIOS
-
-	@idUsuario		int
+create proc SP_CONSULTA_SUCURSALES
 
 as
 
@@ -38,9 +36,9 @@ as
 
 			begin -- principal
 				
-				if not exists ( select 1 from Usuarios )
+				if not exists ( select 1 from CatSucursales )
 					begin
-						select @mensaje = 'No existen usuarios registrados.'
+						select @mensaje = 'No existen sucursales registradas.'
 						raiserror (@mensaje, 11, -1)
 					end
 				else
@@ -67,28 +65,13 @@ as
 			if ( @valido = cast(1 as bit) )
 				begin
 						
-					select	distinct 
-							@status status,
+					select	@status status,
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							u.*,
-							r.descripcion as descripcionRol,
-							s.descripcion as descripcionSucursal,
-							a.descripcion as descripcionAlmacen
-					from	Usuarios u
-								left join catRoles r
-									on r.idRol = u.idRol
-								left join CatSucursales s
-									on s.idSucursal = u.idSucursal
-								left join Almacenes a
-									on a.idAlmacen = u.idAlmacen
-					where	u.idUsuario =	case
-												when @idUsuario > 0 then @idUsuario
-												else u.idUsuario
-											end
-						and	u.activo = cast(1 as bit)
-
+							*
+					from	CatSucursales
+					
 				end
 			else
 				begin
@@ -106,7 +89,7 @@ as
 	end  -- principal
 go
 
-grant exec on SP_CONSULTA_USUARIOS to public
+grant exec on SP_CONSULTA_SUCURSALES to public
 go
 
 
