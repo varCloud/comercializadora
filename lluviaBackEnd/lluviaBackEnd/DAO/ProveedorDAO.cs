@@ -73,7 +73,7 @@ namespace lluviaBackEnd.DAO
                     db.AddParameters(3, "@telefono", proveedor.telefono);
                     db.AddParameters(4, "@direccion", proveedor.direccion);
                     db.AddParameters(5, "@activo", proveedor.activo);
-                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_INSERTA_ACTUALIZA_USUARIOS]");
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_INSERTA_ACTUALIZA_PROVEEDORES]");
                     while (db.DataReader.Read())
                     {
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)

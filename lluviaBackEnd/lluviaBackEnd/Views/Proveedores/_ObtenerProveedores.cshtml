@@ -1,1 +1,53 @@
-﻿
+﻿@model lluviaBackEnd.Models.Proveedor
+@{
+    List<lluviaBackEnd.Models.Proveedor> lstProveedores = ViewBag.lstProveedores;
+}
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaProveedores">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        #
+                                    </th>
+                                    <th>Nombre</th>
+                                    <th>Descripcion</th>
+                                    <th>Telefono</th>
+                                    <th>Direccion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstProveedores)
+                                {
+                                    <tr>
+                                        <td>@item.idProveedor</td>
+                                        <td>@item.nombre</td>
+                                        <td>@item.descripcion</td>
+                                        <td>@item.telefono</td>
+                                        <td>@item.direccion</td>
+                                        <td>
+                                            <div class="buttons">
+                                                <a href="javascript:VerProveedor(@item.idProveedor);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+                                                <a href="javascript:EditarProveedor(@item.idProveedor);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="javascript:EliminarProveedor(@item.idProveedor);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
