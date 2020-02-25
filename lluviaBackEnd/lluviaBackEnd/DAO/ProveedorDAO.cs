@@ -1,0 +1,129 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using AccesoDatos;
+using lluviaBackEnd.Models;
+using lluviaBackEnd;
+using System.Text;
+using System.Threading.Tasks;
+using System.Configuration;
+using System.Web.Mvc;
+
+namespace lluviaBackEnd.DAO
+{
+    public class ProveedorDAO
+    {
+
+        private DBManager db = null;
+
+
+        public List<Proveedor> ObtenerProveedores(Proveedor proveedor)
+        {
+
+            List<Proveedor> lstProveedores = new List<Proveedor>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idProveedor", proveedor.idProveedor); 
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PROVEEDORES]");
+
+                    while (db.DataReader.Read())
+                    {
+                        if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
+                        {
+                            Proveedor p = new Proveedor();
+                            p.idProveedor = Convert.ToInt32(db.DataReader["idProveedor"]);
+                            p.nombre = db.DataReader["nombre"].ToString();
+                            p.descripcion = db.DataReader["descripcion"].ToString();
+                            p.direccion = db.DataReader["direccion"].ToString();
+                            p.telefono = db.DataReader["telefono"].ToString();
+                            p.activo = Convert.ToBoolean(db.DataReader["activo"]);
+                            lstProveedores.Add(p);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstProveedores;
+        }
+
+
+        public Result GuardarProveedor(Proveedor proveedor)
+        {
+            Result result = new Result();
+            result.status = -1;
+            result.mensaje = "Existió un error al hacer la actualización.";
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(6);
+                    db.AddParameters(0, "@idProveedor", proveedor.idProveedor);
+                    db.AddParameters(1, "@nombre", proveedor.nombre);
+                    db.AddParameters(2, "@descripcion", proveedor.descripcion);
+                    db.AddParameters(3, "@telefono", proveedor.telefono);
+                    db.AddParameters(4, "@direccion", proveedor.direccion);
+                    db.AddParameters(5, "@activo", proveedor.activo);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_INSERTA_ACTUALIZA_USUARIOS]");
+                    while (db.DataReader.Read())
+                    {
+                        if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
+                        {
+                            result.status = Convert.ToInt32(db.DataReader["status"].ToString());
+                            result.mensaje = db.DataReader["mensaje"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public Result ActualizarEstatusProveedor(int idProveedor, bool activo)
+        {
+            Result result = new Result();
+            result.status = -1;
+            result.mensaje = "Existio un error al hacer la actualización.";
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(2);
+                    db.AddParameters(0, "@idProveedor", idProveedor);
+                    db.AddParameters(1, "@activo", activo);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_ACTUALIZA_STATUS_PROVEEDOR");
+                    if (db.DataReader.Read())
+                    {
+                        if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
+                        {
+                            result.status = Convert.ToInt32(db.DataReader["status"].ToString());
+                            result.mensaje = db.DataReader["mensaje"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+            return result;
+        }
+
+    }
+}

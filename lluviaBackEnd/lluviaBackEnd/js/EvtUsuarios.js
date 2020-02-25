@@ -49,56 +49,56 @@ function PintarTabla() {
     });
 }
 
-function initForm() {
-    $("#frmSocio").validate({
-        rules: {
-            nombre: "required",
-            apellidos: "required",
-            telefono: {
-                required: true,
-                minlength: 10,
-                maxlength: 10,
-                digits: true
-            },
-            mail: {
-                required: true,
-                email: true
-            },
+//function initForm() {
+//    $("#frmSocio").validate({
+//        rules: {
+//            nombre: "required",
+//            apellidos: "required",
+//            telefono: {
+//                required: true,
+//                minlength: 10,
+//                maxlength: 10,
+//                digits: true
+//            },
+//            mail: {
+//                required: true,
+//                email: true
+//            },
 
-        },
-        messages: {
-            nombre: "Este campo no puede estar vacio",
-            apellidos: "Este campo no puede estar vacio",
-            telefono: {
-                required: "Este campo no puede estar vacio",
-                minlength: "El minimo para el telefono son 10 digitos",
-                maxlength: "El maximo para el telefono son 10 digitos"
-            },
-            mail: {
-                required: "Este campo no puede estar vacio",
-                email: "Correo invalido ejem :var901106@gmail.com"
-            }
-        },
-        errorElement: "em",
-        errorPlacement: function (error, element) {
-            // Add the `help-block` class to the error element
-            error.addClass("help-block");
-            error.css("color", "#e3324c");
+//        },
+//        messages: {
+//            nombre: "Este campo no puede estar vacio",
+//            apellidos: "Este campo no puede estar vacio",
+//            telefono: {
+//                required: "Este campo no puede estar vacio",
+//                minlength: "El minimo para el telefono son 10 digitos",
+//                maxlength: "El maximo para el telefono son 10 digitos"
+//            },
+//            mail: {
+//                required: "Este campo no puede estar vacio",
+//                email: "Correo invalido ejem :var901106@gmail.com"
+//            }
+//        },
+//        errorElement: "em",
+//        errorPlacement: function (error, element) {
+//            // Add the `help-block` class to the error element
+//            error.addClass("help-block");
+//            error.css("color", "#e3324c");
 
-            if (element.prop("type") === "checkbox") {
-                error.insertAfter(element.parent("label"));
-            } else {
-                error.insertAfter(element);
-            }
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
-        }
-    });
-}
+//            if (element.prop("type") === "checkbox") {
+//                error.insertAfter(element.parent("label"));
+//            } else {
+//                error.insertAfter(element);
+//            }
+//        },
+//        highlight: function (element, errorClass, validClass) {
+//            $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+//        },
+//        unhighlight: function (element, errorClass, validClass) {
+//            $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+//        }
+//    });
+//}
 
 function InitDataTable() {
 
@@ -318,85 +318,6 @@ function ObtenerUsuario(idUsuario) {
 
     return result;
 }
-
-//function actualizaStatusUsuario(idUsuario, estatus) {
-
-//    var result = '';
-//    //$.ajax({
-//    //    url: "/Usuarios/ActualizarEstatusUsuario",
-//    //    data: { idUsuario: idUsuario },
-//    //    method: 'post',
-//    //    dataType: 'json',
-//    //    async: false,
-//    //    beforeSend: function (xhr) {
-//    //        console.log("Antes")
-//    //    },
-//    //    success: function (data) {
-
-//    //        result = data;
-//    //    },
-//    //    error: function (xhr, status) {
-//    //        console.log('hubo un problema pongase en contacto con el administrador del sistema');
-//    //        console.log(xhr);
-//    //        console.log(status);
-//    //    }
-//    //});
-
-//    //$.ajax({
-//    //    url: "/Usuarios/ActualizarEstatusUsuario",
-//    //    data: { idUsuario: idUsuario, activo: estatus },
-//    //    method: 'post',
-//    //    dataType: 'json',
-//    //    async: false,
-//    //    beforeSend: function (xhr) {
-//    //        console.log("Antes ")
-//    //    },
-//    //    success: function (data) {
-//    //        result = data;
-//    //        mensajeOK(data.mensaje);
-//    //        PintarTabla();
-//    //    },
-//    //    error: function (xhr, status) {
-//    //        //mensajeERROR(data.mensaje);
-//    //        console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
-//    //        console.log(xhr);
-//    //        console.log(status);
-//    //    }
-//    //});
-//    return result;
-//}
-
-
-//function GuardarUsuario(dataUsr) {
-
-//    var result = '';
-//    $.ajax({
-//        url: "/Usuarios/GuardarUsuario",
-//        data: { dataUsr: dataUsr },
-//        method: 'post',
-//        dataType: 'json',
-//        async: false,
-//        beforeSend: function (xhr) {
-//            console.log("Antes")
-//        },
-//        success: function (data) {
-//            result = data;
-//        },
-//        error: function (xhr, status) {
-//            console.log('hubo un problema pongase en contacto con el administrador del sistema');
-//            console.log(xhr);
-//            console.log(status);
-//        }
-//    });
-
-//    return result;
-//}
-
-//function pregunta(msg) {
-
-
-
-//}
 
 function mensajeOK(mensaje) {
     swal(mensaje, 'Presione OK para continuar.', 'success');
