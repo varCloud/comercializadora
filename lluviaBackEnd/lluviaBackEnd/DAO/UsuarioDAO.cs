@@ -182,9 +182,6 @@ namespace lluviaBackEnd.DAO
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
                         {
                             result.status = Convert.ToInt32(db.DataReader["status"].ToString());
-                        }
-                        else
-                        {
                             result.mensaje = db.DataReader["mensaje"].ToString();
                         }
                     }
