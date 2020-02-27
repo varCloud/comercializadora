@@ -2,14 +2,14 @@
 var iframe;
 
 
-function onBeginSubmitGuardarProveedor() {
-    console.log("onBeginSubmitGuardarProveedor");
+function onBeginSubmitGuardarLineaProducto() {
+    console.log("onBeginSubmitGuardarLineaProducto");
 }
-function onCompleteSubmitGuardarProveedor() {
-    console.log("onCompleteSubmitGuardarProveedor");
+function onCompleteSubmitGuardarLineaProducto() {
+    console.log("onCompleteSubmitGuardarLineaProducto");
 }
-function onSuccessResultGuardarProveedor(data) {
-    console.log("onSuccessResultGuardarProveedor");
+function onSuccessResultGuardarLineaProducto(data) {
+    console.log("onSuccessResultGuardarLineaProducto");
 
     if (data.status == 200) {
 
@@ -20,17 +20,17 @@ function onSuccessResultGuardarProveedor(data) {
         mensajeERROR(data.mensaje);
     }
 
-    $('#EditarProveedorModal').modal('hide');
+    $('#EditarLineaProductoModal').modal('hide');
 
 }
-function onFailureResultGuardarProveedor() {
-    console.log("onFailureResultGuardarProveedor");
+function onFailureResultGuardarLineaProducto() {
+    console.log("onFailureResultGuardarLineaProducto");
 }
 
 function PintarTabla() {
     $.ajax({
-        url: "/Proveedores/_ObtenerProveedores",
-        data: { idProveedor: 0 },
+        url: "/LineaProductos/_ObtenerLineaProductos",
+        data: { idLineaProducto: 0 },
         method: 'post',
         dataType: 'html',
         async: false,
@@ -38,7 +38,7 @@ function PintarTabla() {
         },
         success: function (data) {
             table.destroy();
-            $('#rowTblProveedores').html(data);
+            $('#rowTblLineaProductos').html(data);
             InitDataTable();
         },
         error: function (xhr, status) {
@@ -102,7 +102,7 @@ function PintarTabla() {
 
 function InitDataTable() {
 
-    table = $('#tablaProveedores').DataTable({
+    table = $('#tablaLineaProductos').DataTable({
         "language": {
             "lengthMenu": "Muestra _MENU_ registros por pagina",
             "zeroRecords": "No existen registros",
@@ -125,7 +125,7 @@ function InitDataTable() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Proveedores",
+                title: "LineaProductoes",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
                     doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
@@ -152,7 +152,7 @@ function InitDataTable() {
         "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
     });
 
-    $('#tablaProveedores_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProveedor" data-toggle="tooltip" title="Agregar Proveedor"><i class="fas fa-user-plus"></i></a>');
+    $('#tablaLineaProductos_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarLineaProducto" data-toggle="tooltip" title="Agregar LineaProducto"><i class="fas fa-user-plus"></i></a>');
     InitBtnAgregar();
 }
 
@@ -293,12 +293,12 @@ function InitDataTable() {
 //}
 
 
-function ObtenerProveedor(idProveedor) {
+function ObtenerLineaProducto(idLineaProducto) {
 
     var result = '';
     $.ajax({
-        url: "/Proveedores/ObtenerProveedor",
-        data: { idProveedor: idProveedor },
+        url: "/LineaProductos/ObtenerLineaProducto",
+        data: { idLineaProducto: idLineaProducto },
         method: 'post',
         dataType: 'json',
         async: false,
@@ -327,72 +327,60 @@ function mensajeERROR(mensaje) {
     swal(mensaje, 'Presione OK para continuar.', 'error');
 }
 
-function VerProveedor(idProveedor) {
+function VerLineaProducto(idLineaProducto) {
 
-    $('#btnGuardarProveedor').prop('disabled', true);
+    $('#btnGuardarLineaProducto').prop('disabled', true);
 
-    var data = ObtenerProveedor(idProveedor);
+    var data = ObtenerLineaProducto(idLineaProducto);
 
-    $('#idProveedor').val(idProveedor);
+    $('#idLineaProducto').val(idLineaProducto);
     $('#activo').val(data.activo);
-
-    $('#nombre').val(data.nombre).prop('disabled', true);
     $('#descripcion').val(data.descripcion).prop('disabled', true);
-    $('#telefono').val(data.telefono).prop('disabled', true);
-    $('#direccion').val(data.direccion).change().prop('disabled', true);
 
     //para abrir el modal
-    $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#TituloModalProveedor').html("Información del Proveedor");
+    $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#TituloModalLineaProducto').html("Información del LineaProducto");
 
 }
 
-function EditarProveedor(idProveedor) {
+function EditarLineaProducto(idLineaProducto) {
 
-    $('#btnGuardarProveedor').prop('disabled', false);
+    $('#btnGuardarLineaProducto').prop('disabled', false);
 
-    var data = ObtenerProveedor(idProveedor);
+    var data = ObtenerLineaProducto(idLineaProducto);
     
-    $('#idProveedor').val(idProveedor);
+    $('#idLineaProducto').val(idLineaProducto);
     $('#activo').val(data.activo);
-
-    $('#nombre').val(data.nombre).prop('disabled', false);
     $('#descripcion').val(data.descripcion).prop('disabled', false);
-    $('#telefono').val(data.telefono).prop('disabled', false);
-    $('#direccion').val(data.direccion).change().prop('disabled', false);
 
     //para abrir el modal
-    $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#TituloModalProveedor').html("Editar Proveedor");
+    $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#TituloModalLineaProducto').html("Editar LineaProducto");
 
 }
 
 
 function InitBtnAgregar() {
-    $('#btnAgregarProveedor').click(function (e) {
+    $('#btnAgregarLineaProducto').click(function (e) {
 
-        $('#btnGuardarProveedor').prop('disabled', false);
+        $('#btnGuardarLineaProducto').prop('disabled', false);
 
-        $('#idProveedor').val(0);
+        $('#idLineaProducto').val(0);
         $('#activo').val(0);
-
-        $('#nombre').val('').prop('disabled', false);
         $('#descripcion').val('').prop('disabled', false);
-        $('#telefono').val('').prop('disabled', false);
-        $('#direccion').val('').change().prop('disabled', false);
 
         //para abrir el modal
-        $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
-        $('#TituloModalProveedor').html("Agregar Proveedor");
+        $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
+        $('#TituloModalLineaProducto').html("Agregar LineaProducto");
 
     });
 }
 
-function EliminarProveedor(idProveedor) {
+function EliminarLineaProducto(idLineaProducto) {
 
     swal({
         title: 'Mensaje',
-        text: 'Estas seguro que deseas eliminar a este Proveedor?',
+        text: 'Estas seguro que deseas eliminar a esta Linea de Producto?',
         icon: 'warning',
         buttons: true,
         dangerMode: true,
@@ -400,8 +388,8 @@ function EliminarProveedor(idProveedor) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: "/Proveedores/ActualizarEstatusProveedor",
-                    data: { idProveedor: idProveedor, activo: false },
+                    url: "/LineaProductos/ActualizarEstatusLineaProducto",
+                    data: { idLineaProducto: idLineaProducto, activo: false },
                     method: 'post',
                     dataType: 'json',
                     async: false,
@@ -413,7 +401,7 @@ function EliminarProveedor(idProveedor) {
                         PintarTabla();
                     },
                     error: function (xhr, status) {
-                        console.log('Hubo un problema al intentar eliminar al Proveedor, contactese con el administrador del sistema');
+                        console.log('Hubo un problema al intentar eliminar la Linea de Producto, contactese con el administrador del sistema');
                         console.log(xhr);
                         console.log(status);
                     }
@@ -449,10 +437,10 @@ $(document).ready(function () {
     //});
 
     
-    //$('#btnGuardarProveedor').click(function (e) {
-    //    //if ($("#frmProveedor").valid()) {
-    //        console.log('btnGuardarProveedor');
-    //        GuardarProveedor(dataUsr);
+    //$('#btnGuardarLineaProducto').click(function (e) {
+    //    //if ($("#frmLineaProducto").valid()) {
+    //        console.log('btnGuardarLineaProducto');
+    //        GuardarLineaProducto(dataUsr);
 
     //    //} else
     //    //    console.log("ocurrio un error")

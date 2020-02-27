@@ -132,8 +132,10 @@
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\LineaProductoController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
     <Compile Include="DAO\LoginDAO.cs" />
@@ -141,6 +143,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Almacen.cs" />
+    <Compile Include="Models\LineaProducto.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Rol.cs" />
@@ -918,6 +921,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
@@ -1006,6 +1010,8 @@
     <Content Include="Views\Usuarios\_ObtenerUsuarios.cshtml" />
     <Content Include="Views\Proveedores\_ObtenerProveedores.cshtml" />
     <Content Include="Views\Proveedores\Proveedores.cshtml" />
+    <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
+    <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -73,7 +73,8 @@ as
 							@error_line error_line,
 							@mensaje mensaje,
 							l.idLineaProducto,
-							l.descripcion
+							l.descripcion,
+							l.activo
 					from	LineaProducto l
 					where	l.idLineaProducto =	case
 													when @idLineaProducto > 0 then @idLineaProducto

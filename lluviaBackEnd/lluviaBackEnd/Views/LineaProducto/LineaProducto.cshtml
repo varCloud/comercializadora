@@ -1,0 +1,97 @@
+﻿@model lluviaBackEnd.Models.LineaProducto
+@{
+
+    ViewBag.Title = "Linea de Productos";
+    List<lluviaBackEnd.Models.LineaProducto> lstLineaProducto = ViewBag.lstLineaProducto;
+
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+
+}
+
+
+<h2>LineaProductos</h2>
+
+<div id="rowTblLineaProducto">
+    @Html.Partial("_ObtenerLineaProducto")
+</div>
+
+
+
+
+<div class="modal fade bd-example-modal-lg" id="EditarLineaProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalLineaProducto"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("GuardarLineaProducto", "LineaProducto",
+
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitGuardarLineaProducto",
+                    OnComplete = "onCompleteSubmitGuardarLineaProducto",
+                    OnFailure = "onFailureResultGuardarLineaProducto",
+                    OnSuccess = "onSuccessResultGuardarLineaProducto",
+                },
+                new { id = "frmLineaProducto" }))
+                {
+                    @Html.HiddenFor(x => x.idLineaProducto, new { @id = "idLineaProducto" })
+                    @Html.HiddenFor(x => x.activo, new { @id = "activo" })
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>LineaProducto</label>
+                                @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
+                            </div>
+                           
+
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarLineaProducto" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+
+    <script src="~/js/EvtLineaProductos.js"></script>
+}
+
+
