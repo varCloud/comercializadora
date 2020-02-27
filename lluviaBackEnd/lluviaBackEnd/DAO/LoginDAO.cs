@@ -23,7 +23,7 @@ namespace lluviaBackEnd.DAO
             Notificacion<Sesion> n = null;
             try
             {
-                throw new Exception("error");
+                //throw new Exception("error");
                n = new Notificacion<Sesion>();
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {

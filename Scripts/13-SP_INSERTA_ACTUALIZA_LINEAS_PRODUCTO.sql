@@ -75,9 +75,8 @@ as
 						if ( @existeLinea = cast(0 as bit) )
 							begin
 								select @activo = cast(1 as bit)
-								select @idLineaProducto = coalesce( max(idLineaProducto) + 1, 1) from LineaProducto
-								insert into LineaProducto (idLineaProducto,descripcion,activo) 
-								values (@idLineaProducto,@descripcion,@activo) 
+								insert into LineaProducto (descripcion,activo) 
+								values (@descripcion,@activo) 
 								select @mensaje = 'Linea de Prouducto agregada correctamente.'
 							end
 					end

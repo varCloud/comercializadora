@@ -29,7 +29,7 @@ function onFailureResultGuardarLineaProducto() {
 
 function PintarTabla() {
     $.ajax({
-        url: "/LineaProductos/_ObtenerLineaProductos",
+        url: "/LineaProducto/_ObtenerLineaProducto",
         data: { idLineaProducto: 0 },
         method: 'post',
         dataType: 'html',
@@ -38,7 +38,7 @@ function PintarTabla() {
         },
         success: function (data) {
             table.destroy();
-            $('#rowTblLineaProductos').html(data);
+            $('#rowTblLineaProducto').html(data);
             InitDataTable();
         },
         error: function (xhr, status) {
@@ -297,7 +297,7 @@ function ObtenerLineaProducto(idLineaProducto) {
 
     var result = '';
     $.ajax({
-        url: "/LineaProductos/ObtenerLineaProducto",
+        url: "/LineaProducto/ObtenerLineaProducto",
         data: { idLineaProducto: idLineaProducto },
         method: 'post',
         dataType: 'json',
@@ -339,7 +339,7 @@ function VerLineaProducto(idLineaProducto) {
 
     //para abrir el modal
     $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#TituloModalLineaProducto').html("Información del LineaProducto");
+    $('#TituloModalLineaProducto').html("Información del Linea de Producto");
 
 }
 
@@ -355,7 +355,7 @@ function EditarLineaProducto(idLineaProducto) {
 
     //para abrir el modal
     $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
-    $('#TituloModalLineaProducto').html("Editar LineaProducto");
+    $('#TituloModalLineaProducto').html("Editar Linea de Producto");
 
 }
 
@@ -366,12 +366,12 @@ function InitBtnAgregar() {
         $('#btnGuardarLineaProducto').prop('disabled', false);
 
         $('#idLineaProducto').val(0);
-        $('#activo').val(0);
+        $('#activo').val(1);
         $('#descripcion').val('').prop('disabled', false);
 
         //para abrir el modal
         $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
-        $('#TituloModalLineaProducto').html("Agregar LineaProducto");
+        $('#TituloModalLineaProducto').html("Agregar Linea de Producto");
 
     });
 }
@@ -388,7 +388,7 @@ function EliminarLineaProducto(idLineaProducto) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: "/LineaProductos/ActualizarEstatusLineaProducto",
+                    url: "/LineaProducto/ActualizarEstatusLineaProducto",
                     data: { idLineaProducto: idLineaProducto, activo: false },
                     method: 'post',
                     dataType: 'json',
