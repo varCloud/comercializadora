@@ -8,13 +8,14 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
+using lluviaBackEndEntidades;
 
 namespace lluviaBackEnd.Controllers
 {
     public class LoginController : Controller
     {
         public LoginDAO loginDAO;
-        
+
 
 
         // GET: Login
@@ -23,40 +24,31 @@ namespace lluviaBackEnd.Controllers
             return View(new Sesion());
         }
 
-       [HttpPost]
+        [HttpPost]
         public ActionResult ValidarUsuario(Sesion sesion)
         {
             try
             {
                 if (!ReCaptchaPassed(sesion.Token))
                 {
-                    ModelState.AddModelError(string.Empty, "You failed the CAPTCHA.");
+                    ModelState.AddModelError(string.Empty, "Por favor comunicate con el Administrador");
                 }
-
-                loginDAO = new LoginDAO();
-                loginDAO.ValidaUsuario(sesion);
-
-                if ( sesion.usuarioValido )
+                Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
+                if (n.Modelo.usuarioValido)
                 {
-                    //return RedirectToAction("index", "DashBoard");
-                    //return Redirect("~/DashBoard/index");
-                    return Json(sesion, JsonRequestBehavior.AllowGet);
-
-                    //return View("Inicio");
+                    Session["UsuarioActual"] = n.Modelo;
                 }
-
-                //return View("Login", sesion);
+                return Json(n, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                throw /*new FaultException(ex.Message)*/;
+                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
             }
-            return View("Login");        
 
         }
 
 
-        public  bool ReCaptchaPassed(string gRecaptchaResponse)
+        public bool ReCaptchaPassed(string gRecaptchaResponse)
         {
             HttpClient httpClient = new HttpClient();
             var res = httpClient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret=6LfandgUAAAAACyyGmdqpahF8xXL1haLavqH6X2i&response={gRecaptchaResponse}").Result;

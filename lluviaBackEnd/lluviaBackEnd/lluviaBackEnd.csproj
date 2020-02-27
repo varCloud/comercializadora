@@ -133,10 +133,12 @@
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LineaProductoController.cs" />
+    <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
+    <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
     <Compile Include="DAO\LoginDAO.cs" />
     <Compile Include="Global.asax.cs">
@@ -144,6 +146,7 @@
     </Compile>
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\LineaProducto.cs" />
+    <Compile Include="Models\Factura.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Rol.cs" />
@@ -925,6 +928,7 @@
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
+    <Content Include="js\Index.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\bundles\ionicons\fonts\ionicons28b5.eot" />
@@ -1012,6 +1016,7 @@
     <Content Include="Views\Proveedores\Proveedores.cshtml" />
     <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
     <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
+    <Content Include="Views\Facturas\Facturas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1029,6 +1034,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lluviaBackEndEntidades\lluviaBackEndEntidades.csproj">
+      <Project>{94d36230-e4ee-4241-8039-12be6fab542a}</Project>
+      <Name>lluviaBackEndEntidades</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
