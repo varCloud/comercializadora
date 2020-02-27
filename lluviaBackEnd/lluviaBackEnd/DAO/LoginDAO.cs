@@ -8,6 +8,7 @@ using lluviaBackEnd;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using lluviaBackEndEntidades;
 
 namespace lluviaBackEnd.DAO
 {
@@ -17,11 +18,13 @@ namespace lluviaBackEnd.DAO
         private DBManager db = null;
 
 
-        public Sesion ValidaUsuario(Sesion sesion)
+        public Notificacion<Sesion> ValidaUsuario(Sesion sesion)
         {
-            //string passwordEncriptado = EncrypSHA1.EnciptaSHA1(usuario.noUsuario + "", usuario.password).ToString().Substring(0, 30).ToUpper();
+            Notificacion<Sesion> n = null;
             try
             {
+                throw new Exception("error");
+               n = new Notificacion<Sesion>();
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
@@ -33,20 +36,24 @@ namespace lluviaBackEnd.DAO
                     {
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
                         {
-                            //if (db.DataReader.NextResult())
-                            //{
-                            //    while (db.DataReader.Read())
-                            //    {
-                                    sesion.idUsuario = Convert.ToInt32(db.DataReader["idUsuario"]);
-                                    sesion.idRol = Convert.ToInt32(db.DataReader["idRol"]);
-                                    sesion.nombre = db.DataReader["nombre"].ToString();
-                                    sesion.telefono = db.DataReader["telefono"].ToString();
-                                    sesion.contrasena = db.DataReader["contrasena"].ToString();
-                                    sesion.idAlmacen = Convert.ToInt32(db.DataReader["idAlmacen"]);
-                                    sesion.idSucursal = Convert.ToInt32(db.DataReader["idSucursal"]);
-                                    sesion.usuarioValido = true;
-                            //    }
-                            //}
+                            sesion.idUsuario = Convert.ToInt32(db.DataReader["idUsuario"]);
+                            sesion.idRol = Convert.ToInt32(db.DataReader["idRol"]);
+                            sesion.nombre = db.DataReader["nombre"].ToString();
+                            sesion.telefono = db.DataReader["telefono"].ToString();
+                            sesion.contrasena = db.DataReader["contrasena"].ToString();
+                            sesion.idAlmacen = Convert.ToInt32(db.DataReader["idAlmacen"]);
+                            sesion.idSucursal = Convert.ToInt32(db.DataReader["idSucursal"]);
+                            sesion.usuarioValido = true;
+                            n.Estatus = 200;
+                            n.Mensaje = "OK";
+                            n.Modelo = sesion;
+
+                        }
+                        else
+                        {
+                            n.Estatus = -1;
+                            n.Mensaje = "Datos incorrectos";
+                            n.Modelo = sesion;
                         }
                     }
                 }
@@ -55,7 +62,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
-            return sesion;
+            return n;
         }
 
 

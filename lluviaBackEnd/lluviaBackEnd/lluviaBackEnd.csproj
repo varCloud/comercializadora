@@ -924,6 +924,7 @@
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
+    <Content Include="js\Index.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\bundles\ionicons\fonts\ionicons28b5.eot" />
@@ -1027,6 +1028,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lluviaBackEndEntidades\lluviaBackEndEntidades.csproj">
+      <Project>{94d36230-e4ee-4241-8039-12be6fab542a}</Project>
+      <Name>lluviaBackEndEntidades</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
