@@ -8,7 +8,7 @@ using lluviaBackEnd;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using lluviaBackEndEntidades;
+
 
 namespace lluviaBackEnd.DAO
 {
@@ -23,7 +23,7 @@ namespace lluviaBackEnd.DAO
             Notificacion<Sesion> n = null;
             try
             {
-                throw new Exception("error");
+              
                n = new Notificacion<Sesion>();
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {

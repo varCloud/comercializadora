@@ -15,4 +15,4 @@ App
 ------------------------
 IP del servidor	ftp.site4now.net
 Nombre de Usuario:crmlluvia-001
-Contraseña: Abcde12345
+Contraseña: T12345678t

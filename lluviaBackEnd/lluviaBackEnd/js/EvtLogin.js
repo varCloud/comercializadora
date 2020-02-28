@@ -22,16 +22,5 @@ function onFailureResult() {
 
 $(document).ready(function () {
 
-    $('#Toast').click(function (e) {
-        //MuestraToast("error", "error");
-        iziToast.warning({
-            title: 'Hello, world!',
-            message: 'This awesome plugin is made by iziToast',
-            position: 'topRight',
-            timeout: 95000,
-            //icon: 'fa fa-chrome'
-
-        });
-    });
 
 });

@@ -37,11 +37,32 @@ function MuestraToast(tipoNotificacion, mensaje) {
 
 }
 
+function initDataTable(nombreTabla) {
 
-$("#toastr-4").click(function () {
-    iziToast.error({
-        title: 'Hello, world!',
-        message: 'This awesome plugin is made by iziToast',
-        position: 'topRight'
+    return $('#' + nombreTabla).DataTable({
+        "language": {
+            "lengthMenu": "Muestra _MENU_ registros por pagina",
+            "zeroRecords": "No existen registros",
+            "info": "Pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No existe informacion para mostrar",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            },
+        },
+        "dom": 'frtip',
+
+
+        "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
     });
+
+}
+
+
+$(document).ready(function () {
+    console.log("index readt");
 });
