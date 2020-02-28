@@ -3,7 +3,7 @@
     ViewBag.Title = "Login";
     Layout = null;
 }
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
 <!-- Mirrored from radixtouch.in/templates/admin/zivi/source/light/auth-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 12 Feb 2020 04:17:49 GMT -->
 <head>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align:center">
-                                    <img alt="image" src="~/assets/img/logo_lluvia.png" style="width: 200px;height: 200px;"  class="user-img-radious-style">
+                                    <img alt="image" src="~/assets/img/logo_lluvia.png" style="width: 200px;height: 200px;" class="user-img-radious-style">
                                 </div>
                                 @*<form method="POST" action="#" class="needs-validation" novalidate="">*@
                                 @using (Ajax.BeginForm("ValidarUsuario", "Login",
@@ -88,26 +88,24 @@
             </div>
         </section>
     </div>
+    <script>
+        var element;
+    </script>
 
-    @Scripts.Render("~/assets/js/app.min.js")
-    @Scripts.Render("~/assets/bundles/izitoast/js/iziToast.min.js")
 
-    @Scripts.Render("~/Scripts/jquery.validate.js")
-    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
-    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
-    @Scripts.Render("~/assets/js/scripts.js")
+    <script src="~/assets/js/app.min.js"></script>
+    <script src="~/assets/bundles/izitoast/js/iziToast.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/js/scripts.js"></script>
 
 
 
 
     <script src="https://www.google.com/recaptcha/api.js?render=6LfandgUAAAAAC71dmEsGltVDobKPEYFvC_ocuP_"></script>
     <script>
-        grecaptcha.ready(function () {
-            grecaptcha.execute('6LfandgUAAAAAC71dmEsGltVDobKPEYFvC_ocuP_', { action: 'homepage' }).then(function (token) {
-                $("#Token").val(token);
-                console.log(token);
-            });
-        });
+
     </script>
     @Scripts.Render("~/js/Index.js")
     @Scripts.Render("~/js/EvtLogin.js")

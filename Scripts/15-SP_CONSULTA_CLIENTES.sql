@@ -1,9 +1,9 @@
 use DB_A552FA_comercializadora
 go
 
--- se crea procedimiento SP_CONSULTA_LINEAS_PRODUCTO
-if exists (select * from sysobjects where name like 'SP_CONSULTA_LINEAS_PRODUCTO' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
-	drop proc SP_CONSULTA_LINEAS_PRODUCTO
+-- se crea procedimiento SP_CONSULTA_CLIENTES
+if exists (select * from sysobjects where name like 'SP_CONSULTA_CLIENTES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+	drop proc SP_CONSULTA_CLIENTES
 go
 
 /*
@@ -11,14 +11,14 @@ go
 Autor			Ernesto Aguilar
 UsuarioRed		auhl373453
 Fecha			2020/02/17
-Objetivo		Consulta los diferentes lineas del producto del sistema
+Objetivo		Consulta los diferentes clientes del sistema
 status			200 = ok
 				-1	= error
 */
 
-create proc SP_CONSULTA_LINEAS_PRODUCTO
+create proc SP_CONSULTA_CLIENTES
 
-	@idLineaProducto		int
+	@idCliente				int
 
 as
 
@@ -38,9 +38,9 @@ as
 
 			begin -- principal
 				
-				if not exists ( select 1 from LineaProducto )
+				if not exists ( select 1 from clientes )
 					begin
-						select @mensaje = 'No existen Lineas de Productos registradas.'
+						select @mensaje = 'No existen clientes registrados.'
 						raiserror (@mensaje, 11, -1)
 					end
 				else
@@ -72,15 +72,28 @@ as
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							l.idLineaProducto,
-							l.descripcion,
-							l.activo
-					from	LineaProducto l
-					where	l.idLineaProducto =	case
-													when @idLineaProducto > 0 then @idLineaProducto
-													else l.idLineaProducto
-												end
-						and	l.activo = cast(1 as bit)
+							c.idCliente,
+							c.nombres,
+							c.apellidoPaterno,
+							c.apellidoMaterno,
+							c.telefono,
+							c.correo,
+							c.rfc,
+							c.calle,
+							c.numeroExterior,
+							c.colonia,
+							c.municipio,
+							c.cp,
+							c.estado,
+							c.fechaAlta,
+							c.activo,
+							c.idTipoCliente
+					from	Clientes c
+					where	c.idCliente	 =	case
+												when @idCliente > 0 then @idCliente
+												else c.idCliente
+											end
+						and	c.activo = cast(1 as bit)
 				end
 			else
 				begin
@@ -98,7 +111,7 @@ as
 	end  -- principal
 go
 
-grant exec on SP_CONSULTA_LINEAS_PRODUCTO to public
+grant exec on SP_CONSULTA_CLIENTES to public
 go
 
 

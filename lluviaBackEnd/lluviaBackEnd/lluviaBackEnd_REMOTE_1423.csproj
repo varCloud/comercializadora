@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>lluviaBackEnd</RootNamespace>
     <AssemblyName>lluviaBackEnd</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -25,7 +25,6 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,21 +48,20 @@
     <Reference Include="AccesoDatos">
       <HintPath>DLL\AccesoDatos.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -107,7 +105,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -132,7 +129,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -140,7 +136,6 @@
     <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
-    <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
@@ -150,15 +145,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Almacen.cs" />
-    <Compile Include="Models\Clientes.cs" />
-    <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
     <Compile Include="Models\Factura.cs" />
-    <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Rol.cs" />
-    <Compile Include="Models\TipoCliente.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Sesion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -854,8 +845,6 @@
     <Content Include="assets\img\image-gallery\thumb\thumb-9.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\logo.png" />
-    <Content Include="assets\img\logo_lluvia.png" />
-    <Content Include="assets\img\logo_lluvia_64.png" />
     <Content Include="assets\img\posts\post11.png" />
     <Content Include="assets\img\posts\post12.png" />
     <Content Include="assets\img\posts\post13.png" />
@@ -935,7 +924,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
@@ -996,8 +984,6 @@
     <Content Include="assets\fonts\webfonts\fa-solid-900.woff" />
     <Content Include="assets\fonts\webfonts\fa-solid-900.woff2" />
     <Content Include="assets\fonts\webfonts\fa-solid-900d41d.eot" />
-    <Content Include="app.config" />
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -1011,9 +997,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1033,8 +1017,6 @@
     <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
     <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
     <Content Include="Views\Facturas\Facturas.cshtml" />
-    <Content Include="Views\Clientes\Clientes.cshtml" />
-    <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1053,12 +1035,15 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lluviaBackEndEntidades\lluviaBackEndEntidades.csproj">
+      <Project>{94d36230-e4ee-4241-8039-12be6fab542a}</Project>
+      <Name>lluviaBackEndEntidades</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -1080,9 +1065,6 @@
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-          <servers defaultServer="SelfHostServer">
-            <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:56199/" workingDir="" />
-          </servers>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

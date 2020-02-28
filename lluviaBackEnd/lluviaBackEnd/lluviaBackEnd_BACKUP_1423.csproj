@@ -140,8 +140,11 @@
     <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+<<<<<<< HEAD
     <Compile Include="DAO\ClienteDAO.cs" />
+=======
     <Compile Include="DAO\LineaProductoDAO.cs" />
+>>>>>>> 8bd30e5b30f31e024798ff76acaf593461dcd722
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
@@ -150,9 +153,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Almacen.cs" />
+<<<<<<< HEAD
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
+=======
     <Compile Include="Models\LineaProducto.cs" />
+>>>>>>> 8bd30e5b30f31e024798ff76acaf593461dcd722
     <Compile Include="Models\Factura.cs" />
     <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Models\Result.cs" />
@@ -935,8 +941,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+<<<<<<< HEAD
     <Content Include="js\EvtClientes.js" />
+=======
     <Content Include="js\EvtLineaProductos.js" />
+>>>>>>> 8bd30e5b30f31e024798ff76acaf593461dcd722
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />

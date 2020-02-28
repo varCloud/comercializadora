@@ -103,11 +103,8 @@
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
                             <ul class="dropdown-menu">
-                                <li class="@(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "") nav-link">
-                                    <a href="@Url.Action("Productos", "Productos")">Productos</a>
-                                </li>
-                                <li><a class="nav-link" href="#">Productos</a></li>
-                                <li><a class="nav-link" href="#">Linea de Productos</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
                             </ul>
                         </li>
 

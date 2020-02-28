@@ -136,12 +136,10 @@
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\LineaProductoController.cs" />
     <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
-    <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
@@ -152,7 +150,6 @@
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
-    <Compile Include="Models\LineaProducto.cs" />
     <Compile Include="Models\Factura.cs" />
     <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Models\Result.cs" />
@@ -936,7 +933,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtClientes.js" />
-    <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
@@ -1030,8 +1026,6 @@
     <Content Include="Views\Usuarios\_ObtenerUsuarios.cshtml" />
     <Content Include="Views\Proveedores\_ObtenerProveedores.cshtml" />
     <Content Include="Views\Proveedores\Proveedores.cshtml" />
-    <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
-    <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
     <Content Include="Views\Facturas\Facturas.cshtml" />
     <Content Include="Views\Clientes\Clientes.cshtml" />
     <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />

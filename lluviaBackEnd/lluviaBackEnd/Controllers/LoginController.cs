@@ -32,6 +32,7 @@ namespace lluviaBackEnd.Controllers
                 if (!ReCaptchaPassed(sesion.Token))
                 {
                     ModelState.AddModelError(string.Empty, "Por favor comunicate con el Administrador");
+                    return Json( new Notificacion<object>() {Estatus = -1 , Mensaje = "Error al validar el captcha" }, JsonRequestBehavior.AllowGet);
                 }
                 Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
                 if (n.Modelo.usuarioValido)
