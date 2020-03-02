@@ -119,5 +119,63 @@ namespace lluviaBackEnd.DAO
             return result;
         }
 
+
+        public List<SelectListItem> ObtenerLineaProductos()
+        {
+            List<SelectListItem> lstLineasDeProductos = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idLineaProducto", 0);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_LINEAS_PRODUCTO]");
+                    while (db.DataReader.Read())
+                    {
+                        lstLineasDeProductos.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["descripcion"].ToString(),
+                                Value = db.DataReader["idLineaProducto"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstLineasDeProductos;
+        }
+
+
+        public List<SelectListItem> ObtenerUnidadesMedidas()
+        {
+            List<SelectListItem> lstUnidadMedida = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_UNIDADES_MEDIDA]");
+                    while (db.DataReader.Read())
+                    {
+                        lstUnidadMedida.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["descripcion"].ToString(),
+                                Value = db.DataReader["idUnidadMedida"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstUnidadMedida;
+        }
+
     }
 }

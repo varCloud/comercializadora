@@ -1,0 +1,210 @@
+﻿@model lluviaBackEnd.Models.Producto
+@{
+    ViewBag.Title = "Productos";
+    List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
+    List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
+
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+
+    @*<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />*@
+
+}
+@*<!DOCTYPE html>*@
+
+
+<h2>Productos</h2>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Buscar Productos</h4>
+                <div class="card-header-action">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                </div>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("BuscarProductos", "Productos",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitProductos",
+                        OnComplete = "onCompleteSubmitProductos",
+                        OnFailure = "onFailureResultProductos",
+                        OnSuccess = "onSuccessResultProductos",
+                    },
+                    new { id = "frmBuscarProductos" }))
+                    {
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Descripción</label>
+                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Linea de Producto</label>
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProductoBusqueda", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Fecha</label>
+                                    @Html.TextBoxFor(x => x.fechaAlta, null, new { @class = "form-control", @id = "fechaAltaBusqueda" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Range Picker</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="RangePicker" class="form-control daterange-cus">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Artículo</label>
+                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="submit" id="btnBuscarProductos" class="btn btn-success">Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="rowProductos">
+    @Html.Partial("_ObtenerProductos", new lluviaBackEnd.Models.Producto() { idProducto = 0 })
+</div>
+
+
+
+
+<div class="modal fade bd-example-modal-lg" id="EditarProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalProducto"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("GuardarProductos", "Productos",
+
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitGuardarProducto",
+                    OnComplete = "onCompleteSubmitGuardarProducto",
+                    OnFailure = "onFailureResultGuardarProducto",
+                    OnSuccess = "onSuccessResultGuardarProducto",
+                },
+                new { id = "frmProductos" }))
+                {
+                    @Html.HiddenFor(x => x.idProducto, new { @id = "idProducto" })
+                    @Html.HiddenFor(x => x.activo, new { @id = "activo" })
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                                @*@Html.ValidationMessageFor(x => x.usuario, null, new { @class = "text-danger was" })*@
+                            </div>
+                            <div class="form-group">
+                                <label>Unidad de Medida</label>
+                                @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control", data_val = "true" })
+
+                                @*@Html.TextBoxFor(x => x.idUnidadMedida, null, new { @class = "form-control", @id = "idUnidadMedida" })*@
+                                @*@Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })*@
+                            </div>
+
+                            <div class="form-group">
+                                <label>Linea de Producto</label>
+                                @*@Html.TextBoxFor(x => x.idLineaProducto, null, new { @class = "form-control", @id = "idLineaProducto" })*@
+                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProducto", @class = "form-control", data_val = "true" })
+
+                                @*@Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })*@
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Cantidad Unidad de Medida</label>
+                                @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
+                                @*@Html.DropDownListFor(x => x.cantidadUnidadMedida, lstAlmacenes, new { id = "idAlmacenGuardar", @class = "form-control", data_val = "true" })*@
+                                @*@Html.ValidationMessageFor(x => x.idAlmacenGuardar, null, new { @class = "text-danger was" })*@
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Artículo</label>
+                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                                @*@Html.ValidationMessageFor(x => x.apellidoPaterno, null, new { @class = "text-danger was" })*@
+                            </div>
+
+                            <div class="form-group">
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarProducto" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    @*<script src="~/assets/js/page/forms-advanced-forms.js"></script>*@
+
+
+    @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
+
+    <script src="~/js/EvtProductos.js"></script>
+
+}

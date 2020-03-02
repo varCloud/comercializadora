@@ -138,10 +138,12 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LineaProductoController.cs" />
     <Compile Include="Controllers\FacturasController.cs" />
+    <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
+    <Compile Include="DAO\ProductosDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="Models\LineaProducto.cs" />
     <Compile Include="Models\Factura.cs" />
     <Compile Include="Models\Notificacion.cs" />
+    <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Rol.cs" />
@@ -938,6 +941,7 @@
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtProveedores.js" />
+    <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
     <Content Include="js\Index.js" />
@@ -1035,6 +1039,9 @@
     <Content Include="Views\Facturas\Facturas.cshtml" />
     <Content Include="Views\Clientes\Clientes.cshtml" />
     <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />
+    <Content Include="Views\Productos\Productos.cshtml" />
+    <Content Include="Views\Productos\_ObtenerProductos.cshtml" />
+    <Content Include="Views\Productos\_BuscarProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
