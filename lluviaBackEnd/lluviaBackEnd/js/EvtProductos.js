@@ -190,6 +190,7 @@ function VerProducto(idProducto) {
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
     $('#articulo').val(data.articulo).prop('disabled', true);
+    obtenerCodigos();
     //para abrir el modal
     $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalProducto').html("Información del Producto");
@@ -208,6 +209,7 @@ function EditarProducto(idProducto) {
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
     $('#articulo').val(data.articulo).prop('disabled', false);
+    obtenerCodigos();
     //para abrir el modal
     $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalUsuario').html("Editar Producto");
@@ -278,36 +280,60 @@ function InitRangePicker() {
 
 }
 
+function obtenerCodigos() {
+    console.log($('#articulo').val());
+    if ($('#articulo').val() !== '') {
+        $.ajax({
+            url: "/Productos/ObtenerCodigos",
+            data: { cadena: $('#articulo').val() },
+            method: 'post',
+            dataType: 'json',
+            async: true,
+            beforeSend: function (xhr) {
+                console.log("Antes ")
+            },
+            success: function (data) {
+                console.log(data);
+                $("#barra").attr('src', 'data:image/png;base64,' + data.barra);
+                $("#qr").attr('src', 'data:image/png;base64,' + data.qr);
+            },
+            error: function (xhr, status) {
+                console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });
+    }
+}
+
 $(document).ready(function () {
 
     InitDataTable();
     InitRangePicker();
     $('#idLineaProductoBusqueda').val('');
 
-    $('#articulo').keyup(function () {
-        console.log($('#articulo').val());
-        if ($('#articulo').val() !=='') {
-            $.ajax({
-                url: "/Productos/ObtenerCodigos",
-                data: { cadena: $('#articulo').val() },
-                method: 'post',
-                dataType: 'json',
-                async: true,
-                beforeSend: function (xhr) {
-                    console.log("Antes ")
-                },
-                success: function (data) {
-                    console.log(data);
-                    $("#barra").attr('src', 'data:image/png;base64,' + data.barra);
-                    $("#qr").attr('src', 'data:image/png;base64,' + data.qr);
-                },
-                error: function (xhr, status) {
-                    console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
-                    console.log(xhr);
-                    console.log(status);
-                }
-            });
+    document.getElementById('articulo').onchange = function () {
+        obtenerCodigos();
+    };
 
+    $('#articulo').keyup(function () {
+        obtenerCodigos();
+    });
+
+    $('#descripcion').keyup(function () {
+        if ( ($('#idLineaProducto').val()) !== null )
+        {
+            $('#articulo').val($("#idLineaProducto option:selected").text().replace('Linea ', '').substring(0, 2).concat('-').concat($("#descripcion").val().substring(0, 3)).toUpperCase());
+            obtenerCodigos();
         }
-   });
+    });
+
+    $('#idLineaProducto').change(function () {
+        if (($('#descripcion').val()) !== '') {
+            $('#articulo').val($("#idLineaProducto option:selected").text().replace('Linea ', '').substring(0, 2).concat('-').concat($("#descripcion").val().substring(0, 3)).toUpperCase());
+            obtenerCodigos();
+        }
+    });
+
+
 });

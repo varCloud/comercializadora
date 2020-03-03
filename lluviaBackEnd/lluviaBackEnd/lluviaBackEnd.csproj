@@ -1025,6 +1025,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Productos\_BuscarProductos.cshtml" />
+    <Content Include="Views\Productos\_ObtenerProductos.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1050,13 +1052,14 @@
     <Content Include="Views\Clientes\Clientes.cshtml" />
     <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />
     <Content Include="Views\Productos\Productos.cshtml" />
-    <Content Include="Views\Productos\_ObtenerProductos.cshtml" />
-    <Content Include="Views\Productos\_BuscarProductos.cshtml" />
     <Content Include="Views\Productos\_SinResultados.cshtml" />
-    <Content Include="Views\Reportes\ReporteProductos.cshtml" />
     <Content Include="Views\Reportes\_SinResultados.cshtml" />
-    <Content Include="Views\Reportes\_BuscarReporteProductos.cshtml" />
-    <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
+    <Content Include="Views\Reportes\Inventario.cshtml" />
+    <Content Include="Views\Reportes\Compras.cshtml" />
+    <Content Include="Views\Reportes\Ventas.cshtml" />
+    <Content Include="Views\Reportes\_Inventario.cshtml" />
+    <Content Include="Views\Reportes\_Compras.cshtml" />
+    <Content Include="Views\Reportes\_Ventas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

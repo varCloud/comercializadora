@@ -10,83 +10,9 @@ namespace lluviaBackEnd.Controllers
 {
     public class ReportesController : Controller
     {
-        //REPORTE PRODUCTOS
-
-        public ActionResult ReporteProductos()
-        {
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            ViewBag.lstProductos = notificacion.Modelo;
-            return View();
-        }
-
-        public ActionResult ObtenerReporteProductos(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                Producto p = new Producto();
-                p = notificacion.Modelo[0];
-                return Json(p, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public ActionResult _ObtenerReporteProductos(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                ViewBag.lstProductos = notificacion.Modelo;
-                return PartialView("_ObtenerProductos");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public ActionResult BuscarReporteProductos(Producto producto)
-        {
-            try
-            {
-                
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-
-                if ( notificacion.Modelo != null )
-                {
-                    ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
-                }
-                else
-                {
-                    ViewBag.titulo = "Mensaje: ";
-                    ViewBag.mensaje = notificacion.Mensaje;
-                    return PartialView("_SinResultados");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-      
-
-
-
         //REPORTE INVENTARIO
 
-        public ActionResult ReporteInventario()
+        public ActionResult Inventario()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
@@ -96,7 +22,7 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult ObtenerReporteInventario(Producto producto)
+        public ActionResult ObtenerInventario(Producto producto)
         {
             try
             {
@@ -112,7 +38,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult _ObtenerReporteInventario(Producto producto)
+        public ActionResult _ObtenerInventario(Producto producto)
         {
             try
             {
@@ -127,7 +53,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult BuscarReporteInventario(Producto producto)
+        public ActionResult BuscarInventario(Producto producto)
         {
             try
             {
@@ -138,7 +64,7 @@ namespace lluviaBackEnd.Controllers
                 if (notificacion.Modelo != null)
                 {
                     ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
+                    return PartialView("_Inventario");
                 }
                 else
                 {
@@ -157,7 +83,7 @@ namespace lluviaBackEnd.Controllers
 
         //REPORTE COMPRAS
 
-        public ActionResult ReporteCompras()
+        public ActionResult Compras()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
@@ -167,7 +93,7 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult ObtenerReporteCompras(Producto producto)
+        public ActionResult ObtenerCompras(Producto producto)
         {
             try
             {
@@ -183,7 +109,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult _ObtenerReporteCompras(Producto producto)
+        public ActionResult _ObtenerCompras(Producto producto)
         {
             try
             {
@@ -198,7 +124,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult BuscarReporteCompras(Producto producto)
+        public ActionResult BuscarCompras(Producto producto)
         {
             try
             {
@@ -209,7 +135,7 @@ namespace lluviaBackEnd.Controllers
                 if (notificacion.Modelo != null)
                 {
                     ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
+                    return PartialView("_Compras");
                 }
                 else
                 {
@@ -228,7 +154,7 @@ namespace lluviaBackEnd.Controllers
 
         //REPORTE VENTAS
 
-        public ActionResult ReporteVentas()
+        public ActionResult Ventas()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
@@ -238,7 +164,7 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult ObtenerReporteVentas(Producto producto)
+        public ActionResult ObtenerVentas(Producto producto)
         {
             try
             {
@@ -254,7 +180,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult _ObtenerReporteVentas(Producto producto)
+        public ActionResult _ObtenerVentas(Producto producto)
         {
             try
             {
@@ -269,7 +195,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult BuscarReporteVentas(Producto producto)
+        public ActionResult BuscarVentas(Producto producto)
         {
             try
             {
@@ -280,7 +206,7 @@ namespace lluviaBackEnd.Controllers
                 if (notificacion.Modelo != null)
                 {
                     ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
+                    return PartialView("_Ventas");
                 }
                 else
                 {

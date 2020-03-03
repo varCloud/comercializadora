@@ -46,19 +46,19 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Descripción</label>
-                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda" })
+                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Linea de Producto</label>
-                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProductoBusqueda" })
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Artículo</label>
-                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda" })
+                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda", data_val = "false" })
                                 </div>
                             </div>
                         </div>

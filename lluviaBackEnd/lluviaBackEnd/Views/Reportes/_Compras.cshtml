@@ -1,0 +1,55 @@
+﻿@model lluviaBackEnd.Models.Producto
+@{
+    List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+
+}
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaProductos">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        Id
+                                    </th>
+                                    <th>Descripción</th>
+                                    <th>Linea de Producto</th>
+                                    <th>Artículo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstProductos)
+                                {
+                                    <tr>
+                                        <td>@item.idProducto</td>
+                                        <td>@item.descripcion</td>
+                                        <td>@item.DescripcionLinea</td>
+                                        <td>@item.articulo</td>
+                                        <td>
+                                            <div class="buttons">
+                                                <a href="javascript:VerProducto(@item.idProducto);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+                                                <a href="javascript:EditarProducto(@item.idProducto);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="javascript:EliminarProducto(@item.idProducto);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
