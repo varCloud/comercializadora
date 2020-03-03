@@ -284,4 +284,30 @@ $(document).ready(function () {
     InitRangePicker();
     $('#idLineaProductoBusqueda').val('');
 
+    $('#articulo').keyup(function () {
+        console.log($('#articulo').val());
+        if ($('#articulo').val() !=='') {
+            $.ajax({
+                url: "/Productos/ObtenerCodigos",
+                data: { cadena: $('#articulo').val() },
+                method: 'post',
+                dataType: 'json',
+                async: true,
+                beforeSend: function (xhr) {
+                    console.log("Antes ")
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#barra").attr('src', 'data:image/png;base64,' + data.barra);
+                    $("#qr").attr('src', 'data:image/png;base64,' + data.qr);
+                },
+                error: function (xhr, status) {
+                    console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+                    console.log(xhr);
+                    console.log(status);
+                }
+            });
+
+        }
+   });
 });

@@ -1,4 +1,86 @@
 ﻿var tablaClientes;
+
+function onBeginSubmitGuardarCliente() {
+}
+
+function onCompleteSubmitGuardarCliente() {
+}
+
+function onFailureResultGuardarCliente() {
+}
+
+function onSuccessResultGuardarCliente(data) {
+    console.log(data);
+    if (data.Estatus === 200) {
+        MuestraToast("success", data.Mensaje)
+
+    } else {
+        MuestraToast("error", data.Mensaje)
+    }
+
+}
+function ObtenerClientes() {
+    $.ajax({
+        url: rootUrl("/Clientes/_ObtenerClientes"),
+        data: { idCliente: 0 },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            tablaClientes.destroy();
+            $('#rowTblClientes').html(data);
+            InitDataTable();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
+
+function EliminarCliente(idCliente) {
+
+    swal({
+        title: 'Mensaje',
+        text: 'Estas seguro que deseas eliminar este cliente?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: rootUrl("/Clientes/EliminarCliente"),
+                    data: { idCliente: idCliente },
+                    method: 'post',
+                    dataType: 'json',
+                    async: true,
+                    beforeSend: function (xhr) {
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+                        ObtenerClientes();
+                    },
+                    error: function (xhr, status) {
+                        console.log('Disculpe, existió un problema');
+                        console.log(xhr);
+                        console.log(status);
+                    }
+                });
+
+            } else {
+                console.log("cancelar");
+            }
+        });
+
+
+
+}
+
 function InitTableClientes() {
     var NombreTabla = "tblClientes";
     tablaClientes = initDataTable(NombreTabla)
