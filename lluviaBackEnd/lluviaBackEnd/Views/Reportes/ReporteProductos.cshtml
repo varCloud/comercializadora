@@ -1,6 +1,6 @@
 ﻿@model lluviaBackEnd.Models.Producto
 @{
-    ViewBag.Title = "Productos";
+    ViewBag.Title = "Reporte Productos";
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
     List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
@@ -32,15 +32,15 @@
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
                     @using (Ajax.BeginForm("BuscarProductos", "Productos",
-                    new AjaxOptions
-                    {
-                        HttpMethod = "Post",
-                        OnBegin = "onBeginSubmitProductos",
-                        OnComplete = "onCompleteSubmitProductos",
-                        OnFailure = "onFailureResultProductos",
-                        OnSuccess = "onSuccessResultProductos",
-                    },
-                    new { id = "frmBuscarProductos" }))
+            new AjaxOptions
+            {
+                HttpMethod = "Post",
+                OnBegin = "onBeginSubmitProductos",
+                OnComplete = "onCompleteSubmitProductos",
+                OnFailure = "onFailureResultProductos",
+                OnSuccess = "onSuccessResultProductos",
+            },
+            new { id = "frmBuscarProductos" }))
                     {
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                      
+
                         <div class="text-right" style="margin-top:15px;">
                             <button type="submit" id="btnBuscarProductos" class="btn btn-success">Buscar</button>
                         </div>
@@ -75,7 +75,7 @@
 
 
 <div id="rowProductos">
-    @Html.Partial("_ObtenerProductos", new lluviaBackEnd.Models.Producto() { idProducto = 0 })
+    @Html.Partial("_ObtenerReporteProductos", new lluviaBackEnd.Models.Producto() { idProducto = 0 })
 </div>
 
 
@@ -93,15 +93,15 @@
             <div class="modal-body">
                 @using (Ajax.BeginForm("GuardarProductos", "Productos",
 
-                new AjaxOptions
-                {
-                    HttpMethod = "Post",
-                    OnBegin = "onBeginSubmitGuardarProducto",
-                    OnComplete = "onCompleteSubmitGuardarProducto",
-                    OnFailure = "onFailureResultGuardarProducto",
-                    OnSuccess = "onSuccessResultGuardarProducto",
-                },
-                new { id = "frmProductos" }))
+            new AjaxOptions
+            {
+                HttpMethod = "Post",
+                OnBegin = "onBeginSubmitGuardarProducto",
+                OnComplete = "onCompleteSubmitGuardarProducto",
+                OnFailure = "onFailureResultGuardarProducto",
+                OnSuccess = "onSuccessResultGuardarProducto",
+            },
+            new { id = "frmProductos" }))
                 {
                     @Html.HiddenFor(x => x.idProducto, new { @id = "idProducto" })
                     @Html.HiddenFor(x => x.activo, new { @id = "activo" })
@@ -185,8 +185,8 @@
 
 
     @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
 
-    <script src="~/js/EvtProductos.js"></script>
+    <script src="~/js/EvtReportesProductos.js"></script>
 
 }

@@ -138,11 +138,13 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LineaProductoController.cs" />
     <Compile Include="Controllers\FacturasController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
+    <Compile Include="DAO\ReportesDAO.cs" />
     <Compile Include="DAO\ProductosDAO.cs" />
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
@@ -940,6 +942,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtLineaProductos.js" />
+    <Content Include="js\EvtReportesProductos.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />
@@ -1042,6 +1045,11 @@
     <Content Include="Views\Productos\Productos.cshtml" />
     <Content Include="Views\Productos\_ObtenerProductos.cshtml" />
     <Content Include="Views\Productos\_BuscarProductos.cshtml" />
+    <Content Include="Views\Productos\_SinResultados.cshtml" />
+    <Content Include="Views\Reportes\ReporteProductos.cshtml" />
+    <Content Include="Views\Reportes\_SinResultados.cshtml" />
+    <Content Include="Views\Reportes\_BuscarReporteProductos.cshtml" />
+    <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1081,13 +1089,13 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56196</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56199/</IISUrl>
+          <IISUrl>http://localhost:56196/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-          <servers defaultServer="SelfHostServer">
+          <servers defaultServer="">
             <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:56199/" workingDir="" />
           </servers>
         </WebProjectProperties>

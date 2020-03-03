@@ -15,7 +15,7 @@ namespace lluviaBackEnd.Controllers
         public ActionResult Productos()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0, fechaAlta = DateTime.Now });
+            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
             ViewBag.lstProductos = notificacion.Modelo;
@@ -43,7 +43,6 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                //notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0, fechaAlta = DateTime.Now });
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
                 ViewBag.lstProductos = notificacion.Modelo;
                 return PartialView("_ObtenerProductos");
@@ -58,21 +57,21 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                //notificacion = new ProductosDAO().ObtenerProductos(producto);
-                //Producto p = new Producto();
-                //p = notificacion.Modelo[0];
-                //return Json(p, JsonRequestBehavior.AllowGet);
-
-
+                
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
-                ViewBag.lstProductos = notificacion.Modelo;
 
-                //return PartialView("_BuscarProductos", notificacion);
-                return PartialView("_BuscarProductos");
-
-                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+                if ( notificacion.Modelo != null )
+                {
+                    ViewBag.lstProductos = notificacion.Modelo;
+                    return PartialView("_BuscarProductos");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
 
             }
             catch (Exception ex)
@@ -90,7 +89,6 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<Producto> result = new Notificacion<Producto>();
                 result = new ProductosDAO().GuardarProducto(producto);
                 return Json(result, JsonRequestBehavior.AllowGet);
-
             }
             catch (Exception ex)
             {

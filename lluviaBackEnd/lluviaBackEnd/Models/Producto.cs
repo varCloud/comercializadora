@@ -27,7 +27,6 @@ namespace lluviaBackEnd.Models
         public string DescripcionLinea { get; set; }
         public int cantidadUnidadMedida { get; set; }
         public string codigoBarras { get; set; }
-        public DateTime fechaAlta { get; set; }
         public Boolean activo { get; set; }
         public string articulo { get; set; }
         public string[] idLineaProductoConsulta { get; set; }

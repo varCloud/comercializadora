@@ -118,7 +118,7 @@
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="#">Productos</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Reporte Productos" ? "dropdown active" : "")" href="@Url.Action("ReporteProductos", "Reportes")">Productos</a></li>
                                 <li><a class="nav-link" href="#">Inventario</a></li>
                                 <li><a class="nav-link" href="#">Compras</a></li>
                                 <li><a class="nav-link" href="#">Ventas</a></li>

@@ -22,7 +22,6 @@ create proc SP_CONSULTA_PRODUCTOS
 	@descripcion			varchar(255) = null,
 	@idUnidadMedida			int = null,
 	@idLineaProducto		int = null,
-	@fechaAlta				datetime = null,
 	@activo					bit = null,
 	@articulo				varchar(255) = null
 	
@@ -39,7 +38,7 @@ as
 						@mensaje				varchar(255) = '',
 						@error_line				varchar(255) = '',
 						@error_procedure		varchar(255) = '',
-						@valido					bit = cast(0 as bit)
+						@valido					bit = cast(1 as bit)
 
 				create table
 					#Productos
@@ -61,7 +60,7 @@ as
 				
 				-- validaciones
 					if (@idProducto is null and @descripcion is null and @idUnidadMedida is null and 
-						@idLineaProducto is null and @fechaAlta is null and @activo is null and @articulo is null )
+						@idLineaProducto is null and @activo is null and @articulo is null )
 					begin
 						select	@mensaje = 'Debe elejir al menos un criterio para la búsqueda del Producto.',
 								@valido = cast(0 as bit)						
@@ -74,7 +73,6 @@ as
 						( @descripcion is null ) and 
 						( @idUnidadMedida = 0 ) and 
 						( @idLineaProducto = 0 ) and 
-						--( @fechaAlta = 0 ) and 
 						( @activo = 0 ) and 
 						( @articulo is null ) 						
 					)
@@ -105,11 +103,11 @@ as
 														else '%' + @descripcion + '%'
 													end
 
-							and idUnidadMedida =	case
-														when @idUnidadMedida is null then idUnidadMedida
-														when @idUnidadMedida = 0 then idUnidadMedida
-														else @idUnidadMedida
-													end
+							--and idUnidadMedida =	case
+							--							when @idUnidadMedida is null then idUnidadMedida
+							--							when @idUnidadMedida = 0 then idUnidadMedida
+							--							else @idUnidadMedida
+							--						end
 
 							and idLineaProducto =	case
 														when @idLineaProducto is null then idLineaProducto
@@ -117,17 +115,17 @@ as
 														else @idLineaProducto
 													end
 
-							and cast(fechaAlta as date) =	case
-																when @fechaAlta is null then cast(fechaAlta as date)
-																when @fechaAlta = '19000101' then cast(fechaAlta as date)
-																else cast(@fechaAlta as date)
-															end
+							--and cast(fechaAlta as date) =	case
+							--									when @fechaAlta is null then cast(fechaAlta as date)
+							--									when @fechaAlta = '19000101' then cast(fechaAlta as date)
+							--									else cast(@fechaAlta as date)
+							--								end
 
-							and activo =	case
-												when @activo is null then activo
-												when @activo = 0 then activo
-												else @activo
-											end
+							--and activo =	case
+							--					when @activo is null then activo
+							--					when @activo = 0 then activo
+							--					else @activo
+							--				end
 
 							and articulo like	case
 													when @articulo is null then articulo
@@ -138,8 +136,12 @@ as
 					end
 
 				
-				if exists ( select 1 from #Productos )
-					select @valido = cast(1 as bit)
+				if not exists ( select 1 from #Productos )
+					begin
+						select	@valido = cast(0 as bit),
+								@status = -1,
+								@mensaje = 'No se encontraron productos con esos términos de búsqueda.'
+					end
 
 			end -- principal
 

@@ -25,11 +25,11 @@ namespace lluviaBackEnd.DAO
 
             try
             {
-                if (  producto.fechaAlta == (new DateTime(0001,01,01) ) )
-                {
-                    producto.fechaAlta = new DateTime(1900, 01, 01);
+                //if (  producto.fechaIni == (new DateTime(0001,01,01) ) )
+                //{
+                //    producto.fechaIni = new DateTime(1900, 01, 01);
 
-                }
+                //}
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
@@ -38,7 +38,6 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@descripcion", producto.descripcion);
                     parameters.Add("@idUnidadMedida", producto.idUnidadMedida);
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
-                    parameters.Add("@fechaAlta", producto.fechaAlta);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
 
@@ -54,7 +53,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo[0] = producto;
+                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
 
 
