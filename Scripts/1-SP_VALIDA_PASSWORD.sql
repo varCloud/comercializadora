@@ -65,14 +65,19 @@ as
 					select	@status status,
 							@error_procedure error_procedure,
 							@error_line error_line,
-							@mensaje mensaje,
-							idUsuario,
+							@mensaje mensaje
+
+					select	idUsuario,
 							idRol,
-							nombre,
+							usuario,
 							telefono,
 							contrasena,
 							idAlmacen,
-							idSucursal
+							idSucursal,
+							nombre,
+							apellidoPaterno,
+							apellidoMaterno,
+							cast(1 as bit) as usuarioValido
 					from	usuarios 
 					where	usuario = @usuario 
 						and contrasena = @contrasena

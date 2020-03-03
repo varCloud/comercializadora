@@ -7,6 +7,7 @@
     <title>@ViewBag.Title - Lluvia Artículos de Limpieza</title>
 
     <link rel="stylesheet" href="~/assets/css/app.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/izitoast/css/iziToast.min.css" />
     <link rel="stylesheet" href="~/assets/css/style.css">
     <link rel="stylesheet" href="~/assets/css/components.css">
     <link rel="stylesheet" href="~/assets/css/custom.css">
@@ -129,10 +130,10 @@
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="#">Productos</a></li>
-                                <li><a class="nav-link" href="#">Ventas</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Reporte Productos" ? "dropdown active" : "")" href="@Url.Action("ReporteProductos", "Reportes")">Productos</a></li>
                                 <li><a class="nav-link" href="#">Inventario</a></li>
                                 <li><a class="nav-link" href="#">Compras</a></li>
+                                <li><a class="nav-link" href="#">Ventas</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -149,6 +150,7 @@
     </div>
     <!-- General JS Scripts -->
     <script src="~/assets/js/app.min.js"></script>
+    <script src="~/assets/bundles/izitoast/js/iziToast.min.js"></script>
     <!-- JS Libraies -->
     <script src="~/assets/bundles/apexcharts/apexcharts.min.js"></script>
     <script src="~/assets/bundles/amcharts4/core.js"></script>
@@ -162,12 +164,7 @@
     <script src="~/assets/js/scripts.js"></script>
     <!-- Custom JS File -->
     <script src="~/assets/js/custom.js"></script>
-
-
     <script src="~/js/Index.js"></script>
-
-
-
 
     @RenderSection("scripts", required: false)
 </body>

@@ -1,0 +1,192 @@
+use DB_A552FA_comercializadora
+go
+
+-- se crea procedimiento SP_CONSULTA_PRODUCTOS
+if exists (select * from sysobjects where name like 'SP_CONSULTA_PRODUCTOS' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+	drop proc SP_CONSULTA_PRODUCTOS
+go
+
+/*
+
+Autor			Ernesto Aguilar
+UsuarioRed		auhl373453
+Fecha			2020/02/17
+Objetivo		Consulta los diferentes clientes del sistema
+status			200 = ok
+				-1	= error
+*/
+
+create proc SP_CONSULTA_PRODUCTOS
+
+	@idProducto				int = null,
+	@descripcion			varchar(255) = null,
+	@idUnidadMedida			int = null,
+	@idLineaProducto		int = null,
+	@activo					bit = null,
+	@articulo				varchar(255) = null
+	
+
+as
+
+	begin -- principal
+	
+		begin try
+
+			begin --declaraciones 
+
+				declare @status					int = 200,
+						@mensaje				varchar(255) = '',
+						@error_line				varchar(255) = '',
+						@error_procedure		varchar(255) = '',
+						@valido					bit = cast(1 as bit)
+
+				create table
+					#Productos
+						(
+							idProducto				int,
+							descripcion				varchar(100),
+							idUnidadMedida			int,
+							idLineaProducto			int,
+							cantidadUnidadMedida	float,
+							codigoBarras			nvarchar(4000),
+							fechaAlta				datetime,
+							activo					bit,
+							articulo				varchar(100)					
+						)
+						
+			end  --declaraciones 
+
+			begin -- principal
+				
+				-- validaciones
+					if (@idProducto is null and @descripcion is null and @idUnidadMedida is null and 
+						@idLineaProducto is null and @activo is null and @articulo is null )
+					begin
+						select	@mensaje = 'Debe elejir al menos un criterio para la búsqueda del Producto.',
+								@valido = cast(0 as bit)						
+						raiserror (@mensaje, 11, -1)
+					end
+
+				-- si son todos
+				if	( 
+						( @idProducto = 0 ) and 
+						( @descripcion is null ) and 
+						( @idUnidadMedida = 0 ) and 
+						( @idLineaProducto = 0 ) and 
+						( @activo = 0 ) and 
+						( @articulo is null ) 						
+					)
+					begin
+
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
+						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
+						from	Productos
+						where	activo = cast(1 as bit)
+						order by idProducto desc						
+
+					end
+				-- si es por busqueda
+				else 
+					begin
+
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
+						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
+						from	Productos
+						where	idProducto =	case
+													when @idProducto is null then idProducto
+													when @idProducto = 0 then idProducto
+													else @idProducto
+												end
+
+							and descripcion like	case
+														when @descripcion is null then descripcion
+														else '%' + @descripcion + '%'
+													end
+
+							--and idUnidadMedida =	case
+							--							when @idUnidadMedida is null then idUnidadMedida
+							--							when @idUnidadMedida = 0 then idUnidadMedida
+							--							else @idUnidadMedida
+							--						end
+
+							and idLineaProducto =	case
+														when @idLineaProducto is null then idLineaProducto
+														when @idLineaProducto = 0 then idLineaProducto
+														else @idLineaProducto
+													end
+
+							--and cast(fechaAlta as date) =	case
+							--									when @fechaAlta is null then cast(fechaAlta as date)
+							--									when @fechaAlta = '19000101' then cast(fechaAlta as date)
+							--									else cast(@fechaAlta as date)
+							--								end
+
+							--and activo =	case
+							--					when @activo is null then activo
+							--					when @activo = 0 then activo
+							--					else @activo
+							--				end
+
+							and articulo like	case
+													when @articulo is null then articulo
+													else '%' + @articulo + '%' 
+												end
+							and activo = cast(1 as bit)
+
+					end
+
+				
+				if not exists ( select 1 from #Productos )
+					begin
+						select	@valido = cast(0 as bit),
+								@status = -1,
+								@mensaje = 'No se encontraron productos con esos términos de búsqueda.'
+					end
+
+			end -- principal
+
+		end try
+
+		begin catch 
+		
+			-- captura del error
+			select	@status =			-error_state(),
+					@error_procedure =	error_procedure(),
+					@error_line =		error_line(),
+					@mensaje =			error_message()
+					
+		end catch
+
+		begin -- reporte de estatus
+
+		--reporte de estatus
+			select	@status status,
+					@error_procedure error_procedure,
+					@error_line error_line,
+					@mensaje mensaje
+							
+
+		-- si todo ok
+			if ( @valido = 1 )
+				begin
+				
+					select	p.*, l.descripcion as DescripcionLinea, u.descripcion as DescripcionUnidadMedida
+					from	#Productos p
+								inner join LineaProducto l 
+									on p.idLineaProducto = l.idLineaProducto
+								inner join CatUnidadMedida u
+									on p.idUnidadMedida = u.idUnidadMedida
+					order by idProducto desc 
+
+				end
+				
+		end -- reporte de estatus
+
+	end  -- principal
+go
+
+grant exec on SP_CONSULTA_PRODUCTOS to public
+go
+
+
+
