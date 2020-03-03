@@ -17,11 +17,13 @@ namespace lluviaBackEnd.DAO
 
         public Notificacion<Cliente> GuardarCliente(Cliente c)
         {
+            Notificacion<Cliente> n;
             try
             {
-                _db = new SqlConnection(ConfigurationManager.ConnectionStrings["conexionString"].ConnectionString);
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
 
+                parameters.Add("@@idCliente", c.idCliente);
                 parameters.Add("@nombres" , c.nombres);
                 parameters.Add("@apellidoPaterno" , c.apellidoPaterno);
                 parameters.Add("@apellidoMaterno", c.apellidoMaterno);
@@ -34,19 +36,40 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@municipio",c.municipio);
                 parameters.Add("@cp" ,c.cp);
                 parameters.Add("@estado",c.estado);
-                parameters.Add("@fechaAlta",c.FechaAlta.ToString("yyyyMMdd"));
+                //parameters.Add("@fechaAlta",c.FechaAlta.ToString("yyyyMMdd"));
                 parameters.Add("@activo",c.activo);
-                parameters.Add("@idTipoCliente",c.tipoCliente);
-                var result =  this._db.Execute("exec ", parameters, commandType:CommandType.StoredProcedure);
+                parameters.Add("@idTipoCliente",c.tipoCliente.idTipoCliente);
+                n =  this._db.QuerySingle<Notificacion<Cliente>>("SP_INSERTA_ACTUALIZA_CLIENTES", parameters, commandType:CommandType.StoredProcedure);
+
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return new Notificacion<Cliente>();
+            return n;
 
         }
 
+        public Notificacion<Cliente> EliminarCliente(Cliente c)
+        {
+            Notificacion<Cliente> n;
+            try
+            {
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                var parameters = new DynamicParameters();
+
+                parameters.Add("idCliente", c.idCliente);
+                parameters.Add("activo", c.nombres);
+                n = this._db.QuerySingle<Notificacion<Cliente>>("SP_ACTUALIZA_STATUS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return n;
+
+        }
 
         public List<Cliente> ObtenerClientes(Cliente c)
         {
@@ -77,6 +100,30 @@ namespace lluviaBackEnd.DAO
             cliente.tipoCliente = tipoCliente;
             return cliente;
         }
+
+        public List<TipoCliente> ObtenerTipoClientes()
+        {
+            List<TipoCliente> lstClientes = null;
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+
+                    lstClientes = this._db.Query<TipoCliente>("SP_CONSULTA_TIPO_CLIENTES",  commandType: CommandType.StoredProcedure).ToList();
+                    lstClientes.Insert(0 , new TipoCliente() { idTipoCliente=0 , descripcion="--SELECCIONA--" });
+                    
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstClientes;
+        }
+
+
         // Referencia para Consulta con dapper y  una clase que contiene otra clase
         //https://dzone.com/articles/tutorial-on-handling-multiple-resultsets-and-multi
         //https://dzone.com/articles/tutorial-on-handling-multiple-resultsets-and-multi

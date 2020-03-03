@@ -7,7 +7,10 @@ namespace lluviaBackEnd.Models
 {
     public class Cliente
     {
-
+        public Cliente()
+        {
+            tipoCliente = new TipoCliente();
+        }
         public Int64 idCliente { get; set; }
         public String nombres { get; set; }
         public String apellidoPaterno { get; set; }

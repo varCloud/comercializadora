@@ -2,12 +2,13 @@
 @{
     ViewBag.Title = "Clientes";
     List<lluviaBackEnd.Models.Cliente> Lstclientes = ViewBag.Lstclientes;
+    List<lluviaBackEnd.Models.TipoCliente> LstTipoClientes = ViewBag.lstTipoClientes;
 }
 
 
 <h2>Clientes</h2>
 
-<div id="rowTblUsuario">
+<div id="rowTblClientes">
     @Html.Partial("_ObtenerClientes", Lstclientes)
 </div>
 
@@ -22,15 +23,15 @@
             </div>
             <div class="modal-body">
                 @*<form id="frmUsuario">*@
-                @using (Ajax.BeginForm("GuardarUsuario", "Usuarios",
+                @using (Ajax.BeginForm("GuardarcLiente", "Clientes",
 
                 new AjaxOptions
                 {
                     HttpMethod = "Post",
-                    OnBegin = "onBeginSubmitGuardarUsuario",
-                    OnComplete = "onCompleteSubmitGuardarUsuario",
-                    OnFailure = "onFailureResultGuardarUsuario",
-                    OnSuccess = "onSuccessResultGuardarUsuario",
+                    OnBegin = "onBeginSubmitGuardarCliente",
+                    OnComplete = "onCompleteSubmitGuardarCliente",
+                    OnFailure = "onFailureResultGuardarCliente",
+                    OnSuccess = "onSuccessResultGuardarCliente",
                 },
                 new { id = "frmUsuario" }))
                 {
@@ -118,13 +119,13 @@
                                 @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
                             </div>
                         </div>
-                        @*<div class="col-12 col-sm-12 col-lg-4">
+                        <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Estado</label>
-                                @Html.TextBoxFor(x => x., null, new { @class = "form-control", @id = "usuario" })
+                                <label>Tipo Cliente</label>
+                                @Html.DropDownListFor( m => m.tipoCliente.idTipoCliente, new SelectList(LstTipoClientes, "idTipoCliente", "descripcion"),null , new { @class = "form-control", @id = "cbTipoCliente" } )
                                 @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
                             </div>
-                        </div>*@
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">
@@ -148,7 +149,7 @@
 
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/assets/js/page/datatables.js"></script>
+    @*<script src="~/assets/js/page/datatables.js"></script>*@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     @Scripts.Render("~/js/EvtClientes.js");
 }
