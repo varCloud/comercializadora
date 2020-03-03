@@ -52,7 +52,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Linea de Producto</label>
-                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProductoBusqueda", @class = "form-control" })
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProductoBusqueda" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -111,22 +111,19 @@
                             <div class="form-group">
                                 <label>Descripción</label>
                                 @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
-                                @*@Html.ValidationMessageFor(x => x.usuario, null, new { @class = "text-danger was" })*@
+                                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
                             </div>
                             <div class="form-group">
                                 <label>Unidad de Medida</label>
                                 @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control", data_val = "true" })
-
-                                @*@Html.TextBoxFor(x => x.idUnidadMedida, null, new { @class = "form-control", @id = "idUnidadMedida" })*@
-                                @*@Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })*@
+                                @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
                             </div>
 
                             <div class="form-group">
                                 <label>Linea de Producto</label>
                                 @*@Html.TextBoxFor(x => x.idLineaProducto, null, new { @class = "form-control", @id = "idLineaProducto" })*@
                                 @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProducto", @class = "form-control", data_val = "true" })
-
-                                @*@Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })*@
+                                @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
                             </div>
 
                         </div>
@@ -134,22 +131,20 @@
                             <div class="form-group">
                                 <label>Cantidad Unidad de Medida</label>
                                 @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
-                                @*@Html.DropDownListFor(x => x.cantidadUnidadMedida, lstAlmacenes, new { id = "idAlmacenGuardar", @class = "form-control", data_val = "true" })*@
-                                @*@Html.ValidationMessageFor(x => x.idAlmacenGuardar, null, new { @class = "text-danger was" })*@
+                                @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
 
                             </div>
 
                             <div class="form-group">
                                 <label>Artículo</label>
                                 @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
-                                @*@Html.ValidationMessageFor(x => x.apellidoPaterno, null, new { @class = "text-danger was" })*@
+                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
                             </div>
 
                             <div class="form-group">
 
 
                             </div>
-
 
                         </div>
                     </div>
