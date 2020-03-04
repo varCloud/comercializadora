@@ -32,11 +32,36 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
+        public ActionResult ObtenerCliente(Cliente c)
+        {
+            try
+            {
+                List<Cliente> lstClientes = this.ObtenerClientes(c);
+                Notificacion<Cliente> n = new Notificacion<Cliente>();
+                if (lstClientes == null) {
+                    n.Estatus = -1;
+                    n.Mensaje = "Espere un momento y vuelva a intentar";
+
+                }
+                else {
+                    n.Estatus = 200;
+                    n.Modelo = lstClientes.FirstOrDefault();
+                }
+                
+                return Json(n, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
         public ActionResult GuardarCliente(Cliente c)
         {
             try
             {
-               return Json(new ClienteDAO().GuardarCliente(c), JsonRequestBehavior.AllowGet); ;
+               return Json(new ClienteDAO().GuardarCliente(c), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

@@ -29,7 +29,7 @@ function onFailureResultGuardarProveedor() {
 
 function PintarTabla() {
     $.ajax({
-        url: "/Proveedores/_ObtenerProveedores",
+        url: rootUrl("/Proveedores/_ObtenerProveedores"),
         data: { idProveedor: 0 },
         method: 'post',
         dataType: 'html',
@@ -297,7 +297,7 @@ function ObtenerProveedor(idProveedor) {
 
     var result = '';
     $.ajax({
-        url: "/Proveedores/ObtenerProveedor",
+        url: rootUrl("/Proveedores/ObtenerProveedor"),
         data: { idProveedor: idProveedor },
         method: 'post',
         dataType: 'json',
@@ -400,7 +400,7 @@ function EliminarProveedor(idProveedor) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: "/Proveedores/ActualizarEstatusProveedor",
+                    url: rootUrl("/Proveedores/ActualizarEstatusProveedor"),
                     data: { idProveedor: idProveedor, activo: false },
                     method: 'post',
                     dataType: 'json',

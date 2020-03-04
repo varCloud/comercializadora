@@ -23,7 +23,7 @@ namespace lluviaBackEnd.DAO
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
 
-                parameters.Add("@@idCliente", c.idCliente);
+                parameters.Add("@idCliente", c.idCliente);
                 parameters.Add("@nombres" , c.nombres);
                 parameters.Add("@apellidoPaterno" , c.apellidoPaterno);
                 parameters.Add("@apellidoMaterno", c.apellidoMaterno);
@@ -37,7 +37,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@cp" ,c.cp);
                 parameters.Add("@estado",c.estado);
                 //parameters.Add("@fechaAlta",c.FechaAlta.ToString("yyyyMMdd"));
-                parameters.Add("@activo",c.activo);
+                //parameters.Add("@activo",c.activo);
                 parameters.Add("@idTipoCliente",c.tipoCliente.idTipoCliente);
                 n =  this._db.QuerySingle<Notificacion<Cliente>>("SP_INSERTA_ACTUALIZA_CLIENTES", parameters, commandType:CommandType.StoredProcedure);
 
