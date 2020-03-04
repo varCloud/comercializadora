@@ -22,42 +22,41 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult ObtenerInventario(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                Producto p = new Producto();
-                p = notificacion.Modelo[0];
-                return Json(p, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public ActionResult ObtenerInventario(Producto producto)
+        //{
+        //    try
+        //    {
+        //        Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+        //        notificacion = new ProductosDAO().ObtenerProductos(producto);
+        //        Producto p = new Producto();
+        //        p = notificacion.Modelo[0];
+        //        return Json(p, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        public ActionResult _ObtenerInventario(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                ViewBag.lstProductos = notificacion.Modelo;
-                return PartialView("_ObtenerProductos");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public ActionResult _ObtenerInventario(Producto producto)
+        //{
+        //    try
+        //    {
+        //        Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+        //        notificacion = new ProductosDAO().ObtenerProductos(producto);
+        //        ViewBag.lstProductos = notificacion.Modelo;
+        //        return PartialView("_ObtenerProductos");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public ActionResult BuscarInventario(Producto producto)
         {
             try
             {
-
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
 

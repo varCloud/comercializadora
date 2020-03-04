@@ -170,12 +170,14 @@ as
 			if ( @valido = 1 )
 				begin
 				
-					select	p.*, l.descripcion as DescripcionLinea, u.descripcion as DescripcionUnidadMedida
+					select	p.*, l.descripcion as DescripcionLinea, u.descripcion as DescripcionUnidadMedida, g.cantidad
 					from	#Productos p
 								inner join LineaProducto l 
 									on p.idLineaProducto = l.idLineaProducto
 								inner join CatUnidadMedida u
 									on p.idUnidadMedida = u.idUnidadMedida
+								left join InventarioGeneral g
+									on g.idProducto = p.idProducto
 					order by idProducto desc 
 
 				end
