@@ -15,7 +15,7 @@
                         <table class="table table-striped" id="tblClientes">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
+                                    <th class="text-center">#Cliente</th>
                                     <th>Nombre</th>
                                     <th>Domicilio</th>
                                     <th>Rfc</th>
@@ -28,9 +28,9 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>@item.idCliente</td>
+                                        <td class="text-center">@item.idCliente</td>
                                         <td>@item.nombres &nbsp; @item.apellidoPaterno &nbsp; @item.apellidoMaterno</td>
-                                        <td>@item.calle &nbsp; @item.colonia &nbsp; @item.estado</td>
+                                        <td class="text-center">@item.calle &nbsp; @item.colonia &nbsp; @item.estado</td>
                                         <td>@item.rfc</td>
                                         <td>@item.telefono</td>
 
@@ -69,8 +69,8 @@
                                         </td>
                                         <td>
                                             <div class="buttons">
-                                                <a href="javascript:VerCliente(@item.idCliente);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
-                                                <a href="javascript:EditarCliente(@item.idCliente);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="javascript:VerCliente(@item.idCliente ,1);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+                                                <a href="javascript:VerCliente(@item.idCliente,2);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
                                                 <a href="javascript:EliminarCliente(@item.idCliente);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
                                             </div>
                                         </td>

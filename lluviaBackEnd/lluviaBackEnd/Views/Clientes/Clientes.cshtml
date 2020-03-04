@@ -39,6 +39,7 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Nombres *</label>
+                                @Html.HiddenFor(x => x.idCliente)
                                 @Html.TextBoxFor(x => x.nombres, null, new { @class = "form-control", @id = "nombres" })
                                 @Html.ValidationMessageFor(x => x.nombres, null, new { @class = "text-danger was" })
                             </div>
@@ -132,7 +133,7 @@
                             <div class="text-right" style="margin-top:15px;">
                                 <button type="reset" class="btn btn-danger" id="btnResetGuardarUsuario">Reset</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="btnGuardarUsuario" class="btn btn-success">Guardar</button>
+                                <button type="submit" id="btnGuardarCliente" class="btn btn-success">Guardar</button>
                             </div>
                         </div>
                     </div>

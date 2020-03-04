@@ -14,10 +14,13 @@ function onSuccessResultGuardarCliente(data) {
     console.log(data);
     if (data.Estatus === 200) {
         MuestraToast("success", data.Mensaje)
+        ObtenerClientes();
+        $('#mdlAgregarCliente').modal('hide');
 
     } else {
         MuestraToast("error", data.Mensaje)
     }
+    
 
 }
 
@@ -33,7 +36,7 @@ function ObtenerClientes() {
         success: function (data) {
             tablaClientes.destroy();
             $('#rowTblClientes').html(data);
-            InitDataTable();
+            InitTableClientes();
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -79,25 +82,39 @@ function EliminarCliente(idCliente) {
         });
 }
 
-function VerCliente(idCliente) {
+function VerCliente(idCliente, accion) {
+    //accion = 1 solo quiere ver al cliente
+    //accion = 2 Va a editar el usario
 
     var data = ObtenerCliente(idCliente)
     if (data.Estatus == 200) {
-        $('#nombres').val(data.Modelo.nombres).prop('disabled', true);
-        $('#apellidoPaterno').val(data.Modelo.apellidoPaterno).prop('disabled', true);;
-        $('#apellidoMaterno').val(data.Modelo.apellidoMaterno).prop('disabled', true);;
-        $('#telefono').val(data.Modelo.telefono).prop('disabled', true);;
-        $('#correo').val(data.Modelo.correo).prop('disabled', true);;
-        $('#rfc').val(data.Modelo.correo).prop('disabled', true);;
-        $('#calle').val(data.Modelo.calle).prop('disabled', true);;
-        $('#colonia').val(data.Modelo.colonia).prop('disabled', true);;
-        $('#municipio').val(data.Modelo.municipio).prop('disabled', true);;
-        $('#cp').val(data.Modelo.cp).prop('disabled', true);;
-        $('#estado').val(data.Modelo.estado).prop('disabled', true);;
-        $('#cbTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente).prop('disabled', true);;
-        $('#btnGuardarUsuario').prop('disabled', false).css('display', 'none');
-        $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true }).prop('disabled', true);
-        $('#TituloModalCliente').html("Cliente");
+        if (accion == 1) {
+            $("#frmClientes input").prop("disabled", true);
+            $("#frmClientes select").prop("disabled", true);
+            $('#btnGuardarCliente').css('display', 'none');
+            $('#TituloModalCliente').html("Cliente");
+        } else {
+            console.log("accion", accion);
+            $('#idCliente').val(data.Modelo.idCliente);
+            $("#frmClientes input").prop("disabled", false);
+            $("#frmClientes select").prop("disabled", false)
+            $('#btnGuardarCliente').css('display', '');
+            $('#TituloModalCliente').html("Actualizar Cliente");
+        }
+        $('#nombres').val(data.Modelo.nombres);
+        $('#apellidoPaterno').val(data.Modelo.apellidoPaterno);
+        $('#apellidoMaterno').val(data.Modelo.apellidoMaterno);
+        $('#telefono').val(data.Modelo.telefono);
+        $('#correo').val(data.Modelo.correo);
+        $('#rfc').val(data.Modelo.correo);
+        $('#calle').val(data.Modelo.calle);
+        $('#colonia').val(data.Modelo.colonia);
+        $('#municipio').val(data.Modelo.municipio);
+        $('#cp').val(data.Modelo.cp);
+        $('#estado').val(data.Modelo.estado);
+        $('#cbTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente);
+        $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true })
+        
     } else {
         MuestraToast('info', data.Mensaje)
     }
@@ -138,7 +155,7 @@ function InitTableClientes() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Proveedores",
+                title: "Clientes",
                 customize: function (doc) {
 
                     doc.defaultStyle.fontSize = 8; 
@@ -216,10 +233,12 @@ function InitTableClientes() {
 function InitBtnAgregar() {
     $('#btnAgregarCliente').click(function (e) {
 
-        $('#btnGuardarProveedor').prop('disabled', false);
+       
         $("#frmClientes input").prop("disabled", false);
         $("#frmClientes select").prop("disabled", false);
         $('#btnResetGuardarUsuario').trigger('click');
+        $('#btnGuardarCliente').css('display', '');
+        $('#idCliente').val('0');
         //para abrir el modal
         $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalCliente').html("Agregar Cliente");
@@ -229,4 +248,5 @@ function InitBtnAgregar() {
 
 $(document).ready(function () {
     InitTableClientes();
+    $('#btnResetGuardarUsuario').css('display','none');
 });
