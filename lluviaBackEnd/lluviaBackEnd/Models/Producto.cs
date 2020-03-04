@@ -41,6 +41,7 @@ namespace lluviaBackEnd.Models
         public string articulo { get; set; }
 
         public string[] idLineaProductoConsulta { get; set; }
-        
+
+        public int cantidad { get; set; }
     }
 }

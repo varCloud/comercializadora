@@ -31,7 +31,7 @@
             </div>
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
-                    @using (Ajax.BeginForm("BuscarProductos", "Productos",
+                    @using (Ajax.BeginForm("BuscarInventario", "Reportes",
             new AjaxOptions
             {
                 HttpMethod = "Post",
@@ -102,6 +102,6 @@
     @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
 
-    <script src="~/js/EvtProductos.js"></script>
+    <script src="~/js/EvtInventario.js"></script>
 
 }

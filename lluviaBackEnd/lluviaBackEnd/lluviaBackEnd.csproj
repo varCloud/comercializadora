@@ -949,7 +949,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtLineaProductos.js" />
-    <Content Include="js\EvtReportesProductos.js" />
+    <Content Include="js\EvtInventario.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />

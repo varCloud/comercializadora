@@ -75,7 +75,7 @@ function InitDataTable() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "LineaProductoes",
+                title: "Linea de Productos",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
                     doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
@@ -83,7 +83,7 @@ function InitDataTable() {
                     doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1]
                 },
             },
             {
@@ -92,7 +92,7 @@ function InitDataTable() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1]
                 },
             },
 
