@@ -1,22 +1,19 @@
-﻿@model lluviaBackEnd.Models.Producto
+﻿@model lluviaBackEnd.Models.Compras
 @{
     ViewBag.Title = "Compras";
-    List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<lluviaBackEnd.Models.Compras> lstCompras = ViewBag.lstCompras;
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
-    List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
-
+    List<SelectListItem> lstProveedores = (List<SelectListItem>)ViewBag.lstProveedores;
+    
 }
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
-
-    @*<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />*@
-
 }
-@*<!DOCTYPE html>*@
 
+@*<!DOCTYPE html>*@
 
 <h2>Productos</h2>
 
@@ -24,29 +21,29 @@
     <div class="col-12 col-sm-12 col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4>Buscar Productos</h4>
+                <h4>Buscar Compras</h4>
                 <div class="card-header-action">
                     <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
                 </div>
             </div>
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
-                    @using (Ajax.BeginForm("BuscarProductos", "Productos",
+                    @using (Ajax.BeginForm("BuscarCompras", "Productos",
             new AjaxOptions
             {
                 HttpMethod = "Post",
-                OnBegin = "onBeginSubmitProductos",
-                OnComplete = "onCompleteSubmitProductos",
-                OnFailure = "onFailureResultProductos",
-                OnSuccess = "onSuccessResultProductos",
+                OnBegin = "onBeginSubmitCompras",
+                OnComplete = "onCompleteSubmitCompras",
+                OnFailure = "onFailureResultCompras",
+                OnSuccess = "onSuccessResultCompras",
             },
-            new { id = "frmBuscarProductos" }))
+            new { id = "frmBuscarCompras" }))
                     {
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
-                                    <label>Descripción</label>
-                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
+                                    <label>Descripción del Producto</label>
+                                    @Html.TextBoxFor(x => x.descripcionProducto, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -58,7 +55,35 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Artículo</label>
-                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idProveedor, lstProveedores, new { @class = "form-control", id = "lstProveedoresBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+
+                                <div class="form-group">
+                                    <label>Date Range Picker</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control daterange-cus">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+
                                 </div>
                             </div>
                         </div>
@@ -74,8 +99,8 @@
 </div>
 
 
-<div id="rowProductos">
-    @Html.Partial("_Compras", new lluviaBackEnd.Models.Producto() { idProducto = 0 })
+<div id="rowCompras">
+    @Html.Partial("_Compras", new lluviaBackEnd.Models.Compras() { idCompra = 0 })
 </div>
 
 

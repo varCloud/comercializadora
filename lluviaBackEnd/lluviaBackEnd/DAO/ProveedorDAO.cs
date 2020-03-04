@@ -125,5 +125,36 @@ namespace lluviaBackEnd.DAO
             return result;
         }
 
+
+        public List<SelectListItem> ObtenerProveedores(int idProveedor)
+        {
+            List<SelectListItem> lstProveedores = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idProveedor", idProveedor);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PROVEEDORES]");
+                    while (db.DataReader.Read())
+                    {
+                        lstProveedores.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["nombre"].ToString(),
+                                Value = db.DataReader["idProveedor"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstProveedores;
+        }
+
+
     }
 }
