@@ -54,6 +54,48 @@ function MuestraToast(tipoNotificacion, mensaje) {
     }
 
 }
+function setFooterPDF(page, pages) {
+    return {
+        columns: [
+            {
+                alignment: 'right',
+                text: ['pagina ', { text: page.toString() }, ' de ', { text: pages.toString() }]
+            }
+        ],
+        margin: [0, 0, 30]
+    }
+
+}
+
+
+function SetHeaderPDF(titulo) {
+
+  return {
+        columns: [
+            {
+                image: logoBase64,
+                width: 64,
+                margin: [0, 20, -20, 0]
+            },
+            /*{
+                alignment: 'left',
+                italics: true,
+                text: 'dataTables',
+                fontSize: 18,
+                margin: [10,0]
+            },*/
+            {
+                alignment: 'center',
+                fontSize: 14,
+                text: titulo,
+                margin: [0, 40, 80]
+            }
+        ],
+        margin: [10, 0]
+    }
+
+
+}
 
 function initDataTable(nombreTabla) {
 

@@ -193,9 +193,7 @@ function InitTableClientes() {
                     doc['footer'] = (function (page, pages) {
                         return {
                             columns: [
-                                
                                 {
-                                    // This is the right column
                                     alignment: 'right',
                                     text: ['pagina ', { text: page.toString() }, ' de ', { text: pages.toString() }]
                                 }

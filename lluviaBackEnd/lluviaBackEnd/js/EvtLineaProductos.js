@@ -1,13 +1,15 @@
-﻿var table;
+﻿
 var iframe;
-
+var tablaLineaProductos;
 
 function onBeginSubmitGuardarLineaProducto() {
     console.log("onBeginSubmitGuardarLineaProducto");
 }
+
 function onCompleteSubmitGuardarLineaProducto() {
     console.log("onCompleteSubmitGuardarLineaProducto");
 }
+
 function onSuccessResultGuardarLineaProducto(data) {
     console.log("onSuccessResultGuardarLineaProducto");
 
@@ -23,6 +25,7 @@ function onSuccessResultGuardarLineaProducto(data) {
     $('#EditarLineaProductoModal').modal('hide');
 
 }
+
 function onFailureResultGuardarLineaProducto() {
     console.log("onFailureResultGuardarLineaProducto");
 }
@@ -37,9 +40,10 @@ function PintarTabla() {
         beforeSend: function (xhr) {
         },
         success: function (data) {
-            table.destroy();
+            tablaLineaProductos.destroy();
             $('#rowTblLineaProducto').html(data);
-            InitDataTable();
+            InitTableLineaProductos();
+
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
@@ -49,26 +53,10 @@ function PintarTabla() {
     });
 }
 
-
-function InitDataTable() {
-
-    table = $('#tablaLineaProductos').DataTable({
-        "language": {
-            "lengthMenu": "Muestra _MENU_ registros por pagina",
-            "zeroRecords": "No existen registros",
-            "info": "Pagina _PAGE_ de _PAGES_",
-            "infoEmpty": "No existe informacion para mostrar",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            "search": "Buscar:",
-            "paginate": {
-                "first": "Primero",
-                "last": "Ultimo",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            },
-        },
-        "dom": 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+function InitTableLineaProductos() {
+    var NombreTabla = "tablaLineaProductos";
+    tablaLineaProductos = initDataTable(NombreTabla)
+    new $.fn.dataTable.Buttons(tablaLineaProductos, {
         buttons: [
             {
                 extend: 'pdfHtml5',
@@ -77,10 +65,14 @@ function InitDataTable() {
                 titleAttr: 'Exportar a PDF',
                 title: "Linea de Productos",
                 customize: function (doc) {
-                    doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
-                    doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
+                    doc.defaultStyle.fontSize = 8; 
+                    doc.styles.tableHeader.fontSize = 10; 
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
+                    doc.content[1].table.widths = ['50%', '50%'];
+                    doc.pageMargins = [30, 85, 20, 30];
+                    doc.content.splice(0, 1);
+                    doc['header'] = SetHeaderPDF("Linea de Productos");
+                    doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
                     columns: [0, 1]
@@ -95,14 +87,14 @@ function InitDataTable() {
                     columns: [0, 1]
                 },
             },
-
-
         ],
-
-        "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
     });
 
-    $('#tablaLineaProductos_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarLineaProducto" data-toggle="tooltip" title="Agregar LineaProducto"><i class="fas fa-user-plus"></i></a>');
+    tablaLineaProductos.buttons(0, null).container().prependTo(
+        tablaLineaProductos.table().container()
+    );
+
+    $('#' + NombreTabla+'_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarLineaProducto" data-toggle="tooltip" title="Agregar LineaProducto"><i class="fas fa-user-plus"></i></a>');
     InitBtnAgregar();
 }
 
@@ -177,7 +169,6 @@ function InitBtnAgregar() {
     $('#btnAgregarLineaProducto').click(function (e) {
 
         $('#btnGuardarLineaProducto').prop('disabled', false);
-
         $('#idLineaProducto').val(0);
         $('#activo').val(1);
         $('#descripcion').val('').prop('disabled', false);
@@ -230,6 +221,6 @@ function EliminarLineaProducto(idLineaProducto) {
 
 $(document).ready(function () {
 
-    InitDataTable();
+    InitTableLineaProductos();
 
 });
