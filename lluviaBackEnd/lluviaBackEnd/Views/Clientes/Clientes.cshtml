@@ -33,27 +33,27 @@
                     OnFailure = "onFailureResultGuardarCliente",
                     OnSuccess = "onSuccessResultGuardarCliente",
                 },
-                new { id = "frmUsuario" }))
+                new { id = "frmClientes" }))
                 {
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Nombres</label>
-                                @Html.TextBoxFor(x => x.nombres, null, new { @class = "form-control", @id = "usuario" })
+                                <label>Nombres *</label>
+                                @Html.TextBoxFor(x => x.nombres, null, new { @class = "form-control", @id = "nombres" })
                                 @Html.ValidationMessageFor(x => x.nombres, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Apellido Paterno</label>
-                                @Html.TextBoxFor(x => x.apellidoPaterno, null, new { @class = "form-control", @id = "usuario" })
+                                <label>Apellido Paterno *</label>
+                                @Html.TextBoxFor(x => x.apellidoPaterno, null, new { @class = "form-control", @id = "apellidoPaterno" })
                                 @Html.ValidationMessageFor(x => x.apellidoPaterno, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Apellido Paterno</label>
-                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno" })
                                 @Html.ValidationMessageFor(x => x.apellidoMaterno, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -61,22 +61,22 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Telefono</label>
-                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "usuario" })
+                                <label>Telefono *</label>
+                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono" })
                                 @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Correo</label>
-                                @Html.TextBoxFor(x => x.correo, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.correo, null, new { @class = "form-control", @id = "correo" })
                                 @Html.ValidationMessageFor(x => x.correo, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>RFC</label>
-                                @Html.TextBoxFor(x => x.rfc, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.rfc, null, new { @class = "form-control", @id = "rfc" })
                                 @Html.ValidationMessageFor(x => x.rfc, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -85,21 +85,21 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Calle</label>
-                                @Html.TextBoxFor(x => x.calle, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.calle, null, new { @class = "form-control", @id = "calle" })
                                 @Html.ValidationMessageFor(x => x.calle, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Colonia</label>
-                                @Html.TextBoxFor(x => x.colonia, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.colonia, null, new { @class = "form-control", @id = "colonia" })
                                 @Html.ValidationMessageFor(x => x.colonia, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Municipio</label>
-                                @Html.TextBoxFor(x => x.municipio, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.municipio, null, new { @class = "form-control", @id = "municipio" })
                                 @Html.ValidationMessageFor(x => x.municipio, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -108,14 +108,14 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Codigo Postal</label>
-                                @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "cp" })
                                 @Html.ValidationMessageFor(x => x.cp, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Estado</label>
-                                @Html.TextBoxFor(x => x.estado,  null, new { @class = "form-control", @id = "usuario" })
+                                @Html.TextBoxFor(x => x.estado,  null, new { @class = "form-control", @id = "estado" })
                                 @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -130,6 +130,7 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">
                             <div class="text-right" style="margin-top:15px;">
+                                <button type="reset" class="btn btn-danger" id="btnResetGuardarUsuario">Reset</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="btnGuardarUsuario" class="btn btn-success">Guardar</button>
                             </div>
