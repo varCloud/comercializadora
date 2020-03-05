@@ -1,4 +1,4 @@
-﻿var table;
+﻿var tablaUsuarios;  
 var iframe;
 
 
@@ -37,9 +37,9 @@ function PintarTabla() {
         beforeSend: function (xhr) {
         },
         success: function (data) {
-            table.destroy();
+            tablaUsuarios.destroy();
             $('#rowTblUsuario').html(data);
-            InitDataTable();
+            InitTableUsuarios();
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
@@ -100,25 +100,11 @@ function PintarTabla() {
 //    });
 //}
 
-function InitDataTable() {
+function InitTableUsuarios() {
+    var NombreTabla = "tablaUsuarios";
+    tablaUsuarios = initDataTable(NombreTabla);
 
-    table = $('#tablaUsuarios').DataTable({
-        "language": {
-            "lengthMenu": "Muestra _MENU_ registros por pagina",
-            "zeroRecords": "No existen registros",
-            "info": "Pagina _PAGE_ de _PAGES_",
-            "infoEmpty": "No existe informacion para mostrar",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            "search": "Buscar:",
-            "paginate": {
-                "first": "Primero",
-                "last": "Ultimo",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            },
-        },
-        "dom": 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    new $.fn.dataTable.Buttons(tablaUsuarios, {
         buttons: [
             {
                 extend: 'pdfHtml5',
@@ -127,13 +113,17 @@ function InitDataTable() {
                 titleAttr: 'Exportar a PDF',
                 title: "Usuarios",
                 customize: function (doc) {
-                    doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
-                    doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
+                    doc.defaultStyle.fontSize = 8;
+                    doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
+                    doc.content[1].table.widths = ['10%', '30%', '20%', '20%', '20%'];
+                    doc.pageMargins = [30, 85, 20, 30];
+                    doc.content.splice(0, 1);
+                    doc['header'] = SetHeaderPDF("Usuarios");
+                    doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
             },
             {
@@ -142,17 +132,18 @@ function InitDataTable() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
             },
-
-
         ],
-
-        "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
     });
 
-    $('#tablaUsuarios_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarUsuario" data-toggle="tooltip" title="Agregar Usuario"><i class="fas fa-user-plus"></i></a>');
+    tablaUsuarios.buttons(0, null).container().prependTo(
+        tablaUsuarios.table().container()
+    );
+
+
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarUsuario" data-toggle="tooltip" title="Agregar Usuario"><i class="fas fa-user-plus"></i></a>');
     InitBtnAgregar();
 }
 
@@ -465,7 +456,7 @@ function EliminarUsuario(idUsuario) {
 $(document).ready(function () {
     //InitDrop();
     //initForm();
-    InitDataTable();
+    InitTableUsuarios();
 
 
     //$('#swallll').click(function (e) {

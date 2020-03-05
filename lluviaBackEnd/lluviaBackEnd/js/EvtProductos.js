@@ -1,5 +1,6 @@
 ﻿var table;
 var iframe;
+var tablaProductos;  
 
 //busqueda
 function onBeginSubmitProductos() {
@@ -14,9 +15,9 @@ function onSuccessResultProductos(data) {
     //if (notificacion.Estatus == 200) {
     //    MuestraToast('success', notificacion.Mensaje);
 
-        table.destroy();
+        tablaProductos.destroy();
         $('#rowProductos').html(data);
-        InitDataTable();
+        InitTableProductos();
 
     //} else {
     //    MuestraToast('error', "error");
@@ -60,9 +61,9 @@ function PintarTabla() {
         beforeSend: function (xhr) {
         },
         success: function (data) {
-            table.destroy();
+            tablaProductos.destroy();
             $('#rowProductos').html(data);
-            InitDataTable();
+            InitTableProductos();
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
@@ -94,25 +95,11 @@ function BuscarProductos(data) {
     });
 }
 
-function InitDataTable() {
+function InitTableProductos() {
+    var NombreTabla = "tablaProductos";
+    tablaProductos = initDataTable(NombreTabla);
 
-    table = $('#tablaProductos').DataTable({
-        "language": {
-            "lengthMenu": "Muestra _MENU_ registros por pagina",
-            "zeroRecords": "No existen registros",
-            "info": "Pagina _PAGE_ de _PAGES_",
-            "infoEmpty": "No existe informacion para mostrar",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            "search": "Buscar:",
-            "paginate": {
-                "first": "Primero",
-                "last": "Ultimo",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            },
-        },
-        "dom": 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    new $.fn.dataTable.Buttons(tablaProductos, {
         buttons: [
             {
                 extend: 'pdfHtml5',
@@ -121,10 +108,14 @@ function InitDataTable() {
                 titleAttr: 'Exportar a PDF',
                 title: "Productos",
                 customize: function (doc) {
-                    doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
-                    doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
+                    doc.defaultStyle.fontSize = 8;
+                    doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
+                    doc.content[1].table.widths = ['25%', '25%',  '25%', '25%'];
+                    doc.pageMargins = [30, 85, 20, 30];
+                    doc.content.splice(0, 1);
+                    doc['header'] = SetHeaderPDF("Productos");
+                    doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
                     columns: [0, 1, 2, 3]
@@ -139,14 +130,16 @@ function InitDataTable() {
                     columns: [0, 1, 2, 3]
                 },
             },
-
-
         ],
-
-        "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
     });
 
-    $('#tablaProductos_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProducto" data-toggle="tooltip" title="Agregar Producto"><i class="fas fa-user-plus"></i></a>');
+    tablaProductos.buttons(0, null).container().prependTo(
+        tablaProductos.table().container()
+    );
+
+  
+
+    $('#' + NombreTabla+'_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProducto" data-toggle="tooltip" title="Agregar Producto"><i class="fas fa-user-plus"></i></a>');
     InitBtnAgregar();
 }
 
@@ -308,7 +301,7 @@ function obtenerCodigos() {
 
 $(document).ready(function () {
 
-    InitDataTable();
+    InitTableProductos();
     InitRangePicker();
     $('#idLineaProductoBusqueda').val('');
 
