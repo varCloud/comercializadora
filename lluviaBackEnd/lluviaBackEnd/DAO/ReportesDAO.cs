@@ -86,6 +86,7 @@ namespace lluviaBackEnd.DAO
 
                     parameters.Add("@idProducto", ventas.idProducto);
                     parameters.Add("@descProducto", ventas.descripcionProducto);
+                    parameters.Add("@idLineaProducto", ventas.idLineaProducto);
                     parameters.Add("@idCliente", ventas.idCliente);
                     parameters.Add("@idUsuario", ventas.idUsuario);
                     parameters.Add("@fechaIni", ventas.fechaIni);

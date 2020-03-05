@@ -20,6 +20,7 @@ create proc SP_CONSULTA_VENTAS
 
 	@idProducto				int = null,
 	@descProducto			varchar(300) = null,
+	@idLineaProducto		int = null,
 	@idCliente				int = null,
 	@idUsuario				int = null,
 	@fechaIni				datetime = null,
@@ -42,15 +43,17 @@ as
 				create table
 					#Ventas	
 						(
-							idVenta					int,
-							idCliente				int,
-							nombreCliente			varchar(300),
-							cantidad				bigint,
-							fechaAlta				datetime,
-							idUsuario				int,
-							nombreUsuario			varchar(300),
-							idProducto				int,
-							descripcionProducto		varchar(300)
+							idVenta						int,
+							idCliente					int,
+							nombreCliente				varchar(300),
+							cantidad					bigint,
+							fechaAlta					datetime,
+							idUsuario					int,
+							nombreUsuario				varchar(300),
+							idProducto					int,
+							descripcionProducto			varchar(300),							
+							idLineaProducto				int,
+							descripcionLineaProducto	varchar(300)
 						)			
 
 			end  --declaraciones 
@@ -83,10 +86,10 @@ as
 						)
 					begin
 
-						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto)
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
 						select	top 50 v.idVenta, v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
-								p.idProducto,p.descripcion
+								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
@@ -96,16 +99,18 @@ as
 										on vd.idVenta = v.idVenta
 									inner join Productos p
 										on vd.idProducto = p.idProducto	
+									inner join LineaProducto lp
+										on lp.idLineaProducto = p.idLineaProducto
 
 					end
 				-- si es por busqueda
 				else 
 					begin
 
-						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto)
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
 						select	 v.idVenta, v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
-								p.idProducto,p.descripcion
+								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
@@ -114,7 +119,9 @@ as
 									inner join VentasDetalle vd
 										on vd.idVenta = v.idVenta
 									inner join Productos p
-										on vd.idProducto = p.idProducto	
+										on vd.idProducto = p.idProducto
+									inner join LineaProducto lp
+										on lp.idLineaProducto = p.idLineaProducto											
 																		
 						where	p.idProducto =	case
 													when @idProducto is null then p.idProducto
@@ -137,6 +144,12 @@ as
 													when @idUsuario is null then v.idUsuario
 													when @idUsuario = 0 then v.idUsuario
 													else @idUsuario
+												end
+
+							and lp.idLineaProducto =	case
+													when @idLineaProducto is null then lp.idLineaProducto
+													when @idLineaProducto = 0 then lp.idLineaProducto
+													else @idLineaProducto
 												end
 
 							and cast(v.fechaAlta as date) >=	case

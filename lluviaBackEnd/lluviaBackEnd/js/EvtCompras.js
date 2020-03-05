@@ -121,7 +121,7 @@ function InitDataTable() {
                     doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2, 3, 4, 5]
                 },
             },
             {
@@ -130,7 +130,7 @@ function InitDataTable() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2, 3, 4, 5]
                 },
             },
 
@@ -276,5 +276,7 @@ $(document).ready(function () {
     InitDataTable();
     InitRangePicker();
     $('#idLineaProductoBusqueda').val('');
+    $('#lstProveedoresBusqueda').val('');
+    $('#lstUsuariosBusqueda').val('');
 
 });

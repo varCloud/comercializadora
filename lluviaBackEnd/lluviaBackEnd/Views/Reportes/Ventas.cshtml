@@ -3,7 +3,8 @@
     ViewBag.Title = "Ventas";
     List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
-    List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
+    List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
 
 }
 @section Styles {
@@ -16,7 +17,7 @@
 @*<!DOCTYPE html>*@
 
 
-<h2>Ventas</h2>
+<h2>Reportes</h2>
 
 <div class="row">
     <div class="col-12 col-sm-12 col-lg-12">
@@ -29,22 +30,22 @@
             </div>
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
-                    @using (Ajax.BeginForm("BuscarProductos", "Productos",
+                    @using (Ajax.BeginForm("BuscarVentas", "Reportes",
             new AjaxOptions
             {
                 HttpMethod = "Post",
-                OnBegin = "onBeginSubmitProductos",
-                OnComplete = "onCompleteSubmitProductos",
-                OnFailure = "onFailureResultProductos",
-                OnSuccess = "onSuccessResultProductos",
+                OnBegin = "onBeginSubmitVentas",
+                OnComplete = "onCompleteSubmitVentas",
+                OnFailure = "onFailureResultVentas",
+                OnSuccess = "onSuccessResultVentas",
             },
-            new { id = "frmBuscarProductos" }))
+            new { id = "frmBuscarVentas" }))
                     {
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Descripción</label>
-                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
+                                    @Html.TextBoxFor(x => x.descripcionProducto, null, new { @class = "form-control", @id = "descripcionProductoBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -55,8 +56,37 @@
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
-                                    <label>Artículo</label>
-                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda", data_val = "false" })
+                                    <label>Cliente</label>
+                                    @Html.DropDownListFor(x => x.idCliente, lstClientes, new { @class = "form-control", id = "idClienteBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control daterange-cus">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "form-control", id = "idUsuarioBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+
                                 </div>
                             </div>
                         </div>
@@ -72,8 +102,8 @@
 </div>
 
 
-<div id="rowProductos">
-    @Html.Partial("_Ventas", new lluviaBackEnd.Models.Producto() { idProducto = 0 })
+<div id="rowVentas">
+    @Html.Partial("_Ventas", new lluviaBackEnd.Models.Ventas() { idVenta = 0 })
 </div>
 
 
@@ -98,6 +128,6 @@
     @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
 
-    <script src="~/js/EvtProductos.js"></script>
+    <script src="~/js/EvtVentas.js"></script>
 
 }

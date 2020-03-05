@@ -59,6 +59,7 @@ namespace lluviaBackEnd.Controllers
             notificacion = new ReportesDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
+            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
             ViewBag.lstCompras = notificacion.Modelo;
             return View();
         }
@@ -75,7 +76,10 @@ namespace lluviaBackEnd.Controllers
 
                 if (notificacion.Modelo != null)
                 {
-                    ViewBag.lstProductos = notificacion.Modelo;
+                    ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                    ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
+                    ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
+                    ViewBag.lstCompras = notificacion.Modelo;
                     return PartialView("_Compras");
                 }
                 else
@@ -100,8 +104,8 @@ namespace lluviaBackEnd.Controllers
             Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
             notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            //ViewBag.lstClientes = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            //ViewBag.lstUsuarios = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
             ViewBag.lstVentas = notificacion.Modelo;
             return View();
         }
@@ -118,6 +122,10 @@ namespace lluviaBackEnd.Controllers
 
                 if (notificacion.Modelo != null)
                 {
+                    ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                    ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+                    ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                    ViewBag.lstVentas = notificacion.Modelo;
                     ViewBag.lstProductos = notificacion.Modelo;
                     return PartialView("_Ventas");
                 }

@@ -63,6 +63,65 @@ namespace lluviaBackEnd.DAO
             return lstUsuarios;
         }
 
+        public List<SelectListItem> ObtenerUsuarios(int idUsuario)
+        {
+            List<SelectListItem> lstUsuarios = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idUsuario", idUsuario);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_USUARIOS]");
+                    while (db.DataReader.Read())
+                    {
+                        lstUsuarios.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["nombre"].ToString() + ' ' + db.DataReader["apellidoPaterno"].ToString() + ' ' + db.DataReader["apellidoMAterno"].ToString(),
+                                Value = db.DataReader["idUsuario"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstUsuarios;
+        }
+
+        public List<SelectListItem> ObtenerClientes(int idCliente)
+        {
+            List<SelectListItem> lst = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idCliente", idCliente);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_CLIENTES]");
+                    db.DataReader.NextResult();
+                    while (db.DataReader.Read())
+                    {
+                        //string nombre = db.DataReader["nombres"].ToString() + ' ' + db.DataReader["apellidoPaterno"].ToString() + ' ' + db.DataReader["apellidoMaterno"].ToString();
+                        lst.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["nombres"].ToString() + ' ' + db.DataReader["apellidoPaterno"].ToString() + ' ' + db.DataReader["apellidoMaterno"].ToString(),
+                                Value = db.DataReader["idCliente"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lst;
+        }
 
         public List<SelectListItem> ObtenerRoles(Rol rol)
         {

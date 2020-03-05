@@ -276,5 +276,7 @@ $(document).ready(function () {
     InitDataTable();
     InitRangePicker();
     $('#idLineaProductoBusqueda').val('');
+    $('#idClienteBusqueda').val('');
+    $('#idUsuarioBusqueda').val('');
 
 });

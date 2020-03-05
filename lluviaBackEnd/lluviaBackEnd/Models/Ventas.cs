@@ -46,6 +46,11 @@ namespace lluviaBackEnd.Models
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public int idProducto { get; set; }
 
+
+        [Display(Name = "idLineaProducto")]
+        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        public int idLineaProducto { get; set; }
+
         public DateTime fechaIni { get; set; }
 
         public DateTime fechaFin { get; set; }
