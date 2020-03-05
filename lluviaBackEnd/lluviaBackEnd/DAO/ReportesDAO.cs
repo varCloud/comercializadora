@@ -19,17 +19,18 @@ namespace lluviaBackEnd.DAO
     {
         private IDbConnection db = null;
 
-        public Notificacion<List<Producto>> ObtenerReporteProductos(Producto producto)
+        public Notificacion<List<Producto>> ObtenerInventario(Producto producto)
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
 
             try
             {
-                //if (  producto.fechaIni == (new DateTime(0001,01,01) ) )
-                //{
-                //    producto.fechaIni = new DateTime(1900, 01, 01);
+                if (producto.fechaIni == (new DateTime(0001, 01, 01)))
+                    producto.fechaIni = new DateTime(1900, 01, 01);
 
-                //}
+                if (producto.fechaFin == (new DateTime(0001, 01, 01)))
+                    producto.fechaFin = new DateTime(1900, 01, 01);
+
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
@@ -40,6 +41,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
+                    parameters.Add("@fechaIni", producto.fechaIni);
+                    parameters.Add("@fechaFin", producto.fechaFin);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -53,7 +56,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
 
 
@@ -104,7 +106,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
                 }
             }
@@ -135,6 +136,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", compras.idProducto);
                     parameters.Add("@descProducto", compras.descripcionProducto);
                     parameters.Add("@idProveedor", compras.idProveedor);
+                    parameters.Add("@idLineaProducto", compras.idLineaProducto);
                     parameters.Add("@idUsuario", compras.idUsuario);
                     parameters.Add("@fechaIni", compras.fechaIni);
                     parameters.Add("@fechaFin", compras.fechaFin);
@@ -151,7 +153,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
                 }
             }
