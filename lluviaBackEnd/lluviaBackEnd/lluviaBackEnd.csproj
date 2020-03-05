@@ -161,6 +161,7 @@
     </Compile>
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Clientes.cs" />
+    <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
     <Compile Include="Models\Factura.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Rol.cs" />
     <Compile Include="Models\TipoCliente.cs" />
+    <Compile Include="Models\Compras.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Sesion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -948,6 +950,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtClientes.js" />
+    <Content Include="js\EvtVentas.js" />
+    <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
     <Content Include="js\EvtProveedores.js" />

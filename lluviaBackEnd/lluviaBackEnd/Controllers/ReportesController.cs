@@ -22,36 +22,7 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        //public ActionResult ObtenerInventario(Producto producto)
-        //{
-        //    try
-        //    {
-        //        Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-        //        notificacion = new ProductosDAO().ObtenerProductos(producto);
-        //        Producto p = new Producto();
-        //        p = notificacion.Modelo[0];
-        //        return Json(p, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-        //public ActionResult _ObtenerInventario(Producto producto)
-        //{
-        //    try
-        //    {
-        //        Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-        //        notificacion = new ProductosDAO().ObtenerProductos(producto);
-        //        ViewBag.lstProductos = notificacion.Modelo;
-        //        return PartialView("_ObtenerProductos");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+      
 
         public ActionResult BuscarInventario(Producto producto)
         {
@@ -84,52 +55,23 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Compras()
         {
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+            Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
+            notificacion = new ReportesDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            ViewBag.lstProductos = notificacion.Modelo;
+            ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
+            ViewBag.lstCompras = notificacion.Modelo;
             return View();
         }
 
-        public ActionResult ObtenerCompras(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                Producto p = new Producto();
-                p = notificacion.Modelo[0];
-                return Json(p, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+       
 
-        public ActionResult _ObtenerCompras(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                ViewBag.lstProductos = notificacion.Modelo;
-                return PartialView("_ObtenerProductos");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public ActionResult BuscarCompras(Producto producto)
+        public ActionResult BuscarCompras(Compras compras)
         {
             try
             {
 
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
+                Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
+                notificacion = new ReportesDAO().ObtenerCompras(compras);
 
                 if (notificacion.Modelo != null)
                 {
@@ -155,52 +97,24 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Ventas()
         {
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            ViewBag.lstProductos = notificacion.Modelo;
+            //ViewBag.lstClientes = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            //ViewBag.lstUsuarios = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            ViewBag.lstVentas = notificacion.Modelo;
             return View();
         }
 
-        public ActionResult ObtenerVentas(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                Producto p = new Producto();
-                p = notificacion.Modelo[0];
-                return Json(p, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+      
 
-        public ActionResult _ObtenerVentas(Producto producto)
-        {
-            try
-            {
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
-                ViewBag.lstProductos = notificacion.Modelo;
-                return PartialView("_ObtenerProductos");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public ActionResult BuscarVentas(Producto producto)
+        public ActionResult BuscarVentas(Ventas ventas)
         {
             try
             {
 
-                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerVentas(ventas);
 
                 if (notificacion.Modelo != null)
                 {
