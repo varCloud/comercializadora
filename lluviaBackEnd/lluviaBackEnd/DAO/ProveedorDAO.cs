@@ -60,7 +60,7 @@ namespace lluviaBackEnd.DAO
         {
             Result result = new Result();
             result.status = -1;
-            result.mensaje = "Existió un error al hacer la actualización.";
+            result.Mensaje = "Existió un error al hacer la actualización.";
             try
             {
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -79,7 +79,7 @@ namespace lluviaBackEnd.DAO
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
                         {
                             result.status = Convert.ToInt32(db.DataReader["status"].ToString());
-                            result.mensaje = db.DataReader["mensaje"].ToString();
+                            result.Mensaje = db.DataReader["mensaje"].ToString();
                         }
                     }
                 }
@@ -95,7 +95,7 @@ namespace lluviaBackEnd.DAO
         {
             Result result = new Result();
             result.status = -1;
-            result.mensaje = "Existio un error al hacer la actualización.";
+            result.Mensaje = "Existio un error al hacer la actualización.";
             try
             {
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -110,7 +110,7 @@ namespace lluviaBackEnd.DAO
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
                         {
                             result.status = Convert.ToInt32(db.DataReader["status"].ToString());
-                            result.mensaje = db.DataReader["mensaje"].ToString();
+                            result.Mensaje = db.DataReader["mensaje"].ToString();
                         }
                     }
                 }
