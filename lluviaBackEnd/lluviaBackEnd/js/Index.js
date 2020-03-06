@@ -121,17 +121,7 @@ function initDataTable(nombreTabla) {
     });
 
 }
-/*
-function rootUrl(url) {
-    var _rootUrl = '@Url.Content("~")';
-    var x = url;
-    if (url.indexOf(_rootUrl) != 0) {
-        x = _rootUrl + "/" + url;
-        x = x.replace(/\/\//g, "/").replace(/\/\//g, "/");
-    }
-    return x;
-};
-*/
+
 
 $(document).ready(function () {
     console.log("index ready");

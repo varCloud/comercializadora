@@ -23,8 +23,9 @@ create proc SP_CONSULTA_PRODUCTOS
 	@idUnidadMedida			int = null,
 	@idLineaProducto		int = null,
 	@activo					bit = null,
-	@articulo				varchar(255) = null
-	
+	@articulo				varchar(255) = null,
+	@fechaIni				datetime = null,
+	@fechaFin				datetime = null
 
 as
 
@@ -74,7 +75,9 @@ as
 						( @idUnidadMedida = 0 ) and 
 						( @idLineaProducto = 0 ) and 
 						( @activo = 0 ) and 
-						( @articulo is null ) 						
+						( @articulo is null ) and					
+						( @fechaIni = '19000101' ) and					
+						( @fechaFin = '19000101' ) 
 					)
 					begin
 
@@ -103,34 +106,34 @@ as
 														else '%' + @descripcion + '%'
 													end
 
-							--and idUnidadMedida =	case
-							--							when @idUnidadMedida is null then idUnidadMedida
-							--							when @idUnidadMedida = 0 then idUnidadMedida
-							--							else @idUnidadMedida
-							--						end
-
 							and idLineaProducto =	case
 														when @idLineaProducto is null then idLineaProducto
 														when @idLineaProducto = 0 then idLineaProducto
 														else @idLineaProducto
 													end
 
-							--and cast(fechaAlta as date) =	case
-							--									when @fechaAlta is null then cast(fechaAlta as date)
-							--									when @fechaAlta = '19000101' then cast(fechaAlta as date)
-							--									else cast(@fechaAlta as date)
-							--								end
-
-							--and activo =	case
-							--					when @activo is null then activo
-							--					when @activo = 0 then activo
-							--					else @activo
-							--				end
-
 							and articulo like	case
 													when @articulo is null then articulo
 													else '%' + @articulo + '%' 
 												end
+
+							and cast(fechaAlta as date) >=	case
+																	when @fechaIni is null then cast(fechaAlta as date)
+																	when @fechaIni = 0 then cast(fechaAlta as date)
+																	when @fechaIni = '19000101' then cast(fechaAlta as date)
+																	else cast(@fechaIni as date)
+																end
+
+							and cast(fechaAlta as date) <=	case
+																	when @fechaFin is null then cast(fechaAlta as date)
+																	when @fechaFin = 0 then cast(fechaAlta as date)
+																	when @fechaFin = '19000101' then cast(fechaAlta as date)
+																	else cast(@fechaFin as date)
+																end
+
+
+
+
 							and activo = cast(1 as bit)
 
 					end

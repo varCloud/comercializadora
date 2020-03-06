@@ -29,7 +29,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
+                notificacion = new ReportesDAO().ObtenerInventario(producto);
 
                 if (notificacion.Modelo != null)
                 {

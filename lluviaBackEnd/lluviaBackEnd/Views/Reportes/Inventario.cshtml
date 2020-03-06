@@ -32,16 +32,19 @@
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
                     @using (Ajax.BeginForm("BuscarInventario", "Reportes",
-            new AjaxOptions
-            {
-                HttpMethod = "Post",
-                OnBegin = "onBeginSubmitProductos",
-                OnComplete = "onCompleteSubmitProductos",
-                OnFailure = "onFailureResultProductos",
-                OnSuccess = "onSuccessResultProductos",
-            },
-            new { id = "frmBuscarProductos" }))
+                    new AjaxOptions
                     {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitProductos",
+                        OnComplete = "onCompleteSubmitProductos",
+                        OnFailure = "onFailureResultProductos",
+                        OnSuccess = "onSuccessResultProductos",
+                    },
+                    new { id = "frmBuscarProductos" }))
+                    {
+                        @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIniInventario" })
+                        @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFinInventario" })
+
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
@@ -63,6 +66,32 @@
                             </div>
                         </div>
 
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="rangeInventario" class="form-control daterange-cus">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+
+                            </div>
+
+                        </div>
+
                         <div class="text-right" style="margin-top:15px;">
                             <button type="submit" id="btnBuscarProductos" class="btn btn-success">Buscar</button>
                         </div>
@@ -79,29 +108,15 @@
 </div>
 
 
-
-
-
-
-
 @section scripts {
-
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/page/datatables.js"></script>
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
-    @*<script src="~/assets/js/page/forms-advanced-forms.js"></script>*@
-
-
-    @*<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>*@
-
     <script src="~/js/EvtInventario.js"></script>
-
 }

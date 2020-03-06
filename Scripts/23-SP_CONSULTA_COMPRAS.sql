@@ -21,6 +21,7 @@ create proc SP_CONSULTA_COMPRAS
 	@idProducto				int = null,
 	@descProducto			varchar(300) = null,
 	@idProveedor			int = null,
+	@idLineaProducto		int = null,
 	@idUsuario				int = null,
 	@fechaIni				datetime = null,
 	@fechaFin				datetime = null
@@ -42,15 +43,17 @@ as
 				create table 
 					#Compras
 						(
-							idCompra				int,
-							idProducto				int,
-							descripcionProducto		varchar(300),
-							idProveedor				int,
-							descripcionProveedor	varchar(300),
-							idUsuario				int,
-							nombreUsuario			varchar(300),
-							fechaAlta				datetime,
-							cantidad				int
+							idCompra					int,
+							idProducto					int,
+							descripcionProducto			varchar(300),
+							idProveedor					int,
+							descripcionProveedor		varchar(300),
+							idUsuario					int,
+							nombreUsuario				varchar(300),
+							fechaAlta					datetime,
+							cantidad					int,
+							idLineaProducto				int,
+							descripcionLineaProducto	varchar(300)
 						)
 						
 			end  --declaraciones 
@@ -73,14 +76,15 @@ as
 				-- si son todos
 					if (	(@idProducto = 0) and 
 							(@idProveedor = 0) and
+							(@idLineaProducto = 0) and
 							(@idUsuario = 0) and
 							(@fechaIni = '19000101') and
 							(@fechaFin = '19000101')
 						)
 					begin
 
-						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad)
-						select	top 50 c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad
+						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
+						select	top 50 c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
 						from	Compras c
 									inner join Productos p
 										on p.idProducto = c.idProducto
@@ -88,6 +92,9 @@ as
 										on u.idUsuario = c.idUsuario
 									inner join Proveedores pro
 										on pro.idProveedor = c.idProveedor					
+									inner join LineaProducto lp
+										on lp.idLineaProducto = p.idLineaProducto											
+
 						order by idCompra desc
 
 					end
@@ -95,8 +102,8 @@ as
 				else 
 					begin
 
-						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad)
-						select	c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad
+						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
+						select	c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
 						from	Compras c
 									inner join Productos p
 										on p.idProducto = c.idProducto
@@ -104,6 +111,8 @@ as
 										on u.idUsuario = c.idUsuario
 									inner join Proveedores pro
 										on pro.idProveedor = c.idProveedor
+									inner join LineaProducto lp
+										on lp.idLineaProducto = p.idLineaProducto											
 
 						where	c.idProducto =	case
 													when @idProducto is null then c.idProducto
@@ -127,6 +136,12 @@ as
 														when @idUsuario = 0 then c.idUsuario
 														else @idUsuario
 													end
+
+							and lp.idLineaProducto =	case
+															when @idLineaProducto is null then lp.idLineaProducto
+															when @idLineaProducto = 0 then lp.idLineaProducto
+															else @idLineaProducto
+														end
 
 							and cast(c.fechaAlta as date) >=	case
 																	when @fechaIni is null then cast(c.fechaAlta as date)

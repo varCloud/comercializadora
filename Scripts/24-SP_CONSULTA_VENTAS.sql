@@ -79,6 +79,7 @@ as
 					if (	
 							(@idProducto is null) and 
 							(@descProducto is null) and 
+							(@idLineaProducto is null) and 
 							(@idCliente is null) and 
 							(@idUsuario is null) and 
 							(@fechaIni = '19000101') and
@@ -147,10 +148,10 @@ as
 												end
 
 							and lp.idLineaProducto =	case
-													when @idLineaProducto is null then lp.idLineaProducto
-													when @idLineaProducto = 0 then lp.idLineaProducto
-													else @idLineaProducto
-												end
+															when @idLineaProducto is null then lp.idLineaProducto
+															when @idLineaProducto = 0 then lp.idLineaProducto
+															else @idLineaProducto
+														end
 
 							and cast(v.fechaAlta as date) >=	case
 																	when @fechaIni is null then cast(v.fechaAlta as date)

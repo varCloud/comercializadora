@@ -27,8 +27,6 @@ function onFailureResultProductos() {
     console.log("onFailureResult___");
 }
 
-
-
 // guardar-modificar
 function onBeginSubmitGuardarProducto() {
     console.log("onBeginSubmit___");
@@ -50,10 +48,9 @@ function onFailureResultGuardarProducto() {
     console.log("onFailureResult___");
 }
 
-
 function PintarTabla() {
     $.ajax({
-        url: "/Productos/_ObtenerProductos",
+        url: rootUrl("/Productos/_ObtenerProductos"),
         data: { idUsuario: 0 },
         method: 'post',
         dataType: 'html',
@@ -75,7 +72,7 @@ function PintarTabla() {
 
 function BuscarProductos(data) {
     $.ajax({
-        url: "/Productos/BuscarProductos",
+        url: rootUrl("/Productos/BuscarProductos"),
         data: { idUsuario: data.idProducto },
         method: 'post',
         dataType: 'html',
@@ -148,7 +145,7 @@ function ObtenerProducto(idProducto) {
 
     var result = '';
     $.ajax({
-        url: "/Productos/ObtenerProductos",
+        url: rootUrl("/Productos/ObtenerProductos"),
         data: { idProducto: idProducto },
         method: 'post',
         dataType: 'json',
@@ -238,7 +235,7 @@ function EliminarProducto(idProducto) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: "/Productos/ActualizarEstatusProducto",
+                    url: rootUrl("/Productos/ActualizarEstatusProducto"),
                     data: { idProducto: idProducto, activo: false },
                     method: 'post',
                     dataType: 'json',
@@ -277,7 +274,7 @@ function obtenerCodigos() {
     console.log($('#articulo').val());
     if ($('#articulo').val() !== '') {
         $.ajax({
-            url: "/Productos/ObtenerCodigos",
+            url: rootUrl("/Productos/ObtenerCodigos"),
             data: { cadena: $('#articulo').val() },
             method: 'post',
             dataType: 'json',

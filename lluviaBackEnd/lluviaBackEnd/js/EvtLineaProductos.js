@@ -15,11 +15,11 @@ function onSuccessResultGuardarLineaProducto(data) {
 
     if (data.status == 200) {
 
-        mensajeOK(data.mensaje);
+        MuestraToast("success", data.Mensaje);
         PintarTabla();
 
     } else {
-        mensajeERROR(data.mensaje);
+        MuestraToast("error", data.Mensaje);
     }
 
     $('#EditarLineaProductoModal').modal('hide');
@@ -32,7 +32,7 @@ function onFailureResultGuardarLineaProducto() {
 
 function PintarTabla() {
     $.ajax({
-        url: "/LineaProducto/_ObtenerLineaProducto",
+        url: rootUrl("/LineaProducto/_ObtenerLineaProducto"),
         data: { idLineaProducto: 0 },
         method: 'post',
         dataType: 'html',
@@ -102,7 +102,7 @@ function ObtenerLineaProducto(idLineaProducto) {
 
     var result = '';
     $.ajax({
-        url: "/LineaProducto/ObtenerLineaProducto",
+        url: rootUrl("/LineaProducto/ObtenerLineaProducto"),
         data: { idLineaProducto: idLineaProducto },
         method: 'post',
         dataType: 'json',
@@ -122,14 +122,6 @@ function ObtenerLineaProducto(idLineaProducto) {
     });
 
     return result;
-}
-
-function mensajeOK(mensaje) {
-    swal(mensaje, 'Presione OK para continuar.', 'success');
-}
-
-function mensajeERROR(mensaje) {
-    swal(mensaje, 'Presione OK para continuar.', 'error');
 }
 
 function VerLineaProducto(idLineaProducto) {
@@ -192,7 +184,7 @@ function EliminarLineaProducto(idLineaProducto) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: "/LineaProducto/ActualizarEstatusLineaProducto",
+                    url: rootUrl("/LineaProducto/ActualizarEstatusLineaProducto"),
                     data: { idLineaProducto: idLineaProducto, activo: false },
                     method: 'post',
                     dataType: 'json',
@@ -201,7 +193,7 @@ function EliminarLineaProducto(idLineaProducto) {
                         console.log("Antes ")
                     },
                     success: function (data) {
-                        mensajeOK(data.mensaje);
+                        MuestraToast("success", data.Mensaje);
                         PintarTabla();
                     },
                     error: function (xhr, status) {
@@ -220,7 +212,5 @@ function EliminarLineaProducto(idLineaProducto) {
 
 
 $(document).ready(function () {
-
     InitTableLineaProductos();
-
 });
