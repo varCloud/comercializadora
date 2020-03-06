@@ -20,6 +20,19 @@
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="~/assets/css/custom.css">
     <link rel='shortcut icon' type='image/x-icon' href='~/assets/img/favicon.ico' />
+
+    <script>
+        function rootUrl(url) {
+            var _rootUrl = '@Url.Content("~")';
+            var x = url;
+            if (url.indexOf(_rootUrl) != 0) {
+                x = _rootUrl + "/" + url;
+                x = x.replace(/\/\//g, "/").replace(/\/\//g, "/");
+            }
+            return x;
+        };
+    </script>
+
 </head>
 
 <body>
