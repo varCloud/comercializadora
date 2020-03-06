@@ -199,8 +199,10 @@
     <Compile Include="Models\Sesion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilerias\Utils.cs" />
+    <Compile Include="WebServices\Modelos\WsUtils.cs" />
     <Compile Include="WebServices\WsLoginController.cs" />
     <Compile Include="WebServices\Modelos\RequestLogin.cs" />
+    <Compile Include="WebServices\WsProductosController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\bundles\amcharts4\animated.js" />

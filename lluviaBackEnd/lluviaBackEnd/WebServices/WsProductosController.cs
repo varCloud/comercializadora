@@ -10,17 +10,18 @@ using System.Web.Http;
 
 namespace lluviaBackEnd.WebServices
 {
-    public class WsLoginController : ApiController
+    public class WsProductosController : ApiController
     {
-        public Models.Notificacion<Sesion> ValidaUsario(RequestLogin login)
+
+        public Notificacion<Producto> AgregarProducto(Producto producto)
         {
             try
             {
-                return new LoginDAO().ValidaUsuario(new Sesion() { usuario = login.Usuario, contrasena = login.Contrasena });
+                return new ProductosDAO().GuardarProducto(producto);
             }
             catch (Exception ex)
             {
-                return WsUtils<Sesion>.RegresaExcepcion(ex, null);
+                return WsUtils<Producto>.RegresaExcepcion(ex, producto);
             }
 
         }
