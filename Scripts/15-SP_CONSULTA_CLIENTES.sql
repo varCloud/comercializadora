@@ -71,11 +71,15 @@ as
 							@status status,
 							@error_procedure error_procedure,
 							@error_line error_line,
-							@mensaje mensaje,
+							@mensaje mensaje
+					select 
 							c.idCliente,
 							c.nombres,
 							c.apellidoPaterno,
-							c.apellidoMaterno,
+							case
+								when ( (c.activo = cast(0 as bit)) or (c.activo is null) ) then c.apellidoMaterno + ' (BAJA)'
+								else c.apellidoMaterno
+							end as apellidoMaterno,
 							c.telefono,
 							c.correo,
 							c.rfc,
@@ -93,7 +97,7 @@ as
 												when @idCliente > 0 then @idCliente
 												else c.idCliente
 											end
-						and	c.activo = cast(1 as bit)
+						--and	c.activo = cast(1 as bit)
 				end
 			else
 				begin

@@ -72,7 +72,22 @@ as
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							u.*,
+							u.idUsuario,
+							u.idRol,
+							u.usuario,
+							u.telefono,
+							u.contrasena,
+							u.idAlmacen,
+							u.idSucursal,
+							u.nombre,
+							u.apellidoPaterno,
+							--u.apellidoMaterno,
+							case 
+								when u.activo = cast(0 as bit) then u.apellidoMaterno + ' (BAJA)'
+								else u.apellidoMaterno
+							end as apellidoMaterno,
+							u.fecha_alta,
+							u.activo,
 							r.descripcion as descripcionRol,
 							s.descripcion as descripcionSucursal,
 							a.descripcion as descripcionAlmacen
@@ -87,7 +102,7 @@ as
 												when @idUsuario > 0 then @idUsuario
 												else u.idUsuario
 											end
-						and	u.activo = cast(1 as bit)
+						--and	u.activo = cast(1 as bit)
 						and r.idRol <> 1 -- administrador
 
 				end
