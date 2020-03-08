@@ -89,6 +89,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
+            lstUsuarios.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
             return lstUsuarios;
         }
 
@@ -120,6 +121,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
+            lst.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
             return lst;
         }
 
