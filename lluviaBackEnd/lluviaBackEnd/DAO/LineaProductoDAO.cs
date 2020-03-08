@@ -146,6 +146,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
+            lstLineasDeProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
             return lstLineasDeProductos;
         }
 

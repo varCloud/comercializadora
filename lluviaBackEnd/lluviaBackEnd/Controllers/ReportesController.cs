@@ -120,21 +120,21 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
                 notificacion = new ReportesDAO().ObtenerVentas(ventas);
 
-                if (notificacion.Modelo != null)
-                {
-                    ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-                    ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
-                    ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                //if (notificacion.Modelo != null)
+                //{
+                   // ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                   // ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+                   // ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
                     ViewBag.lstVentas = notificacion.Modelo;
-                    ViewBag.lstProductos = notificacion.Modelo;
+                   // ViewBag.lstProductos = notificacion.Modelo;
                     return PartialView("_Ventas");
-                }
-                else
-                {
-                    ViewBag.titulo = "Mensaje: ";
-                    ViewBag.mensaje = notificacion.Mensaje;
-                    return PartialView("_SinResultados");
-                }
+                //}
+                //else
+                //{
+                //    ViewBag.titulo = "Mensaje: ";
+                //    ViewBag.mensaje = notificacion.Mensaje;
+                //    return PartialView("_SinResultados");
+                //}
 
             }
             catch (Exception ex)

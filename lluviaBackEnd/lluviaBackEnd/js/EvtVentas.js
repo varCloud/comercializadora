@@ -90,9 +90,41 @@ function InitDataTableVentas() {
 function InitRangePicker() {
 
     $('#rangeVentas').daterangepicker({
-        autoUpdateInput: false,
+        singleDatePicker: false,
+        //autoUpdateInput: false,
+        showDropdowns: true,
         locale: {
-            cancelLabel: 'Clear'
+            "format": "MM/DD/YYYY",
+            "separator": " - ",
+            "applyLabel": "Aceptar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "De",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": [
+                "Dom",
+                "Lun",
+                "Mar",
+                "Mié",
+                "Juv",
+                "Vie",
+                "Sáb"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Augosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
         }
     }, function (start, end, label) {
         $('#fechaIniVentas').val(start.format('YYYY-MM-DD'));
@@ -104,7 +136,7 @@ function InitRangePicker() {
     });
 
     $('#rangeVentas').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
+        //$(this).val('');
     });
 
 }
@@ -113,8 +145,8 @@ $(document).ready(function () {
 
     InitDataTableVentas();
     InitRangePicker();
-    $('#idLineaProductoBusqueda').val('');
-    $('#idClienteBusqueda').val('');
-    $('#idUsuarioBusqueda').val('');
+    $('#idLineaProductoBusqueda').val('0');
+    $('#idClienteBusqueda').val('0');
+    $('#idUsuarioBusqueda').val('0');
 
 });

@@ -127,7 +127,8 @@ $(document).ready(function () {
     console.log("index ready");
 
     toDataURL(
-        'http://localhost:56196/assets/img/logo_lluvia.png',
+        pathServer,
+        //'http://localhost:56196/assets/img/logo_lluvia.png',
         function (dataUrl) {
             //console.log('base64:', dataUrl)
             logoBase64 = dataUrl;
