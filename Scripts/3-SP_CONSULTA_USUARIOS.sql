@@ -88,6 +88,7 @@ as
 												else u.idUsuario
 											end
 						and	u.activo = cast(1 as bit)
+						and r.idRol <> 1 -- administrador
 
 				end
 			else
