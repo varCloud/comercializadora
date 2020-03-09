@@ -91,8 +91,11 @@ as
 							c.estado,
 							c.fechaAlta,
 							c.activo,
-							c.idTipoCliente
+							c.idTipoCliente,
+							t.descripcion 
 					from	Clientes c
+							inner join CatTipoCliente t
+								on c.idTipoCliente = t.idTipoCliente
 					where	c.idCliente	 =	case
 												when @idCliente > 0 then @idCliente
 												else c.idCliente

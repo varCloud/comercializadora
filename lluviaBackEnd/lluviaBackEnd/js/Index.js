@@ -123,6 +123,59 @@ function initDataTable(nombreTabla) {
 }
 
 
+function InitRangePicker(nombrePicker, fechaIni, fechaFin) {
+
+    $('#' + nombrePicker).daterangepicker({
+        singleDatePicker: false,
+        showDropdowns: true,
+        locale: {
+            "format": "MM/DD/YYYY",
+            "separator": " - ",
+            "applyLabel": "Aceptar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "De",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": [
+                "Dom",
+                "Lun",
+                "Mar",
+                "Mié",
+                "Juv",
+                "Vie",
+                "Sáb"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Augosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
+        }
+    }, function (start, end, label) {
+        $('#' + fechaIni).val(start.format('YYYY-MM-DD'));
+        $('#' + fechaFin).val(end.format('YYYY-MM-DD'));
+    });
+
+    $('#' + nombrePicker).on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    //$('#nombrePicker').on('cancel.daterangepicker', function (ev, picker) {
+    //    //$(this).val('');
+    //});
+
+}
+
 $(document).ready(function () {
     console.log("index ready");
 

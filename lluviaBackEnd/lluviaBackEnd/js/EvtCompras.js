@@ -88,34 +88,37 @@ function InitDataTableCompras() {
 }
 
 
-function InitRangePicker() {
+//function InitRangePicker() {
 
-    $('#rangeCompras').daterangepicker({
-        autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }
-    }, function (start, end, label) {
-        $('#fechaIniCompras').val(start.format('YYYY-MM-DD'));
-        $('#fechaFinCompras').val(end.format('YYYY-MM-DD'));
-    });
+//    $('#rangeCompras').daterangepicker({
+//        autoUpdateInput: false,
+//        locale: {
+//            cancelLabel: 'Clear'
+//        }
+//    }, function (start, end, label) {
+//        $('#fechaIniCompras').val(start.format('YYYY-MM-DD'));
+//        $('#fechaFinCompras').val(end.format('YYYY-MM-DD'));
+//    });
 
-    $('#rangeCompras').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
+//    $('#rangeCompras').on('apply.daterangepicker', function (ev, picker) {
+//        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+//    });
 
-    $('#rangeCompras').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-    });
+//    $('#rangeCompras').on('cancel.daterangepicker', function (ev, picker) {
+//        $(this).val('');
+//    });
     
-}
+//}
 
 $(document).ready(function () {
 
     InitDataTableCompras();
-    InitRangePicker();
-    $('#idLineaProductoBusqueda').val('');
-    $('#lstProveedoresBusqueda').val('');
-    $('#lstUsuariosBusqueda').val('');
+    InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
+    $('#idLineaProductoBusqueda').val('0');
+    $('#lstProveedoresBusqueda').val('0');
+    $('#lstUsuariosBusqueda').val('0');
+    $('#fechaIni').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaFin').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
 
 });

@@ -42,62 +42,6 @@ function PintarTabla() {
     });
 }
 
-//function InitDataTable() {
-
-//    table = $('#tablaRepProductos').DataTable({
-//        "language": {
-//            "lengthMenu": "Muestra _MENU_ registros por pagina",
-//            "zeroRecords": "No existen registros",
-//            "info": "Pagina _PAGE_ de _PAGES_",
-//            "infoEmpty": "No existe informacion para mostrar",
-//            "infoFiltered": "(filtered from _MAX_ total records)",
-//            "search": "Buscar:",
-//            "paginate": {
-//                "first": "Primero",
-//                "last": "Ultimo",
-//                "next": "Siguiente",
-//                "previous": "Anterior"
-//            },
-//        },
-//        "dom": 'Bfrtip',
-//        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-//        buttons: [
-//            {
-//                extend: 'pdfHtml5',
-//                text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
-//                className: '',
-//                titleAttr: 'Exportar a PDF',
-//                title: "Inventario de Productos",
-//                customize: function (doc) {
-//                    doc.defaultStyle.fontSize = 8; //2, 3, 4,etc
-//                    doc.styles.tableHeader.fontSize = 10; //2, 3, 4, etc
-//                    doc.defaultStyle.alignment = 'center';
-//                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
-//                },
-//                exportOptions: {
-//                    columns: [0, 1, 2, 3]
-//                },
-//            },
-//            {
-//                extend: 'excel',
-//                text: '<i class="fas fa-file-excel" style="font-size:20px;"></i>',
-//                className: '',
-//                titleAttr: 'Exportar a Excel',
-//                exportOptions: {
-//                    columns: [0, 1, 2, 3]
-//                },
-//            },
-
-
-//        ],
-
-//        "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
-//    });
-
-
-//}
-
-
 function InitDataTableInventario() {
     var NombreTabla = "tablaRepProductos";
     tablaInventario = initDataTable(NombreTabla);
@@ -142,34 +86,12 @@ function InitDataTableInventario() {
     );
 }
 
-function InitRangePicker() {
-
-    $('#rangeInventario').daterangepicker({
-        autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }     
-    }, function (start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        $('#fechaIniInventario').val(start.format('YYYY-MM-DD'));
-        $('#fechaFinInventario').val(end.format('YYYY-MM-DD'));
-
-    });
-
-    $('#rangeInventario').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $('#rangeInventario').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-    });
-
-}
-
 $(document).ready(function () {
 
     InitDataTableInventario();
-    InitRangePicker();
-    $('#idLineaProductoBusqueda').val('');
+    InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
+    $('#idLineaProductoBusqueda').val('0');
+    $('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });

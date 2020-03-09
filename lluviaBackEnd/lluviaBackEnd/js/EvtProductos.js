@@ -260,15 +260,15 @@ function EliminarProducto(idProducto) {
         });
 }
 
-function InitRangePicker() {
+//function InitRangePicker() {
 
-    $('.daterange-cus').daterangepicker({
-        locale: { format: 'YYYY-MM-DD' },
-        drops: 'down',
-        opens: 'right'
-    });
+//    $('.daterange-cus').daterangepicker({
+//        locale: { format: 'YYYY-MM-DD' },
+//        drops: 'down',
+//        opens: 'right'
+//    });
 
-}
+//}
 
 function obtenerCodigos() {
     console.log($('#articulo').val());
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
     InitTableProductos();
     InitRangePicker();
-    $('#idLineaProductoBusqueda').val('');
+    $('#idLineaProductoBusqueda').val('0');
 
     document.getElementById('articulo').onchange = function () {
         obtenerCodigos();

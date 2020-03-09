@@ -5,8 +5,8 @@
     List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
     List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
 }
-@if (lstVentas != null)
-{
+
+
     <div class="section-body">
         <div class="row">
             <div class="col-12">
@@ -50,33 +50,6 @@
         </div>
 
     </div>
-}
-else
-{
-
-    <div class="card">
-        <div class="card-header">
-            <h4>Mensaje</h4>
-        </div>
-        <div class="card-body">
-            <div class="empty-state" data-height="400" style="height: 400px;">
-                <div class="empty-state-icon">
-                    <i class="fas fa-question"></i>
-                </div>
-                <h2>No se encontraron productos con esos términos de búsqueda</h2>
-                @*<p class="lead">
-            Sorry we can't find any data, to get rid of this message, make at least 1 entry.
-        </p>*@
-
-                @*<a href="@Url.Action("Productos", "Productos")" class="btn btn-primary mt-4">Ok</a>
-        <a href="javascript:PintarTabla();" class="btn btn-primary mt-4">Ok</a>
-                *@
-
-            </div>
-        </div>
-    </div>
 
 
-
-}
 

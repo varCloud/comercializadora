@@ -1,6 +1,6 @@
 ﻿var table;
 var iframe;
-var tablaVentas;  
+var tablaVentas; 
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -87,66 +87,14 @@ function InitDataTableVentas() {
     );
 }
 
-function InitRangePicker() {
-
-    $('#rangeVentas').daterangepicker({
-        singleDatePicker: false,
-        //autoUpdateInput: false,
-        showDropdowns: true,
-        locale: {
-            "format": "MM/DD/YYYY",
-            "separator": " - ",
-            "applyLabel": "Aceptar",
-            "cancelLabel": "Cancelar",
-            "fromLabel": "De",
-            "toLabel": "Hasta",
-            "customRangeLabel": "Custom",
-            "daysOfWeek": [
-                "Dom",
-                "Lun",
-                "Mar",
-                "Mié",
-                "Juv",
-                "Vie",
-                "Sáb"
-            ],
-            "monthNames": [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Augosto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre"
-            ],
-            "firstDay": 1
-        }
-    }, function (start, end, label) {
-        $('#fechaIniVentas').val(start.format('YYYY-MM-DD'));
-        $('#fechaFinVentas').val(end.format('YYYY-MM-DD'));
-    });
-
-    $('#rangeVentas').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $('#rangeVentas').on('cancel.daterangepicker', function (ev, picker) {
-        //$(this).val('');
-    });
-
-}
-
 $(document).ready(function () {
 
     InitDataTableVentas();
-    InitRangePicker();
+    InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
     $('#idLineaProductoBusqueda').val('0');
     $('#idClienteBusqueda').val('0');
     $('#idUsuarioBusqueda').val('0');
+    $('#fechaIni').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaFin').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });

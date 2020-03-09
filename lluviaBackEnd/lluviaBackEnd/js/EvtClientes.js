@@ -161,7 +161,7 @@ function InitTableClientes() {
                     doc.defaultStyle.fontSize = 8; 
                     doc.styles.tableHeader.fontSize = 10; 
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
+                    doc.content[1].table.widths = ['5%', '20%', '20%', '15%', '15%', '10%', '15%'];
 
                     doc.content.splice(0, 1);
                     doc.pageMargins = [30, 85, 20, 30];
