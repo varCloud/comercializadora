@@ -75,6 +75,7 @@ as
 							*
 					from	catRoles
 					where	activo = cast(1 as bit)
+						and	idRol <> 1
 
 				end
 			else
