@@ -17,7 +17,6 @@ namespace lluviaBackEnd.DAO
 
         private DBManager db = null;
 
-
         public List<LineaProducto> ObtenerLineaProductos(LineaProducto lineaProducto)
         {
 
@@ -149,8 +148,7 @@ namespace lluviaBackEnd.DAO
             lstLineasDeProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
             return lstLineasDeProductos;
         }
-
-
+        
         public List<SelectListItem> ObtenerUnidadesMedidas()
         {
             List<SelectListItem> lstUnidadMedida = new List<SelectListItem>();
