@@ -85,6 +85,7 @@ function EliminarCliente(idCliente) {
 function VerCliente(idCliente, accion) {
     //accion = 1 solo quiere ver al cliente
     //accion = 2 Va a editar el usario
+    $('.field-validation-error').html("");
 
     var data = ObtenerCliente(idCliente)
     if (data.Estatus == 200) {
@@ -114,7 +115,7 @@ function VerCliente(idCliente, accion) {
         $('#estado').val(data.Modelo.estado);
         $('#cbTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente);
         $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true })
-        
+
     } else {
         MuestraToast('info', data.Mensaje)
     }
@@ -230,6 +231,7 @@ function InitTableClientes() {
 
 function InitBtnAgregar() {
     $('#btnAgregarCliente').click(function (e) {
+        $('.field-validation-error').html("");
 
        
         $("#frmClientes input").prop("disabled", false);

@@ -180,6 +180,9 @@ function VerProducto(idProducto) {
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
     $('#articulo').val(data.articulo).prop('disabled', true);
+    $('.field-validation-error').html("");
+    document.getElementById('barra').src = '';
+    document.getElementById('qr').src = '';
     obtenerCodigos();
     //para abrir el modal
     $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -199,6 +202,9 @@ function EditarProducto(idProducto) {
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
     $('#articulo').val(data.articulo).prop('disabled', false);
+    $('.field-validation-error').html("");
+    document.getElementById('barra').src = '';
+    document.getElementById('qr').src = '';
     obtenerCodigos();
     //para abrir el modal
     $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -217,6 +223,9 @@ function InitBtnAgregar() {
         $('#idLineaProducto').val('').prop('disabled', false);
         $('#cantidadUnidadMedida').val('').prop('disabled', false);
         $('#articulo').val('').prop('disabled', false);
+        $('.field-validation-error').html("");
+        document.getElementById('barra').src = '';
+        document.getElementById('qr').src = '';
         //para abrir el modal
         $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalProducto').html("Agregar Producto");
@@ -259,16 +268,6 @@ function EliminarProducto(idProducto) {
             }
         });
 }
-
-//function InitRangePicker() {
-
-//    $('.daterange-cus').daterangepicker({
-//        locale: { format: 'YYYY-MM-DD' },
-//        drops: 'down',
-//        opens: 'right'
-//    });
-
-//}
 
 function obtenerCodigos() {
     console.log($('#articulo').val());
