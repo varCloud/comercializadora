@@ -39,7 +39,7 @@ function PintarTabla() {
         success: function (data) {
             tablaProveedores.destroy();
             $('#rowTblProveedores').html(data);
-            tablaProveedores();
+            InitTableProveedores();
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
@@ -191,7 +191,7 @@ function EliminarProveedor(idProveedor) {
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este Proveedor?',
         icon: 'warning',
-        buttons: true,
+        buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
         .then((willDelete) => {

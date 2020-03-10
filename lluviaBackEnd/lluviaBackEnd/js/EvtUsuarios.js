@@ -217,7 +217,7 @@ function EliminarUsuario(idUsuario) {
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este usuario?',
         icon: 'warning',
-        buttons: true,
+        buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
         .then((willDelete) => {

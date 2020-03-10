@@ -11,17 +11,11 @@ function onCompleteSubmitProductos() {
 }
 function onSuccessResultProductos(data) {
     console.log("onSuccessResult", JSON.stringify(data) );
-    
-    //if (notificacion.Estatus == 200) {
-    //    MuestraToast('success', notificacion.Mensaje);
 
-        tablaProductos.destroy();
-        $('#rowProductos').html(data);
-        InitTableProductos();
+    tablaProductos.destroy();
+    $('#rowProductos').html(data);
+    InitTableProductos();
 
-    //} else {
-    //    MuestraToast('error', "error");
-    //}
 }
 function onFailureResultProductos() {
     console.log("onFailureResult___");
@@ -229,7 +223,7 @@ function EliminarProducto(idProducto) {
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este Producto?',
         icon: 'warning',
-        buttons: true,
+        buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
         .then((willDelete) => {
@@ -259,16 +253,6 @@ function EliminarProducto(idProducto) {
             }
         });
 }
-
-//function InitRangePicker() {
-
-//    $('.daterange-cus').daterangepicker({
-//        locale: { format: 'YYYY-MM-DD' },
-//        drops: 'down',
-//        opens: 'right'
-//    });
-
-//}
 
 function obtenerCodigos() {
     console.log($('#articulo').val());
