@@ -22,6 +22,7 @@
                                     <th>Linea de Producto</th>
                                     <th>Artículo</th>
                                     <th>Cantidad</th>
+                                    <th>Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,6 +34,7 @@
                                     <td>@item.DescripcionLinea</td>
                                     <td>@item.articulo</td>
                                     <td>@item.cantidad</td>
+                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
                                 </tr>
                                 }
                             </tbody>

@@ -44,6 +44,7 @@ namespace lluviaBackEnd.Models
 
         public int cantidad { get; set; }
 
+        public DateTime fechaAlta { get; set; }
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
     }

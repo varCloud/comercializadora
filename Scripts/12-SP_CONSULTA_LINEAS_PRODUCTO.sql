@@ -72,7 +72,7 @@ as
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							l.idLineaProducto,
+							ROW_NUMBER() OVER(ORDER BY idLineaProducto DESC) as idLineaProducto,
 							l.descripcion,
 							l.activo
 					from	LineaProducto l
