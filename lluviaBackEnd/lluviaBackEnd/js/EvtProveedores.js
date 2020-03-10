@@ -137,6 +137,7 @@ function VerProveedor(idProveedor) {
     $('#descripcion').val(data.descripcion).prop('disabled', true);
     $('#telefono').val(data.telefono).prop('disabled', true);
     $('#direccion').val(data.direccion).change().prop('disabled', true);
+    $('.field-validation-error').html("");
 
     //para abrir el modal
     $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -157,6 +158,7 @@ function EditarProveedor(idProveedor) {
     $('#descripcion').val(data.descripcion).prop('disabled', false);
     $('#telefono').val(data.telefono).prop('disabled', false);
     $('#direccion').val(data.direccion).change().prop('disabled', false);
+    $('.field-validation-error').html("");
 
     //para abrir el modal
     $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -177,6 +179,7 @@ function InitBtnAgregar() {
         $('#descripcion').val('').prop('disabled', false);
         $('#telefono').val('').prop('disabled', false);
         $('#direccion').val('').change().prop('disabled', false);
+        $('.field-validation-error').html("");
 
         //para abrir el modal
         $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });

@@ -133,6 +133,7 @@ function VerLineaProducto(idLineaProducto) {
     $('#idLineaProducto').val(idLineaProducto);
     $('#activo').val(data.activo);
     $('#descripcion').val(data.descripcion).prop('disabled', true);
+    $('.field-validation-error').html("");
 
     //para abrir el modal
     $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -149,6 +150,7 @@ function EditarLineaProducto(idLineaProducto) {
     $('#idLineaProducto').val(idLineaProducto);
     $('#activo').val(data.activo);
     $('#descripcion').val(data.descripcion).prop('disabled', false);
+    $('.field-validation-error').html("");
 
     //para abrir el modal
     $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -164,6 +166,7 @@ function InitBtnAgregar() {
         $('#idLineaProducto').val(0);
         $('#activo').val(1);
         $('#descripcion').val('').prop('disabled', false);
+        $('.field-validation-error').html("");
 
         //para abrir el modal
         $('#EditarLineaProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
