@@ -48,7 +48,7 @@ namespace lluviaBackEnd.Models
 
         [Display(Name = "fechaAlata")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public DateTime fechaAlata { get; set; }
+        public DateTime fechaAlta { get; set; }
 
         [Display(Name = "cantidad")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]

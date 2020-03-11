@@ -58,14 +58,14 @@ function InitDataTableInventario() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '23%', '23%', '22%', '22%'];
+                    doc.content[1].table.widths = ['10%', '20%', '20%', '20%', '20%', '10%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Inventario");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4,5]
                 },
             },
             {
@@ -74,7 +74,7 @@ function InitDataTableInventario() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4,5]
                 },
             },
         ],

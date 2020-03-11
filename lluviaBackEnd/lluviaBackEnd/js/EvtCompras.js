@@ -88,28 +88,6 @@ function InitDataTableCompras() {
 }
 
 
-//function InitRangePicker() {
-
-//    $('#rangeCompras').daterangepicker({
-//        autoUpdateInput: false,
-//        locale: {
-//            cancelLabel: 'Clear'
-//        }
-//    }, function (start, end, label) {
-//        $('#fechaIniCompras').val(start.format('YYYY-MM-DD'));
-//        $('#fechaFinCompras').val(end.format('YYYY-MM-DD'));
-//    });
-
-//    $('#rangeCompras').on('apply.daterangepicker', function (ev, picker) {
-//        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-//    });
-
-//    $('#rangeCompras').on('cancel.daterangepicker', function (ev, picker) {
-//        $(this).val('');
-//    });
-    
-//}
-
 $(document).ready(function () {
 
     InitDataTableCompras();

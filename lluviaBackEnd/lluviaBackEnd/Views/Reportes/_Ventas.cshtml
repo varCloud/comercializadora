@@ -22,24 +22,24 @@
                                             Id
                                         </th>
                                         <th>Cliente</th>
-                                        <th>Fecha</th>
                                         <th>Cantidad</th>
                                         <th>Usuario</th>
                                         <th>Producto</th>
+                                        <th>Fecha</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in lstVentas)
                                     {
-                                        <tr>
-                                            <td>@item.idVenta</td>
-                                            <td>@item.nombreCliente</td>
-                                            <td>@item.fechaAlta</td>
-                                            <td>@item.cantidad</td>
-                                            <td>@item.nombreUsuario</td>
-                                            <td>@item.descripcionProducto</td>
+                                    <tr>
+                                        <td>@item.idVenta</td>
+                                        <td>@item.nombreCliente</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.nombreUsuario</td>
+                                        <td>@item.descripcionProducto</td>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
 
-                                        </tr>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>

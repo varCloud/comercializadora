@@ -24,21 +24,21 @@
                                     <th>Producto</th>
                                     <th>Proveedor</th>
                                     <th>Usuario</th>
-                                    <th>Fecha</th>
                                     <th>Cantidad</th>
+                                    <th>Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstCompras)
                                 {
-                                    <tr>
-                                        <td>@item.idProducto</td>
-                                        <td>@item.descripcionProducto</td>
-                                        <td>@item.descripcionProveedor</td>
-                                        <td>@item.nombreUsuario</td>
-                                        <td>@item.fechaAlata</td>
-                                        <td>@item.cantidad</td>
-                                    </tr>
+                                <tr>
+                                    <td>@item.idProducto</td>
+                                    <td>@item.descripcionProducto</td>
+                                    <td>@item.descripcionProveedor</td>
+                                    <td>@item.nombreUsuario</td>
+                                    <td>@item.cantidad</td>
+                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

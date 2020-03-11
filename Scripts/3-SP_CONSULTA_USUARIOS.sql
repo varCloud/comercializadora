@@ -72,7 +72,7 @@ as
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							u.idUsuario,
+							ROW_NUMBER() OVER(ORDER BY idUsuario DESC) as idUsuario,
 							u.idRol,
 							u.usuario,
 							u.telefono,

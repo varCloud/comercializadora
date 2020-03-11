@@ -51,7 +51,7 @@ function EliminarCliente(idCliente) {
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar este cliente?',
         icon: 'warning',
-        buttons: true,
+        buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
         .then((willDelete) => {

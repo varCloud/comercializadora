@@ -181,7 +181,7 @@ function EliminarLineaProducto(idLineaProducto) {
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a esta Linea de Producto?',
         icon: 'warning',
-        buttons: true,
+        buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
         .then((willDelete) => {

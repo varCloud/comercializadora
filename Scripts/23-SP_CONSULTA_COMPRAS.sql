@@ -43,7 +43,7 @@ as
 				create table 
 					#Compras
 						(
-							idCompra					int,
+							idCompra					int identity(1,1),
 							idProducto					int,
 							descripcionProducto			varchar(300),
 							idProveedor					int,
@@ -83,8 +83,8 @@ as
 						)
 					begin
 
-						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
-						select	top 50 c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
+						insert into #Compras (idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
+						select	top 50 c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
 						from	Compras c
 									inner join Productos p
 										on p.idProducto = c.idProducto
@@ -102,8 +102,8 @@ as
 				else 
 					begin
 
-						insert into #Compras (idCompra,idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
-						select	c.idCompra, c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
+						insert into #Compras (idProducto,descripcionProducto,idProveedor,descripcionProveedor,idUsuario,nombreUsuario,fechaAlta,cantidad,idLineaProducto,descripcionLineaProducto)
+						select	c.idProducto, p.descripcion as descripcionProducto, c.idProveedor, pro.nombre as descripcionProveedor, c.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario, c.fechaAlta, c.cantidad,lp.idLineaProducto,lp.descripcion
 						from	Compras c
 									inner join Productos p
 										on p.idProducto = c.idProducto
