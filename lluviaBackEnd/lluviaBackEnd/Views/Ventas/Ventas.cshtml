@@ -1,0 +1,245 @@
+﻿@model lluviaBackEnd.Models.Ventas
+@{
+    ViewBag.Title = "Ventas";
+    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+
+}
+
+
+
+<h2>Ventas</h2>
+
+@*<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Buscar Productos</h4>
+                <div class="card-header-action">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                </div>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("BuscarProductos", "Productos",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitProductos",
+                        OnComplete = "onCompleteSubmitProductos",
+                        OnFailure = "onFailureResultProductos",
+                        OnSuccess = "onSuccessResultProductos",
+                    },
+                    new { id = "frmBuscarProductos" }))
+                    {
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Descripción</label>
+                                    @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Linea de Producto</label>
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Artículo</label>
+                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articuloBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="submit" id="btnBuscarProductos" class="btn btn-success">Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+@*<div id="rowVentas">
+    @Html.Partial("_ObtenerVentas", new lluviaBackEnd.Models.Ventas() { idVenta = 0 })
+</div>*@
+
+
+
+
+@*<div class="modal fade bd-example-modal-lg" id="EditarProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalProducto"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("GuardarProductos", "Productos",
+
+            new AjaxOptions
+            {
+                HttpMethod = "Post",
+                OnBegin = "onBeginSubmitGuardarProducto",
+                OnComplete = "onCompleteSubmitGuardarProducto",
+                OnFailure = "onFailureResultGuardarProducto",
+                OnSuccess = "onSuccessResultGuardarProducto",
+            },
+            new { id = "frmProductos" }))
+                {
+                    @Html.HiddenFor(x => x.idProducto, new { @id = "idProducto" })
+                    @Html.HiddenFor(x => x.activo, new { @id = "activo" })
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
+                            </div>
+                            <div class="form-group">
+                                <label>Unidad de Medida</label>
+                                @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control", data_val = "true" })
+                                @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Linea de Producto</label>
+                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProducto", @class = "form-control", data_val = "true" })
+                                @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label>Cantidad Unidad de Medida</label>
+                                @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
+                                @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Artículo</label>
+                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
+                            </div>
+
+                            <div class="form-group">
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12" style="text-align:center">
+                            <div class="form-group">
+                                <h5>Códigos</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-12 col-lg-6" style="text-align:center">
+                            <div class="form-group">
+
+                                <img src="" id="barra" style="position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;" />
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-12 col-lg-6" style="text-align:center">
+                            <div class="form-group">
+                                <img src="" id="qr" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarProducto" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+
+
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaRepVentas">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"> Id </th>
+                                    <th>Cliente</th>
+                                    @*<th>Fecha</th>
+                                    <th>Cantidad</th>
+                                    <th>Usuario</th>
+                                    <th>Producto</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstVentas)
+                                {
+                                    <tr>
+                                        <td>@item.idVenta</td>
+                                        <td>@item.nombreCliente</td>
+                                        @*<td>@item.fechaAlta</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.nombreUsuario</td>
+                                        <td>@item.descripcionProducto</td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<a href="javascript:SaveData();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/js/EvtVentas.js"></script>
+
+}
+
+

@@ -1,0 +1,51 @@
+﻿@model lluviaBackEnd.Models.Ventas
+@{
+    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    //List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
+    //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    //List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
+}
+
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaRepVentas">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"> Id </th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Cantidad</th>
+                                    <th>Usuario</th>
+                                    <th>Producto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstVentas)
+                                {
+                                    <tr>
+                                        <td>@item.contador</td>
+                                        <td>@item.nombreCliente</td>
+                                        <td>@item.fechaAlta</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.nombreUsuario</td>
+                                        <td>@item.descripcionProducto</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
