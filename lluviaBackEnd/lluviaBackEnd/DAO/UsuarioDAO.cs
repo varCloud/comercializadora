@@ -37,6 +37,7 @@ namespace lluviaBackEnd.DAO
                         {
                             Usuario u = new Usuario();
                             u.idUsuario = Convert.ToInt32(db.DataReader["idUsuario"]);
+                            u.contador = Convert.ToInt32(db.DataReader["contador"]);
                             u.usuario = db.DataReader["usuario"].ToString();
                             u.contrasena = db.DataReader["contrasena"].ToString();
                             u.nombre = db.DataReader["nombre"].ToString();

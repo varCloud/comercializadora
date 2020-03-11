@@ -69,6 +69,8 @@ namespace lluviaBackEnd.Models
         [Display(Name = "idSucursal")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public string[] idSucursalGuardar { get; set; }
-        
+
+        public int contador { get; set; }
+
     }
 }

@@ -17,6 +17,7 @@ namespace lluviaBackEnd.Models
         public string  descripcion { get; set; }
 
         public Boolean activo { get; set; }
+        public int contador { get; set; }
 
     }
 }

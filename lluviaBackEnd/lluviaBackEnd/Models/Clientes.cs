@@ -53,5 +53,7 @@ namespace lluviaBackEnd.Models
         public bool activo { get; set; }
 
         public TipoCliente tipoCliente { get; set; }
+        public int contador { get; set; }
+
     }
 }

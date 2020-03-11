@@ -37,6 +37,7 @@ namespace lluviaBackEnd.DAO
                         {
                             Proveedor p = new Proveedor();
                             p.idProveedor = Convert.ToInt32(db.DataReader["idProveedor"]);
+                            p.contador = Convert.ToInt32(db.DataReader["contador"]);
                             p.nombre = db.DataReader["nombre"].ToString();
                             p.descripcion = db.DataReader["descripcion"].ToString();
                             p.direccion = db.DataReader["direccion"].ToString();

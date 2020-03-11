@@ -72,7 +72,8 @@ as
 							@error_procedure error_procedure,
 							@error_line error_line,
 							@mensaje mensaje,
-							ROW_NUMBER() OVER(ORDER BY idLineaProducto DESC) as idLineaProducto,
+							ROW_NUMBER() OVER(ORDER BY idLineaProducto DESC) as contador,
+							l.idLineaProducto,
 							l.descripcion,
 							l.activo
 					from	LineaProducto l

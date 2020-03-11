@@ -44,7 +44,8 @@ as
 				create table
 					#Productos
 						(
-							idProducto				int identity (1,1),
+							contador				int identity (1,1),
+							idProducto				int,
 							descripcion				varchar(100),
 							idUnidadMedida			int,
 							idLineaProducto			int,
@@ -81,8 +82,8 @@ as
 					)
 					begin
 
-						insert into #Productos (descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
-						select	top 50 descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
+						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
 						from	Productos
 						where	activo = cast(1 as bit)
 						order by idProducto desc						
@@ -92,8 +93,8 @@ as
 				else 
 					begin
 
-						insert into #Productos (descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
-						select	descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
+						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo
 						from	Productos
 						where	idProducto =	case
 													when @idProducto is null then idProducto

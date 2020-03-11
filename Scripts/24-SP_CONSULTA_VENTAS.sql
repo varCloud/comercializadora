@@ -43,7 +43,8 @@ as
 				create table
 					#Ventas	
 						(
-							idVenta						int identity(1,1),
+							contador					int identity(1,1),
+							idVenta						int ,
 							idCliente					int,
 							nombreCliente				varchar(300),
 							cantidad					bigint,
@@ -87,8 +88,8 @@ as
 						)
 					begin
 
-						insert into #Ventas (idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
-						select	top 50 v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
+						select	top 50 v.idVenta,v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
 								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
 						from	Ventas v
@@ -108,8 +109,8 @@ as
 				else 
 					begin
 
-						insert into #Ventas (idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
-						select	 v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
+						select	 v.idVenta,v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
 								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
 						from	Ventas v

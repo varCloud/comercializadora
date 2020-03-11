@@ -73,7 +73,8 @@ as
 							@error_line error_line,
 							@mensaje mensaje
 					select 
-							ROW_NUMBER() OVER(ORDER BY idCliente DESC) AS idCliente,
+							ROW_NUMBER() OVER(ORDER BY idCliente DESC) AS contador,
+							c.idCliente,
 							c.nombres,
 							c.apellidoPaterno,
 							case

@@ -36,6 +36,7 @@ namespace lluviaBackEnd.DAO
                         {
                             LineaProducto p = new LineaProducto();
                             p.idLineaProducto = Convert.ToInt32(db.DataReader["idLineaProducto"]);
+                            p.contador = Convert.ToInt32(db.DataReader["contador"]);
                             p.descripcion = db.DataReader["descripcion"].ToString();
                             p.activo = Convert.ToBoolean(db.DataReader["activo"]);
                             lstLineaProductos.Add(p);
