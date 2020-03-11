@@ -162,6 +162,7 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
+    <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
     <Compile Include="DAO\ProductosDAO.cs" />
@@ -979,7 +981,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtVentas.js" />
-    <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
     <Content Include="js\EvtProveedores.js" />
@@ -1092,6 +1093,8 @@
     <Content Include="Views\Reportes\_Inventario.cshtml" />
     <Content Include="Views\Reportes\_Compras.cshtml" />
     <Content Include="Views\Reportes\_Ventas.cshtml" />
+    <Content Include="Views\Ventas\Ventas.cshtml" />
+    <Content Include="Views\Ventas\_ObtenerVentas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

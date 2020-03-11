@@ -22,6 +22,10 @@ namespace lluviaBackEnd.Models
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public string descripcionProducto { get; set; }
 
+        [Display(Name = "precioProducto")]
+        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        public float precioProducto { get; set; }
+
         [Display(Name = "idLineaProducto")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public int idLineaProducto { get; set; }

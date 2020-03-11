@@ -19,7 +19,6 @@ function onFailureResultVentas() {
     console.log("onFailureResult___");
 }
 
-
 function PintarTabla() {
     $.ajax({
         url: "/Reportes/BuscarVentas",
@@ -41,7 +40,6 @@ function PintarTabla() {
         }
     });
 }
-
 
 function InitDataTableVentas() {
     var NombreTabla = "tablaRepVentas";
@@ -86,6 +84,13 @@ function InitDataTableVentas() {
         tablaVentas.table().container()
     );
 }
+
+
+
+
+
+
+
 
 $(document).ready(function () {
 
