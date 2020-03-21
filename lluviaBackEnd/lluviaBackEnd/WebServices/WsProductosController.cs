@@ -1,6 +1,7 @@
 ﻿using lluviaBackEnd.DAO;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.WebServices.Modelos;
+using lluviaBackEnd.WebServices.Modelos.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,33 @@ namespace lluviaBackEnd.WebServices
         }
 
         [HttpPost]
-        public Notificacion<List<Producto>> ObetenerProductos(Producto producto)
+        public Notificacion<List<Producto>> ObtenerProductos(RequestObtenerProductos request)
         {
             try
             {
-                return new ProductosDAO().ObtenerProductos(producto);
+                Producto p = new Producto();
+                p.articulo = request.articulo;
+                p.idLineaProducto = request.idLineaProducto;
+                p.descripcion= request.descripcion;
+                p.idProducto = request.idProducto;
+                return new ProductosDAO().ObtenerProductos(p);
             }
             catch (Exception ex)
             {
                 return WsUtils<List<Producto>>.RegresaExcepcion(ex, null);
+            }
+        }
+
+        [HttpPost]
+        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request)
+        {
+            try
+            {
+                return new ProductosDAO().ObtenerProductoXCodigo(request);
+            }
+            catch (Exception ex)
+            {
+                return WsUtils<Producto>.RegresaExcepcion(ex, null);
             }
         }
     }

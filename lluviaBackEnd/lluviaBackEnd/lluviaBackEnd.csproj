@@ -201,6 +201,9 @@
     <Compile Include="Models\Sesion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilerias\Utils.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductos.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXCodigo.cs" />
     <Compile Include="WebServices\WsLineaProductoController.cs" />
     <Compile Include="WebServices\Modelos\WsUtils.cs" />
     <Compile Include="WebServices\WsLoginController.cs" />

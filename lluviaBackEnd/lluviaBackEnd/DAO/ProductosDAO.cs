@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using Dapper;
 using System.Data;
 using System.Data.SqlClient;
+using lluviaBackEnd.WebServices.Modelos.Request;
 
 namespace lluviaBackEnd.DAO
 {
@@ -107,8 +108,6 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
-
-
         public Notificacion<Producto> ActualizarEstatusProducto(Producto producto)
         {
             Notificacion<Producto> notificacion = new Notificacion<Producto>();
@@ -140,6 +139,47 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
+        }
+
+
+        /// <summary>
+        /// es metodo se expone mediante web service
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request )
+        {
+            Notificacion<Producto> notificacion = new Notificacion<Producto>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@codigo", request.codigo);
+                    var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS_POR_CODIGO_BARRAS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.estatus == 200)
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.ReadSingle<Producto>();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
         }
 
     }
