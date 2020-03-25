@@ -85,7 +85,8 @@ $(function () {
     return false;
   });
 
-  $(document).on("click", function (e) {
+    $(document).on("click", function (e) {
+        console.log("click");
     $(".nav-collapse .navbar-nav").removeClass("show");
   });
 
@@ -153,7 +154,8 @@ $(function () {
     $activeAnchors.next().show();
   });
 
-  $("[data-toggle='sidebar']").click(function () {
+    $("[data-toggle='sidebar']").click(function () {
+        console.log('click sidebar ')
     var body = $("body"),
       w = $(window);
 

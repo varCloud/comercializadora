@@ -141,7 +141,6 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-
         /// <summary>
         /// es metodo se expone mediante web service
         /// </summary>
@@ -156,7 +155,6 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-
                     parameters.Add("@codigo", request.codigo);
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS_POR_CODIGO_BARRAS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
