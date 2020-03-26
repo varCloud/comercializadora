@@ -177,5 +177,64 @@ namespace lluviaBackEnd.DAO
             return lstUnidadMedida;
         }
 
+
+        public List<SelectListItem> ObtenerClavesProductos()
+        {
+            List<SelectListItem> lstClavesProductos = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_CLAVES_PRODUCTOS]");
+                    while (db.DataReader.Read())
+                    {
+                        lstClavesProductos.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["descripcion"].ToString(),
+                                Value = db.DataReader["claveProdServ"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            lstClavesProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            return lstClavesProductos;
+        }
+
+
+        public List<SelectListItem> ObtenerClavesUnidad()
+        {
+            List<SelectListItem> lstClavesUnidad = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_CLAVES_UNIDAD]");
+                    while (db.DataReader.Read())
+                    {
+                        lstClavesUnidad.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["nombre"].ToString(),
+                                Value = db.DataReader["claveUnidad"].ToString()
+                            });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            lstClavesUnidad.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            return lstClavesUnidad;
+        }
+
+
     }
 }

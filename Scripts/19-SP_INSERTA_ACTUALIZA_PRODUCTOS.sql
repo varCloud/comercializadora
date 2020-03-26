@@ -26,7 +26,9 @@ create proc SP_INSERTA_ACTUALIZA_PRODUCTOS
 	@codigoBarras			nvarchar(4000),
 	--@fechaAlta				datetime = null,
 	@activo					bit,
-	@articulo				varchar(255)
+	@articulo				varchar(255),
+	@claveProdServ			float,
+	@claveUnidad			nvarchar(4000)
 
 as
 
@@ -72,7 +74,9 @@ as
 										codigoBarras = @codigoBarras,
 										--fechaAlta = @fechaAlta,
 										activo = @activo,
-										articulo = @articulo
+										articulo = @articulo,
+										claveProdServ = @claveProdServ,
+										claveUnidad = @claveUnidad
 								where	idProducto = @idProducto
 						
 								select	@mensaje = 'Cliente modificado correctamente.'
@@ -87,8 +91,8 @@ as
 							begin
 								select @activo = cast(1 as bit)
 								select @idProducto = coalesce( max(idProducto) + 1, 1) from Productos
-								insert into productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo)
-								values (@idProducto,@descripcion,@idUnidadMedida,@idLineaProducto,@cantidadUnidadMedida,@codigoBarras,getdate(),@activo,@articulo)
+								insert into productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,claveUnidad)
+								values (@idProducto,@descripcion,@idUnidadMedida,@idLineaProducto,@cantidadUnidadMedida,@codigoBarras,getdate(),@activo,@articulo,@claveProdServ,@claveUnidad)
 
 								select @mensaje = 'Producto agregado correctamente.'
 							end

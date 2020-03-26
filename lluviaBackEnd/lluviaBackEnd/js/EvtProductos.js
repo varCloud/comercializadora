@@ -172,6 +172,8 @@ function VerProducto(idProducto) {
     $('#descripcion').val(data.descripcion).prop('disabled', true);
     $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', true);
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
+    $('#claveProdServ').val(data.claveProdServ).prop('disabled', true);
+    $('#claveUnidad').val(data.claveUnidad).prop('disabled', true);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
     $('#articulo').val(data.articulo).prop('disabled', true);
     $('.field-validation-error').html("");
@@ -194,6 +196,8 @@ function EditarProducto(idProducto) {
     $('#descripcion').val(data.descripcion).prop('disabled', false);
     $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', false);
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
+    $('#claveProdServ').val(data.claveProdServ).prop('disabled', false);
+    $('#claveUnidad').val(data.claveUnidad).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
     $('#articulo').val(data.articulo).prop('disabled', false);
     $('.field-validation-error').html("");
