@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Descuentos";
     List<lluviaBackEnd.Models.TipoCliente> LstTiposClientes = ViewBag.LstTiposClientes;
-    ////List<lluviaBackEnd.Models.TipoCliente> LstTipoClientes = ViewBag.lstTipoClientes;
+
 }
 
 
@@ -40,6 +40,7 @@
                             <div class="form-group">
                                 <label>Descripción *</label>
                                 @Html.HiddenFor(x => x.idTipoCliente)
+                                @Html.HiddenFor(x => x.activo)
                                 @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
                                 @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
                             </div>

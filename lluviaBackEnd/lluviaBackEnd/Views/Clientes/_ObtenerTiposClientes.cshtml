@@ -1,5 +1,6 @@
 ﻿@model List<lluviaBackEnd.Models.TipoCliente>
 @{
+    List<lluviaBackEnd.Models.TipoCliente> lstTiposClientes = ViewBag.lstTiposClientes;
 
 
 }
@@ -22,7 +23,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @foreach (var item in lstTiposClientes)
                                 {
                                 <tr>
                                     <td class="text-center">@item.contador</td>

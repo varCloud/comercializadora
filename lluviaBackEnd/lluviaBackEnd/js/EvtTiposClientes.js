@@ -10,34 +10,32 @@ function onSuccessResultGuardarTipoCliente(data) {
     console.log(data);
     if (data.Estatus === 200) {
         MuestraToast("success", data.Mensaje)
-        ObtenerClientes();
+        ObtenerTiposClientes();
         $('#mdlAgregarTipoCliente').modal('hide');
-
     } else {
         MuestraToast("error", data.Mensaje)
     }
-    
-
 }
 
-function ObtenerClientes() {
+function ObtenerTiposClientes() {
     $.ajax({
-        url: rootUrl("/Clientes/_ObtenerClientes"),
-        data: { idCliente: 0 },
+        url: rootUrl("/Clientes/_ObtenerTiposClientes"),
+        data: { idTipoCliente: 0 },
         method: 'post',
         dataType: 'html',
         async: false,
         beforeSend: function (xhr) {
         },
         success: function (data) {
-            tablaClientes.destroy();
-            $('#rowTblClientes').html(data);
-            InitTableClientes();
+            tablaTipoClientes.destroy();
+            $('#rowTblTiposClientes').html(data);
+            InitTableTipoClientes();
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
             console.log(xhr);
             console.log(status);
+            console.log(data);
         }
     });
 }
@@ -45,7 +43,7 @@ function ObtenerClientes() {
 function EliminarTipoCliente(idTipoCliente) {
     swal({
         title: 'Mensaje',
-        text: 'Estas seguro que deseas eliminar este cliente?',
+        text: 'Estas seguro que deseas eliminar este tipo de cliente?',
         icon: 'warning',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
@@ -63,7 +61,7 @@ function EliminarTipoCliente(idTipoCliente) {
                     success: function (data) {
                         console.log(data);
                         MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-                        ObtenerClientes();
+                        ObtenerTiposClientes();
                     },
                     error: function (xhr, status) {
                         console.log('Disculpe, existió un problema');
@@ -83,25 +81,11 @@ function EditarTipoCliente(idTipoCliente) {
 
     var data = ObtenerTipoCliente(idTipoCliente)
     if (data.Estatus == 200) {
-        //if (accion == 1) {
-        //    $("#frmClientes input").prop("disabled", true);
-        //    $("#frmClientes select").prop("disabled", true);
-        //    $('#btnGuardarCliente').css('display', 'none');
-        //    $('#TituloModalCliente').html("Cliente");
-        //} else {
-        //    console.log("accion", accion);
-        //    $('#idCliente').val(data.Modelo.idCliente);
-        //    $("#frmClientes input").prop("disabled", false);
-        //    $("#frmClientes select").prop("disabled", false)
-        //    $('#btnGuardarCliente').css('display', '');
-        //    $('#TituloModalCliente').html("Actualizar Cliente");
-        //}
         $('#idTipoCliente').val(idTipoCliente);
         $('#descripcion').val(data.Modelo[0].descripcion);
         $('#descuento').val(data.Modelo[0].descuento);
-      
+        $('#activo').val(data.Modelo[0].activo);
         $('#mdlAgregarTipoCliente').modal({ backdrop: 'static', keyboard: false, show: true })
-
     } else {
         MuestraToast('info', data.Mensaje)
     }
@@ -217,16 +201,13 @@ function InitTableTipoClientes() {
 function InitBtnAgregar() {
     $('#btnAgregarTipoCliente').click(function (e) {
         $('.field-validation-error').html("");
-       
         $("#frmTipoClientes input").prop("disabled", false);
-        //$("#frmClientes select").prop("disabled", false);
         $('#btnResetGuardarTipoCliente').trigger('click');
         $('#btnGuardarTipoCliente').css('display', '');
         $('#idTipoCliente').val('0');
         //para abrir el modal
         $('#mdlAgregarTipoCliente').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalTipoCliente').html("Agregar Tipo de Cliente");
-
     });
 }
 

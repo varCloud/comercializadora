@@ -101,9 +101,19 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult _ObtenerTiposClientes()
+        public ActionResult _ObtenerTiposClientes(int idTipoCliente)
         {
-            return PartialView("_ObtenerTiposClientes", new ClienteDAO().ObtenerTiposClientes  (new TipoCliente() { idTipoCliente = 0 }));
+            try
+            {
+                Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+                notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente { idTipoCliente = idTipoCliente });
+                ViewBag.lstTiposClientes = notificacion.Modelo;
+                return PartialView("_ObtenerTiposClientes");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost]
@@ -134,7 +144,23 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-       
+
+        [HttpPost]
+        public ActionResult EliminarTipoCliente(int idTipoCliente)
+        {
+            try
+            {
+                Notificacion<TipoCliente> notificacion = new Notificacion<TipoCliente>();
+                notificacion = new ClienteDAO().EliminarTipoCliente(new TipoCliente() { idTipoCliente = idTipoCliente }); 
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
     }
 }
