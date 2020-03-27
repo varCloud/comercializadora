@@ -185,6 +185,34 @@ function VerProducto(idProducto) {
     $('#TituloModalProducto').html("Información del Producto");
 }
 
+
+
+function VerPrecios(idProducto) {
+
+    //$('#btnGuardarProducto').prop('disabled', true);
+
+    //var data = ObtenerProducto(idProducto);
+
+    //$('#idProducto').val(idProducto);
+    //$('#activo').val(data.activo);
+    //$('#descripcion').val(data.descripcion).prop('disabled', true);
+    //$('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', true);
+    //$('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
+    //$('#claveProdServ').val(data.claveProdServ).prop('disabled', true);
+    //$('#claveUnidad').val(data.claveUnidad).prop('disabled', true);
+    //$('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
+    //$('#articulo').val(data.articulo).prop('disabled', true);
+    //$('.field-validation-error').html("");
+    //document.getElementById('barra').src = '';
+    //document.getElementById('qr').src = '';
+    //obtenerCodigos();
+    //para abrir el modal
+    $('#RangosPreciosProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#TituloModalRangosPrecios').html("Precios por Producto");
+}
+
+
+
 function EditarProducto(idProducto) {
 
     $('#btnGuardarProducto').prop('disabled', false);
