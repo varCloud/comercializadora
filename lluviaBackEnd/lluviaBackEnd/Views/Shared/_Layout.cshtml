@@ -120,7 +120,7 @@
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Precios" ? "dropdown active" : "")" href="@Url.Action("Productos", "Precios")">Precios</a></li>
+                                @*<li><a class="nav-link @(ViewBag.Title.ToString() == "Precios" ? "dropdown active" : "")" href="@Url.Action("Productos", "Precios")">Precios</a></li>*@
                                 <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
                             </ul>
                         </li>

@@ -87,5 +87,54 @@ namespace lluviaBackEnd.Controllers
         {
             return new ClienteDAO().ObtenerTipoClientes();
         }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// DESCUENTOS
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ActionResult Descuentos()
+        {
+            Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+            notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = 0 });
+            ViewBag.LstTiposClientes = notificacion.Modelo;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult _ObtenerTiposClientes()
+        {
+            return PartialView("_ObtenerTiposClientes", new ClienteDAO().ObtenerTiposClientes  (new TipoCliente() { idTipoCliente = 0 }));
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerTipoCliente(int idTipoCliente)
+        {
+            try
+            {
+                Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+                notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = idTipoCliente });
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GuardarTipoCliente(TipoCliente tipoCliente)
+        {
+            try
+            {
+                return Json(new ClienteDAO().GuardarTipoCliente(tipoCliente), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+       
+
     }
 }

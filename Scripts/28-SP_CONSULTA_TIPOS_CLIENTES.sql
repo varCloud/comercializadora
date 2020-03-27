@@ -17,7 +17,7 @@ status			200 = ok
 */
 
 create proc SP_CONSULTA_TIPOS_CLIENTES
-
+	@idTipoCliente		int 
 as
 
 	begin -- principal
@@ -60,12 +60,17 @@ as
 							
 
 		-- si todo ok
-			select	idTipoCliente,
+			select	ROW_NUMBER() OVER(ORDER BY idTipoCliente DESC) AS contador,
+					idTipoCliente,
 					descripcion,
 					descuento,
 					activo
 			from	CatTipoCliente
-			where	activo = cast(1 as bit)
+			where	idTipoCliente = case
+										when @idTipoCliente = 0 then idTipoCliente
+										else @idTipoCliente
+									end	
+				and activo = cast(1 as bit)
 				
 		end -- reporte de estatus
 

@@ -1,0 +1,49 @@
+﻿@model List<lluviaBackEnd.Models.TipoCliente>
+@{
+
+
+}
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblTipoClientes">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Id</th>
+                                    <th>Descripción</th>
+                                    <th>Descuento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td class="text-center">@item.contador</td>
+                                    <td>@item.descripcion </td>
+                                    <td>@item.descuento</td>
+                                    <td>
+                                        <div class="buttons">
+                                            <a href="javascript:EditarTipoCliente(@item.idTipoCliente);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                            <a href="javascript:EliminarTipoCliente(@item.idTipoCliente);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

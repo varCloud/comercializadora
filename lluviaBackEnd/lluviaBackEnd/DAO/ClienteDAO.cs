@@ -124,6 +124,63 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<TipoCliente> GuardarTipoCliente(TipoCliente tipoCliente)
+        {
+            Notificacion<TipoCliente> notificacion;
+            try
+            {
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@idTipoCliente", tipoCliente.idTipoCliente);
+                parameters.Add("@descripcion", tipoCliente.descripcion);
+                parameters.Add("@descuento", tipoCliente.descuento);
+                parameters.Add("@activo", tipoCliente.activo);
+
+                notificacion = this._db.QuerySingle<Notificacion<TipoCliente>>("SP_INSERTA_ACTUALIZA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+        public Notificacion<List<TipoCliente>> ObtenerTiposClientes(TipoCliente tipoCliente)
+        {
+            Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("idTipoCliente", tipoCliente.idTipoCliente);
+                    var result = _db.QueryMultiple("SP_CONSULTA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<TipoCliente>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+
         // Referencia para Consulta con dapper y  una clase que contiene otra clase
         //https://dzone.com/articles/tutorial-on-handling-multiple-resultsets-and-multi
         //https://dzone.com/articles/tutorial-on-handling-multiple-resultsets-and-multi
