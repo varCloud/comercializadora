@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
+    <Compile Include="DAO\FacturacionDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
@@ -187,6 +188,7 @@
     </Compile>
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Clientes.cs" />
+    <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
     <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductos.cs" />
@@ -212,6 +215,7 @@
     <Compile Include="WebServices\WsLoginController.cs" />
     <Compile Include="WebServices\Modelos\RequestLogin.cs" />
     <Compile Include="WebServices\WsProductosController.cs" />
+    <Compile Include="WebServices\WsProveedorController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\bundles\amcharts4\animated.js" />

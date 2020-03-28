@@ -35,4 +35,25 @@ function InitRecaptcha() {
 }
 $(document).ready(function () {
     InitRecaptcha();
+    $('#facturar').click(function (e) {
+        $.ajax({
+            url: rootUrl("/Login/Facturar"),
+            data: { idCliente: 0 },
+            method: 'post',
+            dataType: 'html',
+            async: false,
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+
+            },
+            error: function (xhr, status) {
+                console.log('Disculpe, existió un problema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });   
+
+    });
+    
 });

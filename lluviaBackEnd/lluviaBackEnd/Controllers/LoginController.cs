@@ -48,6 +48,20 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult Facturar()
+        {
+            try
+            {
+                new FacturacionDAO().ObtenerComprobante();
+                return Json("facturando",JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
+            }
+
+        }
 
         public bool ReCaptchaPassed(string gRecaptchaResponse)
         {
