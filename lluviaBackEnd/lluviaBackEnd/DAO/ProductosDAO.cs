@@ -41,6 +41,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
+                    parameters.Add("@claveProdServ", producto.claveProdServ);
+                    parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -85,6 +87,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@codigoBarras", producto.codigoBarras);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
+                    parameters.Add("@claveProdServ", producto.claveProdServ);
+                    parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

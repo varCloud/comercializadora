@@ -49,5 +49,8 @@ namespace lluviaBackEnd.Models
         public DateTime fechaFin { get; set; }
         public int contador { get; set; }
 
+        public string claveUnidad { get; set; }
+        public float claveProdServ { get; set; }
+         
     }
 }

@@ -14,8 +14,10 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Ventas()
         {
-            ViewBag.lstProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+            ViewBag.lstProductos = notificacion.Modelo;
+            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
             return View();
         }
 

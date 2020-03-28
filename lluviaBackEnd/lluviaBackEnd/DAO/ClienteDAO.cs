@@ -108,11 +108,8 @@ namespace lluviaBackEnd.DAO
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
-
                     lstClientes = this._db.Query<TipoCliente>("SP_CONSULTA_TIPO_CLIENTES",  commandType: CommandType.StoredProcedure).ToList();
                     lstClientes.Insert(0 , new TipoCliente() { idTipoCliente=0 , descripcion="--SELECCIONA--" });
-                    
-                    
                 }
             }
             catch (Exception ex)
@@ -121,6 +118,110 @@ namespace lluviaBackEnd.DAO
             }
 
             return lstClientes;
+        }
+
+
+        public Notificacion<TipoCliente> GuardarTipoCliente(TipoCliente tipoCliente)
+        {
+            Notificacion<TipoCliente> notificacion = new Notificacion<TipoCliente>();
+            try
+            {
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@idTipoCliente", tipoCliente.idTipoCliente);
+                parameters.Add("@descripcion", tipoCliente.descripcion);
+                parameters.Add("@descuento", tipoCliente.descuento);
+                parameters.Add("@activo", tipoCliente.activo);
+
+                var result = _db.QueryMultiple("SP_INSERTA_ACTUALIZA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+
+                var r1 = result.ReadFirst();
+                
+                if (r1.status == 200)
+                {
+                    notificacion.Estatus = r1.status;
+                    notificacion.Mensaje = r1.mensaje;
+                    notificacion.Modelo = tipoCliente; //result.Read<TipoCliente>();
+                }
+                else
+                {
+                    notificacion.Estatus = r1.status;
+                    notificacion.Mensaje = r1.mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+        public Notificacion<List<TipoCliente>> ObtenerTiposClientes(TipoCliente tipoCliente)
+        {
+            Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("idTipoCliente", tipoCliente.idTipoCliente);
+                    var result = _db.QueryMultiple("SP_CONSULTA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<TipoCliente>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public Notificacion<TipoCliente> EliminarTipoCliente(TipoCliente tipoCliente)
+        {
+            Notificacion<TipoCliente> notificacion = new Notificacion<TipoCliente>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoCliente", tipoCliente.idTipoCliente);
+                    parameters.Add("@activo", tipoCliente.activo);
+                    var result = _db.QueryMultiple("SP_ACTUALIZA_STATUS_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = tipoCliente;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = tipoCliente;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
         }
 
 

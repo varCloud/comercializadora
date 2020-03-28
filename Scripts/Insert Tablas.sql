@@ -83,3 +83,26 @@ end
 insert into CatSucursales (descripcion) values('sucursal principal')
 select * from CatSucursales
 -----------------------------------------------------------------------------
+if exists (select 1 from CatStatusVenta)
+begin
+	delete from  dbo.CatStatusVenta
+	--DBCC CHECKIDENT ('CatStatusVenta', RESEED, 0);
+end
+
+insert into CatStatusVenta (idStatusVenta,descripcion) values(1,'Activa')
+insert into CatStatusVenta (idStatusVenta,descripcion) values(2,'Cancelada')
+select * from CatStatusVenta
+-----------------------------------------------------------------------------
+if exists (select 1 from CatTipoCliente)
+begin
+	delete from  dbo.CatTipoCliente
+	DBCC CHECKIDENT ('CatTipoCliente', RESEED, 0);
+end
+
+insert into CatTipoCliente (descripcion,descuento,activo) values ('General', 0.0,1)
+insert into CatTipoCliente (descripcion,descuento,activo) values ('A', 2.0,1)
+insert into CatTipoCliente (descripcion,descuento,activo) values ('B', 5.0,1)
+insert into CatTipoCliente (descripcion,descuento,activo) values ('VIP', 10.0,1)
+select * from CatTipoCliente
+-----------------------------------------------------------------------------
+

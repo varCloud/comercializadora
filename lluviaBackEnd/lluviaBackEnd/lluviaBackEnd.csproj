@@ -989,6 +989,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
@@ -1105,6 +1106,8 @@
     <Content Include="Views\Reportes\_Ventas.cshtml" />
     <Content Include="Views\Ventas\Ventas.cshtml" />
     <Content Include="Views\Ventas\_ObtenerVentas.cshtml" />
+    <Content Include="Views\Clientes\Descuentos.cshtml" />
+    <Content Include="Views\Clientes\_ObtenerTiposClientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

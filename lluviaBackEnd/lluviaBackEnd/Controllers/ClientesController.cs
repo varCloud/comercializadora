@@ -87,5 +87,80 @@ namespace lluviaBackEnd.Controllers
         {
             return new ClienteDAO().ObtenerTipoClientes();
         }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// DESCUENTOS
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ActionResult Descuentos()
+        {
+            Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+            notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = 0 });
+            ViewBag.LstTiposClientes = notificacion.Modelo;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult _ObtenerTiposClientes(int idTipoCliente)
+        {
+            try
+            {
+                Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+                notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente { idTipoCliente = idTipoCliente });
+                ViewBag.lstTiposClientes = notificacion.Modelo;
+                return PartialView("_ObtenerTiposClientes");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerTipoCliente(int idTipoCliente)
+        {
+            try
+            {
+                Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+                notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = idTipoCliente });
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GuardarTipoCliente(TipoCliente tipoCliente)
+        {
+            try
+            {
+                return Json(new ClienteDAO().GuardarTipoCliente(tipoCliente), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult EliminarTipoCliente(int idTipoCliente)
+        {
+            try
+            {
+                Notificacion<TipoCliente> notificacion = new Notificacion<TipoCliente>();
+                notificacion = new ClienteDAO().EliminarTipoCliente(new TipoCliente() { idTipoCliente = idTipoCliente }); 
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
     }
 }
