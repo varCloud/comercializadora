@@ -194,11 +194,71 @@ function VerPrecios(idProducto) {
     $('#precio').val('');
     $('#idProductoRango').val(idProducto);
     $("#tablaRangosPrecios").find("tr:gt(0)").remove();
-
+    document.getElementById("btnGuardarPrecios").disabled = true;
+    ObtenerPrecios(idProducto);
+    
     //para abrir el modal
     $('#RangosPreciosProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalRangosPrecios').html("Precios por Producto");
     
+}
+
+
+function ObtenerPrecios(idProducto) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerPrecios"),
+        data: { idProducto: idProducto },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            pintarPrecios(data);
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+    return result;
+}
+
+function pintarPrecios(data) {
+    document.getElementById("sinPrecios").innerHTML = "";
+
+    if (data.Modelo == null) {
+        document.getElementById("sinPrecios").innerHTML = "<strong>No se tienen configurados precios para este producto. &nbsp;</strong>";
+    }
+    else {
+        var i = 0;
+        for (i = 0; i < data.Modelo.length; i++) {
+            console.log(data.Modelo[i].contador);
+
+            var row_ =
+                "<tr>" +
+                "    <td>0</td>" +
+                "    <td class=\"text-center\">" + data.Modelo[i].min + "</td>" +
+                "    <td class=\"text-center\">" + data.Modelo[i].max + "</td>" +
+                "    <td class=\"text-center\">" + data.Modelo[i].costo + "</td>" +
+                "    <td class=\"text-center\">" +
+                "       <a href=\"javascript:eliminaFilaPrecios(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                "    </td>" +
+                "</tr>";
+
+            $("#tablaRangosPrecios tbody").append(row_);
+        }
+        actualizaTablaPrecios();
+        $('#max_').val('');
+        $('#min_').val('');
+        $('#precio').val('');
+    }
 }
 
 $('#tablaProductos tbody').on('click', 'td', function () {
@@ -361,35 +421,26 @@ $('#btnAgregarPrecio').click(function (e) {
                 $('#min_').val('');
                 $('#precio').val('');
 
+                validaBtnGuardarPrecios();
             }
-
-            
-
         }
-                
     }
-
 });
-
-
-
 
 
 $('#btnGuardarPrecios').click(function (e) {
 
     var rangos = [];
 
-    //var idProducto = $('#idProductoRango').val();
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
 
-        //codigo = fila.children[0].innerHTML;
-        var row_ = {
-            contador: fila.children[0].innerHTML,
-            min: fila.children[1].innerHTML,
-            max: fila.children[2].innerHTML,
-            costo: fila.children[3].innerHTML,
-            idProducto: $('#idProductoRango').val()
-        };
+        var row_ =  {
+                        contador: fila.children[0].innerHTML,
+                        min: fila.children[1].innerHTML,
+                        max: fila.children[2].innerHTML,
+                        costo: fila.children[3].innerHTML,
+                        idProducto: $('#idProductoRango').val()
+                    };
         rangos.push(row_);
 
     });
@@ -397,18 +448,26 @@ $('#btnGuardarPrecios').click(function (e) {
     dataToPost = JSON.stringify({ precios: rangos });
 
     $.ajax({
-        type: "POST",
-        url: "/Productos/GuardarPrecios",
-        contentType: "application/json; charset=utf-8", // specify the content type
-        dataType: 'JSON', // make sure you use the correct case for dataType
+        url: rootUrl("/Productos/GuardarPrecios"),
         data: dataToPost,
-        traditional: true
-    });   
+        method: 'POST',
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8", // specify the content type
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast('success', data.Mensaje);
+            $('#RangosPreciosProductoModal').modal('hide');
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un problema al insertar el , contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
 
 });
-
-
-
 
 function eliminaFilaPrecios(index_) {
 
@@ -427,18 +486,28 @@ function eliminaFilaPrecios(index_) {
     }
 
     actualizaTablaPrecios();
+    validaBtnGuardarPrecios();
 
 }
 
-function actualizaTablaPrecios() {
+function validaBtnGuardarPrecios() {
 
+    var totalRows = $('#tablaRangosPrecios tr').length - 1;
+    if (totalRows <= 0) {
+        document.getElementById("btnGuardarPrecios").disabled = true;
+    }
+    else {
+        document.getElementById("btnGuardarPrecios").disabled = false;
+    }
+    
+}
+
+function actualizaTablaPrecios() {
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
         fila.children[4].innerHTML = "      <a href=\"javascript:eliminaFilaPrecios(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     });
-
 }
-
 
 
 $(document).ready(function () {

@@ -84,7 +84,7 @@ namespace lluviaBackEnd.Controllers
                 if (notificacion.Modelo != null)
                 {
                     ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
+                    return PartialView("_ObtenerProductos");
                 }
                 else
                 {
@@ -148,6 +148,20 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+        public ActionResult ObtenerPrecios(Precio precio)
+        {
+            try
+            {
+                Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+                notificacion = new ProductosDAO().ObtenerPrecios(precio);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 

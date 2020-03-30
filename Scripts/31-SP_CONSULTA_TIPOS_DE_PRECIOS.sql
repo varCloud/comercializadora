@@ -77,6 +77,7 @@ as
 					costo 
 			from	ProductosPorPrecio
 			where	idProducto = @idProducto
+			and		activo = cast(1 as bit)
 				
 		end -- reporte de estatus
 

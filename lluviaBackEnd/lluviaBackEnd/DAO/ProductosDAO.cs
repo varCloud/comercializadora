@@ -224,6 +224,44 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<Precio>> ObtenerPrecios(Precio precio)
+        {
+            Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProducto", precio.idProducto);
+                    var result = db.QueryMultiple("SP_CONSULTA_TIPOS_DE_PRECIOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Precio>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo.Clear();// [0] = producto;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
         public string Serialize(List<Precio> precios)
         {
             var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
@@ -233,7 +271,6 @@ namespace lluviaBackEnd.DAO
                 xmlSerializer.Serialize(xmlWriter, precios);
             }
 
-            stringBuilder.Replace("utf-16", "utf-8");
             return stringBuilder.ToString();
 
         }
