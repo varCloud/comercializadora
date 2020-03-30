@@ -25,7 +25,6 @@ create proc SP_CONSULTA_PRODUCTOS
 	@activo					bit = null,
 	@articulo				varchar(255) = null,
 	@claveProdServ			float = null,
-	@claveUnidad			nvarchar(1020) = null,
 	@fechaIni				datetime = null,
 	@fechaFin				datetime = null
 
@@ -56,8 +55,7 @@ as
 							fechaAlta				datetime,
 							activo					bit,
 							articulo				varchar(100),
-							claveProdServ			float,
-							claveUnidad				nvarchar(1020)
+							claveProdServ			float
 						)
 						
 			end  --declaraciones 
@@ -67,7 +65,7 @@ as
 				-- validaciones
 					if (@idProducto is null and @descripcion is null and @idUnidadMedida is null and 
 						@idLineaProducto is null and @activo is null and @articulo is null and 
-						@claveProdServ is null and @claveUnidad is null 						
+						@claveProdServ is null 						
 						)
 					begin
 						select	@mensaje = 'Debe elejir al menos un criterio para la búsqueda del Producto.',
@@ -85,13 +83,12 @@ as
 						( @articulo is null ) and					
 						( @fechaIni = '19000101' ) and					
 						( @fechaFin = '19000101' ) and 
-						( @claveProdServ is null) and 
-						( @claveUnidad is null )
+						( @claveProdServ is null)  
 					)
 					begin
 
-						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,claveUnidad)
-						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,claveUnidad
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ)
+						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ
 						from	Productos
 						where	activo = cast(1 as bit)
 						order by idProducto desc						
@@ -101,8 +98,8 @@ as
 				else 
 					begin
 					
-						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,claveUnidad)
-						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,claveUnidad
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ)
+						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ
 						from	Productos
 						where	idProducto =	case
 													when @idProducto is null then idProducto
@@ -145,12 +142,6 @@ as
 															when @claveProdServ = 0 then claveProdServ
 															else @claveProdServ
 														end
-
-							and claveUnidad			=	case
-															when @claveUnidad is null then claveUnidad
-															else @claveUnidad
-														end							
-							 
 
 							and activo = cast(1 as bit)
 

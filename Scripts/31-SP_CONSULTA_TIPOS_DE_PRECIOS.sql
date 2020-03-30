@@ -76,6 +76,7 @@ as
 					max,
 					costo 
 			from	ProductosPorPrecio
+			where	idProducto = @idProducto
 				
 		end -- reporte de estatus
 

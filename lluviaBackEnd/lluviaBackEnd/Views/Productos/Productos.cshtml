@@ -224,64 +224,67 @@
                 </button>
             </div>
             <div class="modal-body">
-               
+
 
                 <div class="row">
                     <div class="col-md-6">
                         <address>
-                            <div id="descNombreProducto"><strong>Descripción: &nbsp;</strong> descripcion </div>
-                            <div id="desdUnidadMedida"><strong>Unidad de Medida: &nbsp;</strong> descripcion </div>
+                            <div id="descNombreProducto"><strong>Descripción: &nbsp;</strong> aa </div>
+                            <input type="hidden" id="idProductoRango" name="idProductoRango" value="0">
+
+                            @*<div id="desdUnidadMedida"><strong>Unidad de Medida: &nbsp;</strong> descripcion </div>
                             <div id="descLineaProducto"><strong>Linea de Producto: &nbsp;</strong> descripcion </div>
                             <div id="descClaveProducto"><strong>Clave de Producto: &nbsp;</strong> descripcion </div>
                             <div id="descClaveUnidadMedida"><strong>Cantidad Unidad de Medida: &nbsp;</strong> descripcion </div>
                             <div id="descArticulo"><strong>Artículo: &nbsp;</strong> descripcion </div>
-                            <div id="descClaveUnidad"><strong>Clave de Unidad: &nbsp;</strong> descripcion </div>
+                            <div id="descClaveUnidad"><strong>Clave de Unidad: &nbsp;</strong> descripcion </div>*@
                         </address>
                     </div>
 
                     <div class="col-md-6 text-md-right">
 
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-12">
-                                <div class="card">
-                                 
-                                    
-                                        <div class="card-body">
-
-                                            <div class="row">
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Mínimo</label>
-                                                        <input id="min_" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Máximo</label>
-                                                        <input id="max_" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Precio</label>
-                                                        <input id="precio" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="text-right" style="margin-top:15px;">
-                                                <button type="button" id="btnAgregarPrecio" class="btn btn-success">Agregar Precio</button>
-                                            </div>
-                                        </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
 
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="card">
+
+
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-lg-3">
+                                        <div class="form-group">
+                                            <label>Mínimo</label>
+                                            <input id="min_" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-3">
+                                        <div class="form-group">
+                                            <label>Máximo</label>
+                                            <input id="max_" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-3">
+                                        <div class="form-group">
+                                            <label>Precio</label>
+                                            <input id="precio" type="text" class="form-control">
+                                        </div>
+                                    </div>                                    
+                                    <div class="col-12 col-sm-12 col-lg-3">
+                                        <div class="form-group">
+                                            <div class="text-right" style="margin-top:30px;">
+                                                <button type="button" id="btnAgregarPrecio" class="btn btn-success">Agregar Precio</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
 
@@ -290,39 +293,28 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
 
-                                <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
 
-                                        <div class="table-responsive">
-                                            <table class="table table-striped" id="tablaRangosPrecios">
-                                                <thead>
-                                                    <tr>
-                                                        <th data-width="40" style="width: 40px;">#</th>
-                                                        <th class="text-center">Cantidad Mínima</th>
-                                                        <th class="text-center">Cantidad Máxima</th>
-                                                        <th class="text-center">Precio</th>
-                                                        <th class="text-center">Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
 
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-center">10</td>
-                                                        <td class="text-center">10.99</td>
-                                                        <td class="text-center">
-                                                            <a href="#" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                   
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="tablaRangosPrecios">
+                                        <thead>
+                                            <tr>
+                                                <th data-width="40" style="width: 40px;">#</th>
+                                                <th class="text-center">Cantidad Mínima</th>
+                                                <th class="text-center">Cantidad Máxima</th>
+                                                <th class="text-center">Precio</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div id="sinPrecios" align="center"><strong>No se tienen configurados precios para este producto. &nbsp;</strong></div>
                                 </div>
+
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -331,11 +323,11 @@
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="btnGuardarProducto" class="btn btn-success">Guardar</button>
+                            <button type="button" id="btnGuardarPrecios" class="btn btn-success">Guardar</button>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Models;
 
+
 namespace lluviaBackEnd.Controllers
 {
     public class ProductosController : Controller
@@ -129,6 +130,24 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+
+
+        [HttpPost]
+        public ActionResult GuardarPrecios(List<Precio> precios)
+        {
+            try
+            {
+                Notificacion<Precio> result = new Notificacion<Precio>();
+                result = new ProductosDAO().GuardarPrecios(precios);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 
