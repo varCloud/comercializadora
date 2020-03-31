@@ -189,6 +189,7 @@
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
+    <Compile Include="Models\Precio.cs" />
     <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
@@ -1079,7 +1080,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Views\Productos\_BuscarProductos.cshtml" />
     <Content Include="Views\Productos\_ObtenerProductos.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

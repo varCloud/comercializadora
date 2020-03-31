@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Models;
 
+
 namespace lluviaBackEnd.Controllers
 {
     public class ProductosController : Controller
@@ -83,7 +84,7 @@ namespace lluviaBackEnd.Controllers
                 if (notificacion.Modelo != null)
                 {
                     ViewBag.lstProductos = notificacion.Modelo;
-                    return PartialView("_BuscarProductos");
+                    return PartialView("_ObtenerProductos");
                 }
                 else
                 {
@@ -122,6 +123,38 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Producto> notificacion = new Notificacion<Producto>();
                 notificacion = new ProductosDAO().ActualizarEstatusProducto(producto);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult GuardarPrecios(List<Precio> precios)
+        {
+            try
+            {
+                Notificacion<Precio> result = new Notificacion<Precio>();
+                result = new ProductosDAO().GuardarPrecios(precios);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public ActionResult ObtenerPrecios(Precio precio)
+        {
+            try
+            {
+                Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+                notificacion = new ProductosDAO().ObtenerPrecios(precio);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

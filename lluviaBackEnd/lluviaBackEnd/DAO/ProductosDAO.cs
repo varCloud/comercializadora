@@ -13,6 +13,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using lluviaBackEnd.WebServices.Modelos.Request;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.DAO
 {
@@ -42,7 +45,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
                     parameters.Add("@claveProdServ", producto.claveProdServ);
-                    parameters.Add("@claveUnidad", producto.claveUnidad);
+                    //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -183,6 +186,96 @@ namespace lluviaBackEnd.DAO
             return notificacion;
 
         }
+
+
+        public Notificacion<Precio> GuardarPrecios(List<Precio> precios)
+        {
+            Notificacion<Precio> notificacion = new Notificacion<Precio>();
+            try
+            {
+
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@XML", Serialize(precios));
+
+                    var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_RANGOS_PRECIOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public Notificacion<List<Precio>> ObtenerPrecios(Precio precio)
+        {
+            Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProducto", precio.idProducto);
+                    var result = db.QueryMultiple("SP_CONSULTA_TIPOS_DE_PRECIOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Precio>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo.Clear();// [0] = producto;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
+        public string Serialize(List<Precio> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+
+            return stringBuilder.ToString();
+
+        }
+
+
 
     }
 }
