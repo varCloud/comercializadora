@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
-
+using lluviaBackEnd.Models.Facturacion;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -53,7 +53,16 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                new FacturacionDAO().ObtenerComprobante();
+                Comprobante comprobante = new FacturacionDAO().ObtenerComprobante();
+                Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
+                if(certificados == null)
+                    return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
+                comprobante.Certificado = certificados["Certificado"];
+                comprobante.NoCertificado = certificados["NoCertificado"];
+                string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
+                comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
+                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante);
                 return Json("facturando",JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
