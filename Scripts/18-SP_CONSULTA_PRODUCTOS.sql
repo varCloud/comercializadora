@@ -55,7 +55,8 @@ as
 							fechaAlta				datetime,
 							activo					bit,
 							articulo				varchar(100),
-							claveProdServ			float
+							claveProdServ			float,
+							precio					money
 						)
 						
 			end  --declaraciones 
@@ -87,8 +88,8 @@ as
 					)
 					begin
 
-						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ)
-						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,precio)
+						select	top 50 idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ, 0 as precio
 						from	Productos
 						where	activo = cast(1 as bit)
 						order by idProducto desc						
@@ -98,8 +99,8 @@ as
 				else 
 					begin
 					
-						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ)
-						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ
+						insert into #Productos (idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ,precio)
+						select	idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,fechaAlta,activo,articulo,claveProdServ, 0 as precio
 						from	Productos
 						where	idProducto =	case
 													when @idProducto is null then idProducto
@@ -154,6 +155,23 @@ as
 								@status = -1,
 								@mensaje = 'No se encontraron productos con esos términos de búsqueda.'
 					end
+
+				-- se actualizan los precios minimos por cada producto
+					update	#Productos
+					set		precio = a.costo
+					from	(
+								select	contador, idProducto, min, max, costo, activo
+								from	ProductosPorPrecio 
+								where	contador in ( 
+														select min(contador) as min_contador 
+														from  ProductosPorPrecio 
+														where activo = 1 
+														group by idProducto 
+													)
+							)A
+					where #Productos.idProducto = a.idProducto
+
+
 
 			end -- principal
 

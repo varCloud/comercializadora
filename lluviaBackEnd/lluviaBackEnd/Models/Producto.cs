@@ -51,6 +51,7 @@ namespace lluviaBackEnd.Models
 
         public string claveUnidad { get; set; }
         public float claveProdServ { get; set; }
+        public float precio { get; set; }
          
     }
 }
