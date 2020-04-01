@@ -56,6 +56,7 @@ namespace lluviaBackEnd.Models
         public DateTime fechaFin { get; set; }
 
         public int contador { get; set; }
+        public float precio { get; set; }
 
 
     }
