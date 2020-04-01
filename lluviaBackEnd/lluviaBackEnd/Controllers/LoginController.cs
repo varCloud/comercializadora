@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.Models.Facturacion;
+using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -53,7 +54,14 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Comprobante comprobante = new FacturacionDAO().ObtenerComprobante();
+                string pathFactura  = Utils.ObtnerFolder();
+                int idVenta = 1;
+                FacturacionDAO facturacionDAO = new FacturacionDAO();
+                Comprobante comprobante =  facturacionDAO.ObtenerComprobante();
+
+                comprobante.Conceptos = facturacionDAO.ObtenerConceptos(idVenta).ToArray();
+                facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
+                facturacionDAO.ObtenerTotal(ref comprobante);
                 Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
                 if(certificados == null)
                     return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
@@ -62,12 +70,12 @@ namespace lluviaBackEnd.Controllers
                 string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante);
+                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante , pathFactura+'/'+ idVenta);
                 return Json("facturando",JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
             }
 
         }

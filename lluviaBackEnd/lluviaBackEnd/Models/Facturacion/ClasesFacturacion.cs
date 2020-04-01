@@ -20,7 +20,7 @@ namespace lluviaBackEnd.Models.Facturacion
     {
         public Comprobante()
         {
-            this.schemaLocation = "";
+            xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
         }
        
         private string xsiSchemaLocation;
@@ -56,7 +56,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private string folioField;
 
-        private System.DateTime fechaField;
+        private string fechaField;
 
         private string selloField;
 
@@ -64,7 +64,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private string certificadoField;
 
-        private uint subTotalField;
+        private decimal subTotalField;
 
         private string monedaField;
 
@@ -80,7 +80,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private decimal descuentoField;
 
-        private byte tipoCambioField;
+      
 
         private ushort lugarExpedicionField;
 
@@ -207,7 +207,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public System.DateTime Fecha
+        public string Fecha
         {
             get
             {
@@ -263,7 +263,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public uint SubTotal
+        public decimal SubTotal
         {
             get
             {
@@ -373,19 +373,7 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
 
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttribute()]
-        public byte TipoCambio
-        {
-            get
-            {
-                return this.tipoCambioField;
-            }
-            set
-            {
-                this.tipoCambioField = value;
-            }
-        }
+       
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]

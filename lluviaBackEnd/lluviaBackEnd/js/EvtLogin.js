@@ -40,11 +40,12 @@ $(document).ready(function () {
             url: rootUrl("/Login/Facturar"),
             data: { idCliente: 0 },
             method: 'post',
-            dataType: 'html',
+            dataType: 'json',
             async: false,
             beforeSend: function (xhr) {
             },
             success: function (data) {
+                console.log(data);
 
             },
             error: function (xhr, status) {

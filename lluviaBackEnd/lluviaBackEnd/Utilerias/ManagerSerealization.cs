@@ -10,12 +10,12 @@ namespace lluviaBackEnd.Utilerias
 {
     public class ManagerSerealization <T> where T : class 
     {
-        public static void Serealizar(T value)
+        public static void Serealizar(T value , string path)
         {
             XmlSerializer xsSubmit = new XmlSerializer(value.GetType());
             //var subReq = new MyObject();
             var xml = "";
-            using (var sww = new StreamWriter("factura.xml"))
+            using (var sww = new StreamWriter(path+".xml"))
             {
                 using (XmlWriter writer = XmlWriter.Create(sww))
                 {

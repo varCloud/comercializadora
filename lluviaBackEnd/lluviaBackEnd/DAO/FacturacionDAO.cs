@@ -28,8 +28,7 @@ namespace lluviaBackEnd.DAO
                 if (r1.Estatus == 200)
                 {
                     c = result.Read<Comprobante, ComprobanteEmisor, Comprobante>(MapComprobanteAEmisor, splitOn: "RegimenFiscal").ToList().FirstOrDefault();
-                    ObtenerConceptos(ref c , 1);
-                    ObtenerImpuestosGenerales(ref c);
+                    c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                 }
             }
             return c;
@@ -41,9 +40,9 @@ namespace lluviaBackEnd.DAO
             return comprobante;
         }
 
-        public void  ObtenerConceptos(ref Comprobante c, int idVenta)
+        public List<ComprobanteConcepto> ObtenerConceptos(int idVenta)
         {
-
+            List<ComprobanteConcepto> listConceptos = null;
             try
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -54,10 +53,10 @@ namespace lluviaBackEnd.DAO
                     var r1 = result.ReadFirst();
                     if (r1.Estatus == 200)
                     {
-                        c.Conceptos = result.Read<ComprobanteConcepto>().ToArray();
-                        if (c.Conceptos != null)
+                        listConceptos = result.Read<ComprobanteConcepto>().ToList();
+                        if (listConceptos != null)
                         {
-                            c.Conceptos.ToList().ForEach(data => data.Impuestos = new ComprobanteConceptoImpuestos()
+                            listConceptos.ForEach(data => data.Impuestos = new ComprobanteConceptoImpuestos()
                             {
                                 Traslados = new ComprobanteConceptoImpuestosTraslados()
                                 {
@@ -80,23 +79,42 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
-            
+            return listConceptos;
         }
 
         public void ObtenerImpuestosGenerales(ref Comprobante c)
         {
-            decimal TotalImpuestosTrasladados = 0;
-            TotalImpuestosTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Importe);
-            ComprobanteImpuestos impuestos = new ComprobanteImpuestos();
-            impuestos.TotalImpuestosTrasladados = TotalImpuestosTrasladados;
-            impuestos.Traslados = new ComprobanteImpuestosTraslados();
-            impuestos.Traslados.Traslado = new ComprobanteImpuestosTrasladosTraslado();
-            impuestos.Traslados.Traslado.Importe = TotalImpuestosTrasladados;
-            impuestos.Traslados.Traslado.Impuesto = "002";
-            impuestos.Traslados.Traslado.TipoFactor = "Tasa";
-            impuestos.Traslados.Traslado.TasaOCuota = 0.16M;
+            try
+            {
+                decimal TotalImpuestosTrasladados = 0;
+                TotalImpuestosTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Importe);
+                ComprobanteImpuestos impuestos = new ComprobanteImpuestos();
+                impuestos.TotalImpuestosTrasladados = TotalImpuestosTrasladados;
+                impuestos.Traslados = new ComprobanteImpuestosTraslados();
+                impuestos.Traslados.Traslado = new ComprobanteImpuestosTrasladosTraslado();
+                impuestos.Traslados.Traslado.Importe = TotalImpuestosTrasladados;
+                impuestos.Traslados.Traslado.Impuesto = "002";
+                impuestos.Traslados.Traslado.TipoFactor = "Tasa";
+                impuestos.Traslados.Traslado.TasaOCuota = 0.16M;
+                c.Impuestos = impuestos;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
         }
 
+        public void ObtenerTotal(ref Comprobante c) {
+            try
+            {
+                c.SubTotal = c.Conceptos.Sum(data => data.Importe);
+                c.Total = c.SubTotal + c.Impuestos.TotalImpuestosTrasladados;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
