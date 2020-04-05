@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://edifact.com.mx/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://edifact.com.mx/xsd">
+<types>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://edifact.com.mx/xsd">
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+</xsd:schema>
+</types>
+<message name="enviaAcuseCancelacionRequest">
+  <part name="xmlFile" type="xsd:string" /></message>
+<message name="enviaAcuseCancelacionResponse">
+  <part name="ns1:return" type="xsd:string" /></message>
+<portType name="enviaAcuseCancelacionPortType">
+  <operation name="enviaAcuseCancelacion">
+    <input message="tns:enviaAcuseCancelacionRequest"/>
+    <output message="tns:enviaAcuseCancelacionResponse"/>
+  </operation>
+</portType>
+<binding name="enviaAcuseCancelacionBinding" type="tns:enviaAcuseCancelacionPortType">
+  <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="enviaAcuseCancelacion">
+    <soap:operation soapAction="http://comprobantes-fiscales.com/service/cancelarCFDI.php/enviaAcuseCancelacion" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://edifact.com.mx/xsd" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://edifact.com.mx/xsd" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="enviaAcuseCancelacion">
+  <port name="enviaAcuseCancelacionPort" binding="tns:enviaAcuseCancelacionBinding">
+    <soap:address location="http://comprobantes-fiscales.com/service/cancelarCFDI.php"/>
+  </port>
+</service>
+</definitions>
+
+
+

@@ -72,13 +72,13 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private string tipoDeComprobanteField;
 
-        private byte formaPagoField;
+        private string formaPagoField;
 
         private string metodoPagoField;
 
         private string condicionesDePagoField;
 
-        private decimal descuentoField;
+        private decimal descuentoField = 0;
 
       
 
@@ -319,7 +319,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [XmlAttribute()]
-        public byte FormaPago
+        public string FormaPago
         {
             get
             {
@@ -373,7 +373,7 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
 
-       
+        public bool ShouldSerializeDescuento() { return descuentoField == 0 ? false : true; }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -1239,7 +1239,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private ComprobanteImpuestosTraslados trasladosField;
 
-        private uint totalImpuestosRetenidosField;
+        private decimal totalImpuestosRetenidosField = 0;
 
         private decimal totalImpuestosTrasladadosField;
 
@@ -1272,7 +1272,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public uint TotalImpuestosRetenidos
+        public decimal TotalImpuestosRetenidos
         {
             get
             {
@@ -1284,6 +1284,7 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
 
+        public bool ShouldSerializeTotalImpuestosRetenidos() { return totalImpuestosRetenidosField == 0 ? false : true; }
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public decimal TotalImpuestosTrasladados

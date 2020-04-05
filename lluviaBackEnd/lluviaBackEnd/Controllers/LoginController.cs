@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Utilerias;
+using lluviaBackEnd.servicioTimbrarPruebas;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -57,11 +58,18 @@ namespace lluviaBackEnd.Controllers
                 string pathFactura  = Utils.ObtnerFolder();
                 int idVenta = 1;
                 FacturacionDAO facturacionDAO = new FacturacionDAO();
-                Comprobante comprobante =  facturacionDAO.ObtenerComprobante();
+                Comprobante comprobante =  facturacionDAO.ObtenerConfiguracionComprobante();
+                comprobante.Emisor.Rfc= "CMV980925LQ7";
+                comprobante.Emisor.Nombre = "CAJA MORELIA VALLADOLID S.C. DE A.P. DE R.L. DE C.V.";
+                comprobante.Emisor.RegimenFiscal = 603;
+                
 
-                comprobante.Conceptos = facturacionDAO.ObtenerConceptos(idVenta).ToArray();
+                comprobante = facturacionDAO.ObtenerComprobante(idVenta, comprobante);
+
                 facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
+
                 facturacionDAO.ObtenerTotal(ref comprobante);
+
                 Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
                 if(certificados == null)
                     return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
@@ -70,7 +78,14 @@ namespace lluviaBackEnd.Controllers
                 string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante , pathFactura+'/'+ idVenta);
+                servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
+                respuestaTimbrado respuesta =  timbrar.timbrarCFDI("", "", ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
+                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante, pathFactura + '/' +  idVenta);
+                Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura+'/'+ "respuesta_"+idVenta);
+                if (respuesta.codigoResultado.Equals("100"))
+                {
+                    System.IO.File.WriteAllText(pathFactura + '/' + "timbre_" + idVenta+".xml", ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado)); 
+                }
                 return Json("facturando",JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
