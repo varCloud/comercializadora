@@ -461,7 +461,7 @@ $('#btnGuardarPrecios').click(function (e) {
             $('#RangosPreciosProductoModal').modal('hide');
         },
         error: function (xhr, status) {
-            console.log('Hubo un problema al insertar el , contactese con el administrador del sistema');
+            console.log('Hubo un problema al insertar el rango, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }

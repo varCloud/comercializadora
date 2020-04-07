@@ -19,102 +19,31 @@ function onFailureResultVentas() {
     console.log("onFailureResult___");
 }
 
-//function PintarTabla() {
-//    $.ajax({
-//        url: "/Reportes/BuscarVentas",
-//        data: { idUsuario: 0 },
-//        method: 'post',
-//        dataType: 'html',
-//        async: false,
-//        beforeSend: function (xhr) {
-//        },
-//        success: function (data) {
-//            tablaVentas.destroy();
-//            $('#rowVentas').html(data);
-//            InitDataTableVentas();
-//        },
-//        error: function (xhr, status) {
-//            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
-//            console.log(xhr);
-//            console.log(status);
-//        }
-//    });
-//}
-
-//function InitDataTableVentas() {
-//    var NombreTabla = "tablaRepVentas";
-//    tablaVentas = initDataTable(NombreTabla);
-
-//    new $.fn.dataTable.Buttons(tablaVentas, {
-//        buttons: [
-//            {
-//                extend: 'pdfHtml5',
-//                text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
-//                className: '',
-//                titleAttr: 'Exportar a PDF',
-//                title: "Ventas",
-//                customize: function (doc) {
-//                    doc.defaultStyle.fontSize = 8;
-//                    doc.styles.tableHeader.fontSize = 10;
-//                    doc.defaultStyle.alignment = 'center';
-//                    doc.content[1].table.widths = ['10%', '20%', '20%', '10%', '20%', '20%'];
-//                    doc.pageMargins = [30, 85, 20, 30];
-//                    doc.content.splice(0, 1);
-//                    doc['header'] = SetHeaderPDF("Ventas");
-//                    doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
-//                },
-//                exportOptions: {
-//                    columns: [0, 1, 2, 3, 4, 5]
-//                },
-//            },
-//            {
-//                extend: 'excel',
-//                text: '<i class="fas fa-file-excel" style="font-size:20px;"></i>',
-//                className: '',
-//                titleAttr: 'Exportar a Excel',
-//                exportOptions: {
-//                    columns: [0, 1, 2, 3, 4, 5]
-//                },
-//            },
-//        ],
-
-//    });
-
-//    tablaVentas.buttons(0, null).container().prependTo(
-//        tablaVentas.table().container()
-//    );
-//}
 
 
 
 var vtas = [];
 
 
-function SaveData() {
+function preguntaAltaPrecios() {
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
-
-        //codigo = fila.children[0].innerHTML;
-        var row_ = {
-            idVenta: fila.children[0].innerHTML,
-            nombreCliente: fila.children[1].innerHTML
-        };
-        vtas.push(row_);
-
-    });
-
-    dataToPost = JSON.stringify({ ventas: vtas });
-
-    $.ajax({
-        type: "POST",
-        url: "/Ventas/GuardarVentas",
-        contentType: "application/json; charset=utf-8", // specify the content type
-        dataType: 'JSON', // make sure you use the correct case for dataType
-        data: dataToPost,
-        traditional: true
-    });
-    
+    swal({
+        title: 'Mensaje',
+        text: 'Este producto no tiene un rango de precios configurado, desea configurarlo?',
+        icon: 'warning',
+        buttons: ["No", "Sí"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                console.log(willDelete);
+                location.href = rootUrl("/Productos/Productos");
+            } else {
+                console.log("cancelar");
+            }
+        });
 }
+
 
 function InitSelect2Productos() {
     $('.select-multiple').select2({
@@ -137,6 +66,31 @@ function eliminaFila(index_) {
 
 $('#cancelar').click(function (e) {
 
+    var max_id = parseFloat(0);
+
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+        var maximo_actual = parseFloat(fila.children[0].innerHTML);
+        if (maximo_actual > max_id) {
+            max_id = maximo_actual;
+        }
+    });
+
+    var i;
+    for (i = max_id; i >= 1 ; i--) {
+        document.getElementById("tablaRepVentas").deleteRow(i);
+    }
+
+    actualizaTicket();
+    $('#cantidad').val('');
+
+});
+
+
+$('#previoVenta').click(function (e) {
+
+
+    $('#ModalPrevioVenta').modal({ backdrop: 'static', keyboard: false, show: true });
+
 
 });
 
@@ -146,32 +100,153 @@ function actualizaTicket() {
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
-        fila.children[5].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index+1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        total += parseFloat(fila.children[4].innerHTML.replace('$', ''));
+        fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index+1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
     });
 
     //actualizar los totales
     document.getElementById("divSubTotal").innerHTML = "$" + parseFloat(total).toFixed(2);
     document.getElementById("divIva").innerHTML = "$" + parseFloat(total * 0.16).toFixed(2);
     document.getElementById("divTotal").innerHTML = "$" + parseFloat(total * 1.16).toFixed(2);
+
+    //replicamos en el precio de la venta
+    document.getElementById("previoTotal").innerHTML = "<h3>$" + parseFloat(total).toFixed(2) + "</h3>";
+    document.getElementById("previoDescuento").innerHTML = "<h3>$" + parseFloat(0.0).toFixed(2) + "</h3>";
+    document.getElementById("previoSubTotal").innerHTML = "<h3>$" + parseFloat(total).toFixed(2) + "</h3>";
+    document.getElementById("previoIVA").innerHTML = "<h3>$" + parseFloat(total * 0.16).toFixed(2) + "</h3>";
+    document.getElementById("previoFinal").innerHTML = "<h3>$" + parseFloat(total * 1.16).toFixed(2) + "</h3>";
+
 }
 
 $('#btnAgregarProducto').click(function (e) {
 
-    var row_ = "<tr>" +
-        "  <td>1</td>" +
-        "  <td>prueba Blitz TDR-3000</td>" +
-        "  <td class=\"text-center\">$" + $('#precio').val() + "</td>" +
-        "  <td class=\"text-center\">" + $('#cantidad').val() + "</td>" +
-        "  <td class=\"text-center\">$" + $('#cantidad').val() * $('#precio').val() + "</td>" +
-        "  <td class=\"text-center\">" +
-        "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
-        "  </td>" +
-        "</tr >";
+    if ($('#cantidad').val() == "") {
+        MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
+    }
+    else {
 
-    $("table tbody").append(row_);
+        //var precio = parseFloat($('#precio').val());
+        var idProducto = $('#idProducto').val();
+        var cantidad = $('#cantidad').val();
+        var data = ObtenerProductoPorPrecio(idProducto, cantidad);
+        var precio = parseFloat(data.Modelo[0].costo);
 
-    actualizaTicket();
+        if (precio == 0) {
+            preguntaAltaPrecios();
+        }
+        else {
+            console.log($("#idProducto").find("option:selected").text());
+            var row_ =  "<tr>" +
+                        "  <td>1</td>" +
+                        "  <td> " + $('#idProducto').val() + "</td>" +
+                        "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
+                        "  <td class=\"text-center\">$" + precio + "</td>" +
+                        "  <td class=\"text-center\">" + cantidad + "</td>" +
+                        "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                        "  <td class=\"text-center\">" +
+                        "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                        "  </td>" +
+                        "</tr >";
+
+            $("table tbody").append(row_);
+            $('#cantidad').val('');
+
+            actualizaTicket();
+        }
+
+    }
+    
+});
+
+
+function ObtenerProductoPorPrecio(idProducto,cantidad) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Ventas/ObtenerProductoPorPrecio"),
+        data: { idProducto: idProducto, cantidad: cantidad, costo : 0 },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
+
+function ObtenerCliente(idCliente) {
+    var result = "";//{ "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
+    $.ajax({
+        url: rootUrl("/Clientes/ObtenerCliente"),
+        data: { idCliente: idCliente },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes_")
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
+
+
+$('#btnGuardarVenta').click(function (e) {
+
+    var productos = [];
+
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+
+
+        var row_ = {
+            idCliente: $('#idCliente').val(),
+            idProducto: fila.children[1].innerHTML,
+            cantidad: fila.children[4].innerHTML,
+            idUsuario: 4,//fila.children[3].innerHTML,
+            formaPago: $('#formaPago').val()
+        };
+        productos.push(row_);
+
+    });
+
+    dataToPost = JSON.stringify({ venta: productos });
+
+    $.ajax({
+        url: rootUrl("/Ventas/GuardarVenta"),
+        data: dataToPost,
+        method: 'POST',
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8", 
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast('success', data.Mensaje);
+            $('#ModalPrevioVenta').modal('hide');
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un problema al guardar la venta, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
 
 });
 
@@ -180,13 +255,62 @@ $('#btnAgregarProducto').click(function (e) {
 
 $(document).ready(function () {
 
-    //InitDataTableVentas();
+    actualizaTicket();
     InitSelect2Productos();
-    InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
-    $('#idLineaProductoBusqueda').val('0');
-    $('#idClienteBusqueda').val('0');
-    $('#idUsuarioBusqueda').val('0');
-    $('#fechaIni').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
+    $("#idCliente").on("change", function () {
+        console.log($('#idCliente').val());
+        
+        var idCliente = parseFloat($('#idCliente').val());
+        var data = ObtenerCliente(idCliente);
+        var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
+        var descuento = parseFloat(0.0);
+
+        if (idCliente != 0) {
+            descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
+        }
+        
+        var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h3>$", "").replace("</h3>", "")).toFixed(2);
+        var cantidadDescontada = parseFloat(0).toFixed(2);
+
+        if (descuento > 0.0) {
+            cantidadDescontada = parseFloat(total * (descuento / 100)).toFixed(2);
+        }
+
+        var subTotal = parseFloat(total - cantidadDescontada).toFixed(2);
+        var iva = parseFloat(subTotal * 0.16).toFixed(2);
+        var final = parseFloat(subTotal * 1.16).toFixed(2);
+
+        document.getElementById("previoDescuento").innerHTML = "<h3>-$" + cantidadDescontada + "</h3>";
+        document.getElementById("previoSubTotal").innerHTML = "<h3>$" + subTotal + "</h3>";
+        document.getElementById("previoIVA").innerHTML = "<h3>$" + iva + "</h3>";
+        document.getElementById("previoFinal").innerHTML = "<h3>$" + final + "</h3>";
+
+       // para los datos del cliente
+       var row_ = "<address>" +
+                "    <strong></strong><br>" +
+                "    <br>" +
+                "    <br>" +
+                "    <br>" +
+                "    <br>" +
+                "    <br>" +
+                "</address>";
+
+        if ( (data.idCliente != 0) && (idCliente != 0) ) {
+            row_ =  "<address>" +
+                    "    <strong>Datos del Cliente:</strong><br>" +
+                    "    Nombre: " + nombre.toUpperCase() + "<br>" +
+                    "    Telefono: " + data.Modelo.telefono + "<br>" +
+                    "    E-mail: " + data.Modelo.correo + "<br>" +
+                    "    RFC: " + data.Modelo.rfc + "<br>" +
+                    "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
+                    "</address>";
+        }
+
+
+        document.getElementById("nombreCliente").innerHTML = row_; 
+
+    }); 
+
 
 });

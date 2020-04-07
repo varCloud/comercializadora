@@ -189,6 +189,7 @@
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
+    <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />
     <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />

@@ -16,6 +16,6 @@ namespace lluviaBackEnd.Models
         public float costo { get; set; }
         public Boolean activo { get; set; }
         public int idTipoPrecio { get; set; }
-        
+        public int cantidad { get; set; }
     }
 }
