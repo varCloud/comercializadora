@@ -19,6 +19,9 @@ using System.Drawing;
 //using StoPrueba.Entidades;
 using System.Security.Cryptography.X509Certificates;
 using lluviaBackEnd.Models.Facturacion;
+using Gma.QrCodeNet.Encoding;
+using Gma.QrCodeNet.Encoding.Windows.Render;
+using System.Drawing.Imaging;
 
 //using CmvComprobante;
 
@@ -41,7 +44,8 @@ namespace lluviaBackEnd.Utilerias
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Comprobante));
                 MemoryStream ms = new MemoryStream();
-                XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, Encoding.UTF8);
+                Encoding utf8EncodingWithNoByteOrderMark = new UTF8Encoding(false);
+                XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, utf8EncodingWithNoByteOrderMark);
 
                 XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
 
@@ -183,8 +187,19 @@ namespace lluviaBackEnd.Utilerias
             return strSello;
         }
 
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
 
-        
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+
 
         /*
         public static string ObtenerPath()

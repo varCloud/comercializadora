@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="urn:respuestaTimbrado" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:respuestaTimbrado">
+<types>
+<xsd:schema elementFormDefault="qualified" targetNamespace="urn:respuestaTimbrado"
+>
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+ <xsd:complexType name="respuestaTimbrado">
+  <xsd:all>
+   <xsd:element name="documentoTimbrado" type="xsd:string"/>
+   <xsd:element name="codigoResultado" type="xsd:string"/>
+   <xsd:element name="codigoDescripcion" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+</xsd:schema>
+</types>
+<message name="timbrarCFDIRequest">
+  <part name="suscriptorRFC" type="xsd:string" />
+  <part name="agenteTI" type="xsd:string" />
+  <part name="documentoXML" type="xsd:string" /></message>
+<message name="timbrarCFDIResponse">
+  <part name="return" type="tns:respuestaTimbrado" /></message>
+<portType name="timbrarCFDIPortType">
+  <operation name="timbrarCFDI">
+    <input message="tns:timbrarCFDIRequest"/>
+    <output message="tns:timbrarCFDIResponse"/>
+  </operation>
+</portType>
+<binding name="timbrarCFDIBinding" type="tns:timbrarCFDIPortType">
+  <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="timbrarCFDI">
+    <soap:operation soapAction="http://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:respuestaTimbrado" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:respuestaTimbrado" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="timbrarCFDI">
+  <port name="timbrarCFDIPort" binding="tns:timbrarCFDIBinding">
+    <soap:address location="http://comprobantes-fiscales.com/service/timbraCFDI.php"/>
+  </port>
+</service>
+</definitions>

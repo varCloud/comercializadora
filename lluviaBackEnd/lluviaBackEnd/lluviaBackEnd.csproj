@@ -52,6 +52,12 @@
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
       <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
@@ -63,6 +69,8 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
@@ -161,6 +169,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Connected Services\servicioTimbrarPruebas\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
@@ -211,6 +224,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilerias\ItextEvents.cs" />
     <Compile Include="Utilerias\ManagerSerealization.cs" />
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
@@ -918,7 +932,6 @@
     <Content Include="assets\img\image-gallery\thumb\thumb-8.png" />
     <Content Include="assets\img\image-gallery\thumb\thumb-9.png" />
     <Content Include="assets\img\loading.gif" />
-    <Content Include="assets\img\logo.png" />
     <Content Include="assets\img\logo_lluvia.png" />
     <Content Include="assets\img\logo_lluvia_64.png" />
     <Content Include="assets\img\posts\post11.png" />
@@ -992,6 +1005,15 @@
     <Content Include="assets\js\page\widget-chart.js" />
     <Content Include="assets\js\page\widget-data.js" />
     <Content Include="assets\js\scripts.js" />
+    <None Include="Connected Services\servicioTimbrarPruebas\configuration91.svcinfo" />
+    <None Include="Connected Services\servicioTimbrarPruebas\configuration.svcinfo" />
+    <Content Include="Connected Services\servicioTimbrarPruebas\lluviaBackEnd.servicioTimbrarPruebas.respuestaTimbrado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\servicioTimbrarPruebas\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1068,6 +1090,7 @@
     <Content Include="assets\fonts\webfonts\fa-solid-900.woff2" />
     <Content Include="assets\fonts\webfonts\fa-solid-900d41d.eot" />
     <Content Include="app.config" />
+    <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Resources\CerProductivo.cer" />
     <None Include="Resources\keyProductivo.key" />
@@ -1147,6 +1170,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

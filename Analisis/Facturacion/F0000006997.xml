@@ -13,7 +13,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  MetodoPago="PUE"
   LugarExpedicion="60130">
 	<cfdi:Emisor RegimenFiscal="621" Rfc="COVO781128LJ1" Nombre="OSEAS AURELIANO CORNEJO VAZQUEZ"></cfdi:Emisor>
-	<cfdi:Receptor Rfc="GVA850923MU0" Nombre="GRUAS VAZQUEZ S.A DE C.V" UsoCFDI="G03"></cfdi:Receptor>
+	<cfdi:Receptor 
+	 Rfc="GVA850923MU0"
+	 Nombre="GRUAS VAZQUEZ S.A DE C.V" 
+	 UsoCFDI="G03"></cfdi:Receptor>
 	<cfdi:Conceptos>
 		<cfdi:Concepto ClaveProdServ="47132100" ClaveUnidad="H87" Cantidad="1.00" Unidad="PZA" NoIdentificacion="AL" Descripcion="ARTICULOS PARA LA LIMPIEZA" ValorUnitario="209.50" Importe="209.50">
 			<cfdi:Impuestos>
