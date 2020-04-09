@@ -14,8 +14,7 @@ namespace lluviaBackEnd.Controllers
         //  Nueva Venta
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        public ActionResult Ventas()
+        public ActionResult Ventas(Ventas venta)
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
@@ -26,7 +25,9 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstFormasPago = formasPago.Modelo;
 
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
-            
+
+            ViewBag.venta = venta;
+
             return View();
         }
 
@@ -67,9 +68,47 @@ namespace lluviaBackEnd.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+        public ActionResult ConsultaVentas()
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta=2 });
+            //Notificacion<List<Producto>> notificacionProductos = new Notificacion<List<Producto>>();
+            //notificacionProductos = new ProductosDAO().ObtenerProductos(new Producto() { idProducto = 0 });
+
+            ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 } );
+            ViewBag.lstVentas = notificacion.Modelo;
+            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            
+            return View();
+        }
+
+        public ActionResult _ObtenerVentas(Ventas ventas)
+        {
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                ventas.tipoConsulta = 2;
+                notificacion = new ReportesDAO().ObtenerVentas(ventas);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstVentas = notificacion.Modelo;
+                    return PartialView("_ObtenerVentas");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
 
 
-
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

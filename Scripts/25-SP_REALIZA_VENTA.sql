@@ -132,19 +132,19 @@ as
 					raiserror (@mensaje, 11, -1)
 				end
 				
-				-- validamos q tenga el suficiente inventario
-				if  exists	( 
-								select	i.cantidad - v.cantidad as cantidadActualInvGeneral,
-										i.cantidad as cantidadAnteriorInvGeneral
-								from	#vta v
-										inner join InventarioGeneral i
-											on v.idProducto = i.idProducto
-								where	( ( i.cantidad - v.cantidad ) < 0 )
-							)
-				begin
-					select @mensaje = 'No se cuenta con suficientes existencias en el inventario.'
-					raiserror (@mensaje, 11, -1)
-				end
+				---- validamos q tenga el suficiente inventario
+				--if  exists	( 
+				--				select	i.cantidad - v.cantidad as cantidadActualInvGeneral,
+				--						i.cantidad as cantidadAnteriorInvGeneral
+				--				from	#vta v
+				--						inner join InventarioGeneral i
+				--							on v.idProducto = i.idProducto
+				--				where	( ( i.cantidad - v.cantidad ) < 0 )
+				--			)
+				--begin
+				--	select @mensaje = 'No se cuenta con suficientes existencias en el inventario.'
+				--	raiserror (@mensaje, 11, -1)
+				--end
 
 				-- validamos si el cliente tiene descuento por aplicar
 				select	@descuento = t.descuento
@@ -158,32 +158,61 @@ as
 				begin
 					update	#vta set #vta.precioPorProducto = #vta.precioPorProducto - (#vta.precioPorProducto * ( @descuento / 100 ))
 				end
-
-				-- si es una edicion de venta se cancela el ticket actual y para insertar los nuevos datos
-				--if( @idVenta > 0 )
-				--	begin
-						
-				--		update	Ventas	
-				--		set		idStatusVenta = 2
-				--		where	idVenta = @idVenta
-
-
-
-				--	end
 				
-
 				-- si todo bien
 				select @montoTotal = sum(precioPorProducto) from #vta
 				select @totalProductos = sum(cantidad) from #vta
 
 
 				-- inserta en tablas fisicas
-				insert into Ventas (idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idStatusVenta,idFactFormaPago)
-				select	@idCliente as idCliente, @totalProductos as cantidad , GETDATE() as fechaAlta, 
-						@montoTotal as montoTotal, @idUsuario as idUsuario, 1 as idStatusVenta,
-						@idFactFormaPago as idFactFormaPago
+				if ( @idVenta > 0 ) -- si es edicion
+					begin
 
-				select @idVenta = max(idVenta) from Ventas
+						--select	'InventarioGeneral',
+						--		i.cantidad + A.tot_productos
+						--		,* 
+						
+						update	InventarioGeneral 
+						set		cantidad = i.cantidad + A.tot_productos
+						from	InventarioGeneral i
+									inner join	(
+													select	idProducto as idProducto, sum(cantidad) as tot_productos 
+													from	VentasDetalle 
+													where	idVenta = @idVenta
+													group by idProducto
+												)A 
+										on A.idProducto = i.idProducto
+
+
+						delete from VentasDetalle where idVenta = @idVenta
+
+						-- se restituye las existencias en el inventario
+
+
+						-- se actualiza el la venta con los nuevos datos
+						update	Ventas
+						set		idCliente = @idCliente,
+								cantidad  = @totalProductos,
+								fechaAlta = getdate(),
+								montoTotal = @montoTotal,
+								idUsuario = @idUsuario,
+								idStatusVenta = 1,
+								idFactFormaPago = @idFactFormaPago
+						where	idVenta = @idVenta
+
+					end
+				else -- si es nueva
+					begin
+						
+						insert into Ventas (idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idStatusVenta,idFactFormaPago)
+						select	@idCliente as idCliente, @totalProductos as cantidad , GETDATE() as fechaAlta, 
+								@montoTotal as montoTotal, @idUsuario as idUsuario, 1 as idStatusVenta,
+								@idFactFormaPago as idFactFormaPago
+
+						select @idVenta = max(idVenta)  from Ventas
+
+					end
+
 
 				insert into VentasDetalle (idVenta,idProducto,cantidad,contadorProductosPorPrecio,monto,cantidadActualInvGeneral,cantidadAnteriorInvGeneral)
 				select	@idVenta as idVenta, v.idProducto, v.cantidad, v.contador, v.precioPorProducto, i.cantidad - v.cantidad as cantidadActualInvGeneral,
@@ -194,14 +223,30 @@ as
 
 				-- actualizar el inventario general	
 				update	InventarioGeneral
-				set		cantidad = A.cantidadActualInvGeneral,
+				set		cantidad = cantidad - a.productosComprados,
 						fechaUltimaActualizacion = getdate()
 				from	(
-							select	idProducto, cantidadActualInvGeneral 
+							select	idProducto, sum(cantidad) as productosComprados
 							from	VentasDetalle 
 							where	idVenta = @idVenta
+							group by idProducto 
+							--select	idProducto, cantidadActualInvGeneral 
+							--from	VentasDetalle 
+							--where	idVenta = @idVenta
 						)A
 				where	InventarioGeneral.idProducto = A.idProducto
+
+				-- si el inventario de los productos vendidos queda negativo se paso de productos = rollback
+				if  exists	( 
+								select	1 
+								from	InventarioGeneral
+								where	idProducto in (select idProducto from #vta)
+									and	cantidad < 0
+							)
+				begin
+					select @mensaje = 'No se cuenta con suficientes existencias en el inventario.'
+					raiserror (@mensaje, 11, -1)
+				end
 
 
 

@@ -58,7 +58,7 @@ namespace lluviaBackEnd.Models
         public int contador { get; set; }
         public float precio { get; set; }
         public string formaPago { get; set; }
-
+        public int tipoConsulta { get; set; }
 
     }
 }

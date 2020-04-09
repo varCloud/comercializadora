@@ -14,6 +14,7 @@ Fecha			2020/02/17
 Objetivo		Consulta las ventas hechas a los clientes
 status			200 = ok
 				-1	= error
+				tipoConsulta: 1-para reportes / 2- para modulo de ventas
 */
 
 create proc SP_CONSULTA_VENTAS
@@ -24,7 +25,8 @@ create proc SP_CONSULTA_VENTAS
 	@idCliente				int = null,
 	@idUsuario				int = null,
 	@fechaIni				datetime = null,
-	@fechaFin				datetime = null
+	@fechaFin				datetime = null,
+	@tipoConsulta			int = null
 
 as
 
@@ -95,7 +97,7 @@ as
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
-									inner join Clientes cl
+									left join Clientes cl
 										on v.idCliente = cl.idCliente
 									inner join VentasDetalle vd
 										on vd.idVenta = v.idVenta
@@ -116,7 +118,7 @@ as
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
-									inner join Clientes cl
+									left join Clientes cl
 										on v.idCliente = cl.idCliente
 									inner join VentasDetalle vd
 										on vd.idVenta = v.idVenta
@@ -206,7 +208,41 @@ as
 		-- si todo ok
 			if ( @valido = 1 )
 				begin
-					select	* from	#Ventas order by idVenta desc 
+
+					if ( @tipoConsulta = 2 )
+						begin
+							select	ROW_NUMBER() OVER(ORDER BY idVenta DESC) AS contador,
+									idVenta,idCliente,
+									case
+										when nombreCliente is null then 'PÚBLICO EN GENERAL' 
+										else nombreCliente
+									end as nombreCliente,
+									cantidad,fechaAlta,idUsuario,nombreUsuario 
+							from	#Ventas 
+							group by idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario
+							order by idVenta desc 
+						end
+					else
+						begin
+							select	
+									contador,					
+									idVenta,						
+									idCliente,					
+									case
+										when nombreCliente is null then 'PÚBLICO EN GENERAL' 
+										else nombreCliente
+									end as nombreCliente,
+									cantidad,					
+									fechaAlta,					
+									idUsuario,					
+									nombreUsuario,				
+									idProducto,					
+									descripcionProducto	,								
+									idLineaProducto,				
+									descripcionLineaProducto								
+							from	#Ventas 
+							order by idVenta desc 
+						end
 				end
 				
 		end -- reporte de estatus

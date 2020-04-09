@@ -1,4 +1,4 @@
-﻿@model lluviaBackEnd.Models.Ventas
+﻿@model List<lluviaBackEnd.Models.Ventas>
 @{
     List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     //List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped" id="tablaRepVentas">
+                        <table class="table table-striped" id="tablaConsultaVentas">
                             <thead>
                                 <tr>
                                     <th class="text-center"> Id </th>
@@ -23,20 +23,29 @@
                                     <th>Fecha</th>
                                     <th>Cantidad</th>
                                     <th>Usuario</th>
-                                    <th>Producto</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstVentas)
                                 {
-                                    <tr>
-                                        <td>@item.contador</td>
-                                        <td>@item.nombreCliente</td>
-                                        <td>@item.fechaAlta</td>
-                                        <td>@item.cantidad</td>
-                                        <td>@item.nombreUsuario</td>
-                                        <td>@item.descripcionProducto</td>
-                                    </tr>
+                                <tr>
+                                    <td>@item.contador</td>
+                                    <td>@item.nombreCliente</td>
+                                    <td>@item.fechaAlta</td>
+                                    <td>@item.cantidad</td>
+                                    <td>@item.nombreUsuario</td>
+                                    <td>
+                                        <div class="buttons">
+                                            @*<a href="javascript:VerDetalleVenta(@item.idProducto);" class="btn btn-icon btn-success" data-toggle="tooltip" title="Ver Detalle de la Venta"><i class="fas fa-file-alt"></i></a>*@
+                                            @*window.location.href = '@Url.Action("MyMethod", "SomeControllerName", new { area = "MyArea", id = Model.MyId })';*@
+                                            <a href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta })" class="btn btn-icon btn-info" data-toggle="tooltip" title="Editar Venta"><i class="far fa-edit"></i></a>
+                                            <a href="javascript:ImprimirTicket(@item.idVenta);" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Imprimir Ticket"><i class="fas fa-print"></i></a>
+                                            <a href="javascript:GenerarFactura(@item.idVenta);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Generar Factura"><i class="fas fa-file-invoice-dollar"></i></a>
+                                            <a href="javascript:CancelaVenta(@item.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Venta"><i class="fas fa-times"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

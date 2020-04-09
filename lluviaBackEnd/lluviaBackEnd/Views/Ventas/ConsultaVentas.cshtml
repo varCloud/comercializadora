@@ -1,0 +1,101 @@
+﻿@model lluviaBackEnd.Models.Ventas
+@{
+    ViewBag.Title = "Consulta Ventas";
+    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+
+}
+<h2>Editar Ventas</h2>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Buscar Ventas</h4>
+                <div class="card-header-action">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                </div>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("_ObtenerVentas", "Ventas",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitConsultaVentas",
+                        OnComplete = "onCompleteSubmitConsultaVentas",
+                        OnFailure = "onFailureResultConsultaVentas",
+                        OnSuccess = "onSuccessResultConsultaVentas",
+                    },
+                    new { id = "frmConsultaVentas" }))
+                    {
+                        @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                        @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Producto: </label>
+                                    @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Cliente: </label>
+                                    @Html.DropDownListFor(model => model.idCliente, lstClientes , new { id = "idCliente", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="rangeConsultaVentas" class="form-control daterange-cus">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="submit" id="btnBuscarVentas" class="btn btn-success">Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="rowConsultaVentas">
+    @Html.Partial("_ObtenerVentas", lstVentas)
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtConsultaVentas.js"></script>
+}

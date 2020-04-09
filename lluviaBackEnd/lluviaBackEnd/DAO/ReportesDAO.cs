@@ -93,6 +93,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", ventas.idUsuario);
                     parameters.Add("@fechaIni", ventas.fechaIni);
                     parameters.Add("@fechaFin", ventas.fechaFin);
+                    parameters.Add("@tipoConsulta", ventas.tipoConsulta);
 
                     var result = db.QueryMultiple("SP_CONSULTA_VENTAS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

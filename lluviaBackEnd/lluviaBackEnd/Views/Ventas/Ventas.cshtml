@@ -5,6 +5,18 @@
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
     List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
+    int idVenta = ViewBag.venta.idVenta;
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+
+
+    if (idVenta > 0)
+    {
+        notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta });
+        //List<lluviaBackEnd.Models.Ticket> lstTicket = notificacion.Modelo;
+
+    }
+
 
 }
 
@@ -32,6 +44,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Producto</label>
+                                @Html.HiddenFor(x => idVenta);
                                 @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
                             </div>
                             <div class="form-group">
@@ -76,7 +89,33 @@
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        @if (notificacion.Modelo != null)
+                                        {
+                                            if (notificacion.Modelo.Count() > 0)
+                                            {
+                                                <tbody>
+                                                    @foreach (var item in notificacion.Modelo)
+                                                    {
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>@item.idProducto</td>
+                                                            <td>@item.descProducto</td>
+                                                            <td class="text-center">$@item.monto</td>
+                                                            <td class="text-center">@item.cantidad</td>
+                                                            <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
+                                                            <td class="text-center">7</td>
+                                                        </tr>
+
+                                                    }
+
+                                                </tbody>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tbody></tbody>
+                                        }
+
                                     </table>
                                 </div>
 
@@ -104,7 +143,7 @@
 
                             <hr>
                             <div class="text-md-right">
-                                <button id="cancelar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i> Cancelar</button>
+                                <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
                                 <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
                                     <i class="fas fa-credit-card"></i> Realizar Venta
                                 </button>
@@ -116,152 +155,6 @@
             </div>
         </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<section class="section">
-
-    <div class="section-body">
-        <div class="invoice">
-            <div class="invoice-print">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="invoice-title">
-                            <h2>Venta de Productos</h2>
-                            <div class="invoice-number"></div>
-                        </div>
-                        <hr>
-
-
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Agregar Productos</h4>
-                                        <div class="card-header-action">
-                                            <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="collapse show" id="mycard-collapse">
-                                        <div class="card-body">
-
-
-                                            <div class="row">
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Producto</label>
-                                                        @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                    
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Cantidad</label>
-                                                        <input id="cantidad" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-2">
-                                                    <div class="form-group">
-                                                        <div class="text-right" style="margin-top:30px;">
-                                                            <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="section-title">Resumen de la venta</div>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped" id="tablaRepVentas">
-                                <thead>
-                                    <tr>
-                                        <th data-width="40" style="width: 40px;">#</th>
-                                        <th>Id Producto</th>
-                                        <th>Producto</th>
-                                        <th class="text-center">Precio</th>
-                                        <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Total</th>
-                                        <th class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col-lg-6">
-
-                            </div>
-                            <div class="col-lg-6 text-right">
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">Subtotal</div>
-                                    <div class="invoice-detail-value" id="divSubTotal">$670.99</div>
-                                </div>
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">I.V.A.</div>
-                                    <div class="invoice-detail-value" id="divIva">$15</div>
-                                </div>
-                                <hr class="mt-2 mb-2">
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">Total</div>
-                                    <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <hr>
-               
-
-
-
-            </div>
-            <hr>
-            <div class="text-md-right">
-                <button id="cancelar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i> Cancelar</button>
-                <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
-                    <i class="fas fa-credit-card"></i> Realizar Venta
-                </button>
-            </div>
-        </div>
-    </div>
-</section>*@
 
 
 
@@ -345,7 +238,7 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                             <button type="button" id="btnGuardarVenta" class="btn btn-success">Guardar</button>
                         </div>
                     </div>

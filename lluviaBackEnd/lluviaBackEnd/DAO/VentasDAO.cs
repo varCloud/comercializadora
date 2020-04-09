@@ -22,7 +22,7 @@ namespace lluviaBackEnd.DAO
         private IDbConnection db = null;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  Editar Ventas
+        //  Nuevas Ventas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Notificacion<List<Precio>> ObtenerProductoPorPrecio(Precio precio)
@@ -145,7 +145,37 @@ namespace lluviaBackEnd.DAO
         //  Editar Ventas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+        public Notificacion<List<Ticket>> ObtenerTickets(Ticket ticket)
+        {
+            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", ticket.idVenta);
+                    var result = db.QueryMultiple("SP_CONSULTA_TICKET", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ticket>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Ticket> { ticket };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
 
     }
 }

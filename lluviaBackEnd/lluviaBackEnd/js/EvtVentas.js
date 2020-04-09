@@ -22,7 +22,7 @@ function onFailureResultVentas() {
 
 
 
-var vtas = [];
+//var vtas = [];
 
 
 function preguntaAltaPrecios() {
@@ -64,7 +64,20 @@ function eliminaFila(index_) {
     actualizaTicket();
 }
 
+$('#limpiar').click(function (e) {
+
+    limpiarTicket();
+    
+});
+
+
 $('#cancelar').click(function (e) {
+
+    limpiaModalPrevio();
+
+});
+
+function limpiarTicket() {
 
     var max_id = parseFloat(0);
 
@@ -76,22 +89,58 @@ $('#cancelar').click(function (e) {
     });
 
     var i;
-    for (i = max_id; i >= 1 ; i--) {
+    for (i = max_id; i >= 1; i--) {
         document.getElementById("tablaRepVentas").deleteRow(i);
     }
 
     actualizaTicket();
+    limpiaModalPrevio();
     $('#cantidad').val('');
+    $('#idProducto').val(0);
+    $('#idVenta').val(0);
 
-});
+}
+
+function limpiaModalPrevio() {
+
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    document.getElementById("nombreCliente").innerHTML = row_; 
+
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    $('#idCliente').val('0');
+    $('#formaPago').val('0');
+    //console.log(document.getElementById('idCliente').selectedIndex);
+
+    //document.getElementById('idCliente').selectedIndex = "0";
+    //document.getElementById('formaPago').selectedIndex = 0;
+
+}
+
 
 
 $('#previoVenta').click(function (e) {
 
+    limpiaModalPrevio();
+    document.getElementById("previoTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
+    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
+    document.getElementById("previoIVA").innerHTML = document.getElementById("divIva").innerHTML;
+    document.getElementById("previoFinal").innerHTML = document.getElementById("divTotal").innerHTML;
 
     $('#ModalPrevioVenta').modal({ backdrop: 'static', keyboard: false, show: true });
-
-
 });
 
 function actualizaTicket() {
@@ -102,19 +151,20 @@ function actualizaTicket() {
         fila.children[0].innerHTML = index + 1;
         fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index+1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
         total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        console.log(total + " " + index);
     });
 
     //actualizar los totales
-    document.getElementById("divSubTotal").innerHTML = "$" + parseFloat(total).toFixed(2);
-    document.getElementById("divIva").innerHTML = "$" + parseFloat(total * 0.16).toFixed(2);
-    document.getElementById("divTotal").innerHTML = "$" + parseFloat(total * 1.16).toFixed(2);
+    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+    document.getElementById("divIva").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
+    document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
 
     //replicamos en el precio de la venta
-    document.getElementById("previoTotal").innerHTML = "<h3>$" + parseFloat(total).toFixed(2) + "</h3>";
-    document.getElementById("previoDescuento").innerHTML = "<h3>$" + parseFloat(0.0).toFixed(2) + "</h3>";
-    document.getElementById("previoSubTotal").innerHTML = "<h3>$" + parseFloat(total).toFixed(2) + "</h3>";
-    document.getElementById("previoIVA").innerHTML = "<h3>$" + parseFloat(total * 0.16).toFixed(2) + "</h3>";
-    document.getElementById("previoFinal").innerHTML = "<h3>$" + parseFloat(total * 1.16).toFixed(2) + "</h3>";
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
 
 }
 
@@ -220,7 +270,8 @@ $('#btnGuardarVenta').click(function (e) {
             idProducto: fila.children[1].innerHTML,
             cantidad: fila.children[4].innerHTML,
             idUsuario: 4,//fila.children[3].innerHTML,
-            formaPago: $('#formaPago').val()
+            formaPago: $('#formaPago').val(),
+            idVenta: $('#idVenta').val(),
         };
         productos.push(row_);
 
@@ -240,6 +291,7 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             MuestraToast('success', data.Mensaje);
             $('#ModalPrevioVenta').modal('hide');
+            limpiarTicket();
         },
         error: function (xhr, status) {
             console.log('Hubo un problema al guardar la venta, contactese con el administrador del sistema');
@@ -259,7 +311,7 @@ $(document).ready(function () {
     InitSelect2Productos();
 
     $("#idCliente").on("change", function () {
-        console.log($('#idCliente').val());
+        //console.log($('#idCliente').val());
         
         var idCliente = parseFloat($('#idCliente').val());
         var data = ObtenerCliente(idCliente);
@@ -270,7 +322,7 @@ $(document).ready(function () {
             descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
         }
         
-        var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h3>$", "").replace("</h3>", "")).toFixed(2);
+        var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
         var cantidadDescontada = parseFloat(0).toFixed(2);
 
         if (descuento > 0.0) {
@@ -281,10 +333,10 @@ $(document).ready(function () {
         var iva = parseFloat(subTotal * 0.16).toFixed(2);
         var final = parseFloat(subTotal * 1.16).toFixed(2);
 
-        document.getElementById("previoDescuento").innerHTML = "<h3>-$" + cantidadDescontada + "</h3>";
-        document.getElementById("previoSubTotal").innerHTML = "<h3>$" + subTotal + "</h3>";
-        document.getElementById("previoIVA").innerHTML = "<h3>$" + iva + "</h3>";
-        document.getElementById("previoFinal").innerHTML = "<h3>$" + final + "</h3>";
+        document.getElementById("previoDescuento").innerHTML = "<h4>-$" + cantidadDescontada + "</h4>";
+        document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
+        document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
+        document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
 
        // para los datos del cliente
        var row_ = "<address>" +

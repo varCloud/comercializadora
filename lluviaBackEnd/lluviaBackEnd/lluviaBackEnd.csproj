@@ -191,6 +191,7 @@
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />
+    <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
@@ -1001,6 +1002,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
+    <Content Include="js\EvtReporteVentas.js" />
+    <Content Include="js\EvtConsultaVentas.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
@@ -1119,6 +1122,8 @@
     <Content Include="Views\Ventas\_ObtenerVentas.cshtml" />
     <Content Include="Views\Clientes\Descuentos.cshtml" />
     <Content Include="Views\Clientes\_ObtenerTiposClientes.cshtml" />
+    <Content Include="Views\Ventas\ConsultaVentas.cshtml" />
+    <Content Include="Views\Ventas\_SinResultados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
