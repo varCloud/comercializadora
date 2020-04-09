@@ -7,15 +7,9 @@ using System.Xml.Serialization;
 namespace lluviaBackEnd.Models.Facturacion
 {
 
-
-
-    // NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
-    /// <remarks/>
-    //[System.SerializableAttribute()]
-    //[System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
-    [XmlRoot(Namespace = "http://www.sat.gob.mx/cfd/3", IsNullable = false)]
-    
+    [XmlRoot(Namespace = "http://www.sat.gob.mx/cfd/3", IsNullable = false, ElementName = "Comprobante")]
+
     public partial class Comprobante
     {
         public Comprobante()

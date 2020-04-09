@@ -55,8 +55,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                string pathFactura  = Utils.ObtnerFolder();
-                int idVenta = 1;
+                string pathFactura  = Utils.ObtnerFolder()+'/';
+                int idVenta = 64;
                 FacturacionDAO facturacionDAO = new FacturacionDAO();
                 Comprobante comprobante =  facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Emisor.Rfc= "CMV980925LQ7";
@@ -79,12 +79,18 @@ namespace lluviaBackEnd.Controllers
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
                 servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
-                respuestaTimbrado respuesta =  timbrar.timbrarCFDI("", "", ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
-                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante, pathFactura + '/' +  idVenta);
-                Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura+'/'+ "respuesta_"+idVenta);
+                respuestaTimbrado respuesta =timbrar.timbrarCFDI("", "", ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
+                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante, (pathFactura +  ("Comprobante_"+idVenta)));
                 if (respuesta.codigoResultado.Equals("100"))
                 {
-                    System.IO.File.WriteAllText(pathFactura + '/' + "timbre_" + idVenta+".xml", ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado)); 
+                    string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
+                    System.IO.File.WriteAllText(pathFactura + "Timbre_" + idVenta + ".xml", xmlTimbradoDecodificado);
+                    Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeToObject(xmlTimbradoDecodificado);
+                    Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + idVenta));
+                    Utils.GenerarFactura(comprobanteTimbrado, pathFactura + "Factura_" + (idVenta + ".pdf"));
+                }
+                else {
+                    Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura + ("respuesta_" + idVenta));
                 }
                 return Json("facturando",JsonRequestBehavior.AllowGet);
             }

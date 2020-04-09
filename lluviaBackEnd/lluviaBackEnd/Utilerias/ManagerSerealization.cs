@@ -25,5 +25,31 @@ namespace lluviaBackEnd.Utilerias
                 }
             }
         }
+
+        public static  T DeserializeToObject(string file)
+        {
+            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(T));
+
+            using (StringReader sr = new StringReader(file))
+            {
+                return (T)ser.Deserialize(sr);
+            }
+        }
+
+        public static T DeseralizarXML(string archivo)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                using (StreamReader reader = new StreamReader(archivo))
+                {
+                    return (T)serializer.Deserialize(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace lluviaBackEnd.DAO
             List<ComprobanteConcepto> listConceptos = null;
             try
             {
+                // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
                 parameters.Add("@idVenta", idVenta);
