@@ -34,6 +34,28 @@ function InitSelect2Multiple() {
 }
 
 
+function ImprimeTicket(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicket"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            console.log(data);
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 function PintarTabla() {
     $.ajax({
         url: "/Ventas/_ObtenerVentas",

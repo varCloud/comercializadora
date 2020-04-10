@@ -286,7 +286,8 @@ as
 			select	@status status,
 					@error_procedure error_procedure,
 					@error_line error_line,
-					@mensaje mensaje
+					@mensaje mensaje,
+					@idVenta as idVenta
 
 		end -- reporte de estatus
 

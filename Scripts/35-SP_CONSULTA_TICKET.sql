@@ -69,15 +69,19 @@ as
 			if ( @valido = cast(1 as bit) )
 				begin
 					
-					select	v.idVenta, d.idProducto, d.cantidad, d.contadorProductosPorPrecio, pp.costo as monto,
+					select	v.idVenta, d.idProducto, d.cantidad, d.contadorProductosPorPrecio, d.monto as monto,
 							p.descripcion as descProducto, 
-							v.idCliente, c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoMaterno as nombreCliente,
+							v.idCliente, 
+							case
+								when c.nombres is null then 'PÚBLICO EN GENERAL' 
+								else c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoMaterno
+							end as nombreCliente,
 							u.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
 							d.cantidadActualInvGeneral, d.cantidadAnteriorInvGeneral, v.fechaAlta							 
 					from	Ventas v 
 								inner join VentasDetalle d
 									on v.idVenta = d.idVenta
-								inner join Clientes c
+								left join Clientes c
 									on c.idCliente = v.idCliente
 								inner join Usuarios u
 									on u.idUsuario = v.idUsuario
