@@ -105,6 +105,7 @@ as
 										on vd.idProducto = p.idProducto	
 									inner join LineaProducto lp
 										on lp.idLineaProducto = p.idLineaProducto
+						where	v.idStatusVenta = 1
 
 					end
 				-- si es por busqueda
@@ -169,7 +170,7 @@ as
 																	when @fechaFin = '19000101' then cast(v.fechaAlta as date)
 																	else cast(@fechaFin as date)
 																end
-
+							and	v.idStatusVenta = 1
 						order by v.idVenta desc
 
 					end

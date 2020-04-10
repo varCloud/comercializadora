@@ -106,8 +106,7 @@ namespace lluviaBackEnd.Controllers
                     ViewBag.mensaje = notificacion.Mensaje;
                     return PartialView("_SinResultados");
                 }
-
-
+                
             }
             catch (Exception ex)
             {
@@ -115,6 +114,21 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+        [HttpPost]
+        public ActionResult CancelaVenta(Ventas venta)
+        {
+            try
+            {
+                Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+                notificacion = new VentasDAO().CancelaVenta(venta);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public ActionResult ImprimeTicket( Ventas venta )
         {
@@ -200,7 +214,7 @@ namespace lluviaBackEnd.Controllers
 
             Rectangle datosProducto =   new Rectangle(5,   200, 180 , 82);
             Rectangle datosCantidad =   new Rectangle(190, 200, 30  , 82);
-            Rectangle datosPrecio =     new Rectangle(215, 200, 30  , 82);
+            Rectangle datosPrecio =     new Rectangle(225, 200, 40  , 82);
 
             Rectangle datosEnca =       new Rectangle(0, 145, 280  , 82);
 
@@ -209,7 +223,7 @@ namespace lluviaBackEnd.Controllers
 
             e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
             datosEnca.Y += 14;
-            e.Graphics.DrawString("  Descripcion                                             Cantidad    Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+            e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
             datosEnca.Y += 8;
             e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
             //datosEnca.Y += 14;
@@ -222,9 +236,17 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString(notificacion.Modelo[i].monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                 monto += notificacion.Modelo[i].monto;
 
-                datosProducto.Y += espaciado;
-                datosCantidad.Y += espaciado;
-                datosPrecio.Y += espaciado;
+                if (notificacion.Modelo[i].descProducto.ToString().Length >= 27) {
+                    datosProducto.Y += espaciado + 10;
+                    datosCantidad.Y += espaciado + 10;
+                    datosPrecio.Y += espaciado + 10;
+                }
+                else {
+                    datosProducto.Y += espaciado;
+                    datosCantidad.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+                }
+
 
             }
 
@@ -233,15 +255,15 @@ namespace lluviaBackEnd.Controllers
             datosfooter1.Y += espaciado;
             
             e.Graphics.DrawString("  SUBTOTAL:" , font, drawBrush, 0, datosfooter1.Y, izquierda);
-            e.Graphics.DrawString( monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 247, datosfooter1.Y, derecha);
+            e.Graphics.DrawString( monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
             datosfooter1.Y += espaciado;
 
             e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-            e.Graphics.DrawString( (monto * 0.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 247, datosfooter1.Y, derecha);
+            e.Graphics.DrawString( (monto * 0.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
             datosfooter1.Y += espaciado;
 
             e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-            e.Graphics.DrawString((monto * 1.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 247, datosfooter1.Y, derecha);
+            e.Graphics.DrawString((monto * 1.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
             datosfooter1.Y += espaciado;
 
 
