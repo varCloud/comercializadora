@@ -932,6 +932,7 @@
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\logo_lluvia.png" />
     <Content Include="assets\img\logo_lluvia_64.png" />
+    <Content Include="assets\img\marcaAgua.png" />
     <Content Include="assets\img\posts\post11.png" />
     <Content Include="assets\img\posts\post12.png" />
     <Content Include="assets\img\posts\post13.png" />

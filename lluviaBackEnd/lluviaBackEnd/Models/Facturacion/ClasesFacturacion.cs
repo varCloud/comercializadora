@@ -586,7 +586,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private string descripcionField;
 
-        private uint valorUnitarioField;
+        private decimal valorUnitarioField;
 
         private decimal importeField;
 
@@ -728,7 +728,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public uint ValorUnitario
+        public decimal ValorUnitario
         {
             get
             {

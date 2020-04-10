@@ -14,15 +14,10 @@ namespace lluviaBackEnd.Utilerias
 {
     public class ItextEvents : PdfPageEventHelper
     {
-        private string css = "style='font-size:4.5px; color:white; text-align:center; font-weight:bold;'";
-        private string negritasYCentradas = "style='text-align:center; font-weight:bold;'";
-        private string titulosCabeceras = "style='font-weight:bold;  color:7a7a7a'";
-        private string filaTabla = "bgcolor='#bcbcbc'";
-        private string centradas = "style='text-align:center;'";
+
+        private string Titulo = "style='text-align:left; font-size:12px font-weight:bold;'";
         private string derecha = "style='text-align:right;'";
-        private string izq = "style='text-align:left;'";
-        private string cabeceraHeader = "bgcolor='#77b221' style='font-weight:bold; text-align:right; color:white'";
-        private string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+
         public string pathLogo { get; set; }
         public string pathMarcaAgua { get { return _pathMarcaAgua; } set { _pathMarcaAgua = value; } }
         private string cssTabla = @"style='text-align:center;font-size:8px;font-family:Arial'";
@@ -61,7 +56,7 @@ namespace lluviaBackEnd.Utilerias
         public ItextEvents()
         {
            this.pathLogo=  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets","img", "logo_lluvia.png");
-           //this.pathMarcaAgua = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reportes", "Imagenes", "marcaAgua.png");
+           this.pathMarcaAgua = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "img", "marcaAgua.png");
         }
 
         public override void OnOpenDocument(PdfWriter writer, Document document)
@@ -100,14 +95,14 @@ namespace lluviaBackEnd.Utilerias
 
                 cb.BeginText();
                 cb.SetFontAndSize(bf, tamaño);
-                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "CAJA MORELIA VALLADOLID, S.C. DE A.P. DE R.L. DE C.V. ACATITA DE BAJAN",
+                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "",
                     pageSize.GetLeft(30),
                     pageSize.GetBottom(65), 0);
                 cb.EndText();
 
                 cb.BeginText();
                 cb.SetFontAndSize(bf, tamaño);
-                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "NO 222 COL. LOMAS DE HIDALGO C.P. 58240 MORELIA, MICH RFC: CMV980925LQ7",
+                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "",
                     pageSize.GetLeft(30),
                     pageSize.GetBottom(55), 0);
                 cb.EndText();
@@ -123,21 +118,20 @@ namespace lluviaBackEnd.Utilerias
         public override void OnStartPage(PdfWriter writer, Document document)
         {
             string encabezado = @"<br/><html><body>
-                <table width='100%'" + cssTabla + @"   CELLPADDING='0'>
+                <table border='0' width='100%'" + cssTabla + @"   CELLPADDING='0'>
                     <tr>
-                        <td rowspan ='2'> 
-                            <img src='" + pathLogo /*ConfigurationManager.AppSettings["logoCajaMorelia"] */+ @"' width = '60' height = '40' />
+                        <td> 
+                            <img src='" + pathLogo+ @"' width = '100' height = '70' />
                         </td>
-                        <td " + cabeceraHeader + @">"+this.TituloCabecera+@"</td>
-                    </tr>
+                        <td "+ Titulo + @">
+                                Articulos de limpieza lluvia
+                        </td>
                     <tr>
-                        <td  " + derecha + @">Centro de Atención a Socios <b>01 800 3000 268</b> www.<b>cajamorelia</b>.com.mx</td>
-                    </tr>
-                    <tr>
-                        <td   width='35%' " + derecha + @"></td>
+                        <td   width='40%' " + derecha + @"></td>
                         <td   width='60%' " + derecha + @"></td>
                     </tr>
-                </table><br/>";
+                    </tr>
+                </table>";
 
             foreach (IElement E in HTMLWorker.ParseToList(new StringReader(encabezado.ToString()), new StyleSheet()))
             {
@@ -171,7 +165,7 @@ namespace lluviaBackEnd.Utilerias
             try
             {
 
-                /*
+               
                 Image objImagePdf;
 
                 //    //// Crea la imagen
@@ -185,7 +179,7 @@ namespace lluviaBackEnd.Utilerias
                 objImagePdf.SetAbsolutePosition((objPdfDocument.PageSize.Width / 4), (objPdfDocument.PageSize.Height / 4));
                 //    //// Imprime la imagen como fondo de página
                 objPdfDocument.Add(objImagePdf);
-                */
+             
 
             }
             catch (Exception ex)
