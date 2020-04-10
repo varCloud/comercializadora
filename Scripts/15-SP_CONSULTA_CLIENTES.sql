@@ -83,7 +83,10 @@ as
 							end as apellidoMaterno,
 							c.telefono,
 							c.correo,
-							c.rfc,
+							case
+								when c.rfc is null then '[no tiene]'
+								else c.rfc
+							end as rfc,
 							c.calle,
 							c.numeroExterior,
 							c.colonia,
@@ -93,7 +96,8 @@ as
 							c.fechaAlta,
 							c.activo,
 							c.idTipoCliente,
-							t.descripcion 
+							t.descripcion, 
+							cast(t.descuento as decimal(18,2)) as descuento
 					from	Clientes c
 							inner join CatTipoCliente t
 								on c.idTipoCliente = t.idTipoCliente

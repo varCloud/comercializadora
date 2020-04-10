@@ -3,7 +3,20 @@
     ViewBag.Title = "Ventas";
     List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
     List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
+    int idVenta = ViewBag.venta.idVenta;
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+
+
+    if (idVenta > 0)
+    {
+        notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta });
+        //List<lluviaBackEnd.Models.Ticket> lstTicket = notificacion.Modelo;
+
+    }
+
 
 }
 
@@ -16,562 +29,229 @@
 }
 
 
-
-@*<h2>Ventas</h2>*@
-
+    <section class="section">
 
 
+        <div class="section-body">
+            <div class="row mt-sm-4">
+                <div class="col-12 col-md-12 col-lg-4">
 
-@*<div class="section-body">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Agregar Productos</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Producto</label>
+                                @Html.HiddenFor(x => idVenta);
+                                @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                            </div>
+                            <div class="form-group">
+                                <p class="clearfix">
+                                    <span class="float-left">
+                                        <label>Cantidad</label>
+                                    </span>
+                                    <span class="float-right text-muted">
+                                        <input id="cantidad" type="text" class="form-control">
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <div class="text-right" style="margin-top:30px;">
+                                    <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped" id="tablaRepVentas">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center"> Id </th>
-                                        <th>Cliente</th>
 
+                   
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in lstVentas)
-                                    {
-                                        <tr>
-                                            <td>@item.idVenta</td>
-                                            <td>@item.nombreCliente</td>
+                </div>
+                <div class="col-12 col-md-12 col-lg-8">
+                    <div class="card">
+                        <div class="padding-20">
 
+                            <div class="col-md-12">
+                                <div class="section-title">Resumen de la venta</div>
+                                @*<div class="section-title" id="descuentoCliente">Resumen de la venta</div>*@
 
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="tablaRepVentas">
+                                        <thead>
+                                            <tr>
+                                                <th data-width="40" style="width: 40px;">#</th>
+                                                <th>Id Producto</th>
+                                                <th>Producto</th>
+                                                <th class="text-center">Precio</th>
+                                                <th class="text-center">Cantidad</th>
+                                                <th class="text-center">Total</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        @if (notificacion.Modelo != null)
+                                        {
+                                            if (notificacion.Modelo.Count() > 0)
+                                            {
+                                                <tbody>
+                                                    @foreach (var item in notificacion.Modelo)
+                                                    {
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>@item.idProducto</td>
+                                                            <td>@item.descProducto</td>
+                                                            <td class="text-center">$@item.monto</td>
+                                                            <td class="text-center">@item.cantidad</td>
+                                                            <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
+                                                            <td class="text-center">7</td>
+                                                        </tr>
+
+                                                    }
+
+                                                </tbody>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tbody></tbody>
+                                        }
+
+                                    </table>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-lg-6">
+
+                                    </div>
+                                    <div class="col-lg-6 text-right">
+                                        <div class="invoice-detail-item">
+                                            <div class="invoice-detail-name">Subtotal</div>
+                                            <div class="invoice-detail-value" id="divSubTotal">$670.99</div>
+                                        </div>
+                                        <div class="invoice-detail-item">
+                                            <div class="invoice-detail-name">I.V.A.</div>
+                                            <div class="invoice-detail-value" id="divIva">$15</div>
+                                        </div>
+                                        <hr class="mt-2 mb-2">
+                                        <div class="invoice-detail-item">
+                                            <div class="invoice-detail-name">Total</div>
+                                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="text-md-right">
+                                <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                                <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                    <i class="fas fa-credit-card"></i> Realizar Venta
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>*@
-
-
-
-
-
-@*<div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Assign Project List</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="tablaRepVentas">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Team</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-8.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Wordpress Website</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Airi Satou</span>
-                                        </p>
-                                    </td>
-                                    <td>20-02-2018</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-red">High</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">50%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-success" data-width="50%" style="width: 50%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-1.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Android Game App</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Sarah Smith</span>
-                                        </p>
-                                    </td>
-                                    <td>22-05-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-green">Low</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">55%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-purple" data-width="55%" style="width: 55%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-5.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Java Web Service</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Cara Stevens</span>
-                                        </p>
-                                    </td>
-                                    <td>11-04-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-blue">Medium</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">70%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar" data-width="70%" style="width: 70%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-9.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Wedding IOS App</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> John Doe</span>
-                                        </p>
-                                    </td>
-                                    <td>19-05-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-red">High</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">45%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-cyan" data-width="45%" style="width: 45%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-10.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Blize Admin Template</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Ashton Cox</span>
-                                        </p>
-                                    </td>
-                                    <td>25-07-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-blue">Medium</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">67%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-red" data-width="67%" style="width: 67%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-4.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">React js website</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Sarah Smith </span>
-                                        </p>
-                                    </td>
-                                    <td>11-08-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-green">Low</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">41%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-orange" data-width="41%" style="width: 41%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-10.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">SEO improvement</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Janak Gandhi</span>
-                                        </p>
-                                    </td>
-                                    <td>22-02-2018</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-red">High</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">70%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-success" data-width="70%" style="width: 70%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="table-img">
-                                        <img src="assets/img/users/user-6.png" alt="">
-                                    </td>
-                                    <td>
-                                        <h6 class="mb-0 font-13">Laravel Website</h6>
-                                        <p class="m-0 font-12">
-                                            Assigned to<span class="col-green font-weight-bold"> Mili Rain</span>
-                                        </p>
-                                    </td>
-                                    <td>31-03-2019</td>
-                                    <td class="text-truncate">
-                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                                            <li class="team-member team-member-sm"><img class="rounded-circle" src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="badge-outline col-green">Low</div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text">55%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-purple" data-width="55%" style="width: 55%;"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                        <a data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
+    </section>
 
 
 
 
 
 
-
-
-
-
-
-
-
-<section class="section">
-
-
-    <div class="section-body">
-        <div class="invoice">
-            <div class="invoice-print">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="invoice-title">
-                            <h2>Venta de Productos</h2>
-                            <div class="invoice-number">Venta #12345</div>
-                        </div>
-                        <hr>
-
-
-
-
-
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Agregar Productos</h4>
-                                        <div class="card-header-action">
-                                            <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="collapse show" id="mycard-collapse">
-                                        <div class="card-body">
-
-
-                                            <div class="row">
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Producto</label>
-                                                        @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "precio", "descripcion"), new { id = "precio", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
-                                                        @*<input type="hidden" id="precio" name="precio" value="11.0">*@
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-4">
-                                                    <div class="form-group">
-                                                        <label>Cliente</label>
-                                                        @Html.DropDownListFor(x => x.idCliente, lstClientes, new { @class = "form-control", id = "idProductos", data_val = "false" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Cantidad</label>
-                                                        <input id="cantidad" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-sm-12 col-lg-2">
-                                                    <div class="form-group">
-                                                        <div class="text-right" style="margin-top:30px;">
-                                                            <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <address>
-                                    <strong>Billed To:</strong><br>
-                                    Sarah Smith<br>
-                                    6404 Cut Glass Ct,<br>
-                                    Wendell,<br>
-                                    NC, 27591, USA
-                                </address>
-                            </div>
-                            <div class="col-md-6 text-md-right">
-                                <address>
-                                    <strong>Shipped To:</strong><br>
-                                    Keith Johnson<br>
-                                    197 N 2000th E<br>
-                                    Rexburg, ID,<br>
-                                    Springfield Center, USA
-                                </address>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <address>
-                                    <strong>Payment Method:</strong><br>
-                                    Visa ending **** 5687<br>
-                                    test@example.com
-                                </address>
-                            </div>
-                            <div class="col-md-6 text-md-right">
-                                <address>
-                                    <strong>Order Date:</strong><br>
-                                    June 26, 2018<br><br>
-                                </address>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="section-title">Resumen de la venta</div>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped" id="tablaRepVentas">
-                                <thead>
-                                    <tr>
-                                        <th data-width="40" style="width: 40px;">#</th>
-                                        <th>Producto</th>
-                                        <th class="text-center">Precio</th>
-                                        <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Total</th>
-                                        <th class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mouse Wireless</td>
-                                        <td class="text-center">$10.99</td>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">$10.99</td>
-                                        <td class="text-center">
-                                            <a href="#" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Keyboard Wireless</td>
-                                        <td class="text-center">$20.00</td>
-                                        <td class="text-center">3</td>
-                                        <td class="text-center">$60.00</td>
-                                        <td class="text-center">
-                                            <a data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Headphone Blitz TDR-3000</td>
-                                        <td class="text-center">$600.00</td>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">$600.00</td>
-                                        <td class="text-center">
-                                            <a data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col-lg-6">
-
-                            </div>
-                            <div class="col-lg-6 text-right">
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">Subtotal</div>
-                                    <div class="invoice-detail-value" id="divSubTotal">$670.99</div>
-                                </div>
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">I.V.A.</div>
-                                    <div class="invoice-detail-value" id="divIva">$15</div>
-                                </div>
-                                <hr class="mt-2 mb-2">
-                                <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name">Total</div>
-                                    <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="text-md-right">
-                <button id="cancelar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i> Cancelar</button>
-                <button class="btn btn-primary btn-icon icon-left">
-                    <i class="fas fa-credit-card"></i> Realizar Venta
+@*Modal previo venta *@
+<div class="modal fade bd-example-modal-lg" id="ModalPrevioVenta" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Previo: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <div class="section-title"><strong>Cliente: </strong></div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idCliente", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="nombreCliente">
+                                    <address>
+                                        <strong></strong><br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="section-title"><strong>Forma de Pago: </strong></div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.formaPago, new SelectList(lstFormasPago, "formaPago", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-5 text-right">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total:</strong></div>
+                            <div class="invoice-detail-value" id="previoTotal"><h3>$15</h3></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Descuento:</strong></div>
+                            <div class="invoice-detail-value" id="previoDescuento"><h3>$15</h3></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Subtotal:</strong></div>
+                            <div class="invoice-detail-value" id="previoSubTotal"><h3>$15</h3></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>I.V.A.</strong></div>
+                            <div class="invoice-detail-value" id="previoIVA"><h3>$15</h3></div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="previoFinal"><h3>$15</h3></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+                                                         
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="btnGuardarVenta" class="btn btn-success">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-</section>
+</div>
 
 
 
-
-
-
-
-<a href="javascript:SaveData();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+@*<a href="javascript:SaveData();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>*@
 
 
 

@@ -54,6 +54,6 @@ namespace lluviaBackEnd.Models
 
         public TipoCliente tipoCliente { get; set; }
         public int contador { get; set; }
-
+        public decimal descuento { get; set; }
     }
 }

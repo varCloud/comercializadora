@@ -96,10 +96,12 @@
                             </a>
                         </li>
 
-                        <li class="@(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")">
-                            <a href="@Url.Action("Ventas", "Ventas")">
-                                <i data-feather="dollar-sign"></i><span>Ventas</span>
-                            </a>
+                        <li class="dropdown">
+                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
+                            </ul>
                         </li>
 
                         <li class="dropdown">

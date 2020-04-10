@@ -40,7 +40,7 @@ as
 				if not exists ( select 1 from ProductosPorPrecio where idProducto = @idProducto )
 					begin
 						select	@existeProducto = cast(0 as bit),
-								@mensaje = 'No existen rangos de precio para el producto seleccionado',
+								@mensaje = 'No existen un precio definido para el producto con la cantidad seleccionada.',
 								@status = -1
 					end	
 

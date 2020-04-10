@@ -262,6 +262,49 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public List<Producto> ObtenerListaProductos(Producto producto)
+        {
+            List<Producto> lstClientes = null;
+            try
+            {
+                //using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                //{
+                //    lstClientes = this.db.Query<Producto>("SP_CONSULTA_PRODUCTOS", commandType: CommandType.StoredProcedure).ToList();
+                //    lstClientes.Insert(0, new Producto() { idProducto = 0, descripcion = "--TODOS--" });
+                //}
+
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProducto", producto.idProducto);
+                    parameters.Add("@descripcion", producto.descripcion);
+                    parameters.Add("@idUnidadMedida", producto.idUnidadMedida);
+                    parameters.Add("@idLineaProducto", producto.idLineaProducto);
+                    parameters.Add("@activo", producto.activo);
+                    parameters.Add("@articulo", producto.articulo);
+                    parameters.Add("@claveProdServ", producto.claveProdServ);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        lstClientes = result.Read<Producto>().ToList();
+                    }
+
+                    lstClientes.Insert(0, new Producto() { idProducto = 0, descripcion = "--TODOS--" });
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstClientes;
+        }
+
         public string Serialize(List<Precio> precios)
         {
             var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
