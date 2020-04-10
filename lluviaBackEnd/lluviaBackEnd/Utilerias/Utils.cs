@@ -45,7 +45,7 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
-        public static void GenerarQRSAT(Comprobante c , string path)
+        public static void GenerarQRSAT(Comprobante c, string path)
         {
             var data = "&id=" + c.Complemento.TimbreFiscalDigital.UUID;
             data = data + "&re=" + c.Emisor.Rfc;
@@ -60,7 +60,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.Height = 200;
                 writer.Options.Width = 200;
                 img = writer.Write(cadena);
-                img.Save(path+".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(path + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
 
@@ -103,158 +103,192 @@ namespace lluviaBackEnd.Utilerias
 
         public static void GenerarFactura(Comprobante c, string path)
         {
-            
-                
-                Document document = new Document(PageSize.A4, 30, 30, 30, 110);
-                MemoryStream memStream = new MemoryStream();
-                MemoryStream memStreamReader = new MemoryStream();
-                PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
-                ItextEvents eventos = new ItextEvents();
-                eventos.TituloCabecera = "Articulos de limpieza lluvia";
-                PDFWriter.PageEvent = eventos;
-                try
-                {
-                    DateTime fechaActual = System.DateTime.Now;
-                    DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
-                    string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
-                    string html = "<p align='center' ><b>" + eventos.TituloCabecera + @"</b></p><br />";
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:"+ TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string titulosCabeceras = "style='font-weight:bold;  color:3b3b3b;text-align:center'";
+            string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:8px;' ";
+            string color2 = "style='color:7b7b7b; text-align:center; font-size:8px;'";
+            string centradas = "style='text-align:center;'";
+            Document document = new Document(PageSize.A4, 30, 30, 30, 110);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Articulos de limpieza lluvia";
+            PDFWriter.PageEvent = eventos;
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "<br/>";
 
-                    html += "<p align='right'> " + fechaActual.Day.ToString() + " de " + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nombreMes.ToLower()) + " del " + fechaActual.Year.ToString() + @"</p><br />";
-
-
-                    string html1 = @"<table>
-                        <tr>
-                            <td colspan='4' >Datos del Emisor </td>    
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                           <tr " + cabeceraTablas + @">
+                            <td colspan='2' >Información general </td>    
                         </tr>
-                        <tr>
-
-                            <td>RFC: </td> 
-                            <td>Tipo de comprobante: </td>
-                            <td>Lugar de expedición: </td>
-                            <td>Regimen Fiscal: </td>
+                         <tr " + titulosCabeceras + @">
+                                <td>Folio</td>
+                                <td>Fecha de Timbre</td>
                         </tr>
-                        <tr>
-                            <td>" + c.TipoDeComprobante + @" </td>   
-                            <td>" + c.Emisor.Rfc + @" </td> 
-                            <td>" + c.LugarExpedicion+@"</td>    
-                            <td>"+c.Emisor.RegimenFiscal+@"</td>
+                        <tr " + centradas + @">
+                                <td>" + c.Folio + @"</td>
+                               <td>"  + c.Fecha+ @"</td>
                         </tr>
                         </table>";
 
-                    string html2 = @"<table>
-                        <tr>
+
+                string html1 = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr "+ cabeceraTablas + @">
+                            <td colspan='4' >Datos del Emisor </td>    
+                        </tr>
+                        <tr "+ titulosCabeceras + @">
+                            <td>RFC </td> 
+                            <td>Tipo de comprobante </td>
+                            <td>Lugar de expedición </td>
+                            <td>Regimen Fiscal </td>
+                        </tr>
+                        <tr " + centradas + @">
+                            <td>" + c.Emisor.Rfc + @" </td> 
+                            <td>" + c.TipoDeComprobante + @" </td>   
+                            <td>" + c.LugarExpedicion + @"</td>    
+                            <td>" + c.Emisor.RegimenFiscal + @"</td>
+                        </tr>
+                        </table>";
+
+                string html2 = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr " + cabeceraTablas + @">
                             <td colspan='3'>Información del Pago</td>    
                         </tr>
-                        <tr>
-                           
-                            <td>Forma de pago: </td>
-                            <td>Metodo de pago: </td><td>" + c.MetodoPago + @" </td>   
-                            <td>Moneda: </td>
+                       <tr " + titulosCabeceras + @">
+                            <td>Forma de pago </td>
+                            <td>Metodo de pago </td> 
+                            <td>Moneda </td>
                         </tr>
-                        <tr>
+                        <tr " + centradas + @">
                                 <td>" + c.MetodoPago + @" </td>   
                                 <td>" + c.FormaPago + @" </td>  
                                 <td>" + c.Moneda + @"</td>    
                         </tr>
                         </table>";
 
-                string html3 = @"
-                       <table>
-                        <tr>
-                            <td colspan='3'>Datos del cliente</td>    
-                        </tr>
-                        <tr>
-                           
-                            <td>Cliente: </td><td>"+c.Receptor.Rfc+ @"</td>
-                            <td>R.F.C: </td><td>" + c.Receptor.Rfc + @"</td>
-                            <td>Domiclio: </td><td>" + c.MetodoPago + @" </td>   
-                            <td>Uso CFDI: </td><td>" + c.Receptor.UsoCFDI + @" </td> 
-                        </tr>
+                string DatosDelCliente = @"
+                       <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                            <tr " + cabeceraTablas + @">
+                                <td colspan='4'>Datos del cliente</td>    
+                            </tr>
+                            <tr  " + titulosCabeceras + @">
+                                <td>Cliente</td>
+                                <td>R.F.C </td>
+                                <td>Uso CFDI </td>
+                                <td>Domiclio</td>
+                            </tr>
+                            <tr " + centradas + @">
+                                <td>" + c.Receptor.Rfc + @"</td>
+                                <td>" + c.Receptor.Rfc + @"</td>
+                                <td>" + c.MetodoPago + @" </td>  
+                                <td>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
+                            </tr>
+                            <tr>
+                                <td  width='15%'></td>
+                                <td  width='15%'></td> 
+                                <td  width='15%'></td> 
+                                <td  width='55%'></td> 
+                            </tr>
                         </table>";
 
-                    string html4 = @"
-                        <tr>
-                            <td>4. </td>
-                            <td>Nombre del banco que lleva la cuenta de depósito a la vista o de ahorro en la que se realizará
-                                el cargo: ____________________________________________________________________ .
-                            </td>
-                        </tr>";
-
-                    string html5 = @"
-                        <tr>
-                            <td>5. </td>
-                            <td>Cualquiera de los Datos de identificación de la cuenta, siguientes:
-                                Número de tarjeta de débito (16 dígitos): _______________________________________;
-                            </td>
-                        </tr>";
-                    string html6 = @"
-                        <tr>
-                            <td>6. </td>
-                            <td>Monto máximo fijo del cargo autorizado por periodo de facturación: $ __________________ .
-                                En lugar del monto máximo fijo, tratándose del pago de créditos revolventes asociados a tarjetas
-                                de crédito, el titular de la cuenta podrá optar por autorizar alguna de las opciones de cargo
-                                siguientes:
-                            </td>
-                        </tr>";
-
-                    string html6Complemento = @"
-                        <tr><td colspan='2'>(Marcar con una X la opción que, en su caso, corresponda)</td> </tr>
-                        <tr><td colspan='2'>El importe del pago mínimo del periodo: ( &nbsp; ),</td> </tr>
-                        <tr><td colspan='2'>El saldo total para no generar intereses en el periodo ( &nbsp; ), o</td> </tr>
-                        <tr><td colspan='2'>Un monto fijo: ( &nbsp; ) (Incluir monto) $ _________________.</td> </tr>
-                        ";
-
-                    string html7 = @"
-                        <tr>
-                            <td>7. </td>
-                            <td>Esta autorización es por plazo indeterminado ( &nbsp; ), o vence el: _________________________ .
-                            </td>
+                string html4 = @" 
+                        <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr " + cabeceraTablas + @">
+                            <td colspan='8'>Productos</td>    
                         </tr>
-                        <tr>
-                            <td width='3%'> </td>
-                            <td width='97%'> </td>
-                        </tr>
-                    </table>";
-                    html += html1 + html2 + html3 + html4 + html5 + html6 + html6Complemento + html7;
-
-                    html += @"<p  >Estoy enterado de que en cualquier momento podré solicitar la cancelación de la presente
-                         domiciliación sin costo a mi cargo.</p>";
-
-
-                    html += "<br /><p align='center'  >Atentamente, <br /> <br />  Victor Adrian Reyes <br />" +
-                        "______________________________________________<br />" +
-                        "(NOMBRE O RAZÓN SOCIAL DEL TITULAR DE LA CUENTA)</p>";
-
-                    //html = "<h1>Formato para solicitar la Domiciliación</h1>";
-                    document.Open();
-                    foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
-                    {
-                        document.Add(E);
-
-                    }
-                    document.AddAuthor("LLUVIA");
-                    document.AddTitle("Factura");
-                    document.AddCreator("Victor Adrian Reyes");
-                    document.AddSubject("Factura");
-                    document.CloseDocument();
-                    document.Close();
-
-                    //PdfReader reader = new PdfReader(memStream.ToArray());
-                    //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
-                    byte[] content = memStream.ToArray();
-                    using (FileStream fs = File.Create(path))
-                    {
-                        fs.Write(content, 0, (int)content.Length);
-                    }
-
-                    //return content;
-                }
-                catch (Exception ex)
+                        <tr "+ titulosCabeceras + @">
+                            <td>Cantidad </td>
+                            <td>Unidad</td>
+                            <td>Clave Unidad</td> 
+                            <td>Concepto </td>
+                            <td>Valor Unitario</td>
+                            <td>Desc.</td>
+                            <td>IVA</td>
+                            <td>Importe</td>
+                        </tr>";
+                int i = 0;
+                foreach (var item in c.Conceptos)
                 {
-                    throw ex;
+                    html4 += "<tr " + (i % 2 == 0 ? color1 : color2)+" >";
+                    html4 += "<td>" + item.Cantidad + "</td>";
+                    html4 += "<td>" + item.Unidad + "</td>";
+                    html4 += "<td>" + item.ClaveUnidad + "</td>";
+                    html4 += "<td>" + item.Descripcion + "</td>";
+                    html4 += "<td>" + item.ValorUnitario.ToString("c2") + "</td>";
+                    html4 += "<td>$0.00</td>";
+                    html4 += "<td>"+item.Impuestos.Traslados.Traslado.Importe.ToString("C2")+"</td>";
+                    html4 += "<td>"+item.Importe.ToString("C2")+"</td>";
+                    html4 += "</tr>";
+                    i++;
+                }
+                html4 += @"
+                    <tr> 
+                        <td colspan='5'></td>
+                        <td colspan='2'>Subtotal:</td>
+                        <td>" + c.SubTotal.ToString("C2")+ @"</td>
+                    </tr>
+                    <tr> 
+                        <td colspan='5'></td>
+                        <td colspan='2'>Impuestos Trasladados:</td>
+                        <td>" + c.Impuestos.TotalImpuestosTrasladados.ToString("C2") + @"</td>
+                    </tr>
+                     <tr> 
+                        <td colspan='5'></td>
+                        <td colspan='2'>Total:</td>
+                        <td>" + c.Total.ToString("C2") + @"</td>
+                    </tr>
+                    <tr>
+                        <td  width='10%'></td>
+                        <td  width='10%'></td>
+                        <td  width='10%'></td>
+                        <td  width='30%'></td>
+                        <td  width='10%'></td>
+                        <td  width='8%'></td> 
+                        <td  width='10%'></td> 
+                        <td  width='10%'></td> 
+                    </tr>";
+                html4 += "</table>";
+
+
+                html += html1 + html2 + DatosDelCliente + html4;
+
+                //html = "<h1>Formato para solicitar la Domiciliación</h1>";
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Factura");
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Factura");
+                document.CloseDocument();
+                document.Close();
+
+                //PdfReader reader = new PdfReader(memStream.ToArray());
+                //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
+                byte[] content = memStream.ToArray();
+                using (FileStream fs = File.Create(path))
+                {
+                    fs.Write(content, 0, (int)content.Length);
                 }
 
-            
+                //return content;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
 
         }
 
