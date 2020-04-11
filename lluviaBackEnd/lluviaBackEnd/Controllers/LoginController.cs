@@ -87,7 +87,7 @@ namespace lluviaBackEnd.Controllers
                     System.IO.File.WriteAllText(pathFactura + "Timbre_" + idVenta + ".xml", xmlTimbradoDecodificado);
                     Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeToObject(xmlTimbradoDecodificado);
                     Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + idVenta));
-                    Utils.GenerarFactura(comprobanteTimbrado, pathFactura + "Factura_" + (idVenta + ".pdf"));
+                    Utils.GenerarFactura(comprobanteTimbrado, pathFactura , idVenta);
                 }
                 else {
                     Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura + ("respuesta_" + idVenta));

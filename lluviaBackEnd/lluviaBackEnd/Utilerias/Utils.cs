@@ -101,7 +101,7 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path)
+        public static void GenerarFactura(Comprobante c, string path ,int idVenta)
         {
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:"+ TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -110,6 +110,7 @@ namespace lluviaBackEnd.Utilerias
             string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:8px;' ";
             string color2 = "style='color:7b7b7b; text-align:center; font-size:8px;'";
             string centradas = "style='text-align:center;'";
+            string titulosCabecerasAbre = "bgcolor='7D7D7D' style='font-weight:bold;  color:white;text-align:center'";
             Document document = new Document(PageSize.A4, 30, 30, 30, 110);
             MemoryStream memStream = new MemoryStream();
             MemoryStream memStreamReader = new MemoryStream();
@@ -130,7 +131,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + titulosCabeceras + @">
                                 <td>Folio</td>
-                                <td>Fecha de Timbre</td>
+                                <td>Fecha</td>
                         </tr>
                         <tr " + centradas + @">
                                 <td>" + c.Folio + @"</td>
@@ -141,19 +142,18 @@ namespace lluviaBackEnd.Utilerias
 
                 string html1 = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                         <tr "+ cabeceraTablas + @">
-                            <td colspan='4' >Datos del Emisor </td>    
+                            <td colspan='3' >Datos del Emisor </td>    
                         </tr>
                         <tr "+ titulosCabeceras + @">
                             <td>RFC </td> 
                             <td>Tipo de comprobante </td>
                             <td>Lugar de expedición </td>
-                            <td>Regimen Fiscal </td>
+                          
                         </tr>
                         <tr " + centradas + @">
                             <td>" + c.Emisor.Rfc + @" </td> 
                             <td>" + c.TipoDeComprobante + @" </td>   
                             <td>" + c.LugarExpedicion + @"</td>    
-                            <td>" + c.Emisor.RegimenFiscal + @"</td>
                         </tr>
                         </table>";
 
@@ -179,22 +179,22 @@ namespace lluviaBackEnd.Utilerias
                                 <td colspan='4'>Datos del cliente</td>    
                             </tr>
                             <tr  " + titulosCabeceras + @">
-                                <td>Cliente</td>
-                                <td>R.F.C </td>
+                                <td>Cliente</td>             
                                 <td>Uso CFDI </td>
+                                <td>R.F.C </td>
                                 <td>Domiclio</td>
                             </tr>
                             <tr " + centradas + @">
                                 <td>" + c.Receptor.Rfc + @"</td>
+                                <td>" + c.Receptor.UsoCFDI + @" </td>  
                                 <td>" + c.Receptor.Rfc + @"</td>
-                                <td>" + c.MetodoPago + @" </td>  
                                 <td>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
                             </tr>
                             <tr>
-                                <td  width='15%'></td>
+                                <td  width='25%'></td>
+                                <td  width='10%'></td> 
                                 <td  width='15%'></td> 
-                                <td  width='15%'></td> 
-                                <td  width='55%'></td> 
+                                <td  width='50%'></td> 
                             </tr>
                         </table>";
 
@@ -257,7 +257,69 @@ namespace lluviaBackEnd.Utilerias
                 html4 += "</table>";
 
 
-                html += html1 + html2 + DatosDelCliente + html4;
+                string html5 = @" 
+                        <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr " + cabeceraTablas + @">
+                            <td colspan='2'> ESTE DOCUMENTO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI</td>    
+                        </tr>
+                        <tr " + titulosCabecerasAbre + @">
+                            <td>Numero de Certificado </td>
+                            <td>Lugar de Expedicion</td>
+                        </tr>
+                         <tr " + centradas + @">
+                            <td>" + c.Complemento.TimbreFiscalDigital.NoCertificadoSAT+ @" </td>
+                            <td>MORELIA" + " " + "MICHOACÁN" + @"</td>
+                        </tr>
+                        <tr " + titulosCabecerasAbre + @">
+                            <td>No. de serie del certificado del sat </td>
+                            <td>Folio Fiscal</td>
+                        </tr>
+                         <tr " + centradas + @">
+                            <td>" + c.NoCertificado + @" </td>
+                            <td>"+c.Complemento.TimbreFiscalDigital.UUID+ @"</td>
+                        </tr>
+                        <tr " + titulosCabecerasAbre + @">
+                            <td>Fecha y hora de certificación </td>
+                            <td>Régimen fiscal</td>
+                        </tr>
+                         <tr " + centradas + @">
+                            <td>" + c.Complemento.TimbreFiscalDigital.FechaTimbrado + @" </td>
+                            <td>" + c.Emisor.RegimenFiscal+" Incorporación fiscal"+" "+ @"</td>
+                        </tr>
+                    </table>";
+
+               string QR = @"<table  width='100%'>
+                    <tr>
+                        <td width='80%'>
+                            <table width='100%' height='100%'   style='font-size:8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
+                                <tr>
+                                    <td style='color:black;' ><b>CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT </b></td>
+                                </tr>
+                                <tr>
+                                    <td  style='white-space: nowrap'>"+ CadenaComplementos(c.Complemento.TimbreFiscalDigital) + @"</td>
+                                </tr>
+                                <tr>
+                                    <td style='color:black;'><b>SELLO DIGITAL EMISOR</b></td>
+                                </tr>
+                                <tr>
+                                    <td> " + c.Sello + @"</td>
+                                </tr>
+                                <tr>
+                                    <td style='color:black;' ><b>SELLO DIGITAL SAT</b></td>
+                                </tr>
+                                <tr>
+                                    <td> " + c.Complemento.TimbreFiscalDigital.SelloSAT + @"</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width='20%'>
+                                        <img src='" + Path.Combine(path, "Qr_"+idVenta+".jpg") + @"' width = '110' height = '110' align='right' />
+                        </td> 
+                   </tr>
+                </table>";
+
+
+                html += html1 + html2 + DatosDelCliente + html4 + html5+QR;
 
                 //html = "<h1>Formato para solicitar la Domiciliación</h1>";
                 document.Open();
@@ -276,7 +338,7 @@ namespace lluviaBackEnd.Utilerias
                 //PdfReader reader = new PdfReader(memStream.ToArray());
                 //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
                 byte[] content = memStream.ToArray();
-                using (FileStream fs = File.Create(path))
+                using (FileStream fs = File.Create(Path.Combine(path,"Factura_"+idVenta+".pdf")))
                 {
                     fs.Write(content, 0, (int)content.Length);
                 }
@@ -287,8 +349,20 @@ namespace lluviaBackEnd.Utilerias
             {
                 throw ex;
             }
+        }
 
+        private static string CadenaComplementos(TimbreFiscalDigital t)
+        {
 
+            string x = string.Empty;
+            if (t != null)
+            {
+                x = "|" + t.Version.ToString().Replace("|", "") + "|" + t.UUID.ToString().Replace("|", "") + "|" + t.FechaTimbrado.ToString().Replace("|", "") + "|" + t.SelloCFD.ToString().Replace("|", "") + "|" + t.NoCertificadoSAT.ToString().Replace("|", "") + "|";
+
+                x = x.Replace("\n", " ").ToString().Replace("\r", " ").ToString().Replace("\t", " ").Replace(" ", "");
+                x = "|" + x + "|";
+            }
+            return x.Replace(" ", "").ToString().Insert(95, " &nbsp;");
 
         }
 
