@@ -110,6 +110,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta };
                         //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
                     }
                     else
@@ -176,6 +177,40 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
+
+
+        public Notificacion<Ventas> CancelaVenta(Ventas venta)
+        {
+            Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", venta.idVenta);
+                    var result = db.QueryMultiple("SP_ELIMINA_VENTA", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = venta;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = venta;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

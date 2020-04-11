@@ -34,6 +34,28 @@ function InitSelect2Multiple() {
 }
 
 
+function ImprimeTicket(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicket"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            console.log(data);
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 function PintarTabla() {
     $.ajax({
         url: "/Ventas/_ObtenerVentas",
@@ -102,6 +124,42 @@ function InitDataTableConsultaVentas() {
 
 
 
+function CancelaVenta(idVenta) {
+
+    swal({
+        title: 'Mensaje',
+        text: 'Estas seguro que deseas eliminar a esta Venta?',
+        icon: 'warning',
+        buttons: ["Cancelar", "Aceptar"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: rootUrl("/Ventas/CancelaVenta"),
+                    data: { idVenta: idVenta },
+                    method: 'post',
+                    dataType: 'json',
+                    async: false,
+                    beforeSend: function (xhr) {
+                        console.log("Antes ")
+                    },
+                    success: function (data) {
+                        MuestraToast('success', data.Mensaje);
+                        PintarTabla();
+                    },
+                    error: function (xhr, status) {
+                        console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+                        console.log(xhr);
+                        console.log(status);
+                    }
+                });
+
+            } else {
+                console.log("cancelar");
+            }
+        });
+}
 
 
 
