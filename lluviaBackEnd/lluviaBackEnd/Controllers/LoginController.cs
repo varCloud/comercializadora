@@ -50,56 +50,7 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        [HttpPost]
-        public ActionResult Facturar()
-        {
-            try
-            {
-                string pathFactura  = Utils.ObtnerFolder()+'/';
-                int idVenta = 64;
-                FacturacionDAO facturacionDAO = new FacturacionDAO();
-                Comprobante comprobante =  facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Emisor.Rfc= "CMV980925LQ7";
-                comprobante.Emisor.Nombre = "CAJA MORELIA VALLADOLID S.C. DE A.P. DE R.L. DE C.V.";
-                comprobante.Emisor.RegimenFiscal = 603;
-                
-
-                comprobante = facturacionDAO.ObtenerComprobante(idVenta, comprobante);
-
-                facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
-
-                facturacionDAO.ObtenerTotal(ref comprobante);
-
-                Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
-                if(certificados == null)
-                    return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
-                comprobante.Certificado = certificados["Certificado"];
-                comprobante.NoCertificado = certificados["NoCertificado"];
-                string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
-                string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
-                comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
-                respuestaTimbrado respuesta =timbrar.timbrarCFDI("", "", ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
-                Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante, (pathFactura +  ("Comprobante_"+idVenta)));
-                if (respuesta.codigoResultado.Equals("100"))
-                {
-                    string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
-                    System.IO.File.WriteAllText(pathFactura + "Timbre_" + idVenta + ".xml", xmlTimbradoDecodificado);
-                    Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeToObject(xmlTimbradoDecodificado);
-                    Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + idVenta));
-                    Utils.GenerarFactura(comprobanteTimbrado, pathFactura + "Factura_" + (idVenta + ".pdf"));
-                }
-                else {
-                    Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura + ("respuesta_" + idVenta));
-                }
-                return Json("facturando",JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message, JsonRequestBehavior.AllowGet);
-            }
-
-        }
+    
 
         public bool ReCaptchaPassed(string gRecaptchaResponse)
         {

@@ -12,4 +12,12 @@ namespace lluviaBackEnd.Models
         B,
         VIP,
     }
+
+    public enum EnumEstatusFactura
+    {
+        Facturada = 1,
+        Cancelada,
+        Error,
+        
+    }
 }

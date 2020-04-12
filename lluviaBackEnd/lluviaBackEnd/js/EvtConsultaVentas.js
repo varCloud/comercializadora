@@ -161,6 +161,26 @@ function CancelaVenta(idVenta) {
         });
 }
 
+function GenerarFactura(idVenta) {
+
+    $.ajax({
+        url: rootUrl("/Factura/GenerarFactura"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });   
+}
 
 
 
