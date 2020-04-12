@@ -9,28 +9,18 @@ namespace lluviaBackEnd.Models
     public class Factura
     {
 
-        public int idFactura { get; set; }
-        public int idVenta { get; set; }
+        public Int64 idFactura { get; set; }
+        public string idVenta { get; set; }
 
+        public string folio { get; set; }
 
-        //[Display(Name = "nombre")]
-        //[Required(ErrorMessage = "Este campo no puede estar vacio")]
-        //public string  nombre { get; set; }
+        public EnumEstatusFactura estatusFactura { get; set; }
 
-        //[Display(Name = "descripcion")]
-        //[Required(ErrorMessage = "Este campo no puede estar vacio")]
-        //public string  descripcion { get; set; }
+        public string mensajeError { get; set; }
 
-        //[Display(Name = "telefono")]
-        //[Required(ErrorMessage = "Este campo no puede estar vacio")]
-        //public string  telefono { get; set; }
+        public string  UUID { get; set; }
 
-        //[Display(Name = "direccion")]
-        //[Required(ErrorMessage = "Este campo no puede estar vacio")]
-        //public string direccion { get; set; }
-
-
-        //public Boolean activo { get; set; }
+        public DateTime fechaTimbrado { get; set; }
 
     }
 }

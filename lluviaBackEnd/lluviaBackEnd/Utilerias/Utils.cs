@@ -1,10 +1,12 @@
-﻿using iTextSharp.text;
+﻿using ImageMagick;
+using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using lluviaBackEnd.Models.Facturacion;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -57,10 +59,17 @@ namespace lluviaBackEnd.Utilerias
             using (var ms = new MemoryStream())
             {
                 var writer = new BarcodeWriter() { Format = BarcodeFormat.QR_CODE };
-                writer.Options.Height = 200;
-                writer.Options.Width = 200;
+                writer.Options.Height = 150;
+                writer.Options.Width = 150;
                 img = writer.Write(cadena);
-                img.Save(path + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
+                /*using (var images = new MagickImageCollection(ms.ToArray()))
+                {
+                    images.AppendHorizontally().Format = MagickFormat.Jpeg;
+                    images.AppendHorizontally().Quality = 0;
+                    images.AppendHorizontally().Write(Path.Combine(path));
+                }*/
+                
             }
         }
 
@@ -101,7 +110,7 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path ,int idVenta)
+        public static void GenerarFactura(Comprobante c, string path ,string idVenta)
         {
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:"+ TamañoLetra + ";font-family:Arial; color:#3E3E3E'";

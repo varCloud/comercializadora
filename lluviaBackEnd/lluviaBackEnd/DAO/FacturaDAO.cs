@@ -1,232 +1,159 @@
-﻿using System;
+﻿using lluviaBackEnd.Models.Facturacion;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
-using AccesoDatos;
-using lluviaBackEnd.Models;
-using lluviaBackEnd;
-using System.Text;
-using System.Threading.Tasks;
+using Dapper;
+using System.Data.SqlClient;
 using System.Configuration;
-using System.Web.Mvc;
+using lluviaBackEnd.Models;
 
 namespace lluviaBackEnd.DAO
 {
     public class FacturaDAO
     {
+        private IDbConnection _db;
+      
 
-        private DBManager db = null;
+        public Comprobante ObtenerConfiguracionComprobante()
+        {
+            Comprobante c = new Comprobante();
+            using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var result = this._db.QueryMultiple("SP_FACTURACION_OBTENER_CONFIGURACION_COMPROBANTE", commandType: CommandType.StoredProcedure);
+                var r1 = result.ReadFirst();
+                if (r1.Estatus == 200)
+                {
+                    c = result.Read<Comprobante, ComprobanteEmisor, Comprobante>(MapComprobanteAEmisor, splitOn: "RegimenFiscal").ToList().FirstOrDefault();
+                    c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                }
+            }
+            return c;
+        }
 
+        private Comprobante MapComprobanteAEmisor(Comprobante comprobante, ComprobanteEmisor comprobanteEmisor)
+        {
+            comprobante.Emisor = comprobanteEmisor;
+            return comprobante;
+        }
 
-        //    public List<Factura> ObtenerFacturas(Factura usr)
-        //    {
+        public Comprobante ObtenerComprobante(string idVenta, Comprobante c)
+        {
+            List<ComprobanteConcepto> listConceptos = null;
+            try
+            {
+                // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                var parameters = new DynamicParameters();
+                parameters.Add("@idVenta", idVenta);
+                var result = this._db.QueryMultiple("SP_FACTURACION_OBTENER_DETALLE_VENTA", param: parameters, commandType: CommandType.StoredProcedure);
+                var r1 = result.ReadFirst();
+                if (r1.Estatus == 200)
+                {
+                    
+                    var receptor = result.ReadFirst();
+                    //OBTENER LA FORMA DE PAGO 
+                    c.FormaPago = receptor.FormaPago;
+                    ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
+                    c.Receptor = new ComprobanteReceptor();
+                    c.Receptor.Nombre = receptor.Nombre;
+                    c.Receptor.Rfc = receptor.Rfc;
+                    c.Receptor.UsoCFDI = receptor.UsoCFDI;
 
-        //        List<Factura> lstFacturas = new List<Factura>();
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                db.CreateParameters(1);
-        //                db.AddParameters(0, "@idFactura", usr.idFactura); 
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_FacturaS]");
+         
 
-        //                while (db.DataReader.Read())
-        //                {
-        //                    if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
-        //                    {
-        //                        Factura u = new Factura();
-        //                        u.idFactura = Convert.ToInt32(db.DataReader["idFactura"]);
-        //                        u.Factura = db.DataReader["Factura"].ToString();
-        //                        u.contrasena = db.DataReader["contrasena"].ToString();
-        //                        u.nombre = db.DataReader["nombre"].ToString();
-        //                        u.apellidoPaterno = db.DataReader["apellidoPaterno"].ToString();
-        //                        u.apellidoMaterno = db.DataReader["apellidoMaterno"].ToString();
-        //                        u.Sucursal = db.DataReader["descripcionSucursal"].ToString();
-        //                        u.Almacen = db.DataReader["descripcionAlmacen"].ToString();
-        //                        u.Rol = db.DataReader["descripcionRol"].ToString();
-        //                        u.idRol = Convert.ToInt32(db.DataReader["idRol"].ToString());
-        //                        u.idAlmacen = Convert.ToInt32(db.DataReader["idAlmacen"].ToString());
-        //                        u.idSucursal = Convert.ToInt32(db.DataReader["idSucursal"].ToString());
-        //                        u.telefono = db.DataReader["telefono"].ToString();
-        //                        u.activo = Convert.ToBoolean(db.DataReader["activo"]);
-        //                        lstFacturas.Add(u);
-        //                    }
-        //                }
-        //            }
+                    //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
+                    listConceptos = result.Read<ComprobanteConcepto>().ToList();
+                    if (listConceptos != null)
+                    {
+                        listConceptos.ForEach(data =>  data.Impuestos = new ComprobanteConceptoImpuestos()
+                        {
+                            
+                            Traslados = new ComprobanteConceptoImpuestosTraslados()
+                            {
+                                Traslado = new ComprobanteConceptoImpuestosTrasladosTraslado()
+                                {
+                                    Base = data.Importe,
+                                    TasaOCuota = 0.160000M,
+                                    Impuesto = "002",
+                                    TipoFactor="Tasa",
+                                    Importe = Math.Round((data.Importe * 0.16M), 2, MidpointRounding.AwayFromZero)
+                                }
+                            }
+                        });
+                        c.Conceptos = listConceptos.ToArray();
+                    }
+                }
 
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        return lstFacturas;
-        //    }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _db.Close();
+                _db.Dispose();
+                _db = null;
+            }
+            return c;
+        }
+        public void ObtenerImpuestosGenerales(ref Comprobante c)
+        {
+            try
+            {
+                decimal TotalImpuestosTrasladados = 0;
+                TotalImpuestosTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Importe);
+                ComprobanteImpuestos impuestos = new ComprobanteImpuestos();
+                impuestos.TotalImpuestosTrasladados = TotalImpuestosTrasladados;
+                impuestos.Traslados = new ComprobanteImpuestosTraslados();
+                impuestos.Traslados.Traslado = new ComprobanteImpuestosTrasladosTraslado();
+                impuestos.Traslados.Traslado.Importe = TotalImpuestosTrasladados;
+                impuestos.Traslados.Traslado.Impuesto = "002";
+                impuestos.Traslados.Traslado.TipoFactor = "Tasa";
+                impuestos.Traslados.Traslado.TasaOCuota = 0.160000M;
+                c.Impuestos = impuestos;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
+        }
+        public void ObtenerTotal(ref Comprobante c)
+        {
+            try
+            {
+                c.SubTotal = c.Conceptos.Sum(data => data.Importe);
+                c.Total = c.SubTotal + c.Impuestos.TotalImpuestosTrasladados;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        //    public List<SelectListItem> ObtenerRoles(Rol rol)
-        //    {
-        //        List<SelectListItem> listRoles = new List<SelectListItem>();
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                db.CreateParameters(1);
-        //                db.AddParameters(0, "@idRol", rol.idRol);
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ROLES]");
-        //                while (db.DataReader.Read())
-        //                {
-        //                    listRoles.Add(
-        //                        new SelectListItem
-        //                        {
-        //                            Text = db.DataReader["descripcion"].ToString(),
-        //                            Value = db.DataReader["idRol"].ToString()
-        //                        });
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        return listRoles;
-        //    }
+        public Notificacion<String> GuardarFactura( Factura f) {
 
+            Notificacion<String> n  = new Notificacion<String>();
+            try
+            {
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                var parameters = new DynamicParameters();
+                parameters.Add("@idVenta", f.folio);
+                parameters.Add("@fechaTimbrado",f.fechaTimbrado);
+                parameters.Add("@UUID", f.UUID);
+                parameters.Add("@idEstatusFactura",f.estatusFactura);
+                parameters.Add("@msjError", f.mensajeError);
+                n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-        //    public List<SelectListItem> ObtenerAlmacenes()
-        //    {
-        //        List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                //db.CreateParameters(0);
-        //                //db.AddParameters(0, "@idRol", rol.idRol);
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ALMACENES]");
-        //                while (db.DataReader.Read())
-        //                {
-        //                    lstAlmacenes.Add(
-        //                        new SelectListItem
-        //                        {
-        //                            Text = db.DataReader["descripcion"].ToString(),
-        //                            Value = db.DataReader["idAlmacen"].ToString()
-        //                        });
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        return lstAlmacenes;
-        //    }
-
-        //    public List<SelectListItem> ObtenerSucursales()
-        //    {
-        //        List<SelectListItem> lstSucursales = new List<SelectListItem>();
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                //db.CreateParameters(0);
-        //                //db.AddParameters(0, "@idRol", rol.idRol);
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_SUCURSALES]");
-        //                while (db.DataReader.Read())
-        //                {
-        //                    lstSucursales.Add(
-        //                        new SelectListItem
-        //                        {
-        //                            Text = db.DataReader["descripcion"].ToString(),
-        //                            Value = db.DataReader["idSucursal"].ToString()
-        //                        });
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        return lstSucursales;
-        //    }
-
-
-        //    public Result GuardarFactura(Factura usr)
-        //    {
-        //        Result result = new Result();
-        //        result.status = -1;
-        //        result.mensaje = "Existió un error al hacer la actualización.";
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                db.CreateParameters(12);
-        //                db.AddParameters(0, "@idFactura", usr.idFactura);
-        //                db.AddParameters(1, "@idRol", usr.idRolGuardar[0]);
-        //                db.AddParameters(2, "@Factura", usr.Factura);
-        //                db.AddParameters(3, "@telefono", usr.telefono);
-        //                db.AddParameters(4, "@contrasena", usr.contrasena);
-        //                db.AddParameters(5, "@idAlmacen", usr.idAlmacenGuardar[0]);
-        //                db.AddParameters(6, "@idSucursal", usr.idSucursalGuardar[0]);
-        //                db.AddParameters(7, "@nombre", usr.nombre);
-        //                db.AddParameters(8, "@apellidoPaterno", usr.apellidoPaterno);
-        //                db.AddParameters(9, "@apellidoMaterno", usr.apellidoMaterno);
-        //                db.AddParameters(10, "@fecha_alta", DateTime.Now);
-        //                db.AddParameters(11, "@activo", usr.activo);
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_INSERTA_ACTUALIZA_FACTURAS]");
-        //                while (db.DataReader.Read())
-        //                {
-        //                    if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
-        //                    {
-        //                        result.status = Convert.ToInt32(db.DataReader["status"].ToString());
-        //                        result.mensaje = db.DataReader["mensaje"].ToString();
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        return result;
-        //    }
-
-        //    public Result ActualizarEstatusFactura(int idFactura, bool activo)
-        //    {
-        //        Result result = new Result();
-        //        result.status = -1;
-        //        result.mensaje = "Existio un error al hacer la actualización.";
-        //        try
-        //        {
-        //            using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //            {
-        //                db.Open();
-        //                db.CreateParameters(2);
-        //                db.AddParameters(0, "@idFactura", idFactura);
-        //                db.AddParameters(1, "@activo", activo);
-        //                db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_ACTUALIZA_STATUS_FACTURA");
-        //                if (db.DataReader.Read())
-        //                {
-        //                    if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
-        //                    {
-        //                        result.status = Convert.ToInt32(db.DataReader["status"].ToString());
-        //                        result.mensaje = db.DataReader["mensaje"].ToString();
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //        finally
-        //        {
-        //        }
-        //        return result;
-        //    }
-
+            return n;
+        }
     }
 }
