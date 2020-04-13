@@ -90,6 +90,12 @@
                             </a>
                         </li>
 
+                        <li class="@(ViewBag.Title.ToString() == "Estaciones" ? "dropdown active" : "")">
+                            <a href="@Url.Action("Estaciones", "Estaciones")">
+                                <i data-feather="airplay"></i><span>Estaciones</span>
+                            </a>
+                        </li>
+
                         <li class="@(ViewBag.Title.ToString() == "Proveedores" ? "dropdown active" : "")">
                             <a href="@Url.Action("Proveedores", "Proveedores")">
                                 <i data-feather="truck"></i><span>Proveedores</span>

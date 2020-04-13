@@ -177,6 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="DAO\EstacionesDAO.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
@@ -202,6 +204,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Almacen.cs" />
+    <Compile Include="Models\Estacion.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
     <Compile Include="Models\FormaPago.cs" />
@@ -1025,6 +1028,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
@@ -1150,6 +1154,9 @@
     <Content Include="Views\Clientes\_ObtenerTiposClientes.cshtml" />
     <Content Include="Views\Ventas\ConsultaVentas.cshtml" />
     <Content Include="Views\Ventas\_SinResultados.cshtml" />
+    <Content Include="Views\Estaciones\Estaciones.cshtml" />
+    <Content Include="Views\Estaciones\_ObtenerEstaciones.cshtml" />
+    <Content Include="Views\Estaciones\_SinResultados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

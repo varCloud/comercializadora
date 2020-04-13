@@ -1,0 +1,87 @@
+﻿@model lluviaBackEnd.Models.Estacion
+@{
+    ViewBag.Title = "Estaciones";
+    List<lluviaBackEnd.Models.Estacion> lstEstaciones = ViewBag.lstEstaciones;
+    List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
+}
+
+
+<h2>Estaciones</h2>
+
+<div id="rowTblEstaciones">
+    @Html.Partial("_ObtenerEstaciones", lstEstaciones)
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="mdlAgregarEstacion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalEstacion"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                @using (Ajax.BeginForm("GuardarEstacion", "Estaciones",
+
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitGuardarEstacion",
+                    OnComplete = "onCompleteSubmitGuardarEstacion",
+                    OnFailure = "onFailureResultGuardarEstacion",
+                    OnSuccess = "onSuccessResultGuardarEstacion",
+                },
+                new { id = "frmEstacion" }))
+                {
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Nombre *</label>
+                                @Html.HiddenFor(x => x.idEstacion)
+                                @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
+                                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Numero *</label>
+                                @Html.TextBoxFor(x => x.numero, null, new { @class = "form-control", @id = "numero" })
+                                @Html.ValidationMessageFor(x => x.numero, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Almacen</label>
+                                @Html.DropDownListFor(x => x.idAlmacen, lstAlmacenes, new { id = "idAlmacen", @class = "form-control", data_val = "true" })
+                                @Html.ValidationMessageFor(x => x.idAlmacen, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="reset" class="btn btn-danger" id="btnResetGuardarEstacion">Reset</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarEstacion" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    @Scripts.Render("~/js/EvtEstaciones.js");
+}

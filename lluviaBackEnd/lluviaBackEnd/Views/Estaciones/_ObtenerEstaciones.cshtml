@@ -1,0 +1,61 @@
+﻿@model List<lluviaBackEnd.Models.Estacion>
+@{
+//List<lluviaBackEnd.Models.Estacion> lstEstaciones = ViewBag.lstEstaciones;
+
+}
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblEstaciones">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Almacen</th>
+                                    <th>Nombre</th>
+                                    <th>Numero</th>
+                                    <th>Configurado</th>
+                                    <th>Fecha de Alta</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td class="text-center">@item.contador</td>
+                                        <td>@item.nombreAlmacen</td>
+                                        <td class="text-center">@item.nombre</td>
+                                        <td>@item.numero</td>
+                                        <td>@(item.configurado == true ? "SI" : "NO")</td>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+
+
+                                        <td>
+                                            <div class="buttons">
+                                                <a href="javascript:EditarEstacion(@item.idEstacion);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="javascript:EliminarEstacion(@item.idEstacion);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

@@ -9,6 +9,7 @@ using System.Drawing.Printing;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Web.Configuration;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -174,7 +175,8 @@ namespace lluviaBackEnd.Controllers
             notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
             //Logos
-            //Image newImage = Image.FromFile(Application.StartupPath + "\\Imagenes\\logo.jpg");
+            //Image newImage = Image.FromFile(Application.StartupPath + "\\Imagenes\\logo_lluvia_150.jpg");
+            Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
 
             int ancho = 258;
             int espaciado = 14;
@@ -202,21 +204,21 @@ namespace lluviaBackEnd.Controllers
             SolidBrush drawBrush = new SolidBrush(Color.Black);
 
             //Se pinta logo 
-            Rectangle logo = new Rectangle(20, -7, 280, 81);
-            //e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+            Rectangle logo = new Rectangle(80, 15, 280, 81);
+            e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
-            Rectangle datos = new Rectangle(0, 40, ancho, 82);
+            Rectangle datos = new Rectangle(5, 110, ancho, 82);
             e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
-            e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString() , font, drawBrush, 40, 115, izquierda);
-            e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 115, izquierda);
-            e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 126, izquierda);
+            e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString() , font, drawBrush, 40, 181, izquierda);
+            e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+            e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
-            Rectangle datosProducto =   new Rectangle(5,   200, 180 , 82);
-            Rectangle datosCantidad =   new Rectangle(190, 200, 30  , 82);
-            Rectangle datosPrecio =     new Rectangle(225, 200, 40  , 82);
+            Rectangle datosProducto =   new Rectangle(5,   270, 180 , 82);
+            Rectangle datosCantidad =   new Rectangle(190, 270, 30  , 82);
+            Rectangle datosPrecio =     new Rectangle(225, 270, 40  , 82);
 
-            Rectangle datosEnca =       new Rectangle(0, 145, 280  , 82);
+            Rectangle datosEnca =       new Rectangle(0, 215, 280  , 82);
 
             e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
             datosEnca.Y += 14;

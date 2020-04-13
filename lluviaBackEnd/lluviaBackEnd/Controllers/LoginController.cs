@@ -11,6 +11,8 @@ using System.Web.Mvc;
 using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.servicioTimbrarPruebas;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -40,6 +42,27 @@ namespace lluviaBackEnd.Controllers
                 if (n.Modelo.usuarioValido)
                 {
                     Session["UsuarioActual"] = n.Modelo;
+
+
+                    //string key = "configurado";
+                    //string value = "0";
+
+
+                    //Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                    //string valor = config.AppSettings.Settings[key].Value;
+
+                    //if (config.AppSettings.Settings[key] == null)
+                    //{
+                    //    config.AppSettings.Settings.Add(key, value);
+                    //}
+                    //else
+                    //{
+                    //    config.AppSettings.Settings[key].Value = value;
+                    //}
+                    //config.Save();
+                    //ConfigurationManager.RefreshSection("appSettings");
+
+
                 }
                 return Json(n, JsonRequestBehavior.AllowGet);
             }
