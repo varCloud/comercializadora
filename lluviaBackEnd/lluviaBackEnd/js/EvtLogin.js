@@ -11,7 +11,13 @@ function onSuccessResult(data) {
     console.log("onSuccessResult", JSON.stringify(data));   
     
     if (data.Estatus == 200) {
-        location.href = rootUrl("Dashboard/Index/");
+        //if (){
+        //    location.href = rootUrl("Dashboard/Index/");
+        //}
+        //else{
+            location.href = rootUrl("Dashboard/Index/");
+        //}
+
     } else {
         InitRecaptcha();
         MuestraToast("error", data.Mensaje);

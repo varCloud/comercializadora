@@ -60,5 +60,10 @@ namespace lluviaBackEnd.Models
         public string formaPago { get; set; }
         public int tipoConsulta { get; set; }
 
+        public int idFactura { get; set; }
+        public int idEstatusFactura { get; set; }
+        public string descripcionEstatusFactura { get; set; }
+        public string rutaFactura { get; set; }
+
     }
 }

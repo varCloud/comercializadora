@@ -43,7 +43,8 @@ namespace lluviaBackEnd.Controllers
                 {
                     Session["UsuarioActual"] = n.Modelo;
 
-
+                    //string configurado = WebConfigurationManager.AppSettings["pathFacturas"].ToString();
+                    n.Modelo.configurado = WebConfigurationManager.AppSettings["configurado"].ToString();
                     //string key = "configurado";
                     //string value = "0";
 
@@ -73,6 +74,10 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        public ActionResult EstacionesDisponibles()
+        {
+            return View();
+        }
     
 
         public bool ReCaptchaPassed(string gRecaptchaResponse)

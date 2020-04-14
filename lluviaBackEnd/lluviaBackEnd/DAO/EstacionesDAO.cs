@@ -105,6 +105,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     parameters.Add("@idEstacion", estacion.idEstacion);
+                    parameters.Add("@idAlmacen", estacion.idAlmacen);
                     var result = db.QueryMultiple("SP_CONSULTA_ESTACIONES", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
@@ -117,7 +118,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
 
 

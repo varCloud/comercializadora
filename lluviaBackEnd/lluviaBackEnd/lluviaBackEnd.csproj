@@ -1029,6 +1029,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtEstaciones.js" />
+    <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
@@ -1157,6 +1158,7 @@
     <Content Include="Views\Estaciones\Estaciones.cshtml" />
     <Content Include="Views\Estaciones\_ObtenerEstaciones.cshtml" />
     <Content Include="Views\Estaciones\_SinResultados.cshtml" />
+    <Content Include="Views\Login\EstacionesDisponibles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
