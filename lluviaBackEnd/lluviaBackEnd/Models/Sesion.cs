@@ -32,6 +32,7 @@ namespace lluviaBackEnd.Models
         public string Sucursal { get; set; }
         public string Almacen { get; set; }
         public string Rol { get; set; }
+        public string configurado { get; set; }
 
     }
 }

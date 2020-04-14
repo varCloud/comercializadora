@@ -1,0 +1,123 @@
+﻿@model lluviaBackEnd.Models.Sesion
+@{
+    ViewBag.Title = "Estaciones Disponibles";
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Estacion>> lstEstaciones =
+        new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = 1 });
+    Layout = null;
+}
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title></title>
+    <link rel="stylesheet" href="~/assets/css/app.min.css">
+    <link href="~/assets/bundles/izitoast/css/iziToast.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/components.css">
+    <link rel="stylesheet" href="~/assets/css/custom.css">
+    <link rel='shortcut icon' type='image/x-icon' href='~/assets/img/logo_lluvia_64.png' />
+
+    <script>
+        var pathServer = '@Url.Content("~/assets/img/logo_lluvia.png")';
+        console.log("pathServer", pathServer)
+
+
+        function rootUrl(url) {
+            var _rootUrl = '@Url.Content("~")';
+            var x = url;
+            if (url.indexOf(_rootUrl) != 0) {
+                x = _rootUrl + "/" + url;
+                x = x.replace(/\/\//g, "/").replace(/\/\//g, "/");
+            }
+            return x;
+        };
+    </script>
+
+</head>
+
+<body>
+    <div class="loader"></div>
+    <div id="app">
+        <section class="section">
+            <div class="container mt-5">
+
+                <div class="row">
+                    <div class="col-12 col-md-2 col-lg-2">
+
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Seleccione su Estación</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-md">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Nombre de Estación</th>
+                                                <th>Número</th>
+                                                <th>Almacen</th>
+                                                <th>Estatus</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                            @foreach (var item in lstEstaciones.Modelo)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@item.idEstacion.ToString()</td>
+                                                    <td>@item.nombre</td>
+                                                    <td class="text-center">@item.numero.ToString()</td>
+                                                    <td>@item.nombreAlmacen</td>
+                                                    <td>
+                                                        <div class="badge badge-danger">No Configurado</div>
+                                                    </td>
+                                                    <td><a href="javascript:SeleccionarEstacion(@item.idEstacion);" class="btn btn-primary">Seleccionar</a></td>
+
+
+                                                </tr>
+                                            }
+                                        </tbody>
+
+
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <a href="@Url.Action("Login", "Login")" class="btn btn-icon icon-left btn-danger" id="cancelar"><i class="fas fa-times"></i> Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-2 col-lg-2">
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+
+
+    <script src="~/assets/js/app.min.js"></script>
+    <script src="~/assets/bundles/izitoast/js/iziToast.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/js/scripts.js"></script>
+    <script>
+
+    </script>
+    @Scripts.Render("~/js/Index.js")
+    @Scripts.Render("~/js/EvtEstacionesDisponibles.js")
+
+</body>
+
+
+
+</html>
