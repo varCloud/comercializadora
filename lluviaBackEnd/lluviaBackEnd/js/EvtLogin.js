@@ -2,7 +2,6 @@
 function onBeginSubmit() {
 
 }
-
 function onCompleteSubmit() {
  
 }
@@ -11,12 +10,13 @@ function onSuccessResult(data) {
     console.log("onSuccessResult", JSON.stringify(data));   
     
     if (data.Estatus == 200) {
-        //if (){
-        //    location.href = rootUrl("Dashboard/Index/");
-        //}
-        //else{
+
+        if (data.Modelo.configurado == "0" ) {
+            location.href = rootUrl("Login/EstacionesDisponibles/");
+        }
+        else {
             location.href = rootUrl("Dashboard/Index/");
-        //}
+        }
 
     } else {
         InitRecaptcha();
@@ -27,7 +27,6 @@ function onSuccessResult(data) {
 function onFailureResult() {
     console.log("onFailureResult");
 }
-
 function InitRecaptcha() {
     var key = '6LfandgUAAAAAC71dmEsGltVDobKPEYFvC_ocuP_';
     grecaptcha.ready(function () {

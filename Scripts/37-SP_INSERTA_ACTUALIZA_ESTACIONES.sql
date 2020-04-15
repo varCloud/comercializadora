@@ -61,6 +61,18 @@ as
 							raiserror (@mensaje, 11, -1)
 						end
 
+						if @idAlmacen = 0
+							select @idAlmacen = idAlmacen from Estaciones where idEstacion	= @idEstacion
+
+						if @nombre is null
+							select @nombre = nombre from Estaciones where idEstacion = @idEstacion
+
+						if @numero = 0
+							select @numero = numero from Estaciones where idEstacion = @idEstacion
+
+						if @idUsuario = 0
+							select @idUsuario = idUsuario from Estaciones where idEstacion = @idEstacion
+
 						update	Estaciones 
 						set		idAlmacen	= @idAlmacen,
 								macAdress	= @macAdress,

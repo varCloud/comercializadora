@@ -11,7 +11,7 @@ MSSQL: sql5031.site4now.net
 Nombre de Usuario: DB_A552FA_comercializadora_admin
 Contraseña: Abcde12345
 
-App
+Deploy-App
 ------------------------
 IP del servidor	ftp.site4now.net
 Nombre de Usuario:crmlluvia-001
