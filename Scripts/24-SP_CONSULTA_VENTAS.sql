@@ -1,8 +1,8 @@
-use DB_A552FA_comercializadora
+use DB_A57E86_comercializadora
 go
 
 -- se crea procedimiento SP_CONSULTA_VENTAS
-if exists (select * from sysobjects where name like 'SP_CONSULTA_VENTAS' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+if exists (select * from sysobjects where name like 'SP_CONSULTA_VENTAS' and xtype = 'p' and db_name() = 'DB_A57E86_comercializadora')
 	drop proc SP_CONSULTA_VENTAS
 go
 
@@ -56,7 +56,11 @@ as
 							idProducto					int,
 							descripcionProducto			varchar(300),							
 							idLineaProducto				int,
-							descripcionLineaProducto	varchar(300)
+							descripcionLineaProducto	varchar(300),
+							idFactura					int, 
+							idEstatusFactura			int,
+							descripcionEstatusFactura	varchar(300),
+							fechaTimbrado				datetime
 						)			
 
 			end  --declaraciones 
@@ -90,10 +94,10 @@ as
 						)
 					begin
 
-						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto,idFactura,idEstatusFactura,descripcionEstatusFactura,fechaTimbrado)
 						select	top 50 v.idVenta,v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
-								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
+								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion, f.idFactura, f.idEstatusFactura, s.descripcion,f.fechaTimbrado
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
@@ -105,6 +109,10 @@ as
 										on vd.idProducto = p.idProducto	
 									inner join LineaProducto lp
 										on lp.idLineaProducto = p.idLineaProducto
+									left join Facturas f
+										on f.idVenta = v.idVenta
+									left join FacCatEstatusFactura s
+										on s.idEstatusFactura = f.idEstatusFactura
 						where	v.idStatusVenta = 1
 
 					end
@@ -112,10 +120,10 @@ as
 				else 
 					begin
 
-						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto)
+						insert into #Ventas (idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idProducto,descripcionProducto,idLineaProducto,descripcionLineaProducto,idFactura,idEstatusFactura,descripcionEstatusFactura,fechaTimbrado)
 						select	 v.idVenta,v.idCliente, cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno as nombreCliente
 								,v.cantidad, v.fechaAlta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
-								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion
+								p.idProducto,p.descripcion, lp.idLineaProducto, lp.descripcion, f.idFactura, f.idEstatusFactura, s.descripcion,f.fechaTimbrado
 						from	Ventas v
 									inner join Usuarios u
 										on u.idUsuario = v.idUsuario
@@ -126,7 +134,11 @@ as
 									inner join Productos p
 										on vd.idProducto = p.idProducto
 									inner join LineaProducto lp
-										on lp.idLineaProducto = p.idLineaProducto											
+										on lp.idLineaProducto = p.idLineaProducto	
+									left join Facturas f
+										on f.idVenta = v.idVenta
+									left join FacCatEstatusFactura s
+										on s.idEstatusFactura = f.idEstatusFactura
 																		
 						where	p.idProducto =	case
 													when @idProducto is null then p.idProducto
@@ -218,9 +230,24 @@ as
 										when nombreCliente is null then 'PÚBLICO EN GENERAL' 
 										else nombreCliente
 									end as nombreCliente,
-									cantidad,fechaAlta,idUsuario,nombreUsuario 
+									cantidad,fechaAlta,idUsuario,nombreUsuario,idFactura, idEstatusFactura, descripcionEstatusFactura,
+									case month(fechaTimbrado)
+										when 1 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\ENERO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 2 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\FEBRERO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 3 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\MARZO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 4 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\ABRIL\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 5 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\MAYO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 6 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\JUNIO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 7 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\JULIO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 8 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\AGOSTO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 9 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\SEPTIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 10 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\OCTUBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 11 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\NOVIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 12 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\DICIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										else null
+									end as rutaFactura
 							from	#Ventas 
-							group by idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario
+							group by idVenta,idCliente,nombreCliente,cantidad,fechaAlta,idUsuario,nombreUsuario,idFactura,idEstatusFactura,descripcionEstatusFactura,fechaTimbrado
 							order by idVenta desc 
 						end
 					else
@@ -240,7 +267,26 @@ as
 									idProducto,					
 									descripcionProducto	,								
 									idLineaProducto,				
-									descripcionLineaProducto								
+									descripcionLineaProducto,
+									idFactura, 
+									idEstatusFactura,
+									descripcionEstatusFactura,
+									case month(fechaTimbrado)
+										when 1 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\ENERO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 2 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\FEBRERO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 3 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\MARZO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 4 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\ABRIL\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 5 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\MAYO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 6 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\JUNIO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 7 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\JULIO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 8 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\AGOSTO\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 9 then  '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\SEPTIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 10 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\OCTUBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 11 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\NOVIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										when 12 then '\Facturas\' + CAST( YEAR(fechaTimbrado) as varchar(30) ) + '\DICIEMBRE\Factura_' + cast(idVenta as varchar(30)) + '.pdf'
+										else null
+									end as rutaFactura,										
+									year(fechaAlta) as mes, day(fechaAlta) as dia						
 							from	#Ventas 
 							order by idVenta desc 
 						end

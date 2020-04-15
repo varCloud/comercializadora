@@ -13,6 +13,7 @@ using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.servicioTimbrarPruebas;
 using System.Configuration;
 using System.Web.Configuration;
+using System.Net.NetworkInformation;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -42,26 +43,7 @@ namespace lluviaBackEnd.Controllers
                 if (n.Modelo.usuarioValido)
                 {
                     Session["UsuarioActual"] = n.Modelo;
-
-
-                    //string key = "configurado";
-                    //string value = "0";
-
-
-                    //Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
-                    //string valor = config.AppSettings.Settings[key].Value;
-
-                    //if (config.AppSettings.Settings[key] == null)
-                    //{
-                    //    config.AppSettings.Settings.Add(key, value);
-                    //}
-                    //else
-                    //{
-                    //    config.AppSettings.Settings[key].Value = value;
-                    //}
-                    //config.Save();
-                    //ConfigurationManager.RefreshSection("appSettings");
-
+                    n.Modelo.configurado = WebConfigurationManager.AppSettings["configurado"].ToString();
 
                 }
                 return Json(n, JsonRequestBehavior.AllowGet);
@@ -73,7 +55,59 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-    
+        public ActionResult EstacionesDisponibles()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult SeleccionarEstacion(Estacion estacion)
+        {
+            try
+            {
+                Notificacion<Estacion> n = new Notificacion<Estacion>();
+
+                estacion.macAdress =    (
+                                            from nic in NetworkInterface.GetAllNetworkInterfaces()
+                                            where nic.OperationalStatus == OperationalStatus.Up
+                                            select nic.GetPhysicalAddress().ToString()
+                                        ).FirstOrDefault();
+
+                estacion.configurado = true;
+
+                n = new EstacionesDAO().GuardarEstacion(estacion);
+
+                if (n.Estatus == 200) {
+
+                    string key = "configurado";
+                    string value = "1";
+
+                    Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                    string valor = config.AppSettings.Settings[key].Value;
+
+                    if (config.AppSettings.Settings[key] == null)
+                    {
+                        config.AppSettings.Settings.Add(key, value);
+                    }
+                    else
+                    {
+                        config.AppSettings.Settings[key].Value = value;
+                    }
+                    config.Save();
+                    ConfigurationManager.RefreshSection("appSettings");
+                }
+
+                return Json(n, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
+            }
+
+        }
+
+
 
         public bool ReCaptchaPassed(string gRecaptchaResponse)
         {

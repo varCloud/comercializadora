@@ -73,14 +73,10 @@ namespace lluviaBackEnd.Controllers
         //  Editar Ventas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
         public ActionResult ConsultaVentas()
         {
             Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
             notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta=2 });
-            //Notificacion<List<Producto>> notificacionProductos = new Notificacion<List<Producto>>();
-            //notificacionProductos = new ProductosDAO().ObtenerProductos(new Producto() { idProducto = 0 });
-
             ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 } );
             ViewBag.lstVentas = notificacion.Modelo;
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);

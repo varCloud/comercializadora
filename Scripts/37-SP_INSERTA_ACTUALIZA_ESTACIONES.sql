@@ -1,8 +1,8 @@
-use DB_A552FA_comercializadora
+use DB_A57E86_comercializadora
 go
 
 -- se crea procedimiento SP_INSERTA_ACTUALIZA_ESTACIONES
-if exists (select * from sysobjects where name like 'SP_INSERTA_ACTUALIZA_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+if exists (select * from sysobjects where name like 'SP_INSERTA_ACTUALIZA_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A57E86_comercializadora')
 	drop proc SP_INSERTA_ACTUALIZA_ESTACIONES
 go
 
@@ -60,6 +60,18 @@ as
 							select @mensaje = 'La Estacion no existe.'
 							raiserror (@mensaje, 11, -1)
 						end
+
+						if @idAlmacen = 0
+							select @idAlmacen = idAlmacen from Estaciones where idEstacion	= @idEstacion
+
+						if @nombre is null
+							select @nombre = nombre from Estaciones where idEstacion = @idEstacion
+
+						if @numero = 0
+							select @numero = numero from Estaciones where idEstacion = @idEstacion
+
+						if @idUsuario = 0
+							select @idUsuario = idUsuario from Estaciones where idEstacion = @idEstacion
 
 						update	Estaciones 
 						set		idAlmacen	= @idAlmacen,

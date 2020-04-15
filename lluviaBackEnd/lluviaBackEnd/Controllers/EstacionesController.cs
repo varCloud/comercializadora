@@ -44,23 +44,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                //List<Estacion> lstEstaciones = new List<Estacion>();
                 Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
-
                 notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = estacion.idEstacion });
-                //Notificacion<Cliente> n = new Notificacion<Cliente>();
-                //if (notificacion.Modelo == null)
-                //{
-                //    notificacion.Estatus = -1;
-                //    notificacion.Mensaje = "Espere un momento y vuelva a intentar";
-
-                //}
-                //else
-                //{
-                //    notificacion.Estatus = 200;
-                //    //notificacion.Modelo = lstClientes.FirstOrDefault();
-                //}
-
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

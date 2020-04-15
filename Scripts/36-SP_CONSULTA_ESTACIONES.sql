@@ -1,8 +1,8 @@
-use DB_A552FA_comercializadora
+use DB_A57E86_comercializadora
 go
 
 -- se crea procedimiento SP_CONSULTA_ESTACIONES
-if exists (select * from sysobjects where name like 'SP_CONSULTA_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+if exists (select * from sysobjects where name like 'SP_CONSULTA_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A57E86_comercializadora')
 	drop proc SP_CONSULTA_ESTACIONES
 go
 
@@ -18,7 +18,8 @@ status			200 = ok
 
 create proc SP_CONSULTA_ESTACIONES
 
-	@idEstacion				int
+	@idEstacion				int,
+	@idAlmacen				int = null
 
 as
 
@@ -92,10 +93,15 @@ as
 									on a.idAlmacen = e.idAlmacen
 					where	e.idStatus = 1
 						and	e.idEstacion =	case
-												when @idEstacion = 0 then idEstacion
-												when @idEstacion is null then idEstacion
+												when @idEstacion = 0 then e.idEstacion
+												when @idEstacion is null then e.idEstacion
 												else @idEstacion
 											end
+						and	e.idAlmacen =	case
+												when @idAlmacen = 0 then e.idAlmacen
+												when @idAlmacen is null then e.idAlmacen
+												else @idAlmacen
+											end 
 
 				end
 				

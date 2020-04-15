@@ -1,8 +1,8 @@
-use DB_A552FA_comercializadora
+use DB_A57E86_comercializadora
 go
 
 -- se crea procedimiento SP_ACTUALIZA_STATUS_ESTACIONES
-if exists (select * from sysobjects where name like 'SP_ACTUALIZA_STATUS_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A552FA_comercializadora')
+if exists (select * from sysobjects where name like 'SP_ACTUALIZA_STATUS_ESTACIONES' and xtype = 'p' and db_name() = 'DB_A57E86_comercializadora')
 	drop proc SP_ACTUALIZA_STATUS_ESTACIONES
 go
 
