@@ -186,7 +186,7 @@ $('#btnAgregarProducto').click(function (e) {
 
 $(document).ready(function () {
 
-    //InitDataTableVentas();
+    InitDataTableVentas();
     InitSelect2Productos();
     InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
     $('#idLineaProductoBusqueda').val('0');
