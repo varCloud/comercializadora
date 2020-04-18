@@ -92,7 +92,7 @@ function InitTableUsuarios() {
     );
 
 
-    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarUsuario" data-toggle="tooltip" title="Agregar Usuario"><i class="fas fa-user-plus"></i></a>');
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarUsuario" data-toggle="tooltip" title="Agregar Usuario"><i class="fas fa-plus"></i></a>');
     InitBtnAgregar();
 }
 

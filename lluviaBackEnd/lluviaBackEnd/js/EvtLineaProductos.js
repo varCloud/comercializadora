@@ -94,7 +94,7 @@ function InitTableLineaProductos() {
         tablaLineaProductos.table().container()
     );
 
-    $('#' + NombreTabla+'_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarLineaProducto" data-toggle="tooltip" title="Agregar LineaProducto"><i class="fas fa-user-plus"></i></a>');
+    $('#' + NombreTabla+'_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarLineaProducto" data-toggle="tooltip" title="Agregar LineaProducto"><i class="fas fa-plus"></i></a>');
     InitBtnAgregar();
 }
 
