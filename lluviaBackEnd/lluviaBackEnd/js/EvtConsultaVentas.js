@@ -162,7 +162,9 @@ function CancelaVenta(idVenta) {
 }
 
 function GenerarFactura(idVenta) {
-
+    console.log("idventa", idVenta)
+    //ShowLoader();
+    
     $.ajax({
         url: rootUrl("/Factura/GenerarFactura"),
         data: { idVenta: idVenta },
@@ -170,16 +172,21 @@ function GenerarFactura(idVenta) {
         dataType: 'json',
         async: true,
         beforeSend: function (xhr) {
+            ShowLoader()
         },
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+            PintarTabla();
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
             console.log(xhr);
             console.log(status);
+            OcultarLoader();
         }
     });   
+    
 }
 
 

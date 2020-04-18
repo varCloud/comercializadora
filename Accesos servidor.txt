@@ -7,7 +7,7 @@ crmlluvia
 T12345678t
 
 Base de Datos
-MSSQL: sql5031.site4now.net
+MSSQL: sql5047.site4now.net
 Nombre de Usuario: DB_A552FA_comercializadora_admin
 Contraseña: Abcde12345
 

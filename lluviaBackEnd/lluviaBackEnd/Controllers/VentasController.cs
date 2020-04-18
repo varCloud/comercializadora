@@ -10,9 +10,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Web.Configuration;
+using lluviaBackEnd.Filters;
 
 namespace lluviaBackEnd.Controllers
 {
+    [SessionTimeout]
     public class VentasController : Controller
     {
         int idVenta = 0;

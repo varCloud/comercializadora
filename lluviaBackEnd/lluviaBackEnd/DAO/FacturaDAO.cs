@@ -142,6 +142,8 @@ namespace lluviaBackEnd.DAO
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
                 parameters.Add("@idVenta", f.folio);
+                
+                parameters.Add("@idUsuario", f.idUsuario);
                 parameters.Add("@fechaTimbrado",f.fechaTimbrado);
                 parameters.Add("@UUID", f.UUID);
                 parameters.Add("@idEstatusFactura",f.estatusFactura);
@@ -155,5 +157,28 @@ namespace lluviaBackEnd.DAO
 
             return n;
         }
+
+        public Notificacion<String> CancelarFactura(Factura f)
+        {
+
+                Notificacion<String> n = new Notificacion<String>();
+                try
+                {
+
+                _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", f.idVenta);
+                    parameters.Add("@idUsuario", f.idUsuario );
+                    parameters.Add("@idEstatusFactura", f.estatusFactura);
+                    parameters.Add("@msjError", f.mensajeError);
+                    n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA_CANCELADA", parameters, commandType: CommandType.StoredProcedure);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            return n; 
+        }
+             
     }
 }

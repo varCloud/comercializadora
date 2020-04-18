@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.DAO;
+using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 
 
 namespace lluviaBackEnd.Controllers
 {
+    [SessionTimeout]
     public class ProductosController : Controller
     {
         // GET: Productos

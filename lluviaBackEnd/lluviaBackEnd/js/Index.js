@@ -16,6 +16,14 @@ function toDataURL(src, callback, outputFormat) {
     img.src = src;
 }
 
+function ShowLoader() {
+    $('#loader-lluvia').css('display', 'flex');
+}
+
+
+function OcultarLoader() {
+    $('#loader-lluvia').css('display', 'none');
+}
 
 //ESTA FUNCION ES PARA NOTIFICACIONES 
 function MuestraToast(tipoNotificacion, mensaje) {
@@ -187,4 +195,26 @@ $(document).ready(function () {
             logoBase64 = dataUrl;
         }
     )
+
+    $('#facturar').click(function (e) {
+        $.ajax({
+            url: rootUrl("/Factura/CancelarFactura"),
+            data: { idVenta: 1, idFactura: 1 },
+            method: 'post',
+            dataType: 'json',
+            async: false,
+            beforeSend: function (xhr) {
+                console.log("Antes")
+            },
+            success: function (data) {
+                console.log(JSON.stringify(data));
+                MuestraToast("info", JSON.stringify(data));
+            },
+            error: function (xhr, status) {
+                console.log('hubo un problema pongase en contacto con el administrador del sistema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });
+    });
 });

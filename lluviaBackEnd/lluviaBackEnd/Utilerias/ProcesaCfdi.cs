@@ -2,28 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Diagnostics;
 using System.Configuration;
-using System.Globalization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using System.IO.Compression;
-using System.Net;
-using System.Drawing;
 
-//using StoPrueba.Entidades;
-using System.Security.Cryptography.X509Certificates;
 using lluviaBackEnd.Models.Facturacion;
-using Gma.QrCodeNet.Encoding;
-using Gma.QrCodeNet.Encoding.Windows.Render;
-using System.Drawing.Imaging;
 
-//using CmvComprobante;
+
 
 
 
@@ -199,6 +191,24 @@ namespace lluviaBackEnd.Utilerias
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
+        public static XmlElement GenerateXmlSignature(XmlDocument originalXmlDocument)
+        {
+            string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSello"].ToString();
+            X509Certificate2 cert = new X509Certificate2(Resource.archivopfx, strLlavePwd);
+            RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
+            SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
+            Reference reference = new Reference() { Uri = String.Empty };
+            XmlDsigEnvelopedSignatureTransform env = new XmlDsigEnvelopedSignatureTransform();
+            reference.AddTransform(env);
+            KeyInfoX509Data kdata = new KeyInfoX509Data(cert);
+            kdata.AddIssuerSerial(cert.Issuer, cert.SerialNumber);
+            KeyInfo keyInfo = new KeyInfo();
+            keyInfo.AddClause(kdata);
+            signedXml.KeyInfo = keyInfo;
+            signedXml.AddReference(reference);
+            signedXml.ComputeSignature();
+            return signedXml.GetXml();
+        }
 
 
         /*

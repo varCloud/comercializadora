@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
@@ -25,18 +26,31 @@ namespace lluviaBackEnd.Utilerias
                 }
             }
         }
+        public static string SerealizarToString(T value)
+        {
 
-        public static  T DeserializeToObject(string file)
+            using (MemoryStream stream = new MemoryStream())
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                XmlSerializer xml = new XmlSerializer(typeof(T));
+                xml.Serialize(writer, value);
+
+                return Encoding.UTF8.GetString(stream.ToArray());
+                // I am not 100% sure if this can be optimized
+                //httpContextBase.Response.BinaryWrite(stream.ToArray());
+            }
+        }
+
+        public static  T DeserializeXMLStringToObject(string file)
         {
             System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(T));
-
             using (StringReader sr = new StringReader(file))
             {
                 return (T)ser.Deserialize(sr);
             }
         }
 
-        public static T DeseralizarXML(string archivo)
+        public static T DeseralizarXMLFromPath(string archivo)
         {
             try
             {
