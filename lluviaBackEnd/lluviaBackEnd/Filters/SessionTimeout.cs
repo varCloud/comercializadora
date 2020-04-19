@@ -23,10 +23,10 @@ namespace lluviaBackEnd.Filters
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary()
-                              {
-                                   { "action", "Login" },
-                                   { "controller", "Login" }
-                              });
+            {
+                { "action", "Login" },
+                { "controller", "Login" }
+            });
         }
     }
 

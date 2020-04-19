@@ -16,7 +16,8 @@ function toDataURL(src, callback, outputFormat) {
     img.src = src;
 }
 
-function ShowLoader() {
+function ShowLoader(mensaje) {
+    $('#textLoader').html((mensaje==='undefined' || mensaje ==='' ? "Cargadno" : mensaje));
     $('#loader-lluvia').css('display', 'flex');
 }
 

@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.DAO;
+using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace lluviaBackEnd.Controllers
 {
+    [SessionTimeout]
     public class ClientesController : Controller
     {
         // GET: Clientes
