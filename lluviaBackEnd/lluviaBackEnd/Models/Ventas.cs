@@ -9,6 +9,10 @@ namespace lluviaBackEnd.Models
     public class Ventas
     {
 
+        public Ventas()
+        {
+            formaPago = "01";
+        }
 
         [Display(Name = "idVenta")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]

@@ -101,7 +101,7 @@
                                                             <td>@item.idProducto</td>
                                                             <td>@item.descProducto</td>
                                                             <td class="text-center">$@item.monto</td>
-                                                            <td class="text-center">@item.cantidad</td>
+                                                            <td class="text-center"  onclick="listenerDobleClick(this);" onblur="this.contentEditable=false;">@item.cantidad</td>
                                                             <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
                                                             <td class="text-center">7</td>
                                                         </tr>
