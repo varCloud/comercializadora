@@ -40,14 +40,14 @@
                             <div class="form-group">
                                 <label>Descripción *</label>
                                 @Html.HiddenFor(x => x.idTipoCliente)
-                                @Html.HiddenFor(x => x.activo)
+                                @Html.HiddenFor(x => x.activo , new { @id="activo"})
                                 @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
                                 @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <div class="form-group">
-                                <label>Descuento *</label>
+                                <label>Descuento en % *</label>
                                 @Html.TextBoxFor(x => x.descuento, null, new { @class = "form-control", @id = "descuento" })
                                 @Html.ValidationMessageFor(x => x.descuento, null, new { @class = "text-danger was" })
                             </div>

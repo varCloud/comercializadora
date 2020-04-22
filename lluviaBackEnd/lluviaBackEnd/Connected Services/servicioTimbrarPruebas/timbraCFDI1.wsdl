@@ -30,7 +30,7 @@
   <wsdl:binding name="timbrarCFDIBinding" type="tns:timbrarCFDIPortType">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="timbrarCFDI">
-      <soap:operation soapAction="http://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI" style="rpc" />
+      <soap:operation soapAction="https://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI" style="rpc" />
       <wsdl:input>
         <soap:body use="encoded" namespace="urn:respuestaTimbrado" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
       </wsdl:input>
@@ -41,7 +41,7 @@
   </wsdl:binding>
   <wsdl:service name="timbrarCFDI">
     <wsdl:port name="timbrarCFDIPort" binding="tns:timbrarCFDIBinding">
-      <soap:address location="http://comprobantes-fiscales.com/service/timbraCFDI.php" />
+      <soap:address location="https://comprobantes-fiscales.com:443/service/timbraCFDI.php" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

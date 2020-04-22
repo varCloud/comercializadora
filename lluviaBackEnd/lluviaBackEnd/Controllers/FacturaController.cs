@@ -147,8 +147,8 @@ namespace lluviaBackEnd.Controllers
                 string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
-                respuestaTimbrado respuesta = timbrar.timbrarCFDI("", "", ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
+
+                respuestaTimbrado respuesta = (respuestaTimbrado) ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
 
                 if (respuesta.codigoResultado.Equals("100"))
                 {

@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://comprobantes-fiscales.com/service/timbraCFDI.php?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://comprobantes-fiscales.com/service/timbraCFDI.php?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="timbraCFDI.wsdl" MetadataType="Wsdl" ID="a92d58bd-de99-4568-b6a4-b4bdaaa56711" SourceId="1" SourceUrl="http://comprobantes-fiscales.com/service/timbraCFDI.php?wsdl" />
+    <MetadataFile FileName="timbraCFDI1.wsdl" MetadataType="Wsdl" ID="b63960b8-b3bc-4e1e-8d1f-9ae4477b8a6d" SourceId="1" SourceUrl="https://comprobantes-fiscales.com/service/timbraCFDI.php?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

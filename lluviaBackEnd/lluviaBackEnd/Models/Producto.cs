@@ -18,13 +18,19 @@ namespace lluviaBackEnd.Models
 
         [Display(Name = "idUnidadMedida")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public int idUnidadMedida { get; set; }
-
-        public string DescripcionUnidadMedida { get; set; }
+        public string idUnidadMedida { get; set; }
 
         [Display(Name = "idLineaProducto")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public int idLineaProducto { get; set; }
+        public string idLineaProducto { get; set; }
+
+        [Display(Name = "idLineaProducto")]
+        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        public string idClaveProdServ { get; set; }
+
+        public string DescripcionUnidadMedida { get; set; }
+
+
 
         public string DescripcionLinea { get; set; }
 
@@ -50,7 +56,7 @@ namespace lluviaBackEnd.Models
         public int contador { get; set; }
 
         public string claveUnidad { get; set; }
-        public float claveProdServ { get; set; }
+       
         public float precio { get; set; }
          
     }

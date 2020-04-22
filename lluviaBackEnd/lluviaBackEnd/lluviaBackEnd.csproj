@@ -1122,7 +1122,7 @@
     <Content Include="app.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI.wsdl" />
+    <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />

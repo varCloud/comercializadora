@@ -146,7 +146,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
-            lstLineasDeProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            lstLineasDeProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "" });
             return lstLineasDeProductos;
         }
         
@@ -158,22 +158,31 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_UNIDADES_MEDIDA]");
-                    while (db.DataReader.Read())
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_CONSULTA_UNIDADES_MEDIDA");
+                    if (db.DataReader.Read())
                     {
-                        lstUnidadMedida.Add(
-                            new SelectListItem
+                        if (db.DataReader["Estatus"].ToString().Equals("200"))
+                        {
+                            db.DataReader.NextResult();
+                            while (db.DataReader.Read())
                             {
-                                Text = db.DataReader["descripcion"].ToString(),
-                                Value = db.DataReader["idUnidadMedida"].ToString()
-                            });
+                                lstUnidadMedida.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db.DataReader["descripcion"].ToString(),
+                                        Value = db.DataReader["idUnidadMedida"].ToString()
+                                    });
+                            }
+                        }
                     }
+ 
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            lstUnidadMedida.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "" });
             return lstUnidadMedida;
         }
 
@@ -202,7 +211,7 @@ namespace lluviaBackEnd.DAO
             {
                 throw ex;
             }
-            lstClavesProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            lstClavesProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "" });
             return lstClavesProductos;
         }
 
@@ -215,7 +224,7 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_CLAVES_UNIDAD]");
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_FACTURACION_CONSULTA_CLAVES_UNIDAD");
                     while (db.DataReader.Read())
                     {
                         lstClavesUnidad.Add(

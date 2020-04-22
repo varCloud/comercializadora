@@ -101,14 +101,22 @@ namespace lluviaBackEnd.DAO
             return cliente;
         }
 
-        public List<TipoCliente> ObtenerTipoClientes()
+        public List<TipoCliente> ObtenerTipoClientes(TipoCliente tipoCliente )
         {
             List<TipoCliente> lstClientes = null;
             try
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
-                    lstClientes = this._db.Query<TipoCliente>("SP_CONSULTA_TIPO_CLIENTES",  commandType: CommandType.StoredProcedure).ToList();
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoCliente", tipoCliente.idTipoCliente);
+                    var result = this._db.QueryMultiple("SP_CONSULTA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        lstClientes = result.Read<TipoCliente>().ToList();
+                    }
+
                     lstClientes.Insert(0 , new TipoCliente() { idTipoCliente=0 , descripcion="--SELECCIONA--" });
                 }
             }
@@ -133,7 +141,6 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@descripcion", tipoCliente.descripcion);
                 parameters.Add("@descuento", tipoCliente.descuento);
                 parameters.Add("@activo", tipoCliente.activo);
-
                 var result = _db.QueryMultiple("SP_INSERTA_ACTUALIZA_TIPOS_CLIENTES", parameters, commandType: CommandType.StoredProcedure);
 
                 var r1 = result.ReadFirst();

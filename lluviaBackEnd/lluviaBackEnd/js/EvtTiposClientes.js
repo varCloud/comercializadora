@@ -205,6 +205,8 @@ function InitBtnAgregar() {
         $('#btnResetGuardarTipoCliente').trigger('click');
         $('#btnGuardarTipoCliente').css('display', '');
         $('#idTipoCliente').val('0');
+        $('#activo').val(true);
+        
         //para abrir el modal
         $('#mdlAgregarTipoCliente').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalTipoCliente').html("Agregar Tipo de Cliente");

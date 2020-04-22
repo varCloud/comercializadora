@@ -67,13 +67,13 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Claves de Producto</label>
-                                    @Html.DropDownListFor(x => x.claveProdServ, lstClaveProdServ, new { @class = "form-control", id = "claveProdServBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, new { @class = "form-control", id = "claveProdServBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Claves de Unidades</label>
-                                    @Html.DropDownListFor(x => x.claveUnidad, lstClavesUnidad, new { @class = "form-control", id = "claveUnidadBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.claveUnidad , lstUnidadMedida, new { @class = "form-control", id = "claveUnidadBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -133,51 +133,43 @@
                             </div>
                             <div class="form-group">
                                 <label>Unidad de Medida</label>
-                                @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control", data_val = "true" })
+                                @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control"})
                                 @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
                             </div>
 
                             <div class="form-group">
                                 <label>Linea de Producto</label>
-                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProducto", @class = "form-control", data_val = "true" })
+                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { id = "idLineaProducto", @class = "form-control" })
                                 @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
                             </div>
-                            
-                            <div class="form-group">
-                                <label>Clave de Producto</label>
-                                @Html.DropDownListFor(x => x.claveProdServ, lstClaveProdServ, new { @class = "form-control", id = "claveProdServ", data_val = "false" })
-                                @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
-                            </div>
-
+                          
                         </div>
 
                         <div class="col-12 col-sm-12 col-lg-6">
 
-                                <div class="form-group">
-                                    <label>Cantidad Unidad de Medida</label>
-                                    @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
-                                    @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
-
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Artículo</label>
-                                    @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
-                                    @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Clave de Unidad</label>
-                                    @Html.DropDownListFor(x => x.claveUnidad, lstClavesUnidad, new { @class = "form-control", id = "claveUnidad", data_val = "false" })
-                                    @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
-                                </div>
-
-                                <div class="form-group">
-
-
-                                </div>
+                            <div class="form-group">
+                                <label>Cantidad Unidad de Medida</label>
+                                @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
+                                @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
 
                             </div>
+
+                            <div class="form-group">
+                                <label>Artículo</label>
+                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
+                            </div>
+                            <div class="form-group">
+                                <label>Clave de Producto</label>
+                                @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, new { @class = "form-control", id = "cbClaveProdServ" })
+                                @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
+                            </div>
+                            <div class="form-group">
+
+
+                            </div>
+
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12" style="text-align:center">

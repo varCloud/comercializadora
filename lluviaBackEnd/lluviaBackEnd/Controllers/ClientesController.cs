@@ -17,7 +17,7 @@ namespace lluviaBackEnd.Controllers
         {
 
             ViewBag.lstClientes = this.ObtenerClientes(new Cliente() { idCliente = 0 });
-            ViewBag.lstTipoClientes = this.ObtenerTipoClientes();
+            ViewBag.lstTipoClientes = this.ObtenerTipoClientes(new TipoCliente() {idTipoCliente  = 0 });
             return View();
         }
 
@@ -85,9 +85,9 @@ namespace lluviaBackEnd.Controllers
             }
 
         }
-        private List<TipoCliente> ObtenerTipoClientes()
+        private List<TipoCliente> ObtenerTipoClientes(TipoCliente tipoCliente)
         {
-            return new ClienteDAO().ObtenerTipoClientes();
+            return new ClienteDAO().ObtenerTipoClientes(tipoCliente);
         }
 
 
