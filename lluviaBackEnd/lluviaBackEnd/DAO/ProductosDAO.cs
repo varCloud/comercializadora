@@ -44,7 +44,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                    parameters.Add("@claveProdServ", producto.claveProdServ);
+                    parameters.Add("@claveProdServ", producto.idClaveProdServ);
                     //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
@@ -90,15 +90,15 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@codigoBarras", producto.codigoBarras);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                    parameters.Add("@claveProdServ", producto.claveProdServ);
-                    parameters.Add("@claveUnidad", producto.claveUnidad);
+                        parameters.Add("@claveProdServ", producto.idClaveProdServ);
+                    //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
-                    if (r1.status == 200)
+                    if (r1.Estatus == 200)
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                         notificacion.Modelo = producto; //result.ReadSingle<Producto>();
                     }
                     else
@@ -283,7 +283,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                    parameters.Add("@claveProdServ", producto.claveProdServ);
+                    parameters.Add("@claveProdServ", producto.idClaveProdServ);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

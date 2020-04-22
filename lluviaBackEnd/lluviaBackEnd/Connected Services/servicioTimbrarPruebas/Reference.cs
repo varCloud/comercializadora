@@ -15,12 +15,12 @@ namespace lluviaBackEnd.servicioTimbrarPruebas {
     [System.ServiceModel.ServiceContractAttribute(Namespace="urn:respuestaTimbrado", ConfigurationName="servicioTimbrarPruebas.timbrarCFDIPortType")]
     public interface timbrarCFDIPortType {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="https://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(Style=System.ServiceModel.OperationFormatStyle.Rpc, SupportFaults=true, Use=System.ServiceModel.OperationFormatUse.Encoded)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         lluviaBackEnd.servicioTimbrarPruebas.respuestaTimbrado timbrarCFDI(string suscriptorRFC, string agenteTI, string documentoXML);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="https://comprobantes-fiscales.com/service/timbraCFDI.php/timbrarCFDI", ReplyAction="*")]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         System.Threading.Tasks.Task<lluviaBackEnd.servicioTimbrarPruebas.respuestaTimbrado> timbrarCFDIAsync(string suscriptorRFC, string agenteTI, string documentoXML);
     }

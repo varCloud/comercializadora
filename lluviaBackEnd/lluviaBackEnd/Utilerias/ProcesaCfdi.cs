@@ -12,13 +12,9 @@ using System.Diagnostics;
 using System.Configuration;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-
 using lluviaBackEnd.Models.Facturacion;
-
-
-
-
-
+using lluviaBackEnd.servicioTimbrarPruebas;
+using System.Net;
 
 namespace lluviaBackEnd.Utilerias
 {
@@ -210,7 +206,26 @@ namespace lluviaBackEnd.Utilerias
             return signedXml.GetXml();
         }
 
+        public static object TimbrarEdifact(string xmlSerializadoSAT)
+        {
+            try
+            {
+                System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                };
 
+                servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
+                respuestaTimbrado respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         /*
         public static string ObtenerPath()
         {

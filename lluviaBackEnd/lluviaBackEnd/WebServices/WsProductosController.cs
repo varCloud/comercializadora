@@ -33,7 +33,7 @@ namespace lluviaBackEnd.WebServices
             {
                 Producto p = new Producto();
                 p.articulo = request.articulo;
-                p.idLineaProducto = request.idLineaProducto;
+                p.idLineaProducto = request.idLineaProducto.ToString();
                 p.descripcion= request.descripcion;
                 p.idProducto = request.idProducto;
                 return new ProductosDAO().ObtenerProductos(p);

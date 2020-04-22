@@ -185,8 +185,6 @@ function VerProducto(idProducto) {
     $('#TituloModalProducto').html("Información del Producto");
 }
 
-
-
 function VerPrecios(idProducto) {
 
     $('#max_').val('');
@@ -202,7 +200,6 @@ function VerPrecios(idProducto) {
     $('#TituloModalRangosPrecios').html("Precios por Producto");
     
 }
-
 
 function ObtenerPrecios(idProducto) {
 
@@ -279,7 +276,8 @@ function EditarProducto(idProducto) {
     $('#descripcion').val(data.descripcion).prop('disabled', false);
     $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', false);
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
-    $('#claveProdServ').val(data.claveProdServ).prop('disabled', false);
+    console.log("idClaveProdServ", data.idClaveProdServ )
+    $('#cbClaveProdServ').val(data.idClaveProdServ).prop('disabled', false);
     $('#claveUnidad').val(data.claveUnidad).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
     $('#articulo').val(data.articulo).prop('disabled', false);
@@ -301,11 +299,13 @@ function InitBtnAgregar() {
         $('#descripcion').val('').prop('disabled', false);
         $('#idUnidadMedida').val('').prop('disabled', false);
         $('#idLineaProducto').val('').prop('disabled', false);
+        $('#cbClaveProdServ').val('').prop('disabled', false);
         $('#cantidadUnidadMedida').val('').prop('disabled', false);
         $('#articulo').val('').prop('disabled', false);
         $('.field-validation-error').html("");
         document.getElementById('barra').src = '';
         document.getElementById('qr').src = '';
+        
         //para abrir el modal
         $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalProducto').html("Agregar Producto");
