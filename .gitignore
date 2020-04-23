@@ -353,3 +353,6 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/visualstudio
+lluviaBackEnd/lluviaBackEnd/Facturas/2020/ABRIL/Factura_178.pdf
+lluviaBackEnd/lluviaBackEnd/Facturas/2020/ABRIL/Qr_178.jpg
+lluviaBackEnd/lluviaBackEnd/Facturas/2020/ABRIL/Timbre_178.xml
