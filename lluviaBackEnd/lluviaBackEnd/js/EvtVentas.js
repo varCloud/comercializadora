@@ -318,7 +318,7 @@ $('#btnGuardarVenta').click(function (e) {
         method: 'POST',
         dataType: 'JSON',
         contentType: "application/json; charset=utf-8", 
-        async: false,
+        async: true,
         beforeSend: function (xhr) {
             ShowLoader("Guardando Venta.");
         },
