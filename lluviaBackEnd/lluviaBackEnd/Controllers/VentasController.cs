@@ -11,6 +11,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Web.Configuration;
 using lluviaBackEnd.Filters;
+using System.Diagnostics;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -129,13 +130,13 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult ImprimeTicket( Ventas venta )
+        public ActionResult ImprimeTicket(Ventas venta )
         {
-
+            Notificacion<Ventas> notificacion;
             try
             {
 
-                Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+                notificacion = new Notificacion<Ventas>();
                 notificacion.Mensaje = "Se envio el ticket a la impresora.";
 
                 this.idVenta = venta.idVenta;
@@ -158,9 +159,18 @@ namespace lluviaBackEnd.Controllers
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
             }
+            catch (InvalidPrinterException ex) {
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora "+ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
 
         }

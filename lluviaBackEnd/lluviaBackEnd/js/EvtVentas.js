@@ -78,7 +78,6 @@ function preguntaQuiereFactura(idVenta) {
         });
 }
 
-
 function InitSelect2Productos() {
     $('.select-multiple').select2({
         width: "100%",
