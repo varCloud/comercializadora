@@ -442,6 +442,26 @@ function listenerDobleClick(element, idProducto) {
 //}
 
 
+$("#efectivo").on("change", function () {
+
+    var cambio_     = parseFloat(0).toFixed(2);
+    var efectivo_   = parseFloat($('#efectivo').val()).toFixed(2);
+    var total_      = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+
+    if (parseFloat(efectivo_) > parseFloat(total_)) {
+        cambio_ = efectivo_ - total_;
+        //console.log("cambio_:" + cambio_);
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+    }
+    else {
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    }
+
+});
+
+
 
 $(document).ready(function () {
 
