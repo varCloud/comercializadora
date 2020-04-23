@@ -145,7 +145,7 @@ namespace lluviaBackEnd.DAO
                 
                 parameters.Add("@idUsuario", f.idUsuario);
                 parameters.Add("@fechaTimbrado",(f.fechaTimbrado == DateTime.MinValue ? DateTime.Now : (f.fechaTimbrado)));
-                parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)DBNull.Value : f.UUID);
+                parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)null : f.UUID);
                 parameters.Add("@idEstatusFactura",f.estatusFactura);
                 parameters.Add("@msjError", f.mensajeError);
                 n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA", parameters, commandType: CommandType.StoredProcedure);
