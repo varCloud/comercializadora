@@ -20,11 +20,6 @@ function onFailureResultVentas() {
 }
 
 
-
-
-//var vtas = [];
-
-
 function preguntaAltaPrecios() {
 
     swal({
@@ -38,6 +33,45 @@ function preguntaAltaPrecios() {
             if (willDelete) {
                 console.log(willDelete);
                 location.href = rootUrl("/Productos/Productos");
+            } else {
+                console.log("cancelar");
+            }
+        });
+}
+
+function preguntaQuiereFactura(idVenta) {
+    console.log(idVenta);
+    swal({
+        title: 'Mensaje',
+        text: '¿Desea facturar esta venta?',
+        icon: 'info',
+        buttons: ["No", "Sí"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: rootUrl("/Factura/GenerarFactura"),
+                    data: { idVenta: idVenta },
+                    method: 'post',
+                    dataType: 'json',
+                    async: true,
+                    beforeSend: function (xhr) {
+                        ShowLoader("Facturando Venta.");
+                    },
+                    success: function (data) {
+                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+                        OcultarLoader();
+                    },
+                    error: function (xhr, status) {
+                        console.log('Disculpe, existió un problema');
+                        console.log(xhr);
+                        console.log(status);
+                        OcultarLoader();
+                    }
+                });
+
             } else {
                 console.log("cancelar");
             }
@@ -185,13 +219,13 @@ $('#btnAgregarProducto').click(function (e) {
             preguntaAltaPrecios();
         }
         else {
-            console.log($("#idProducto").find("option:selected").text());
+           // console.log($("#idProducto").find("option:selected").text());
             var row_ =  "<tr>" +
                         "  <td>1</td>" +
                         "  <td> " + $('#idProducto').val() + "</td>" +
                         "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
                         "  <td class=\"text-center\">$" + precio + "</td>" +
-                        "  <td class=\"text-center\">" + cantidad + "</td>" +
+                        "  <td class=\"text-center\" onclick=\"listenerDobleClick(this," + $('#idProducto').val()+ ");\" onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
                         "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
                         "  <td class=\"text-center\">" +
                         "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
@@ -287,14 +321,19 @@ $('#btnGuardarVenta').click(function (e) {
         contentType: "application/json; charset=utf-8", 
         async: false,
         beforeSend: function (xhr) {
+            ShowLoader("Guardando Venta.");
         },
         success: function (data) {
+            OcultarLoader();
+
             MuestraToast('success', data.Mensaje);
             $('#ModalPrevioVenta').modal('hide');
             limpiarTicket();
             ImprimeTicket(data.Modelo.idVenta);
+            preguntaQuiereFactura(data.Modelo.idVenta);
         },
         error: function (xhr, status) {
+            OcultarLoader();
             console.log('Hubo un problema al guardar la venta, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
@@ -325,6 +364,85 @@ function ImprimeTicket(idVenta) {
         }
     });
 }
+
+
+
+function listenerDobleClick(element, idProducto) {
+    element.contentEditable = true;
+
+    $(element).keydown(function (evt) {
+        el = evt.target;
+
+        if (evt.keyCode == 27) {
+            document.execCommand('undo');
+            element.contentEditable = false;
+        }
+        //        console.log("nodeName_" + el.nodeName + " el_" + el.innerHTML);
+
+        if (evt.keyCode == 13 || (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))) {
+            event.preventDefault();
+
+            var cantidad = parseFloat(el.innerHTML);
+            var data = ObtenerProductoPorPrecio(idProducto, cantidad);
+            var precio = parseFloat(data.Modelo[0].costo);
+            console.log(precio);
+
+            document.execCommand('undo');
+
+            element.contentEditable = false;
+            console.log("quedo: " + el.innerHTML);
+        }
+        else {       // si es un numero         
+        }
+
+    });
+
+    setTimeout(function () {
+        if (document.activeElement !== element) {
+            element.contentEditable = false;
+            ///alert("time");
+        }
+    }, 300);
+}
+
+//document.addEventListener('keydown', function (event) {
+//    console.log("keydwn");
+//    var esc = event.which == 27,
+//        nl = event.which == 13,
+//        el = event.target,
+//        input = el.nodeName != 'INPUT' && el.nodeName != 'TEXTAREA',
+//        data = {};
+
+//    if (input) {
+//        if (esc) {
+//            // restore state
+//            document.execCommand('undo');
+//            el.blur();
+//        } else if (nl) {
+//            // save
+//            data[el.getAttribute('data-name')] = el.innerHTML;
+
+//            // we could send an ajax request to update the field
+//            /*
+//            $.ajax({
+//              url: window.location.toString(),
+//              data: data,
+//              type: 'post'
+//            });
+//            */
+//            log(JSON.stringify(data));
+
+//            el.blur();
+//            event.preventDefault();
+//        }
+//    }
+//}, true);
+
+//function log(s) {
+//    document.getElementById('debug').innerHTML = 'value changed to: ' + s;
+//}
+
+
 
 $(document).ready(function () {
 
