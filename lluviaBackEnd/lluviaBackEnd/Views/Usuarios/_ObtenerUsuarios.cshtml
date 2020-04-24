@@ -44,24 +44,52 @@
                                             {
                                                 case "Administrador":
                                                     {
+                                                        <div class="badge badge-dark badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
+                                                case "Encargo de Almacen":
+                                                    {
+                                                        <div class="badge badge-primary badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
+                                                case "Cajero":
+                                                    {
+                                                        <div class="badge badge-secondary badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
+                                                case "Montacarguista":
+                                                    {
+                                                        <div class="badge badge-dark badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
+                                                case "Distribuidor":
+                                                    {
                                                         <div class="badge badge-success badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
-                                                case "Encargo de Almacen":
-                                                    {
-                                                        <div class="badge badge-info badge-shadow">@item.Rol</div>
-                                                    }
-                                                    break;
-                                                case "Cajero":
-                                                    {
-                                                        <div class="badge badge-warning badge-shadow">@item.Rol</div>
-                                                    }
-                                                    break;
+
                                                 case "Picker":
                                                     {
                                                         <div class="badge badge-warning badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
+
+                                                case "Almacenista":
+                                                    {
+                                                        <div class="badge badge-info badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
+                                                case "Usuario de Compras":
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+
                                                 default:
                                                     {
                                                         <div class="badge badge-danger badge-shadow">Sin Rol</div>
