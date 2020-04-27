@@ -136,12 +136,12 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarPrecios(List<Precio> precios)
+        public ActionResult GuardarPrecios(List<Precio> precios, Producto producto)
         {
             try
             {
                 Notificacion<Precio> result = new Notificacion<Precio>();
-                result = new ProductosDAO().GuardarPrecios(precios);
+                result = new ProductosDAO().GuardarPrecios(precios, producto);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

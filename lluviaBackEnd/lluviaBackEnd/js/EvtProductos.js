@@ -187,6 +187,8 @@ function VerProducto(idProducto) {
 
 function VerPrecios(idProducto) {
 
+    $('#precioIndividual').val('');
+    $('#precioMenudeo').val('');
     $('#max_').val('');
     $('#min_').val('');
     $('#precio').val('');
@@ -194,6 +196,7 @@ function VerPrecios(idProducto) {
     $("#tablaRangosPrecios").find("tr:gt(0)").remove();
     document.getElementById("btnGuardarPrecios").disabled = true;
     ObtenerPrecios(idProducto);
+    ObtenerIndividualMenudeo(idProducto);
     
     //para abrir el modal
     $('#RangosPreciosProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -215,6 +218,34 @@ function ObtenerPrecios(idProducto) {
         },
         success: function (data) {
             pintarPrecios(data);
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+    return result;
+}
+
+
+function ObtenerIndividualMenudeo(idProducto) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductos"),
+        data: { idProducto: idProducto },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            $('#precioIndividual').val(data.precioIndividual);
+            $('#precioMenudeo').val(data.precioMenudeo);
             result = data;
         },
         error: function (xhr, status) {
@@ -377,52 +408,70 @@ function obtenerCodigos() {
 
 
 $('#btnAgregarPrecio').click(function (e) {
-
+    //console.log($('#min_').val());
+    //console.log($('#max_').val());
+    //console.log($('#precio').val());
     if ( $('#min_').val() == "" || $('#max_').val() == "" || $('#precio').val() == ""  ) {
         MuestraToast('warning', "Debe poner todos los datos para insertar el rango de precios.");
     }
     else {
 
-        if ((parseFloat($('#min_').val())) >= (parseFloat($('#max_').val()))) {
-            MuestraToast('warning', "El máximo debe ser mayor al mínimo");
+        if  (
+                (parseFloat($('#min_').val()) >= parseFloat(0) && parseFloat($('#min_').val()) <= parseFloat(11)) ||
+                (parseFloat($('#max_').val()) >= parseFloat(0) && parseFloat($('#max_').val()) <= parseFloat(11))
+
+            ) {
+            MuestraToast('warning', "Para precios de prductos entre 1 y 11 artículos debe asignar el Precio Individual.");
         }
         else {
 
-            var maximo = parseFloat(0);
-
-            $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
-                console.log(fila.children[1].innerHTML + ", " + fila.children[2].innerHTML);
-                var maximo_actual = parseFloat(fila.children[2].innerHTML);
-                if (maximo_actual > maximo) {
-                    maximo = maximo_actual;
-                }
-            });
-
-            if (parseFloat(maximo) >= parseFloat($('#min_').val())) {
-                MuestraToast('warning', "El mínimo que intenta insertar debe ser mayor al maximo del rango anterior");
+            if ((parseFloat($('#min_').val()) == parseFloat(12)) || (parseFloat($('#max_').val()) == parseFloat(12))) {
+                MuestraToast('warning', "Para precios de productos de 12 artículos debe asignar el Precio Menudeo.");
             }
             else {
 
+                if ((parseFloat($('#min_').val())) >= (parseFloat($('#max_').val()))) {
+                    MuestraToast('warning', "El máximo debe ser mayor al mínimo del rango que quiere agregar.");
+                }
+                else {
 
-                // si todo bien 
-                var row_ =
-                    "<tr>" +
-                    "    <td>0</td>" +
-                    "    <td class=\"text-center\">" + $('#min_').val() + "</td>" +
-                    "    <td class=\"text-center\">" + $('#max_').val() + "</td>" +
-                    "    <td class=\"text-center\">" + $('#precio').val() + "</td>" +
-                    "    <td class=\"text-center\">" +
-                    "       <a href=\"javascript:eliminaFilaPrecios(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
-                    "    </td>" +
-                    "</tr>";
-                $("#tablaRangosPrecios tbody").append(row_);
-                actualizaTablaPrecios();
-                $('#max_').val('');
-                $('#min_').val('');
-                $('#precio').val('');
+                    var maximo = parseFloat(0);
 
-                validaBtnGuardarPrecios();
-            }
+                    $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
+                        console.log(fila.children[1].innerHTML + ", " + fila.children[2].innerHTML);
+                        var maximo_actual = parseFloat(fila.children[2].innerHTML);
+                        if (maximo_actual > maximo) {
+                            maximo = maximo_actual;
+                        }
+                    });
+
+                    if (parseFloat(maximo) >= parseFloat($('#min_').val())) {
+                        MuestraToast('warning', "El mínimo que intenta insertar debe ser mayor al maximo del rango anterior");
+                    }
+                    else {
+
+
+                        // si todo bien 
+                        var row_ =
+                            "<tr>" +
+                            "    <td>0</td>" +
+                            "    <td class=\"text-center\">" + $('#min_').val() + "</td>" +
+                            "    <td class=\"text-center\">" + $('#max_').val() + "</td>" +
+                            "    <td class=\"text-center\">" + $('#precio').val() + "</td>" +
+                            "    <td class=\"text-center\">" +
+                            "       <a href=\"javascript:eliminaFilaPrecios(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                            "    </td>" +
+                            "</tr>";
+                        $("#tablaRangosPrecios tbody").append(row_);
+                        actualizaTablaPrecios();
+                        $('#max_').val('');
+                        $('#min_').val('');
+                        $('#precio').val('');
+
+                        validaBtnGuardarPrecios();
+                    }
+                }
+            }            
         }
     }
 });
@@ -430,42 +479,58 @@ $('#btnAgregarPrecio').click(function (e) {
 
 $('#btnGuardarPrecios').click(function (e) {
 
-    var rangos = [];
 
-    $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
+    if ($('#precioIndividual').val() == "" || $('#precioMenudeo').val() == "" ) {
+        MuestraToast('warning', "Por favor asigne un valor para los precios de Individual y Menudeo.");
+    }
+    else {
 
-        var row_ =  {
-                        contador: fila.children[0].innerHTML,
-                        min: fila.children[1].innerHTML,
-                        max: fila.children[2].innerHTML,
-                        costo: fila.children[3].innerHTML,
-                        idProducto: $('#idProductoRango').val()
-                    };
-        rangos.push(row_);
+        var idProducto = parseInt(0);
+        var rangos = [];
+        
+        $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
 
-    });
+            var row_ = {
+                contador: fila.children[0].innerHTML,
+                min: fila.children[1].innerHTML,
+                max: fila.children[2].innerHTML,
+                costo: fila.children[3].innerHTML
+                //idProducto: $('#idProductoRango').val()
+            };
+            rangos.push(row_);
+            idProducto = $('#idProductoRango').val();
+        });
 
-    dataToPost = JSON.stringify({ precios: rangos });
+        var producto = {
+            idProducto: idProducto,
+            precioIndividual: $('#precioIndividual').val(),
+            precioMenudeo: $('#precioMenudeo').val()
+        };
 
-    $.ajax({
-        url: rootUrl("/Productos/GuardarPrecios"),
-        data: dataToPost,
-        method: 'POST',
-        dataType: 'JSON',
-        contentType: "application/json; charset=utf-8", // specify the content type
-        async: false,
-        beforeSend: function (xhr) {
-        },
-        success: function (data) {
-            MuestraToast('success', data.Mensaje);
-            $('#RangosPreciosProductoModal').modal('hide');
-        },
-        error: function (xhr, status) {
-            console.log('Hubo un problema al insertar el rango, contactese con el administrador del sistema');
-            console.log(xhr);
-            console.log(status);
-        }
-    });
+        dataToPost = JSON.stringify({ precios: rangos, producto: producto });
+
+        $.ajax({
+            url: rootUrl("/Productos/GuardarPrecios"),
+            data: dataToPost,
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8", // specify the content type
+            async: false,
+            beforeSend: function (xhr) {
+            },
+            success: function (data) {
+                MuestraToast('success', data.Mensaje);
+                $('#RangosPreciosProductoModal').modal('hide');
+            },
+            error: function (xhr, status) {
+                console.log('Hubo un problema al insertar el rango, contactese con el administrador del sistema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });
+
+    }
+
 
 });
 
@@ -509,6 +574,15 @@ function actualizaTablaPrecios() {
     });
 }
 
+
+
+$("#precioIndividual").keyup(function () {
+    document.getElementById("btnGuardarPrecios").disabled = false;
+});
+
+$("#precioMenudeo").keyup(function () {
+    document.getElementById("btnGuardarPrecios").disabled = false;
+});
 
 $(document).ready(function () {
 
