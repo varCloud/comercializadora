@@ -60,7 +60,10 @@ namespace lluviaBackEnd.Models
         public float precioIndividual { get; set; }
         public float precioMenudeo { get; set; }
 
+        public float precio { get; set; }
 
-         
+
+
+
     }
 }
