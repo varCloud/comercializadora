@@ -10,8 +10,8 @@ function onCompleteSubmitGuardarProveedor() {
 }
 function onSuccessResultGuardarProveedor(data) {
     console.log("onSuccessResultGuardarProveedor");
-
-    if (data.status == 200) {
+    
+    if (data.Estatus == 200) {
 
         MuestraToast("success", data.Mensaje);
         PintarTabla();

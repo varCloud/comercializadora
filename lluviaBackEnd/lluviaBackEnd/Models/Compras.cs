@@ -62,5 +62,17 @@ namespace lluviaBackEnd.Models
         public DateTime fechaFin { get; set; }
         public int contador { get; set; }
 
+        public List<Producto> listProductos { get; set; }
+        public Proveedor proveedor { get; set; }
+
+        public Status statusCompra { get; set; }
+
+        public Compras()
+        {
+            listProductos = new List<Producto>();
+            proveedor = new Proveedor();
+            statusCompra = new Status();
+        }
+
     }
 }

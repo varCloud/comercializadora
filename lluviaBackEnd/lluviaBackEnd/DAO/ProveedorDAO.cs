@@ -57,10 +57,10 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Result GuardarProveedor(Proveedor proveedor)
+        public Notificacion<Proveedor> GuardarProveedor(Proveedor proveedor)
         {
-            Result result = new Result();
-            result.status = -1;
+            Notificacion<Proveedor> result = new Notificacion<Proveedor>();
+            result.Estatus = -1;
             result.Mensaje = "Existió un error al hacer la actualización.";
             try
             {
@@ -79,8 +79,14 @@ namespace lluviaBackEnd.DAO
                     {
                         if (Convert.ToInt32(db.DataReader["status"].ToString()) == 200)
                         {
-                            result.status = Convert.ToInt32(db.DataReader["status"].ToString());
+                            result.Estatus = Convert.ToInt32(db.DataReader["status"].ToString());
                             result.Mensaje = db.DataReader["mensaje"].ToString();
+                            result.Modelo = new Proveedor
+                            {
+                                idProveedor = Convert.ToInt32(db.DataReader["idProveedor"].ToString()),
+                                nombre = db.DataReader["nombreProveedor"].ToString()
+                            };
+ 
                         }
                     }
                 }

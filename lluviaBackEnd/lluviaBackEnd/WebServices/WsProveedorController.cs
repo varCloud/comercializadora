@@ -37,10 +37,10 @@ namespace lluviaBackEnd.WebServices
         {
             try
             {
-                Result r = new ProveedorDAO().GuardarProveedor(p);
+                Notificacion<Proveedor> r = new ProveedorDAO().GuardarProveedor(p);
                 return new Notificacion<Proveedor>()
                 {
-                    Estatus = r.status,
+                    Estatus = r.Estatus,
                     Mensaje = r.Mensaje,
                     Modelo = p
                 };

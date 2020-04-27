@@ -56,10 +56,11 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Notificacion<Proveedor> notificacion = new ProveedorDAO().GuardarProveedor(p);
 
-                Result result = new Result();
-                result = new ProveedorDAO().GuardarProveedor(p);
-                return Json(result, JsonRequestBehavior.AllowGet);
+                //Result result = new Result();
+                //result = new ProveedorDAO().GuardarProveedor(p);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
@@ -75,6 +76,18 @@ namespace lluviaBackEnd.Controllers
             {
                 Result result = new ProveedorDAO().ActualizarEstatusProveedor(idProveedor, activo);
                 return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ActionResult _NuevoProveedor()
+        {
+            try
+            {               
+                return PartialView();
             }
             catch (Exception ex)
             {

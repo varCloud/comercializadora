@@ -1,0 +1,202 @@
+﻿$(document).ready(function () {
+    actualizaTicket();
+    $('.select-multiple').select2({
+
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        },
+
+    });
+
+    $('#idStatusCompra').val('').trigger('change');
+
+
+    $('#limpiar').click(function (e) {
+        $('#tblCompras tbody').html("");
+        $('#idProveedor').val("").trigger('change');
+        $('#idStatusCompra').val("").trigger('change');
+        actualizaTicket();
+    });
+
+    $('#btnAgregarProducto').click(function (e) {
+
+        if ($('#precio').val() == "") {
+            MuestraToast('warning', "Debe escribir el precio de productos que va a agregar.");
+        }
+        else if ($('#cantidad').val() == "") {
+            MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
+        }
+        else {
+
+            var idProducto = $('#idProducto').val();
+            var cantidad = $('#cantidad').val();
+            var precio = $('#precio').val();
+
+            if (precio == 0) {
+                preguntaAltaPrecios();
+            }
+            else {
+                // console.log($("#idProducto").find("option:selected").text());
+                var row_ = "<tr>" +
+                    "  <td>1</td>" +
+                    "  <td> " + $('#idProducto').val() + "</td>" +
+                    "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
+                    "  <td class=\"text-center\">$" + precio + "</td>" +
+                    "  <td class=\"text-center\">" + cantidad + "</td>" +
+                    "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                    "  <td class=\"text-center\">" +
+                    "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                    "  </td>" +
+                    "</tr >";
+
+                $("#tblCompras tbody").append(row_);
+                $('#cantidad').val('');
+                $('#precio').val('');
+                actualizaTicket();
+            }
+
+        }
+
+    });
+
+
+    $('#btnGuardarCompra').click(function (e) {
+
+        if ($('#idProveedor').val() == "") {
+            MuestraToast('warning', "Debe seleccionar un proveedor.");
+            return;
+        }
+        if ($('#idStatusCompra').val() == "") {
+            MuestraToast('warning', "Debe seleccionar el estatus de la compra.");
+            return;
+        }
+
+
+        var productos = [];
+        $('#tblCompras tbody tr').each(function (index, fila) {
+            var row_ = {
+                idProducto: fila.children[1].innerHTML,
+                cantidad: fila.children[4].innerHTML,
+                precio: fila.children[3].innerHTML.replace('$', '')
+            };
+            productos.push(row_);
+        });
+
+        if (productos.length === 0) {
+            MuestraToast('warning', "Debe agregar productos a la compra.");
+            return;
+        }
+
+        var Proveedor = new Object();
+        Proveedor.idProveedor = $("#idProveedor").val();
+
+        var StatusCompra = new Object();
+        StatusCompra.idStatus = $("#idStatusCompra").val();
+
+        var compra = new Object();
+        compra.idCompra = $("#idCompra").val();
+        compra.proveedor = Proveedor;
+        compra.listProductos = productos;
+        compra.statusCompra = StatusCompra;
+
+        dataToPost = JSON.stringify({ compra: compra });
+
+        $.ajax({
+            url: rootUrl("/Compras/GuardarCompra"),
+            data: dataToPost,
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            beforeSend: function (xhr) {
+                ShowLoader("Guardando Compra.");
+            },
+            success: function (data) {
+                OcultarLoader();
+                
+                if (data.Estatus == 200) {
+                    MuestraToast("success", data.Mensaje);
+                    $("#limpiar").click();
+                }
+                else
+                    MuestraToast("error", data.Mensaje);
+
+               
+            },
+            error: function (xhr, status) {
+                OcultarLoader();
+                console.log('Hubo un problema al guardar la compra, contactese con el administrador del sistema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });
+
+    });
+
+    $("#btnNuevoProveedor").click(function (e) {
+        $('#frmProveedor #idProveedor').val(0);
+        $('#frmProveedor #activo').val(0);
+        $('#frmProveedor #nombre').val('');
+        $('#frmProveedor #descripcion').val('');
+        $('#frmProveedor #telefono').val('');
+        $('#frmProveedor #direccion').val('');
+        $('#EditarProveedorModal').modal({ backdrop: 'static', keyboard: false, show: true });
+        $('#TituloModalProveedor').html("Nuevo Proveedor");
+    });
+
+
+});
+
+
+function actualizaTicket() {
+
+    var total = parseFloat(0);
+
+    $('#tblCompras tbody tr').each(function (index, fila) {
+        fila.children[0].innerHTML = index + 1;
+        fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+    });
+
+    //actualizar los totales
+    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+    //document.getElementById("divIva").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
+    //document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
+    document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+}
+
+function eliminaFila(index_) {
+    document.getElementById("tblCompras").deleteRow(index_);
+    actualizaTicket();
+}
+
+//Proveedor
+function onBeginSubmitGuardarProveedor() {
+    console.log("onBeginSubmitGuardarProveedor");
+}
+function onCompleteSubmitGuardarProveedor() {
+    console.log("onCompleteSubmitGuardarProveedor");
+}
+function onSuccessResultGuardarProveedor(data) {
+    console.log("onSuccessResultGuardarProveedor");
+    if (data.Estatus == 200) {
+        MuestraToast("success", data.Mensaje);
+        var option = new Option(data.Modelo.nombre, data.Modelo.idProveedor, true, true);
+        $('#idProveedor').append(option).trigger('change');
+    } else {
+        MuestraToast("error", data.Mensaje);
+    }
+
+    $('#EditarProveedorModal').modal('hide');
+
+}
+function onFailureResultGuardarProveedor() {
+    console.log("onFailureResultGuardarProveedor");
+}
+
+
