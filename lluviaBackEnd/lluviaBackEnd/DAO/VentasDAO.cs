@@ -93,6 +93,39 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<UsoCFDI>> ObtenerUsoCFDI()
+        {
+            Notificacion<List<UsoCFDI>> notificacion = new Notificacion<List<UsoCFDI>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    var result = db.QueryMultiple("SP_CONSULTA_USO_CFDI", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<UsoCFDI>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo.Clear();// [0] = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
         public Notificacion<Ventas> GuardarVenta(List<Ventas> venta)
         {
             Notificacion<Ventas> notificacion = new Notificacion<Ventas>();

@@ -33,6 +33,10 @@ namespace lluviaBackEnd.Controllers
             formasPago = new VentasDAO().ObtenerFormasPago();
             ViewBag.lstFormasPago = formasPago.Modelo;
 
+            Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+            usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+            ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
             ViewBag.venta = venta;

@@ -227,6 +227,7 @@
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelarFactura.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
+    <Compile Include="Models\UsoCFDI.cs" />
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />
     <Compile Include="Models\Ticket.cs" />

@@ -39,43 +39,28 @@ function preguntaAltaPrecios() {
         });
 }
 
-function preguntaQuiereFactura(idVenta) {
+function facturaVenta(idVenta) {
     console.log(idVenta);
-    swal({
-        title: 'Mensaje',
-        text: '¿Desea facturar esta venta?',
-        icon: 'info',
-        buttons: ["No", "Sí"],
-        dangerMode: true,
-    })
-        .then((willDelete) => {
-            if (willDelete) {
-
-                $.ajax({
-                    url: rootUrl("/Factura/GenerarFactura"),
-                    data: { idVenta: idVenta },
-                    method: 'post',
-                    dataType: 'json',
-                    async: true,
-                    beforeSend: function (xhr) {
-                        ShowLoader("Facturando Venta.");
-                    },
-                    success: function (data) {
-                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-                        OcultarLoader();
-                    },
-                    error: function (xhr, status) {
-                        console.log('Disculpe, existió un problema');
-                        console.log(xhr);
-                        console.log(status);
-                        OcultarLoader();
-                    }
-                });
-
-            } else {
-                console.log("cancelar");
-            }
-        });
+    $.ajax({
+        url: rootUrl("/Factura/GenerarFactura"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
 }
 
 function InitSelect2Productos() {
@@ -324,12 +309,14 @@ $('#btnGuardarVenta').click(function (e) {
         },
         success: function (data) {
             OcultarLoader();
-
             MuestraToast('success', data.Mensaje);
             $('#ModalPrevioVenta').modal('hide');
             limpiarTicket();
             ImprimeTicket(data.Modelo.idVenta);
-            preguntaQuiereFactura(data.Modelo.idVenta);
+            if ($("#chkFacturar").is(":checked")) {
+                console.log(" is checked!- facturar\n");
+                facturaVenta(data.Modelo.idVenta);
+            }
         },
         error: function (xhr, status) {
             OcultarLoader();

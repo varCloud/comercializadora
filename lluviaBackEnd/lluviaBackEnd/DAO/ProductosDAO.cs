@@ -188,7 +188,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<Precio> GuardarPrecios(List<Precio> precios)
+        public Notificacion<Precio> GuardarPrecios(List<Precio> precios, Producto producto)
         {
             Notificacion<Precio> notificacion = new Notificacion<Precio>();
             try
@@ -199,6 +199,9 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     parameters.Add("@XML", Serialize(precios));
+                    parameters.Add("@idProducto", producto.idProducto);
+                    parameters.Add("@precioIndividual", producto.precioIndividual);
+                    parameters.Add("@precioMenudeo", producto.precioMenudeo);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_RANGOS_PRECIOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

@@ -116,25 +116,25 @@ function SaveData() {
 
 }
 
-function InitSelect2Productos() {
+//function InitSelect2Productos() {
 
-    $('.select-multiple').select2({
-        width: "100%",
-        language: {
+//    $('.select-multiple').select2({
+//        width: "100%",
+//        language: {
 
-            noResults: function () {
+//            noResults: function () {
 
-                return "No hay resultado";
-            },
-            searching: function () {
+//                return "No hay resultado";
+//            },
+//            searching: function () {
 
-                return "Buscando..";
-            }
-        }
+//                return "Buscando..";
+//            }
+//        }
 
-    });
+//    });
 
-}
+//}
 
 function eliminaFila(index_) {
     document.getElementById("tablaRepVentas").deleteRow(index_);
@@ -187,7 +187,7 @@ $('#btnAgregarProducto').click(function (e) {
 $(document).ready(function () {
 
     InitDataTableVentas();
-    InitSelect2Productos();
+    //InitSelect2Productos();
     InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
     $('#idLineaProductoBusqueda').val('0');
     $('#idClienteBusqueda').val('0');
