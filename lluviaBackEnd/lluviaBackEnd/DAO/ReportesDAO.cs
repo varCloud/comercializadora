@@ -134,15 +134,15 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
 
-                    parameters.Add("@idProducto", compras.idProducto);
-                    parameters.Add("@descProducto", compras.descripcionProducto);
-                    parameters.Add("@idProveedor", compras.idProveedor);
-                    parameters.Add("@idLineaProducto", compras.idLineaProducto);
-                    parameters.Add("@idUsuario", compras.idUsuario);
+                    parameters.Add("@idProducto", compras.producto.idProducto);
+                    parameters.Add("@descProducto", compras.producto.descripcion);
+                    parameters.Add("@idProveedor", compras.proveedor.idProveedor);
+                    parameters.Add("@idLineaProducto", compras.producto.idLineaProducto);
+                    parameters.Add("@idUsuario", compras.usuario.idUsuario);
                     parameters.Add("@fechaIni", compras.fechaIni);
                     parameters.Add("@fechaFin", compras.fechaFin);
 
-                    var result = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
+                    var result = db.QueryMultiple("SP_CONSULTA_REPORTE_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {

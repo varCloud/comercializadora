@@ -47,19 +47,19 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Descripción del Producto</label>
-                                    @Html.TextBoxFor(x => x.descripcionProducto, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
+                                    @Html.TextBoxFor(x => x.producto.descripcion, null, new { @class = "form-control", @id = "descripcionBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Linea de Producto</label>
-                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.producto.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Proveedor</label>
-                                    @Html.DropDownListFor(x => x.idProveedor, lstProveedores, new { @class = "form-control", id = "lstProveedoresBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.proveedor.idProveedor, lstProveedores, new { @class = "form-control", id = "lstProveedoresBusqueda", data_val = "false" })
                                 </div>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Usuario</label>
-                                    @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "form-control", id = "lstUsuariosBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.usuario.idUsuario, lstUsuarios, new { @class = "form-control", id = "lstUsuariosBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">

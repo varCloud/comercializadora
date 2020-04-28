@@ -33,7 +33,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                compra.idUsuario = usuarioSesion.idUsuario;               
+                compra.usuario.idUsuario = usuarioSesion.idUsuario;               
                 Notificacion<Compras> result = new ComprasDAO().GuardarCompra(compra);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -41,6 +41,19 @@ namespace lluviaBackEnd.Controllers
             {
                 throw ex;
             }
+        }
+
+        
+        public ActionResult Compras()
+        {
+            return View();
+        }
+
+       
+        public ActionResult _ObtenerCompras()
+        {
+            Notificacion<List<Compras>> compras = new ComprasDAO().ObtenerCompras();
+            return PartialView(compras);
         }
     }
 }
