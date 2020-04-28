@@ -15,6 +15,7 @@ namespace lluviaBackEnd.Models.Facturacion
         public Comprobante()
         {
             xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
+            this.Addenda = new ComprobanteAddenda();
         }
        
         private string xsiSchemaLocation;
@@ -41,6 +42,8 @@ namespace lluviaBackEnd.Models.Facturacion
         private ComprobanteConcepto[] conceptosField;
 
         private ComprobanteImpuestos impuestosField;
+
+        private ComprobanteAddenda addendaField;
 
         private ComprobanteComplemento complementoField;
 
@@ -77,6 +80,20 @@ namespace lluviaBackEnd.Models.Facturacion
       
 
         private ushort lugarExpedicionField;
+
+       
+
+        public ComprobanteAddenda Addenda
+        {
+            get
+            {
+                return this.addendaField;
+            }
+            set
+            {
+                this.addendaField = value;
+            }
+        }
 
         /// <remarks/>
         public ComprobanteCfdiRelacionados CfdiRelacionados

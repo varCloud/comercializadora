@@ -124,7 +124,7 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
-                string pathFactura = Utils.ObtnerFolder() + '/';
+                string pathFactura = Utils.ObtnerFolder() + @"/";
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 factura.idUsuario = UsuarioActual.idUsuario;
@@ -133,6 +133,7 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Emisor.Rfc = "CMV980925LQ7";
                 comprobante.Emisor.Nombre = "CAJA MORELIA VALLADOLID S.C. DE A.P. DE R.L. DE C.V.";
                 comprobante.Emisor.RegimenFiscal = 603;
+                
 
                 comprobante = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
@@ -144,11 +145,12 @@ namespace lluviaBackEnd.Controllers
 
                 comprobante.Certificado = certificados["Certificado"];
                 comprobante.NoCertificado = certificados["NoCertificado"];
+                comprobante.Addenda.NombreCliente = "VICTOR ADRIAN REYES";
                 string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-
-                respuestaTimbrado respuesta = (respuestaTimbrado) ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(Utilerias.ProcesaCfdi.SerializaXML33(comprobante)));
+                xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                respuestaTimbrado respuesta = (respuestaTimbrado) ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
 
                 if (respuesta.codigoResultado.Equals("100"))
                 {
@@ -168,7 +170,7 @@ namespace lluviaBackEnd.Controllers
                 {
                     factura.estatusFactura = EnumEstatusFactura.Error;
                     factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
-                    Utilerias.ManagerSerealization<Comprobante>.Serealizar(comprobante, (pathFactura + ("Comprobante_" + factura.idVenta)));
+                    System.IO.File.WriteAllText(pathFactura + ("Comprobante_" + factura.idVenta+".xml"), xmlSerealizado);
                     Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura + ("respuesta_" + factura.idVenta));
                 }
                 notificacion = new FacturaDAO().GuardarFactura(factura);
