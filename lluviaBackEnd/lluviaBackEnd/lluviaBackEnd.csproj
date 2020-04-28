@@ -1194,6 +1194,8 @@
     <Content Include="Views\Login\EstacionesDisponibles.cshtml" />
     <Content Include="Views\Compras\Compra.cshtml" />
     <Content Include="Views\Proveedores\_NuevoProveedor.cshtml" />
+    <Content Include="Views\Compras\Compras.cshtml" />
+    <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

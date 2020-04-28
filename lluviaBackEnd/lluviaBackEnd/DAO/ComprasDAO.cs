@@ -36,7 +36,7 @@ namespace lluviaBackEnd.DAO
 
                     parameters.Add("@idCompra", compra.idCompra);
                     parameters.Add("@idProveedor", compra.proveedor.idProveedor);
-                    parameters.Add("@idUsuario ", compra.idUsuario);
+                    parameters.Add("@idUsuario ", compra.usuario.idUsuario);
                     parameters.Add("@idStatusCompra", compra.statusCompra.idStatus);
                     parameters.Add("@productos", stringBuilder.ToString());
 
@@ -92,6 +92,43 @@ namespace lluviaBackEnd.DAO
             }
 
             return notificacion;
+        }
+
+        public Notificacion<List<Compras>> ObtenerCompras()
+        {
+            Notificacion<List<Compras>> compras = new Notificacion<List<Compras>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", null, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if(rs1.status==200)
+                    {
+                        compras.Estatus = rs1.status;
+                        compras.Mensaje = rs1.mensaje;
+                        compras.Modelo=rs.Read<Compras,Proveedor,Status,Usuario,Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario").ToList();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return compras;
+        }
+
+        private Compras MapCompras(Compras compras, Proveedor proveedor,Status status,Usuario usuario)
+        {
+            compras.proveedor = proveedor;
+            compras.statusCompra=status;
+            compras.usuario = usuario;
+
+            return compras;
         }
 
 

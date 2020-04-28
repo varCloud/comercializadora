@@ -72,5 +72,8 @@ namespace lluviaBackEnd.Models
 
         public int contador { get; set; }
 
+        public string nombreCompleto { get; set; }
+
+
     }
 }

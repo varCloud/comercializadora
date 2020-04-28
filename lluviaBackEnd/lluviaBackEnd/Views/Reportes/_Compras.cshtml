@@ -4,6 +4,7 @@
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
     List<SelectListItem> lstProveedores = (List<SelectListItem>)ViewBag.lstProveedores;
     List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
+    int contador = 1;
 
 }
 
@@ -32,13 +33,15 @@
                                 @foreach (var item in lstCompras)
                                 {
                                 <tr>
-                                    <td>@item.contador</td>
-                                    <td>@item.descripcionProducto</td>
-                                    <td>@item.descripcionProveedor</td>
-                                    <td>@item.nombreUsuario</td>
-                                    <td>@item.cantidad</td>
+                                    <td>@contador</td>
+                                    <td>@item.producto.descripcion</td>
+                                    <td>@item.proveedor.nombre</td>
+                                    <td>@item.usuario.idUsuario</td>
+                                    <td>@item.producto.cantidad</td>
                                     <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
                                 </tr>
+
+                                    contador = contador + 1;
                                 }
                             </tbody>
                         </table>

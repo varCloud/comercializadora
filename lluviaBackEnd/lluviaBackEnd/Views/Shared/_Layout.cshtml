@@ -111,7 +111,7 @@
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("ConsultarCompras", "Compras")">Consultar Compras</a></li>
+                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
                             </ul>
                         </li>
 

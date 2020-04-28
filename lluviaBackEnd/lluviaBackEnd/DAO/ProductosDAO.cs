@@ -13,7 +13,6 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using lluviaBackEnd.WebServices.Modelos.Request;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
