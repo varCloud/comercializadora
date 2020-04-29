@@ -1054,6 +1054,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\evtCompra.js" />
+    <Content Include="js\EvtCompras.js" />
+    <Content Include="js\evtComprasUsuarios.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
