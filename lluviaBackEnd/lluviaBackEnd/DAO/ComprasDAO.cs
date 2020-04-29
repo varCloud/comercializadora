@@ -94,7 +94,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<List<Compras>> ObtenerCompras()
+        public Notificacion<List<Compras>> ObtenerCompras(Compras compra)
         {
             Notificacion<List<Compras>> compras = new Notificacion<List<Compras>>();
             try
@@ -102,7 +102,15 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", null, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@idCompra", compra.idCompra == 0 ? (object)null :compra.idCompra);
+                    parameters.Add("@idProveedor", compra.proveedor.idProveedor == 0 ? (object)null : compra.proveedor.idProveedor);
+                    parameters.Add("@idStatusCompra", compra.statusCompra.idStatus == 0 ? (object)null : compra.statusCompra.idStatus);
+                    parameters.Add("@idUsuario", compra.usuario.idUsuario == 0 ? (object)null : compra.usuario.idUsuario);
+                    parameters.Add("@idAlmacen", compra.usuario.idAlmacen == 0 ? (object)null : compra.usuario.idAlmacen);
+                    parameters.Add("@fechaInicio", compra.fechaIni == DateTime.MinValue ? (object)null : compra.usuario.idUsuario);
+                    parameters.Add("@fechaFin", compra.fechaFin == DateTime.MinValue ? (object)null : compra.usuario.idAlmacen);
+
+                    var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if(rs1.status==200)
                     {
@@ -110,6 +118,11 @@ namespace lluviaBackEnd.DAO
                         compras.Mensaje = rs1.mensaje;
                         compras.Modelo=rs.Read<Compras,Proveedor,Status,Usuario,Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario").ToList();
 
+                    }
+                    else
+                    {
+                        compras.Estatus = rs1.status;
+                        compras.Mensaje = rs1.mensaje;
                     }
                 }
             }

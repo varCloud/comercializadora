@@ -33,7 +33,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                compra.usuario.idUsuario = usuarioSesion.idUsuario;               
+                compra.usuario.idUsuario = usuarioSesion.idUsuario;
                 Notificacion<Compras> result = new ComprasDAO().GuardarCompra(compra);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -43,16 +43,38 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        
+
         public ActionResult Compras()
         {
+            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).ToList();
+            List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
+            List<SelectListItem> listUsuarios;
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            if (usuario.idRol == 1)
+            {
+                listUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+            }
+            else
+                listUsuarios = new UsuarioDAO().ObtenerUsuarios(usuario.idUsuario).Where(x => x.Value != "0").ToList();
+
+
+            ViewBag.listProveedores = listProveedores;
+            ViewBag.listEstatusCompras = listEstatus;
+            ViewBag.listUsuarios = listUsuarios;
             return View();
         }
 
-       
-        public ActionResult _ObtenerCompras()
+
+        public ActionResult _ObtenerCompras(Compras compra)
         {
-            Notificacion<List<Compras>> compras = new ComprasDAO().ObtenerCompras();
+
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+
+            if (compra.usuario.idUsuario==0 && usuario.idRol != 1)
+                compra.usuario.idUsuario = usuario.idUsuario;
+
+
+            Notificacion<List<Compras>> compras = new ComprasDAO().ObtenerCompras(compra);
             return PartialView(compras);
         }
     }

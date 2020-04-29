@@ -3,6 +3,103 @@
     ViewBag.Title = "Compras";
 }
 
+@model lluviaBackEnd.Models.Compras
 
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
 
-@Html.Action("_ObtenerCompras")
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Buscar Compras</h4>
+                <div class="card-header-action">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                </div>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("_ObtenerCompras", "Compras",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitObtenerCompras",
+                        OnComplete = "onCompleteObtenerCompras",
+                        OnFailure = "onFailureResultObtenerCompras",
+                        OnSuccess = "onSuccessResultObtenerCompras",
+                    },
+                    new { id = "frmBuscarCompras" }))
+                    {
+                    <div class="row">
+                        @*<div class="col-12 col-sm-12 col-lg-4">
+            <div class="form-group">
+                <label>Usuario</label>
+                @Html.DropDownListFor(x => x.usuario.idUsuario, (List<SelectListItem>)ViewBag.listUsuarios, new { @class = "select-multiple", data_val = "false" })
+
+            </div>
+        </div>*@
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                @Html.DropDownListFor(x => x.usuario.idUsuario, (List<SelectListItem>)ViewBag.listUsuarios, new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Proveedor</label>
+                                @Html.DropDownListFor(x => x.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Estatus de la compra</label>
+                                @Html.DropDownListFor(x => x.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listEstatusCompras,"--TODOS--", new { @class = "select-multiple", data_val = "false" })
+
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="submit" id="btnBuscarCompras" class="btn btn-success">Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body" id="DivtblCompras">
+                    @Html.Action("_ObtenerCompras", "Compras")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+        <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/evtComprasUsuarios.js"></script>
+
+}
