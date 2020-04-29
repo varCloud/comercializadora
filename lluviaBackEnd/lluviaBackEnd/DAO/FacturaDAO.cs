@@ -38,9 +38,10 @@ namespace lluviaBackEnd.DAO
             return comprobante;
         }
 
-        public Comprobante ObtenerComprobante(string idVenta, Comprobante c)
+        public Dictionary<string, object> ObtenerComprobante(string idVenta, Comprobante c)
         {
             List<ComprobanteConcepto> listConceptos = null;
+            List<ConceptosAddenda> listConceptosAdenda = null;
             try
             {
                 // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
@@ -83,6 +84,12 @@ namespace lluviaBackEnd.DAO
                             }
                         });
                         c.Conceptos = listConceptos.ToArray();
+                    }
+
+                    //OBTENEMOS LOS CONCEPTOS PARA LA ADDENDA
+                    listConceptosAdenda = result.Read<ConceptosAddenda>().ToList();
+                    if (listConceptos != null) {
+                        listConceptosAdenda.ForEach(item => item.IVA = Math.Round((item.Importe * 0.16M), 2, MidpointRounding.AwayFromZero));
                     }
                 }
 

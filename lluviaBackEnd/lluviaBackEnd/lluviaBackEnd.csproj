@@ -227,6 +227,7 @@
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Estacion.cs" />
     <Compile Include="Models\Clientes.cs" />
+    <Compile Include="Models\Facturacion\Addenda.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelarFactura.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
