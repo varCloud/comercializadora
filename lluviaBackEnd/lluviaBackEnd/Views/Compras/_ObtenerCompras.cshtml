@@ -12,7 +12,7 @@
         <div class="empty-state-icon">
             <i class="fas fa-question"></i>
         </div>
-        <h2>@Model.Mensaje</h2>        
+        <h2>@Model.Mensaje</h2>
     </div>
 
 }
@@ -29,7 +29,7 @@ else
                     <th>Estatus</th>
                     <th>Cantidad Productos</th>
                     <th>Total</th>
-                    <th>Acciones</th>
+                    <th width="20%">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,8 +81,8 @@ else
                         <td>@c.montoTotal.ToString("C")</td>
                         <td>
                             <div class="buttons">
-                                <a href="javascript:VerCompra(@c.idCompra);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
-                                <a href="javascript:EditarCompra(@c.idCompra);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                <a href="javascript:VerDetalleCompra(@c.idCompra);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver Detalle"><i class="fas fa-eye"></i></a>
+                                <a href="@Url.Action("Compra","Compras", new { idCompra = c.idCompra})" onclick="ShowLoader()" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
                                 <a href="javascript:EliminarCompra(@c.idCompra);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
                             </div>
                         </td>

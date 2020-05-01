@@ -82,7 +82,7 @@ namespace lluviaBackEnd.DAO
                     else
                     {
                         notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;                   
+                        notificacion.Mensaje = r1.mensaje;
                     }
                 }
             }
@@ -94,7 +94,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<List<Compras>> ObtenerCompras(Compras compra)
+        public Notificacion<List<Compras>> ObtenerCompras(Compras compra, bool detalleCompra = false)
         {
             Notificacion<List<Compras>> compras = new Notificacion<List<Compras>>();
             try
@@ -102,21 +102,24 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idCompra", compra.idCompra == 0 ? (object)null :compra.idCompra);
+                    parameters.Add("@idCompra", compra.idCompra == 0 ? (object)null : compra.idCompra);
                     parameters.Add("@idProveedor", compra.proveedor.idProveedor == 0 ? (object)null : compra.proveedor.idProveedor);
                     parameters.Add("@idStatusCompra", compra.statusCompra.idStatus == 0 ? (object)null : compra.statusCompra.idStatus);
                     parameters.Add("@idUsuario", compra.usuario.idUsuario == 0 ? (object)null : compra.usuario.idUsuario);
                     parameters.Add("@idAlmacen", compra.usuario.idAlmacen == 0 ? (object)null : compra.usuario.idAlmacen);
-                    parameters.Add("@fechaInicio", compra.fechaIni == DateTime.MinValue ? (object)null : compra.usuario.idUsuario);
-                    parameters.Add("@fechaFin", compra.fechaFin == DateTime.MinValue ? (object)null : compra.usuario.idAlmacen);
+                    parameters.Add("@fechaInicio", compra.fechaIni == DateTime.MinValue ? (object)null : compra.fechaIni);
+                    parameters.Add("@fechaFin", compra.fechaFin == DateTime.MinValue ? (object)null : compra.fechaFin);
+                    parameters.Add("@idProducto", compra.producto.idProducto == 0 ? (object)null : compra.producto.idProducto);
+                    parameters.Add("@descripcionProducto", string.IsNullOrEmpty(compra.producto.descripcion) ? (object)null : compra.producto.descripcion);
+                    parameters.Add("@detalleCompra", detalleCompra);
 
                     var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
-                    if(rs1.status==200)
+                    if (rs1.status == 200)
                     {
                         compras.Estatus = rs1.status;
                         compras.Mensaje = rs1.mensaje;
-                        compras.Modelo=rs.Read<Compras,Proveedor,Status,Usuario,Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario").ToList();
+                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto").ToList();
 
                     }
                     else
@@ -135,15 +138,39 @@ namespace lluviaBackEnd.DAO
             return compras;
         }
 
-        private Compras MapCompras(Compras compras, Proveedor proveedor,Status status,Usuario usuario)
+        private Compras MapCompras(Compras compras, Proveedor proveedor, Status status, Usuario usuario, Producto producto)
         {
             compras.proveedor = proveedor;
-            compras.statusCompra=status;
+            compras.statusCompra = status;
             compras.usuario = usuario;
+            compras.producto = producto;
 
             return compras;
         }
 
+        public Notificacion<Compras> EliminaCompra(int idCompra)
+        {
+            Notificacion<Compras> notificacion = new Notificacion<Compras>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idCompra", idCompra);
+
+                    var result = db.QueryMultiple("SP_ELIMINA_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    notificacion.Estatus = r1.status;
+                    notificacion.Mensaje = r1.mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
 
     }
 }

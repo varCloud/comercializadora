@@ -1056,7 +1056,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\evtCompra.js" />
     <Content Include="js\EvtCompras.js" />
-    <Content Include="js\evtComprasUsuarios.js" />
+    <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
@@ -1198,6 +1198,7 @@
     <Content Include="Views\Proveedores\_NuevoProveedor.cshtml" />
     <Content Include="Views\Compras\Compras.cshtml" />
     <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
+    <Content Include="Views\Compras\_DetalleCompra.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

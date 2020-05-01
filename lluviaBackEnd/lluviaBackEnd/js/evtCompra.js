@@ -11,13 +11,13 @@
             }
         },
 
-    });
+    });   
 
-    $('#idStatusCompra').val('').trigger('change');
+    //$('#tblComprasDetalle').editableTableWidget();
 
 
     $('#limpiar').click(function (e) {
-        $('#tblCompras tbody').html("");
+        $('#tblComprasDetalle tbody').html("");
         $('#idProveedor').val("").trigger('change');
         $('#idStatusCompra').val("").trigger('change');
         actualizaTicket();
@@ -54,7 +54,7 @@
                     "  </td>" +
                     "</tr >";
 
-                $("#tblCompras tbody").append(row_);
+                $("#tblComprasDetalle tbody").append(row_);
                 $('#cantidad').val('');
                 $('#precio').val('');
                 actualizaTicket();
@@ -78,7 +78,7 @@
 
 
         var productos = [];
-        $('#tblCompras tbody tr').each(function (index, fila) {
+        $('#tblComprasDetalle tbody tr').each(function (index, fila) {
             var row_ = {
                 idProducto: fila.children[1].innerHTML,
                 cantidad: fila.children[4].innerHTML,
@@ -92,49 +92,65 @@
             return;
         }
 
-        var Proveedor = new Object();
-        Proveedor.idProveedor = $("#idProveedor").val();
+        swal({
+            title: '',
+            text: $("#idCompra").val() > 0 ? 'Estas seguro que deseas actualizar esta Compra?' : 'Estas seguro que deseas guardar esta Compra?',
+            icon: 'warning',
+            buttons: ["Cancelar", "Aceptar"],
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var Proveedor = new Object();
+                    Proveedor.idProveedor = $("#idProveedor").val();
 
-        var StatusCompra = new Object();
-        StatusCompra.idStatus = $("#idStatusCompra").val();
+                    var StatusCompra = new Object();
+                    StatusCompra.idStatus = $("#idStatusCompra").val();
 
-        var compra = new Object();
-        compra.idCompra = $("#idCompra").val();
-        compra.proveedor = Proveedor;
-        compra.listProductos = productos;
-        compra.statusCompra = StatusCompra;
+                    var compra = new Object();
+                    compra.idCompra = $("#idCompra").val();
+                    compra.proveedor = Proveedor;
+                    compra.listProductos = productos;
+                    compra.statusCompra = StatusCompra;
 
-        dataToPost = JSON.stringify({ compra: compra });
+                    dataToPost = JSON.stringify({ compra: compra });
 
-        $.ajax({
-            url: rootUrl("/Compras/GuardarCompra"),
-            data: dataToPost,
-            method: 'POST',
-            dataType: 'JSON',
-            contentType: "application/json; charset=utf-8",
-            async: true,
-            beforeSend: function (xhr) {
-                ShowLoader("Guardando Compra.");
-            },
-            success: function (data) {
-                OcultarLoader();
-                
-                if (data.Estatus == 200) {
-                    MuestraToast("success", data.Mensaje);
-                    $("#limpiar").click();
+                    $.ajax({
+                        url: rootUrl("/Compras/GuardarCompra"),
+                        data: dataToPost,
+                        method: 'POST',
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        async: true,
+                        beforeSend: function (xhr) {
+                            ShowLoader("Guardando Compra.");
+                        },
+                        success: function (data) {
+                            OcultarLoader();
+
+                            if (data.Estatus == 200) {
+                                MuestraToast("success", data.Mensaje);
+                                if ($("#idCompra").val() > 0)
+                                    window.location = rootUrl("/Compras/Compras")
+                                else
+                                    $("#limpiar").click();
+                            }
+                            else
+                                MuestraToast("error", data.Mensaje);
+
+
+                        },
+                        error: function (xhr, status) {
+                            OcultarLoader();
+                            console.log('Hubo un problema al guardar la compra, contactese con el administrador del sistema');
+                            console.log(xhr);
+                            console.log(status);
+                        }
+                    });
+                } else {
+                    console.log("cancelar");
                 }
-                else
-                    MuestraToast("error", data.Mensaje);
-
-               
-            },
-            error: function (xhr, status) {
-                OcultarLoader();
-                console.log('Hubo un problema al guardar la compra, contactese con el administrador del sistema');
-                console.log(xhr);
-                console.log(status);
-            }
-        });
+            });
 
     });
 
@@ -157,7 +173,7 @@ function actualizaTicket() {
 
     var total = parseFloat(0);
 
-    $('#tblCompras tbody tr').each(function (index, fila) {
+    $('#tblComprasDetalle tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
         fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
         total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
@@ -171,7 +187,7 @@ function actualizaTicket() {
 }
 
 function eliminaFila(index_) {
-    document.getElementById("tblCompras").deleteRow(index_);
+    document.getElementById("tblComprasDetalle").deleteRow(index_);
     actualizaTicket();
 }
 

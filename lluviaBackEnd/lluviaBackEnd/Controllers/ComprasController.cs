@@ -14,17 +14,55 @@ namespace lluviaBackEnd.Controllers
     public class ComprasController : Controller
     {
         // GET: Compras
-        public ActionResult Compra()
+        
+        public ActionResult Compra(Compras compras)
         {
-            Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
-            listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
-            ViewBag.listProductos = listProductos.Modelo;
-            ViewBag.listProveedores = listProveedores;
-            ViewBag.listStatusCompra = new ComprasDAO().ObtenerStatusCompra().Modelo;
+            try
+            {
+                Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
+                listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });               
+                ViewBag.listProductos = listProductos.Modelo;
+                return View(compras);
+            }
+            catch (Exception ex)
+            {
 
-            Compras compras = new Compras();
-            return View(compras);
+                throw ex;
+            }
+            
+        }
+
+        public ActionResult _DetalleCompra(Compras compras,Boolean enableEdit=true)
+        {
+            try
+            {
+                List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+                List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
+                ViewBag.listProveedores = listProveedores;
+                ViewBag.listStatusCompra = listEstatus;
+                ViewBag.enableEdit = enableEdit;
+
+                if (compras.idCompra > 0)
+                {
+                    Notificacion<List<Compras>> notificacion = new ComprasDAO().ObtenerCompras(compras, true);
+                    if (notificacion.Estatus == 200)
+                    {
+                        compras = notificacion.Modelo[0];
+                        //compras.producto = new Producto();
+                        foreach (Compras c in notificacion.Modelo)
+                            compras.listProductos.Add(c.producto);
+                        compras.producto = new Producto();
+                    }
+
+
+                }
+                return PartialView(compras);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpPost]
@@ -46,36 +84,67 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Compras()
         {
-            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).ToList();
-            List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
-            List<SelectListItem> listUsuarios;
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-            if (usuario.idRol == 1)
+            try
             {
-                listUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).ToList();
+                List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
+                List<SelectListItem> listUsuarios;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                if (usuario.idRol == 1)
+                {
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                }
+                else
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(usuario.idUsuario).Where(x => x.Value != "0").ToList();
+
+
+                ViewBag.listProveedores = listProveedores;
+                ViewBag.listEstatusCompras = listEstatus;
+                ViewBag.listUsuarios = listUsuarios;
+
+                Compras compras = new Compras();
+                return View(compras);
             }
-            else
-                listUsuarios = new UsuarioDAO().ObtenerUsuarios(usuario.idUsuario).Where(x => x.Value != "0").ToList();
+            catch (Exception ex)
+            {
 
-
-            ViewBag.listProveedores = listProveedores;
-            ViewBag.listEstatusCompras = listEstatus;
-            ViewBag.listUsuarios = listUsuarios;
-            return View();
+                throw ex;
+            }
         }
 
 
         public ActionResult _ObtenerCompras(Compras compra)
         {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
 
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-
-            if (compra.usuario.idUsuario==0 && usuario.idRol != 1)
-                compra.usuario.idUsuario = usuario.idUsuario;
+                if (compra.usuario.idUsuario == 0 && usuario.idRol != 1)
+                    compra.usuario.idUsuario = usuario.idUsuario;
 
 
-            Notificacion<List<Compras>> compras = new ComprasDAO().ObtenerCompras(compra);
-            return PartialView(compras);
+                Notificacion<List<Compras>> compras = new ComprasDAO().ObtenerCompras(compra);
+                return PartialView(compras);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EliminaCompra(Compras compras)
+        {
+            try
+            {
+                return Json(new ComprasDAO().EliminaCompra(compras.idCompra), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
