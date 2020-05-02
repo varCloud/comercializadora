@@ -29,7 +29,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProveedor", request.idProveedor);
                     parameters.Add("@cantidad", request.cantidad);
                     parameters.Add("@idUsuario", request.idUsuario);
-                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_AGREGAR_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@idAlmacen", request.idUsuario);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
