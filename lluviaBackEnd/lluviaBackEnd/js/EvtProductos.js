@@ -194,7 +194,7 @@ function VerPrecios(idProducto) {
     $('#precio').val('');
     $('#idProductoRango').val(idProducto);
     $("#tablaRangosPrecios").find("tr:gt(0)").remove();
-    document.getElementById("btnGuardarPrecios").disabled = true;
+    //document.getElementById("btnGuardarPrecios").disabled = true;
     ObtenerPrecios(idProducto);
     ObtenerIndividualMenudeo(idProducto);
     
@@ -480,12 +480,14 @@ $('#btnAgregarPrecio').click(function (e) {
 $('#btnGuardarPrecios').click(function (e) {
 
 
-    if ($('#precioIndividual').val() == "" || $('#precioMenudeo').val() == "" ) {
+    if ($('#precioIndividual').val() == "" || $('#precioMenudeo').val() == "" || $('#precioIndividual').val() == "0" || $('#precioMenudeo').val() == "0") {
         MuestraToast('warning', "Por favor asigne un valor para los precios de Individual y Menudeo.");
     }
     else {
 
         var idProducto = parseInt(0);
+            idProducto = $('#idProductoRango').val();
+
         var rangos = [];
         
         $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
@@ -498,7 +500,6 @@ $('#btnGuardarPrecios').click(function (e) {
                 //idProducto: $('#idProductoRango').val()
             };
             rangos.push(row_);
-            idProducto = $('#idProductoRango').val();
         });
 
         var producto = {
@@ -519,7 +520,8 @@ $('#btnGuardarPrecios').click(function (e) {
             beforeSend: function (xhr) {
             },
             success: function (data) {
-                MuestraToast('success', data.Mensaje);
+                //MuestraToast('success', data.Mensaje);
+                MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
                 $('#RangosPreciosProductoModal').modal('hide');
             },
             error: function (xhr, status) {
@@ -551,21 +553,21 @@ function eliminaFilaPrecios(index_) {
     }
 
     actualizaTablaPrecios();
-    validaBtnGuardarPrecios();
-
-}
-
-function validaBtnGuardarPrecios() {
-
-    var totalRows = $('#tablaRangosPrecios tr').length - 1;
-    if (totalRows <= 0) {
-        document.getElementById("btnGuardarPrecios").disabled = true;
-    }
-    else {
-        document.getElementById("btnGuardarPrecios").disabled = false;
-    }
+    //validaBtnGuardarPrecios();
     
 }
+
+//function validaBtnGuardarPrecios() {
+
+//    var totalRows = $('#tablaRangosPrecios tr').length - 1;
+//    if (totalRows <= 0) {
+//        document.getElementById("btnGuardarPrecios").disabled = true;
+//    }
+//    else {
+//        document.getElementById("btnGuardarPrecios").disabled = false;
+//    }
+    
+//}
 
 function actualizaTablaPrecios() {
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
