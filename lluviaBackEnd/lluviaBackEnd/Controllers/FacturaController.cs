@@ -135,7 +135,7 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Emisor.RegimenFiscal = 603;
                 
 
-                comprobante = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                //comprobante = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
                 facturacionDAO.ObtenerTotal(ref comprobante);
 
