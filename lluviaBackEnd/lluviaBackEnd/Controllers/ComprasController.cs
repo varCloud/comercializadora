@@ -7,10 +7,12 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using lluviaBackEnd.DAO;
+using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 
 namespace lluviaBackEnd.Controllers
 {
+    [SessionTimeout]
     public class ComprasController : Controller
     {
         // GET: Compras
