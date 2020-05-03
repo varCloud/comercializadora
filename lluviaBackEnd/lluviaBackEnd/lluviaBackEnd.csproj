@@ -228,9 +228,13 @@
     <Compile Include="Models\Estacion.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\Addenda.cs" />
+    <Compile Include="Models\Pasillo.cs" />
+    <Compile Include="Models\Piso.cs" />
+    <Compile Include="Models\Raq.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelarFactura.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
+    <Compile Include="Models\Ubicacion.cs" />
     <Compile Include="Models\UsoCFDI.cs" />
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />
@@ -261,6 +265,8 @@
     <Compile Include="Utilerias\Win32.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseObtenerPisoPasilloRaq.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductos.cs" />

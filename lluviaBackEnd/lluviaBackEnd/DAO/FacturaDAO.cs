@@ -104,7 +104,7 @@ namespace lluviaBackEnd.DAO
                 _db.Dispose();
                 _db = null;
             }
-            return c;
+            return null;
         }
         public void ObtenerImpuestosGenerales(ref Comprobante c)
         {
