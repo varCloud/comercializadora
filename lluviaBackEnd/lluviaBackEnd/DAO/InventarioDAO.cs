@@ -29,7 +29,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProveedor", request.idProveedor);
                     parameters.Add("@cantidad", request.cantidad);
                     parameters.Add("@idUsuario", request.idUsuario);
-                    parameters.Add("@idAlmacen", request.idUsuario);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
                     notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
@@ -49,7 +49,7 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idAlmacen", request.idAlamacen);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
                     parameters.Add("@idProducto", request.idProducto);
                     parameters.Add("@EstatusProducto", request.EstatusProducto);
                     var result = this.db.QueryMultiple("SP_APP_OBTENER_UBICACION_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
