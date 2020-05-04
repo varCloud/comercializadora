@@ -58,7 +58,7 @@ namespace lluviaBackEnd.Controllers
         public ActionResult Compras()
         {
             Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
-            notificacion = new ReportesDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 });
+            notificacion = new ComprasDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 },true);
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
             ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
@@ -74,7 +74,7 @@ namespace lluviaBackEnd.Controllers
             {
 
                 Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
-                notificacion = new ReportesDAO().ObtenerCompras(compras);
+                notificacion = new ComprasDAO().ObtenerCompras(compras,true);
 
                 if (notificacion.Modelo != null)
                 {
