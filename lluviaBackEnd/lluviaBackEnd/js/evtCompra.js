@@ -11,7 +11,7 @@
             }
         },
 
-    });   
+    });
 
     //$('#tblComprasDetalle').editableTableWidget();
 
@@ -37,28 +37,24 @@
             var cantidad = $('#cantidad').val();
             var precio = $('#precio').val();
 
-            if (precio == 0) {
-                preguntaAltaPrecios();
-            }
-            else {
-                // console.log($("#idProducto").find("option:selected").text());
-                var row_ = "<tr>" +
-                    "  <td>1</td>" +
-                    "  <td> " + $('#idProducto').val() + "</td>" +
-                    "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
-                    "  <td class=\"text-center\">$" + precio + "</td>" +
-                    "  <td class=\"text-center\">" + cantidad + "</td>" +
-                    "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
-                    "  <td class=\"text-center\">" +
-                    "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
-                    "  </td>" +
-                    "</tr >";
+            // console.log($("#idProducto").find("option:selected").text());
+            var row_ = "<tr>" +
+                "  <td>1</td>" +
+                "  <td> " + $('#idProducto').val() + "</td>" +
+                "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
+                "  <td class=\"text-center\">$" + precio + "</td>" +
+                "  <td class=\"text-center\">" + cantidad + "</td>" +
+                "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                "  <td class=\"text-center\">" +
+                "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                "  </td>" +
+                "</tr >";
 
-                $("#tblComprasDetalle tbody").append(row_);
-                $('#cantidad').val('');
-                $('#precio').val('');
-                actualizaTicket();
-            }
+            $("#tblComprasDetalle tbody").append(row_);
+            $('#cantidad').val('');
+            $('#precio').val('');
+            actualizaTicket();
+
 
         }
 
@@ -193,7 +189,7 @@ function eliminaFila(index_) {
 
 //Proveedor
 function onBeginSubmitGuardarProveedor() {
-    console.log("onBeginSubmitGuardarProveedor");
+    ShowLoader("Guardando proveedor");
 }
 function onCompleteSubmitGuardarProveedor() {
     console.log("onCompleteSubmitGuardarProveedor");
@@ -209,10 +205,11 @@ function onSuccessResultGuardarProveedor(data) {
     }
 
     $('#EditarProveedorModal').modal('hide');
+    OcultarLoader();
 
 }
 function onFailureResultGuardarProveedor() {
-    console.log("onFailureResultGuardarProveedor");
+    OcultarLoader();
 }
 
 
