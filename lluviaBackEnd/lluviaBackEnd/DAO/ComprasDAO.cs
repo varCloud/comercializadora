@@ -97,6 +97,7 @@ namespace lluviaBackEnd.DAO
         public Notificacion<List<Compras>> ObtenerCompras(Compras compra, bool detalleCompra = false)
         {
             Notificacion<List<Compras>> compras = new Notificacion<List<Compras>>();
+            int idLineaProducto = string.IsNullOrEmpty(compra.producto.idLineaProducto) ? 0 : Convert.ToInt32(compra.producto.idLineaProducto);
             try
             {
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -111,6 +112,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@fechaFin", compra.fechaFin == DateTime.MinValue ? (object)null : compra.fechaFin);
                     parameters.Add("@idProducto", compra.producto.idProducto == 0 ? (object)null : compra.producto.idProducto);
                     parameters.Add("@descripcionProducto", string.IsNullOrEmpty(compra.producto.descripcion) ? (object)null : compra.producto.descripcion);
+                    parameters.Add("@idLineaProducto", idLineaProducto == 0 ? (object)null : idLineaProducto);
                     parameters.Add("@detalleCompra", detalleCompra);
 
                     var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
