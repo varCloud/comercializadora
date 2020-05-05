@@ -24,7 +24,7 @@ function preguntaAltaPrecios() {
 
     swal({
         title: 'Mensaje',
-        text: 'Este producto no tiene un rango de precios configurado, desea configurarlo?',
+        text: 'Este producto no tiene un precio configurado, ¿Desea Configurarlo?',
         icon: 'warning',
         buttons: ["No", "Sí"],
         dangerMode: true,
@@ -79,20 +79,16 @@ function InitSelect2Productos() {
 
 function eliminaFila(index_) {
     document.getElementById("tablaRepVentas").deleteRow(index_);
-    actualizaTicket();
+    actualizaTicketVenta();
 }
 
 $('#limpiar').click(function (e) {
-
-    limpiarTicket();
-    
+    limpiarTicket();    
 });
 
 
 $('#cancelar').click(function (e) {
-
     limpiaModalPrevio();
-
 });
 
 function limpiarTicket() {
@@ -111,11 +107,12 @@ function limpiarTicket() {
         document.getElementById("tablaRepVentas").deleteRow(i);
     }
 
-    actualizaTicket();
+    actualizaTicketVenta();
     limpiaModalPrevio();
     $('#cantidad').val('');
-    $('#idProducto').val(0);
+    $('#idProducto').val("0").trigger('change');
     $('#idVenta').val(0);
+    $('#vaConDescuento').val(0);
 
 }
 
@@ -133,17 +130,16 @@ function limpiaModalPrevio() {
     document.getElementById("nombreCliente").innerHTML = row_; 
 
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
+    document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
-    $('#idCliente').val('0');
-    $('#formaPago').val('0');
-    //console.log(document.getElementById('idCliente').selectedIndex);
-
-    //document.getElementById('idCliente').selectedIndex = "0";
-    //document.getElementById('formaPago').selectedIndex = 0;
+    $('#efectivo').val('');
+    $('#idCliente').val("0").trigger('change');
+    $('#formaPago').val("1").trigger('change'); 
 
 }
 
@@ -152,39 +148,38 @@ function limpiaModalPrevio() {
 $('#previoVenta').click(function (e) {
 
     limpiaModalPrevio();
-    document.getElementById("previoTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
-    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
-    document.getElementById("previoSubTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
-    document.getElementById("previoIVA").innerHTML = document.getElementById("divIva").innerHTML;
-    document.getElementById("previoFinal").innerHTML = document.getElementById("divTotal").innerHTML;
-
-    $('#ModalPrevioVenta').modal({ backdrop: 'static', keyboard: false, show: true });
-});
-
-function actualizaTicket() {
 
     var total = parseFloat(0);
+    var descuento = parseFloat(0);
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
-        fila.children[0].innerHTML = index + 1;
-        fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index+1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
         total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        console.log(total + " " + index);
+        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     });
+    //console.log("total" + " " + total);
+    //console.log("descuento" + " " + descuento);
 
-    //actualizar los totales
-    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
-    document.getElementById("divIva").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
-    document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
+    if (total > 0) {
+        document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total+descuento).toFixed(2) + "</h4>";
+        document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
+        document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
+        document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
+        $('#ModalPrevioVenta').modal({ backdrop: 'static', keyboard: false, show: true });
+    }
+    else {
+        MuestraToast('warning', "Debe tener productos agregados para continuar con la venta.");
+    }
 
-    //replicamos en el precio de la venta
-    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
-    document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
-    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
-    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
-    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
+    //document.getElementById("previoTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
+    //document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
+    //document.getElementById("previoSubTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
+    //document.getElementById("previoIVA").innerHTML = document.getElementById("divIva").innerHTML;
+    //document.getElementById("previoFinal").innerHTML = document.getElementById("divTotal").innerHTML;
 
-}
+});
+
+
+
 
 $('#btnAgregarProducto').click(function (e) {
 
@@ -196,9 +191,10 @@ $('#btnAgregarProducto').click(function (e) {
         //var precio = parseFloat($('#precio').val());
         var idProducto = $('#idProducto').val();
         var cantidad = $('#cantidad').val();
-        var data = ObtenerProductoPorPrecio(idProducto, cantidad);
+        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
         var precio = parseFloat(data.Modelo[0].costo);
-
+        var descuento = parseFloat(data.Modelo[0].descuento);
+        //console.log("desc_" + $("#vaConDescuento").val());
         if (precio == 0) {
             preguntaAltaPrecios();
         }
@@ -209,8 +205,10 @@ $('#btnAgregarProducto').click(function (e) {
                         "  <td> " + $('#idProducto').val() + "</td>" +
                         "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
                         "  <td class=\"text-center\">$" + precio + "</td>" +
-                        "  <td class=\"text-center\" onclick=\"listenerDobleClick(this," + $('#idProducto').val()+ ");\" onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
+                        //"  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
+                        "  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\"><input type='text' style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
                         "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                        "  <td class=\"text-center\">$" + descuento + "</td>" +
                         "  <td class=\"text-center\">" +
                         "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
                         "  </td>" +
@@ -219,7 +217,22 @@ $('#btnAgregarProducto').click(function (e) {
             $("table tbody").append(row_);
             $('#cantidad').val('');
 
-            actualizaTicket();
+            actualizaTicketVenta();
+
+            
+            $('#tablaRepVentas input').on('change', function () {
+                //alert("cambio");
+                console.log("cambio");
+                //console.log("change_name_val__" + $(this).name());
+                //var theInput = $(this);
+                ////theInput.setAttribute('value', '99'); 
+                //document.querySelector('input[value="2"]').value = "99";
+                //console.log("theInput_"+theInput.val());
+                //console.log("change_n_val__" +  this.value);
+                //console.log("change_new_val__" + $(this).val());
+
+                //actualizaTicketVenta();
+            });
         }
 
     }
@@ -227,12 +240,118 @@ $('#btnAgregarProducto').click(function (e) {
 });
 
 
-function ObtenerProductoPorPrecio(idProducto,cantidad) {
+function actualizaTicketVenta() {
+    //alert();
+    console.log("actualizaTicketVenta");
+    var totalPiezas = parseFloat(0);
+    var totalAhorro = parseFloat(0);
 
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+        fila.children[0].innerHTML = index + 1;
+        fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        totalPiezas += parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', ''));
+        totalAhorro += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+    });
+    //console.log("totalPiezas" + " " + totalPiezas);
+    //console.log("totalAhorro" + " " + totalAhorro);
+
+    //actualizar los totales
+    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+
+    //totalPiezas = obtenerNumArticulos();
+
+    if (totalPiezas >= 12) {
+        //console.log("ya son 12 o+");
+        // si hay 12 o mas piezas y todavia no se agrega el descuento al tikcet
+        if (totalAhorro == 0) {
+            agregarDescuentos();
+            //$("#vaConDescuento").val("1");
+        }
+    }
+    else {
+        
+        if (totalAhorro > 0) {
+            //$("#vaConDescuento").val("0");
+            quitarDescuentos();
+        }
+    }
+
+    actualizarSubTotal();
+}
+
+
+function agregarDescuentos() {
+
+    $("#vaConDescuento").val("1");
+
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+
+        var idProducto = parseFloat(fila.children[1].innerHTML);
+        var cantidad = parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')); //parseFloat(fila.children[4].innerHTML);
+        
+        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
+        var precio = parseFloat(data.Modelo[0].costo);
+
+        if (precio == 0) {
+            console.log("error_precio_" + precio);
+        }
+        else {
+            fila.children[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
+            fila.children[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
+            fila.children[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+
+        }
+        
+    });
+
+}
+
+
+function quitarDescuentos() {
+
+    $("#vaConDescuento").val("0");
+
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+
+        var idProducto = parseFloat(fila.children[1].innerHTML);
+        var cantidad = parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')); //parseFloat(fila.children[4].innerHTML);
+
+        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
+        var precio = parseFloat(data.Modelo[0].costo);
+
+        if (precio == 0) {
+            console.log("error_precio_" + precio);
+        }
+        else {
+            fila.children[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
+            fila.children[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
+            fila.children[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+        }
+    });
+
+}
+
+function actualizarSubTotal() {
+
+    var subTotal = parseFloat(0);
+    var descuento = parseFloat(0);
+
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+        subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+    });
+
+    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
+
+}
+
+
+function ObtenerProductoPorPrecio(idProducto, cantidad, vaConDescuento) {
+    
     var result = '';
     $.ajax({
         url: rootUrl("/Ventas/ObtenerProductoPorPrecio"),
-        data: { idProducto: idProducto, cantidad: cantidad, costo : 0 },
+        data: { idProducto: idProducto, cantidad: cantidad, costo: 0, vaConDescuento: vaConDescuento},
         method: 'post',
         dataType: 'json',
         async: false,
@@ -282,13 +401,14 @@ $('#btnGuardarVenta').click(function (e) {
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
-
         var row_ = {
             idCliente: $('#idCliente').val(),
             idProducto: fila.children[1].innerHTML,
-            cantidad: fila.children[4].innerHTML,
+            //cantidad: fila.children[4].innerHTML,
+            cantidad: parseInt(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')),
             idUsuario: 4,//fila.children[3].innerHTML,
             formaPago: $('#formaPago').val(),
+            usoCFDI: $('#usoCFDI').val(),
             idVenta: $('#idVenta').val(),
         };
         productos.push(row_);
@@ -329,6 +449,23 @@ $('#btnGuardarVenta').click(function (e) {
 });
 
 
+$('#chkFacturar').click(function () {
+    $('#efectivo').val('');
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    var subTotal = parseFloat(document.getElementById("previoSubTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var iva = parseFloat(0).toFixed(2);
+    var final = parseFloat(subTotal).toFixed(2);
+    if ($(this).is(':checked')) {
+        document.getElementById("divUsoCFDI").style.display = 'block';
+        iva = parseFloat(subTotal * 0.16).toFixed(2);
+        final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
+    } else {
+        document.getElementById("divUsoCFDI").style.display = 'none';
+    }
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
+});
+
 function ImprimeTicket(idVenta) {
     $.ajax({
         url: rootUrl("/Ventas/ImprimeTicket"),
@@ -352,8 +489,7 @@ function ImprimeTicket(idVenta) {
 }
 
 
-
-function listenerDobleClick(element, idProducto) {
+function listenerDobleClick(element) {
     element.contentEditable = true;
 
     $(element).keydown(function (evt) {
@@ -363,30 +499,22 @@ function listenerDobleClick(element, idProducto) {
             document.execCommand('undo');
             element.contentEditable = false;
         }
-        //        console.log("nodeName_" + el.nodeName + " el_" + el.innerHTML);
 
-        if (evt.keyCode == 13 || (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))) {
+        if (
+             evt.keyCode == 13 ||
+            (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))
+           )
+        {
             event.preventDefault();
-
-            var cantidad = parseFloat(el.innerHTML);
-            var data = ObtenerProductoPorPrecio(idProducto, cantidad);
-            var precio = parseFloat(data.Modelo[0].costo);
-            console.log(precio);
-
-            document.execCommand('undo');
-
             element.contentEditable = false;
-            console.log("quedo: " + el.innerHTML);
         }
         else {       // si es un numero         
         }
-
     });
 
     setTimeout(function () {
         if (document.activeElement !== element) {
             element.contentEditable = false;
-            ///alert("time");
         }
     }, 300);
 }
@@ -429,85 +557,102 @@ function listenerDobleClick(element, idProducto) {
 //}
 
 
-$("#efectivo").on("change", function () {
 
+
+
+$("#efectivo").on("keyup", function () {
     var cambio_     = parseFloat(0).toFixed(2);
     var efectivo_   = parseFloat($('#efectivo').val()).toFixed(2);
     var total_      = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
-
     if (parseFloat(efectivo_) > parseFloat(total_)) {
         cambio_ = efectivo_ - total_;
-        //console.log("cambio_:" + cambio_);
         document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
     }
     else {
         document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-
     }
+});
 
+
+$("#cantidad").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnAgregarProducto").click();
+    }
 });
 
 
 
+$("#idCliente").on("change", function () {
+
+    $('#efectivo').val('');
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    var idCliente = parseFloat($('#idCliente').val());
+    var data = ObtenerCliente(idCliente);
+    var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
+    var descuento = parseFloat(0.0);
+
+    if (idCliente != 0) {
+        descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
+    }
+
+    var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var descuentoMenudeo = parseFloat(document.getElementById("previoDescuentoMenudeo").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var cantidadDescontada = parseFloat(0).toFixed(2);
+
+    if (descuento > 0.0) {
+        cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
+    }
+
+    var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);       
+    var iva = parseFloat(0).toFixed(2);
+
+    // si lleva iva
+    if ($("#chkFacturar").is(":checked")) {
+        console.log(" is checked!- facturar\n");
+        iva = parseFloat(subTotal * 0.16).toFixed(2);
+    }
+
+    var final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
+
+    document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + cantidadDescontada + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
+
+    // para los datos del cliente
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    if ((data.idCliente != 0) && (idCliente != 0)) {
+        row_ = "<address>" +
+            "    <strong>Datos del Cliente:</strong><br>" +
+            "    Nombre: " + nombre.toUpperCase() + "<br>" +
+            "    Telefono: " + data.Modelo.telefono + "<br>" +
+            "    E-mail: " + data.Modelo.correo + "<br>" +
+            "    RFC: " + data.Modelo.rfc + "<br>" +
+            "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
+            "</address>";
+    }
+
+
+    document.getElementById("nombreCliente").innerHTML = row_;
+
+}); 
+
+
 $(document).ready(function () {
 
-    actualizaTicket();
+    actualizaTicketVenta();
     InitSelect2Productos();
-
-    $("#idCliente").on("change", function () {
-        //console.log($('#idCliente').val());
-        
-        var idCliente = parseFloat($('#idCliente').val());
-        var data = ObtenerCliente(idCliente);
-        var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
-        var descuento = parseFloat(0.0);
-
-        if (idCliente != 0) {
-            descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
-        }
-        
-        var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
-        var cantidadDescontada = parseFloat(0).toFixed(2);
-
-        if (descuento > 0.0) {
-            cantidadDescontada = parseFloat(total * (descuento / 100)).toFixed(2);
-        }
-
-        var subTotal = parseFloat(total - cantidadDescontada).toFixed(2);
-        var iva = parseFloat(subTotal * 0.16).toFixed(2);
-        var final = parseFloat(subTotal * 1.16).toFixed(2);
-
-        document.getElementById("previoDescuento").innerHTML = "<h4>-$" + cantidadDescontada + "</h4>";
-        document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
-        document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
-        document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
-
-       // para los datos del cliente
-       var row_ = "<address>" +
-                "    <strong></strong><br>" +
-                "    <br>" +
-                "    <br>" +
-                "    <br>" +
-                "    <br>" +
-                "    <br>" +
-                "</address>";
-
-        if ( (data.idCliente != 0) && (idCliente != 0) ) {
-            row_ =  "<address>" +
-                    "    <strong>Datos del Cliente:</strong><br>" +
-                    "    Nombre: " + nombre.toUpperCase() + "<br>" +
-                    "    Telefono: " + data.Modelo.telefono + "<br>" +
-                    "    E-mail: " + data.Modelo.correo + "<br>" +
-                    "    RFC: " + data.Modelo.rfc + "<br>" +
-                    "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
-                    "</address>";
-        }
-
-
-        document.getElementById("nombreCliente").innerHTML = row_; 
-
-    }); 
-
+    document.getElementById("divUsoCFDI").style.display = 'none';
 
 });
