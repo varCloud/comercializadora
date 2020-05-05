@@ -138,7 +138,7 @@ function InitRangePicker(nombrePicker, fechaIni, fechaFin) {
         singleDatePicker: false,
         showDropdowns: true,
         locale: {
-            "format": "MM/DD/YYYY",
+            "format": "YYYY-MM-DD",
             "separator": " - ",
             "applyLabel": "Aceptar",
             "cancelLabel": "Cancelar",
@@ -176,7 +176,7 @@ function InitRangePicker(nombrePicker, fechaIni, fechaFin) {
     });
 
     $('#' + nombrePicker).on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
     });
 
     //$('#nombrePicker').on('cancel.daterangepicker', function (ev, picker) {

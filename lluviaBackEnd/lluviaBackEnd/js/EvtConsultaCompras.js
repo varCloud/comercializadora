@@ -12,7 +12,32 @@ $(document).ready(function () {
             }
         },
 
+    });   
+
+
+    $("#fechaIni").daterangepicker({
+        locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
+        singleDatePicker: true,
+        autoUpdateInput: false        
+    }, (from_date, to_date) => {
+            $("#fechaIni").val(from_date.format('YYYY-MM-DD'));
     });
+    
+
+    $("#fechaFin").daterangepicker({
+        locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
+        singleDatePicker: true,
+        autoUpdateInput: false
+    }, (from_date, to_date) => {       
+            $("#fechaFin").val(from_date.format('YYYY-MM-DD'));
+    });
+
+    $("#btnLimpiarForm").click(function (evt) {
+        $("#frmBuscarCompras").trigger("reset");
+        $("#frmBuscarCompras .select-multiple").trigger("change");
+
+    });
+
 });
 
 function InitTableCompras() {
@@ -66,19 +91,20 @@ function InitTableCompras() {
 }
 
 function onBeginSubmitObtenerCompras() {
-    console.log("onBeginSubmitObtenerCompras");
+    ShowLoader("Buscando...");
 }
 function onCompleteObtenerCompras() {
-    console.log("onCompleteObtenerCompras");
+    //OcultarLoader();
 }
 function onSuccessResultObtenerCompras(data) {
     console.log("onSuccessResultObtenerCompras", JSON.stringify(data));
     tblCompras.destroy();
     $("#DivtblCompras").html(data);
     InitTableCompras();
+    OcultarLoader();
 }
 function onFailureResultObtenerCompras() {
-    console.log("onFailureResultObtenerCompras");
+    OcultarLoader();
 }
 
 function EliminarCompra(idCompra) {
@@ -131,7 +157,7 @@ function VerDetalleCompra(idCompra) {
 
     $.ajax({
         url: rootUrl("/Compras/_DetalleCompra"),
-        data: { idCompra: idCompra, enableEdit:false },
+        data: { idCompra: idCompra, enableEdit: false },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -161,7 +187,7 @@ function actualizaTicket() {
     $('#tblComprasDetalle tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
         //fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));        
+        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
     });
 
     //actualizar los totales

@@ -61,19 +61,20 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Fecha Inicio</label>
-                                    @Html.TextBoxFor(x => x.fechaIni, "{0: yyyy-MM-dd}", new { @class = "form-control datepicker", placeholder = "yyyy-mm-dd", Value = (Model.fechaIni == DateTime.MinValue ? "" : Model.fechaIni.ToString("yyyy-MM-dd")) })
+                                    @Html.TextBoxFor(x => x.fechaIni, "{0: yyyy-MM-dd}", new { id = "fechaIni", @class = "form-control", placeholder = "yyyy-mm-dd", Value = (Model.fechaIni == DateTime.MinValue ? "" : Model.fechaIni.ToString("yyyy-MM-dd")), data_val = "false", autocomplete = "off" })
 
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Fecha Fin</label>
-                                    @Html.TextBoxFor(x => x.fechaFin, "{0: yyyy-MM-dd}", new { @class = "form-control datepicker", placeholder = "yyyy-mm-dd", Value = (Model.fechaFin == DateTime.MinValue ? "" : Model.fechaFin.ToString("yyyy-MM-dd")) })
+                                    @Html.TextBoxFor(x => x.fechaFin, "{0: yyyy-MM-dd}", new { id = "fechaFin",@class = "form-control", placeholder = "yyyy-mm-dd", Value = (Model.fechaFin == DateTime.MinValue ? "" : Model.fechaFin.ToString("yyyy-MM-dd")), data_val = "false", autocomplete = "off" })
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>
                             <button type="submit" id="btnBuscarCompras" class="btn btn-success">Buscar</button>
                         </div>
                     }

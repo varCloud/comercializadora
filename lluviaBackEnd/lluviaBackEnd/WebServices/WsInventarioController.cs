@@ -2,6 +2,7 @@
 using lluviaBackEnd.Models;
 using lluviaBackEnd.WebServices.Modelos;
 using lluviaBackEnd.WebServices.Modelos.Request;
+using lluviaBackEnd.WebServices.Modelos.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,37 @@ namespace lluviaBackEnd.WebServices
             }
 
         }
+
+        [HttpPost]
+        public Models.Notificacion<List<Ubicacion>> ObtenerUbicacionProductoInventario(RequestObtenerUbicacionProductoInventario request)
+        {
+            try
+            {
+                return new InventarioDAO().ObtenerUbicacionProductoInventario(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils< List<Ubicacion>>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+        [HttpPost]
+        public Models.Notificacion<ResponseObtenerPisoPasilloRaq> ObtenerPasilloRaqPiso()
+        {
+            try
+            {
+                return new InventarioDAO().ObtenerPasilloRaqPiso();
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<ResponseObtenerPisoPasilloRaq>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+
     }
 }
