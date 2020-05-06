@@ -186,6 +186,44 @@ namespace lluviaBackEnd.DAO
                 }
             return n; 
         }
-             
+
+        public Notificacion<List<Factura>> ObtenerFacturas(Factura factura)
+        {
+            Notificacion<List<Factura>> facturas = new Notificacion<List<Factura>>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idStatusFactura", factura.estatusFactura == 0 ? (object)null : factura.estatusFactura);
+                    parameters.Add("@idUsuario", factura.idUsuario == 0 ? (object)null : factura.idUsuario);
+                    parameters.Add("@fechaIni", factura.fechaIni == DateTime.MinValue ? (object)null : factura.fechaIni);
+                    parameters.Add("@fechaFin", factura.fechaFin == DateTime.MinValue ? (object)null : factura.fechaFin);
+                    var rs = _db.QueryMultiple("SP_CONSULTA_FACTURAS", parameters, commandType: CommandType.StoredProcedure);                   
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        facturas.Estatus = rs1.status;
+                        facturas.Mensaje = rs1.mensaje;
+                        facturas.Modelo = rs.Read<Factura>().ToList();
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.status;
+                        facturas.Mensaje = rs1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
+
+
     }
 }

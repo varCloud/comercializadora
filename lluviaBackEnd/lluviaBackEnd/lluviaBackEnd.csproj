@@ -1066,6 +1066,7 @@
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
+    <Content Include="js\EvtFacturas.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
@@ -1178,7 +1179,7 @@
     <Content Include="Views\Proveedores\Proveedores.cshtml" />
     <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
     <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
-    <Content Include="Views\Facturas\Facturas.cshtml" />
+    <Content Include="Views\Factura\Facturas.cshtml" />
     <Content Include="Views\Clientes\Clientes.cshtml" />
     <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />
     <Content Include="Views\Productos\Productos.cshtml" />
@@ -1205,9 +1206,11 @@
     <Content Include="Views\Compras\Compras.cshtml" />
     <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
     <Content Include="Views\Compras\_DetalleCompra.cshtml" />
+    <Content Include="Views\Factura\_ObtenerFacturas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Facturas\" />
     <Folder Include="Views\Inicio\" />
   </ItemGroup>
   <ItemGroup>

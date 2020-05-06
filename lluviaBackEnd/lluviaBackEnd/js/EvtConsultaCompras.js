@@ -12,24 +12,24 @@ $(document).ready(function () {
             }
         },
 
-    });   
+    });
 
 
     $("#fechaIni").daterangepicker({
         locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
         singleDatePicker: true,
-        autoUpdateInput: false        
+        autoUpdateInput: false
     }, (from_date, to_date) => {
-            $("#fechaIni").val(from_date.format('YYYY-MM-DD'));
+        $("#fechaIni").val(from_date.format('YYYY-MM-DD'));
     });
-    
+
 
     $("#fechaFin").daterangepicker({
         locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
         singleDatePicker: true,
         autoUpdateInput: false
-    }, (from_date, to_date) => {       
-            $("#fechaFin").val(from_date.format('YYYY-MM-DD'));
+    }, (from_date, to_date) => {
+        $("#fechaFin").val(from_date.format('YYYY-MM-DD'));
     });
 
     $("#btnLimpiarForm").click(function (evt) {
@@ -83,11 +83,9 @@ function InitTableCompras() {
     );
 
 
-    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="' + rootUrl("/Compras/Compra") + '" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
 
-    $('#btnNuevaCompra').click(function (e) {
 
-    });
 }
 
 function onBeginSubmitObtenerCompras() {
@@ -100,7 +98,8 @@ function onSuccessResultObtenerCompras(data) {
     console.log("onSuccessResultObtenerCompras", JSON.stringify(data));
     tblCompras.destroy();
     $("#DivtblCompras").html(data);
-    InitTableCompras();
+    if (data.estatus == 200)
+        InitTableCompras();
     OcultarLoader();
 }
 function onFailureResultObtenerCompras() {

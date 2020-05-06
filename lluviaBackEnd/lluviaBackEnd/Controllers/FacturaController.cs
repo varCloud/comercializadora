@@ -184,6 +184,44 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        public ActionResult Facturas()
+        {
+            try
+            {
+                List<SelectListItem> listUsuarios;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                if (usuario.idRol == 1)
+                {
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                }
+                else
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(usuario.idUsuario).Where(x => x.Value != "0").ToList();
+                ViewBag.listUsuarios = listUsuarios;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult _ObtenerFacturas(Factura factura)
+        {
+            try
+            {
+                Notificacion<List<Factura>> notificacion=new FacturaDAO().ObtenerFacturas(factura);
+                return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+
         //    [HttpPost]
         //    public ActionResult ActualizarEstatusFactura(int idFactura, bool activo)
         //    {
