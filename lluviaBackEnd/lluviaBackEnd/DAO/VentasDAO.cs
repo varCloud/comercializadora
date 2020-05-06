@@ -35,6 +35,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
                     parameters.Add("@idProducto", precio.idProducto);
                     parameters.Add("@cantidad", precio.cantidad);
+                    parameters.Add("@vaConDescuento", precio.vaConDescuento);
                     var result = db.QueryMultiple("SP_CONSULTA_PRECIO_X_VOLUMEN", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

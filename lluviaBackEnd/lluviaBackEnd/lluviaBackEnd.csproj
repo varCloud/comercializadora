@@ -263,6 +263,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />

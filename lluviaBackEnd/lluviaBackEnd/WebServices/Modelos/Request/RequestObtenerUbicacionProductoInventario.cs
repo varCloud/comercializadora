@@ -7,7 +7,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
 {
     public class RequestObtenerUbicacionProductoInventario
     {
-        public int idAlamacen { get; set; }
+        public int idAlmacen { get; set; }
         public int idProducto { get; set; }
 
         /* 1.- sin acomodar , 2.- Acomodado  , 3 Todo*/

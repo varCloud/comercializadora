@@ -11,7 +11,7 @@ namespace lluviaBackEnd.Models
 
         public Ventas()
         {
-            formaPago = "01";
+            formaPago = 1;
         }
 
         [Display(Name = "idVenta")]
@@ -61,13 +61,15 @@ namespace lluviaBackEnd.Models
 
         public int contador { get; set; }
         public float precio { get; set; }
-        public string formaPago { get; set; }
+        public int formaPago { get; set; }
         public int tipoConsulta { get; set; }
 
         public int idFactura { get; set; }
         public int idEstatusFactura { get; set; }
         public string descripcionEstatusFactura { get; set; }
         public string rutaFactura { get; set; }
+        public int usoCFDI { get; set; }
+        public float descuento { get; set; }
 
     }
 }
