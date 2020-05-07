@@ -51,7 +51,9 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Fecha</label>
-                                    <input type="text"  id="rangeFacturas" class="form-control daterange-cus"/>
+                                    <input type="text"  id="rangeFacturas" class="form-control daterange-cus" autocomplete = "off"/>
+                                    @Html.HiddenFor(x=>x.fechaIni)
+                                    @Html.HiddenFor(x=>x.fechaFin)
                                 </div>
                             </div>
                         </div>

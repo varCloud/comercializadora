@@ -2,9 +2,10 @@
 $(document).ready(function () {
     InitTableFacturas();
     InitRangePicker('rangeFacturas', 'fechaIni', 'fechaFin');
-    $('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
+    $('#rangeFacturas').val('');
     $('.select-multiple').select2({
         width: "100%",
         language: {
@@ -18,26 +19,10 @@ $(document).ready(function () {
 
     });
 
-
-    //$("#fechaIni").daterangepicker({
-    //    locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
-    //    singleDatePicker: true,
-    //    autoUpdateInput: false
-    //}, (from_date, to_date) => {
-    //    $("#fechaIni").val(from_date.format('YYYY-MM-DD'));
-    //});
-
-
-    //$("#fechaFin").daterangepicker({
-    //    locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
-    //    singleDatePicker: true,
-    //    autoUpdateInput: false
-    //}, (from_date, to_date) => {
-    //    $("#fechaFin").val(from_date.format('YYYY-MM-DD'));
-    //});
-
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarFacturas").trigger("reset");
+        $('#fechaIni').val('');
+        $('#fechaFin').val('');
         $("#frmBuscarFacturas .select-multiple").trigger("change");
 
     });
@@ -60,7 +45,7 @@ function InitTableFacturas() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '30%', '30%', '10%','20%'];
+                    doc.content[1].table.widths = ['10%', '30%', '30%', '10%', '20%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Facturas");
@@ -95,11 +80,12 @@ function onCompleteObtenerFacturas() {
     //OcultarLoader();
 }
 function onSuccessResultObtenerFacturas(data) {
-    console.log("onSuccessResultObtenerFacturas", JSON.stringify(data));
-    tblFacturas.destroy();
     $("#DivtblFacturas").html(data);
-    if (data.estatus == 200)
+    if ($("#tblFacturas").length > 0) {
+        tblFacturas.destroy();
         InitTableFacturas();
+    }
+
     OcultarLoader();
 }
 function onFailureResultObtenerFacturas() {

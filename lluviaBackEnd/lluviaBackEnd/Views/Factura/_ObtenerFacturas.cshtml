@@ -27,7 +27,9 @@ else
                     <th>Cliente</th>
                     <th>Usuario</th>
                     <th>Fecha Timbrado</th>
-                    <th>Estatus</th>                    
+                    <th>Fecha Cancelaciòn</th>
+                    <th>Estatus</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +41,7 @@ else
                         <td>@f.nombreCliente</td>
                         <td>@f.nombreUsuarioFacturacion</td>
                         <td>@f.fechaTimbrado.ToShortDateString()</td>
+                        <td>@Html.Raw(f.fechaCancelacion == DateTime.MinValue ? "" : f.fechaCancelacion.ToShortDateString())</td>
                         <td>
                             @{
                                 switch (f.estatusFactura)
@@ -51,24 +54,27 @@ else
 
                                     case EnumEstatusFactura.Cancelada:
                                         {
-                                            <div class="badge badge-primary badge-shadow">@f.estatusFactura.ToString()</div>
-                                        }
-                                        break;                                   
+                                            <div class="badge badge-primary badge-shadow" data-container="body" data-toggle="popover"
+                                                 data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
+                                            }
+                                            break;
 
-                                    case EnumEstatusFactura.Error:
-                                        {
-                                            <div class="badge badge-danger badge-shadow">@f.estatusFactura.ToString()</div>
+                                        case EnumEstatusFactura.Error:
+                                            {
+                                                <div class="badge badge-danger badge-shadow" data-container="body" data-toggle="popover"
+                                                     data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
+                                                }
+                                                break;
+                                            default:
+                                                {
+                                                    <div class="badge badge-dark badge-shadow">@f.estatusFactura.ToString()</div>
+                                                }
+                                                break;
                                         }
-                                        break;
-                                    default:
-                                        {
-                                            <div class="badge badge-dark badge-shadow">@f.estatusFactura.ToString()</div>
-                                        }
-                                        break;
-                                }
                             }
 
-                        </td>                       
+                        </td>
+
                     </tr>
 
                     contador = contador + 1;
