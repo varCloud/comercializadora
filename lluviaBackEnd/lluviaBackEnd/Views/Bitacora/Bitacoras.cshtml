@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Compras";
+    ViewBag.Title = "Bitacoras";
 }
 
-@model lluviaBackEnd.Models.Compras
+@model lluviaBackEnd.Models.PedidosInternos
 
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
@@ -17,31 +17,25 @@
     <div class="col-12 col-sm-12 col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4>Buscar Compras</h4>
+                <h4>Buscar Bitacoras</h4>
                 <div class="card-header-action">
                     <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
                 </div>
             </div>
             <div class="collapse show" id="mycard-collapse">
                 <div class="card-body">
-                    @using (Ajax.BeginForm("_ObtenerCompras", "Compras",
+                    @using (Ajax.BeginForm("_ObtenerBitacoras", "Bitacora",
                     new AjaxOptions
                     {
                         HttpMethod = "Post",
-                        OnBegin = "onBeginSubmitObtenerCompras",
-                        OnComplete = "onCompleteObtenerCompras",
-                        OnFailure = "onFailureResultObtenerCompras",
-                        OnSuccess = "onSuccessResultObtenerCompras",
+                        OnBegin = "onBeginSubmitObtenerBitacoras",
+                        OnComplete = "onCompleteObtenerBitacoras",
+                        OnFailure = "onFailureResultObtenerBitacoras",
+                        OnSuccess = "onSuccessResultObtenerBitacoras",
                     },
-                    new { id = "frmBuscarCompras" }))
+                    new { id = "frmBuscarBitacoras" }))
                     {
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Proveedor</label>
-                                @Html.DropDownListFor(x => x.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, new { @class = "select-multiple", data_val = "false" })
-                            </div>
-                        </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Usuario</label>
@@ -50,8 +44,14 @@
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Estatus de la compra</label>
-                                @Html.DropDownListFor(x => x.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listEstatusCompras, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                                <label>Almacen Origen</label>
+                                @Html.DropDownListFor(x => x.almacenOrigen.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Almacen Destino</label>
+                                @Html.DropDownListFor(x => x.almacenDestino.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
 
                             </div>
                         </div>
@@ -60,8 +60,21 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
+                                <label>Estatus</label>
+                                @Html.DropDownListFor(x => x.estatusPedido.idStatus, (List<SelectListItem>)ViewBag.listEstatusPedidosInternos,"--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Producto</label>
+                                @Html.DropDownListFor(x => x.producto.idProducto, (List<SelectListItem>)ViewBag.listProductos, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
                                 <label>Fecha</label>
-                                <input type="text" id="rangeCompras" class="form-control daterange-cus" autocomplete="off" />
+                                <input type="text" id="rangeBitacoras" class="form-control daterange-cus" autocomplete="off" />
                                 @Html.HiddenFor(x => x.fechaIni)
                                 @Html.HiddenFor(x => x.fechaFin)
                             </div>
@@ -70,7 +83,7 @@
 
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>
-                            <button type="submit" id="btnBuscarCompras" class="btn btn-success">Buscar</button>
+                            <button type="submit" id="btnBuscarBitacoras" class="btn btn-success">Buscar</button>
                         </div>
                     }
                 </div>
@@ -85,29 +98,15 @@
             <div class="card">
                 <div class="card-header">
                 </div>
-                <div class="card-body" id="DivtblCompras">
-                    @Html.Action("_ObtenerCompras", "Compras")
+                <div class="card-body" id="DivtblBitacoras">
+                    @Html.Action("_ObtenerBitacoras", "Bitacora")
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade bd-example-modal-lg" id="modalDetalleCompra" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalle de la compra</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="detalleCompra">
-                
-            </div>
-        </div>
-    </div>
-</div>
+
 
 @section scripts {
 
@@ -121,6 +120,9 @@
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
-    <script src="~/js/EvtConsultaCompras.js"></script>
+    <script src="~/js/EvtConsultaBitacoras.js"></script>
 
 }
+
+
+

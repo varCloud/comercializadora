@@ -1,0 +1,89 @@
+﻿@using lluviaBackEnd.Models
+@model Notificacion<List<Factura>>
+
+@{
+    List<lluviaBackEnd.Models.Factura> facturas = Model.Modelo;
+    int contador = 1;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-question"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblFacturas">
+            <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th>Cliente</th>
+                    <th>Usuario</th>
+                    <th>Fecha Timbrado</th>
+                    <th>Fecha Cancelaciòn</th>
+                    <th>Estatus</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.Factura f in facturas)
+                {
+                    <tr>
+                        <td>@contador</td>
+                        <td>@f.nombreCliente</td>
+                        <td>@f.nombreUsuarioFacturacion</td>
+                        <td>@f.fechaTimbrado.ToShortDateString()</td>
+                        <td>@Html.Raw(f.fechaCancelacion == DateTime.MinValue ? "" : f.fechaCancelacion.ToShortDateString())</td>
+                        <td>
+                            @{
+                                switch (f.estatusFactura)
+                                {
+                                    case EnumEstatusFactura.Facturada:
+                                        {
+                                            <div class="badge badge-success badge-shadow">@f.estatusFactura.ToString()</div>
+                                        }
+                                        break;
+
+                                    case EnumEstatusFactura.Cancelada:
+                                        {
+                                            <div class="badge badge-primary badge-shadow" data-container="body" data-toggle="popover"
+                                                 data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
+                                            }
+                                            break;
+
+                                        case EnumEstatusFactura.Error:
+                                            {
+                                                <div class="badge badge-danger badge-shadow" data-container="body" data-toggle="popover"
+                                                     data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
+                                                }
+                                                break;
+                                            default:
+                                                {
+                                                    <div class="badge badge-dark badge-shadow">@f.estatusFactura.ToString()</div>
+                                                }
+                                                break;
+                                        }
+                            }
+
+                        </td>
+
+                    </tr>
+
+                    contador = contador + 1;
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+

@@ -1,6 +1,11 @@
 ﻿var tblCompras
 $(document).ready(function () {
     InitTableCompras();
+    InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
+    //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
+    $('#rangeCompras').val('');
     $('.select-multiple').select2({
         width: "100%",
         language: {
@@ -12,28 +17,12 @@ $(document).ready(function () {
             }
         },
 
-    });   
-
-
-    $("#fechaIni").daterangepicker({
-        locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
-        singleDatePicker: true,
-        autoUpdateInput: false        
-    }, (from_date, to_date) => {
-            $("#fechaIni").val(from_date.format('YYYY-MM-DD'));
-    });
-    
-
-    $("#fechaFin").daterangepicker({
-        locale: { format: "YYYY-MM-DD", cancelLabel: 'Clear' },
-        singleDatePicker: true,
-        autoUpdateInput: false
-    }, (from_date, to_date) => {       
-            $("#fechaFin").val(from_date.format('YYYY-MM-DD'));
     });
 
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarCompras").trigger("reset");
+        $('#fechaIni').val('');
+        $('#fechaFin').val('');
         $("#frmBuscarCompras .select-multiple").trigger("change");
 
     });
@@ -83,11 +72,9 @@ function InitTableCompras() {
     );
 
 
-    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="' + rootUrl("/Compras/Compra") + '" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
 
-    $('#btnNuevaCompra').click(function (e) {
 
-    });
 }
 
 function onBeginSubmitObtenerCompras() {
@@ -96,11 +83,14 @@ function onBeginSubmitObtenerCompras() {
 function onCompleteObtenerCompras() {
     //OcultarLoader();
 }
-function onSuccessResultObtenerCompras(data) {
-    console.log("onSuccessResultObtenerCompras", JSON.stringify(data));
-    tblCompras.destroy();
+function onSuccessResultObtenerCompras(data) {    
     $("#DivtblCompras").html(data);
-    InitTableCompras();
+    if ($("#tblCompras").length > 0)
+    {
+        tblCompras.destroy();
+        InitTableCompras();
+    }
+    
     OcultarLoader();
 }
 function onFailureResultObtenerCompras() {

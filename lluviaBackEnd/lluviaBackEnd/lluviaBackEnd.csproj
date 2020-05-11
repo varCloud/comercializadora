@@ -195,6 +195,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\BitacoraController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="DAO\BitacoraDAO.cs" />
     <Compile Include="DAO\ComprasDAO.cs" />
     <Compile Include="DAO\EstacionesDAO.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Facturacion\Addenda.cs" />
     <Compile Include="Models\Pasillo.cs" />
+    <Compile Include="Models\PedidosInternos.cs" />
     <Compile Include="Models\Piso.cs" />
     <Compile Include="Models\Raq.cs" />
     <Compile Include="Models\Status.cs" />
@@ -263,6 +266,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />
@@ -1062,10 +1066,12 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\evtCompra.js" />
     <Content Include="js\EvtCompras.js" />
+    <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
+    <Content Include="js\EvtFacturas.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
@@ -1178,7 +1184,7 @@
     <Content Include="Views\Proveedores\Proveedores.cshtml" />
     <Content Include="Views\LineaProducto\LineaProducto.cshtml" />
     <Content Include="Views\LineaProducto\_ObtenerLineaProducto.cshtml" />
-    <Content Include="Views\Facturas\Facturas.cshtml" />
+    <Content Include="Views\Factura\Facturas.cshtml" />
     <Content Include="Views\Clientes\Clientes.cshtml" />
     <Content Include="Views\Clientes\_ObtenerClientes.cshtml" />
     <Content Include="Views\Productos\Productos.cshtml" />
@@ -1205,9 +1211,13 @@
     <Content Include="Views\Compras\Compras.cshtml" />
     <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
     <Content Include="Views\Compras\_DetalleCompra.cshtml" />
+    <Content Include="Views\Factura\_ObtenerFacturas.cshtml" />
+    <Content Include="Views\Bitacora\Bitacoras.cshtml" />
+    <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Facturas\" />
     <Folder Include="Views\Inicio\" />
   </ItemGroup>
   <ItemGroup>

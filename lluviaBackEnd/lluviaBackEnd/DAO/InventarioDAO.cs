@@ -74,8 +74,7 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
-
-
+        
         public Notificacion<ResponseObtenerPisoPasilloRaq> ObtenerPasilloRaqPiso()
         {
             Notificacion<ResponseObtenerPisoPasilloRaq> notificacion = new Notificacion<ResponseObtenerPisoPasilloRaq>();
@@ -96,6 +95,34 @@ namespace lluviaBackEnd.DAO
                     
 
 
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<String> ActualizarUbicacionInventario(RequestActualizarUbicacionInventario request)
+        {
+            Notificacion<String> notificacion = null;
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUbicacion", request.IdUbicacion);
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@cantidad", request.cantidad);
+                    parameters.Add("@idPasillo", request.idPasillo);
+                    parameters.Add("@idRaq", request.idRack);
+                    parameters.Add("@idPiso", request.idPiso);
+                    parameters.Add("@idAlamacen", request.idAlmacen);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZAR_UBICACION_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure , commandTimeout:90);
                 }
             }
             catch (Exception ex)

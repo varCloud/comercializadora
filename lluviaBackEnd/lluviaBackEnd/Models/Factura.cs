@@ -16,6 +16,17 @@ namespace lluviaBackEnd.Models
         public string  UUID { get; set; }
         public DateTime fechaTimbrado { get; set; }
         public int idUsuario { get; set; }
+        public string nombreCliente { get; set; }
+        public string nombreUsuarioFacturacion { get; set; }
+        public string nombreUsuarioCancelacion { get; set; }
+
+        public DateTime fechaCancelacion { get; set; }
+
+
+        public DateTime fechaIni { get; set; }
+        public DateTime fechaFin { get; set; }
+
+
 
     }
 }

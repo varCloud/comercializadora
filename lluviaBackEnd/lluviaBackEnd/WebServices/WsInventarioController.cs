@@ -59,6 +59,21 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+        [HttpPost]
+        public Models.Notificacion<String> ActualizarUbicacionInventario(RequestActualizarUbicacionInventario request)
+        {
+            try
+            {
+                return new InventarioDAO().ActualizarUbicacionInventario(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
 
     }
 }
