@@ -141,6 +141,12 @@
                             </ul>
                         </li>
 
+                        <li class="@(ViewBag.Title.ToString() == "Bitacoras" ? "dropdown active" : "")">
+                            <a href="@Url.Action("Bitacoras", "Bitacora")">
+                                <i data-feather="file-text"></i><span>Bitacoras</span>
+                            </a>
+                        </li>
+
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
                             <ul class="dropdown-menu">

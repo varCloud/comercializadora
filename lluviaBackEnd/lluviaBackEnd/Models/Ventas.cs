@@ -70,6 +70,9 @@ namespace lluviaBackEnd.Models
         public string rutaFactura { get; set; }
         public int usoCFDI { get; set; }
         public float descuento { get; set; }
-
+        public float montoTotal { get; set; }
+        public int idStatusVenta { get; set; }
+        public int idFactFormaPago { get; set; }
+        public int idFactUsoCFDI { get; set; }
     }
 }

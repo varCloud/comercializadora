@@ -649,6 +649,54 @@ $("#idCliente").on("change", function () {
 }); 
 
 
+
+
+function AbrirModalConsultaExistencias() {
+
+    //$('#btnGuardarProducto').prop('disabled', true);
+
+    //var data = ObtenerProducto(idProducto);
+
+    //$('#idProducto').val(idProducto);
+    //$('#activo').val(data.activo);
+    //$('#descripcion').val(data.descripcion).prop('disabled', true);
+    //$('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', true);
+    //$('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
+    //$('#claveProdServ').val(data.claveProdServ).prop('disabled', true);
+    //$('#claveUnidad').val(data.claveUnidad).prop('disabled', true);
+    //$('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
+    //$('#articulo').val(data.articulo).prop('disabled', true);
+    //$('.field-validation-error').html("");
+    //document.getElementById('barra').src = '';
+    //document.getElementById('qr').src = '';
+    //obtenerCodigos();
+
+    //para abrir el modal
+    $('#ModalExistencias').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+function AbrirModalCierreCajaExcedentes() {
+
+    $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+function AbrirModalCierreDia() {
+
+    $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+
+$('#btnRetirarExcesoEfectivo').click(function (e) {
+
+    alert();
+
+});
+
+
+
 $(document).ready(function () {
 
     actualizaTicketVenta();
