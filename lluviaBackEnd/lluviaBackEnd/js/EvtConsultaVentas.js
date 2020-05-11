@@ -161,6 +161,85 @@ function CancelaVenta(idVenta) {
         });
 }
 
+
+
+function limpiaModalIVA() {
+
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    document.getElementById("nombreCliente").innerHTML = row_;
+
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    //document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    $('#efectivo').val('');
+    $('#idCliente').val("0").trigger('change');
+    $('#formaPago').val("1").trigger('change');
+    $('#usoCFDI').val("1").trigger('change');
+
+}
+
+
+function modalFacturar(idVenta) {
+
+    limpiaModalIVA();
+
+    var data = ConsultaVenta(idVenta);
+    //console.log(data);
+
+    var montoTotal = parseFloat(data.Modelo.montoTotal).toFixed(2);
+    var montoIVA = parseFloat(data.Modelo.montoTotal * 0.16).toFixed(2);
+    var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
+
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoFinal).toFixed(2) + "</h4>";
+
+    $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+
+
+function ConsultaVenta(idVenta) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Ventas/ConsultaVenta"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+    return result;
+}
+
 function GenerarFactura(idVenta) {
     console.log("idventa", idVenta)
     //ShowLoader();
@@ -188,6 +267,86 @@ function GenerarFactura(idVenta) {
     });   
     
 }
+
+
+
+function ObtenerCliente(idCliente) {
+    var result = "";//{ "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
+    $.ajax({
+        url: rootUrl("/Clientes/ObtenerCliente"),
+        data: { idCliente: idCliente },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes_")
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
+
+
+$("#efectivo").on("keyup", function () {
+    var cambio_ = parseFloat(0).toFixed(2);
+    var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+    if (parseFloat(efectivo_) > parseFloat(total_)) {
+        cambio_ = efectivo_ - total_;
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+    }
+    else {
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    }
+});
+
+
+
+
+$("#idClienteIVA").on("change", function () {
+
+    $('#efectivo').val('');
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    var idCliente = parseFloat($('#idClienteIVA').val());
+    var data = ObtenerCliente(idCliente);
+    var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
+    console.log(data );
+    // para los datos del cliente
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    if ((data.Modelo.idCliente != 0) && (idCliente != 0)) {
+        row_ = "<address>" +
+            "    <strong>Datos del Cliente:</strong><br>" +
+            "    Nombre: " + nombre.toUpperCase() + "<br>" +
+            "    Telefono: " + data.Modelo.telefono + "<br>" +
+            "    E-mail: " + data.Modelo.correo + "<br>" +
+            "    RFC: " + data.Modelo.rfc + "<br>" +
+            "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
+            "</address>";
+    }
+
+
+    document.getElementById("nombreCliente").innerHTML = row_;
+
+});
+
+
 
 
 

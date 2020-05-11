@@ -87,7 +87,15 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 } );
             ViewBag.lstVentas = notificacion.Modelo;
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
-            
+
+            Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+            formasPago = new VentasDAO().ObtenerFormasPago();
+            ViewBag.lstFormasPago = formasPago.Modelo;
+
+            Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+            usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+            ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+
             return View();
         }
 
@@ -126,6 +134,21 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
                 notificacion = new VentasDAO().CancelaVenta(venta);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ConsultaVenta(Ventas venta)
+        {
+            try
+            {
+                Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+                notificacion = new VentasDAO().ConsultaVenta(venta);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
