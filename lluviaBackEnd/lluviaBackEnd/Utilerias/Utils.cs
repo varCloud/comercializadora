@@ -116,10 +116,11 @@ namespace lluviaBackEnd.Utilerias
             string cssTabla = @"style='text-align:center;font-size:"+ TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
             string titulosCabeceras = "style='font-weight:bold;  color:3b3b3b;text-align:center'";
             string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
-            string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:8px;' ";
-            string color2 = "style='color:7b7b7b; text-align:center; font-size:8px;'";
+            string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:7px;' ";
+            string color2 = "style='color:7b7b7b; text-align:center; font-size:7px;'";
             string centradas = "style='text-align:center;'";
             string titulosCabecerasAbre = "bgcolor='7D7D7D' style='font-weight:bold;  color:white;text-align:center'";
+            string tituloIndividual = "style='font-weight:bold;  color:3b3b3b;'";
             Document document = new Document(PageSize.A4, 30, 30, 30, 110);
             MemoryStream memStream = new MemoryStream();
             MemoryStream memStreamReader = new MemoryStream();
@@ -146,6 +147,28 @@ namespace lluviaBackEnd.Utilerias
                                 <td>" + c.Folio + @"</td>
                                <td>"  + c.Fecha+ @"</td>
                         </tr>
+                        </table>";
+
+               string DatosDelCliente = @"
+                       <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                            <tr " + cabeceraTablas + @">
+                                <td colspan='4'>Datos del cliente</td>    
+                            </tr>
+                            <tr>
+                                <td "+ tituloIndividual+@" >Cliente</td> <td colspan ='3'>" + c.Receptor.Nombre + @"</td>           
+                            </tr>
+                            <tr>
+                                 <td " + tituloIndividual + @" >R.F.C </td> <td>" + c.Receptor.Rfc + @"</td> <td " + tituloIndividual + @">Uso CFDI </td><td>" + c.Receptor.UsoCFDI+" - "+c.Addenda.descripcionUsoCFDI + @" </td>  
+                            </tr>
+                            <tr>
+                                <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
+                            </tr>
+                            <tr>
+                                <td  width='15%'></td>
+                                <td  width='25%'></td> 
+                                <td  width='25%'></td> 
+                                <td  width='25%'></td> 
+                            </tr>
                         </table>";
 
 
@@ -176,46 +199,24 @@ namespace lluviaBackEnd.Utilerias
                             <td>Moneda </td>
                         </tr>
                         <tr " + centradas + @">
-                                <td>" + c.MetodoPago + @" </td>   
-                                <td>" + c.FormaPago + @" </td>  
+                                <td>" + c.FormaPago +" - "+c.Addenda.descripcionFormaPago+@" </td>   
+                                <td>" + c.MetodoPago + "-  Pago en una sola exhibición" + @" </td>  
                                 <td>" + c.Moneda + @"</td>    
                         </tr>
                         </table>";
 
-                string DatosDelCliente = @"
-                       <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
-                            <tr " + cabeceraTablas + @">
-                                <td colspan='4'>Datos del cliente</td>    
-                            </tr>
-                            <tr  " + titulosCabeceras + @">
-                                <td>Cliente</td>             
-                                <td>Uso CFDI </td>
-                                <td>R.F.C </td>
-                                <td>Domiclio</td>
-                            </tr>
-                            <tr " + centradas + @">
-                                <td>" + c.Receptor.Rfc + @"</td>
-                                <td>" + c.Receptor.UsoCFDI + @" </td>  
-                                <td>" + c.Receptor.Rfc + @"</td>
-                                <td>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
-                            </tr>
-                            <tr>
-                                <td  width='25%'></td>
-                                <td  width='10%'></td> 
-                                <td  width='15%'></td> 
-                                <td  width='50%'></td> 
-                            </tr>
-                        </table>";
+  
 
                 string html4 = @" 
                         <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                         <tr " + cabeceraTablas + @">
-                            <td colspan='8'>Productos</td>    
+                            <td colspan='9'>Productos</td>    
                         </tr>
                         <tr "+ titulosCabeceras + @">
                             <td>Cantidad </td>
                             <td>Unidad</td>
                             <td>Clave Unidad</td> 
+                            <td>Clave Producto / Servicio</td> 
                             <td>Concepto </td>
                             <td>Valor Unitario</td>
                             <td>Desc.</td>
@@ -223,45 +224,47 @@ namespace lluviaBackEnd.Utilerias
                             <td>Importe</td>
                         </tr>";
                 int i = 0;
-                foreach (var item in c.Conceptos)
+                foreach (var item in c.Addenda.conceptosAddenda)
                 {
                     html4 += "<tr " + (i % 2 == 0 ? color1 : color2)+" >";
                     html4 += "<td>" + item.Cantidad + "</td>";
-                    html4 += "<td>" + item.Unidad + "</td>";
-                    html4 += "<td>" + item.ClaveUnidad + "</td>";
-                    html4 += "<td>" + item.Descripcion + "</td>";
+                    html4 += "<td>" + item.Unidad+"</td>";
+                    html4 += "<td>" + item.ClaveUnidad + " - " + item.DescripcionClaveUnidad + " </td>";
+                    html4 += "<td>" + item.ClaveProdserv+" - "+item.DescripcionClaveProdServ + "</td>";
+                    html4 += "<td>" + item.Descripcion+"</td>";
                     html4 += "<td>" + item.ValorUnitario.ToString("c2") + "</td>";
                     html4 += "<td>$0.00</td>";
-                    html4 += "<td>"+item.Impuestos.Traslados.Traslado.Importe.ToString("C2")+"</td>";
+                    html4 += "<td>"+item.IVA.ToString("C2")+"</td>";
                     html4 += "<td>"+item.Importe.ToString("C2")+"</td>";
                     html4 += "</tr>";
                     i++;
                 }
                 html4 += @"
                     <tr> 
-                        <td colspan='5'></td>
-                        <td colspan='2'>Subtotal:</td>
+                        <td colspan='6'></td>
+                        <td colspan='2' " + tituloIndividual + @">Subtotal:</td>
                         <td>" + c.SubTotal.ToString("C2")+ @"</td>
                     </tr>
                     <tr> 
-                        <td colspan='5'></td>
-                        <td colspan='2'>Impuestos Trasladados:</td>
+                        <td colspan='6'></td>
+                        <td colspan='2' " + tituloIndividual + @">Impuestos Trasladados:</td>
                         <td>" + c.Impuestos.TotalImpuestosTrasladados.ToString("C2") + @"</td>
                     </tr>
                      <tr> 
-                        <td colspan='5'></td>
-                        <td colspan='2'>Total:</td>
+                        <td colspan='6'></td>
+                        <td colspan='2' " + tituloIndividual + @">Total:</td>
                         <td>" + c.Total.ToString("C2") + @"</td>
                     </tr>
                     <tr>
                         <td  width='10%'></td>
                         <td  width='10%'></td>
                         <td  width='10%'></td>
-                        <td  width='30%'></td>
+                        <td  width='13%'></td>
                         <td  width='10%'></td>
-                        <td  width='8%'></td> 
                         <td  width='10%'></td> 
-                        <td  width='10%'></td> 
+                        <td  width='9%'></td> 
+                        <td  width='9%'></td> 
+                        <td  width='9%'></td> 
                     </tr>";
                 html4 += "</table>";
 

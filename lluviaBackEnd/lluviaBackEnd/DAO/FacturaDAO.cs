@@ -40,8 +40,10 @@ namespace lluviaBackEnd.DAO
 
         public Dictionary<string, object> ObtenerComprobante(string idVenta, Comprobante c)
         {
+            Dictionary<string, object> items = null;
             List<ComprobanteConcepto> listConceptos = null;
             List<ConceptosAddenda> listConceptosAdenda = null;
+            
             try
             {
                 // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
@@ -52,17 +54,20 @@ namespace lluviaBackEnd.DAO
                 var r1 = result.ReadFirst();
                 if (r1.Estatus == 200)
                 {
-                    
+                    items = new Dictionary<string, object>();
+
                     var receptor = result.ReadFirst();
                     //OBTENER LA FORMA DE PAGO 
                     c.FormaPago = receptor.FormaPago;
+                    //OBTENEMOS LAS DESCRIPCIONES DE LA INFORMACION DEL PAGO 
+                    items.Add("descripcionUsoCFDI", receptor.descripcionUsoCFDI);
+                    items.Add("descripcionFormaPago", receptor.descripcionUsoCFDI);
+
                     ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
                     c.Receptor = new ComprobanteReceptor();
                     c.Receptor.Nombre = receptor.Nombre;
                     c.Receptor.Rfc = receptor.Rfc;
-                    c.Receptor.UsoCFDI = receptor.UsoCFDI;
-
-         
+                    c.Receptor.UsoCFDI = receptor.UsoCFDI;      
 
                     //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
                     listConceptos = result.Read<ComprobanteConcepto>().ToList();
@@ -91,9 +96,14 @@ namespace lluviaBackEnd.DAO
                     if (listConceptos != null) {
                         listConceptosAdenda.ForEach(item => item.IVA = Math.Round((item.Importe * 0.16M), 2, MidpointRounding.AwayFromZero));
                     }
+                    items.Add("comprobante", c);
+                    items.Add("conceptosAddenda", listConceptosAdenda);
                 }
-
+               
+                
+               
             }
+             
             catch (Exception ex)
             {
                 throw ex;
@@ -104,7 +114,7 @@ namespace lluviaBackEnd.DAO
                 _db.Dispose();
                 _db = null;
             }
-            return null;
+            return items;
         }
         public void ObtenerImpuestosGenerales(ref Comprobante c)
         {
