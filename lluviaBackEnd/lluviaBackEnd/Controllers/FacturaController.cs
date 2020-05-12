@@ -127,6 +127,7 @@ namespace lluviaBackEnd.Controllers
                 string pathFactura = Utils.ObtnerFolder() + @"/";
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                factura.idVenta = "64";
                 factura.idUsuario = UsuarioActual.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = factura.idVenta;
@@ -135,7 +136,8 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Emisor.RegimenFiscal = 603;
                 
 
-                //comprobante = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                Dictionary<string, object> items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                comprobante = (items["comprobante"] as Comprobante);
                 facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
                 facturacionDAO.ObtenerTotal(ref comprobante);
 
@@ -145,7 +147,7 @@ namespace lluviaBackEnd.Controllers
 
                 comprobante.Certificado = certificados["Certificado"];
                 comprobante.NoCertificado = certificados["NoCertificado"];
-                comprobante.Addenda.NombreCliente = "VICTOR ADRIAN REYES";
+                
                 string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
                 string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                 comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
@@ -156,10 +158,17 @@ namespace lluviaBackEnd.Controllers
                 {
 
                     string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
-                    System.IO.File.WriteAllText(pathFactura + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
+                    
                     Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeXMLStringToObject(xmlTimbradoDecodificado);
+                    comprobanteTimbrado.Addenda = new ComprobanteAddenda();
+                    comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
+                    comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
+                    comprobanteTimbrado.Addenda.descripcionUsoCFDI= items["descripcionFormaPago"].ToString();
+
+
                     Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + factura.idVenta + ".jpg"));
                     Utils.GenerarFactura(comprobanteTimbrado, pathFactura, factura.idVenta);
+                    System.IO.File.WriteAllText(pathFactura + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
                     factura.estatusFactura = EnumEstatusFactura.Facturada;
                     factura.mensajeError = "OK";
                     factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;

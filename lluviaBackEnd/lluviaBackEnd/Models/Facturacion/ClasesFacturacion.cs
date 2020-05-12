@@ -15,7 +15,7 @@ namespace lluviaBackEnd.Models.Facturacion
         public Comprobante()
         {
             xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
-            this.Addenda = new ComprobanteAddenda();
+           
         }
        
         private string xsiSchemaLocation;
@@ -43,7 +43,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private ComprobanteImpuestos impuestosField;
 
-        private ComprobanteAddenda addendaField;
+        private ComprobanteAddenda addendaField = null;
 
         private ComprobanteComplemento complementoField;
 
@@ -76,25 +76,9 @@ namespace lluviaBackEnd.Models.Facturacion
         private string condicionesDePagoField;
 
         private decimal descuentoField = 0;
-
-      
-
+              
         private ushort lugarExpedicionField;
-
-       
-
-        public ComprobanteAddenda Addenda
-        {
-            get
-            {
-                return this.addendaField;
-            }
-            set
-            {
-                this.addendaField = value;
-            }
-        }
-
+              
         /// <remarks/>
         public ComprobanteCfdiRelacionados CfdiRelacionados
         {
@@ -399,6 +383,20 @@ namespace lluviaBackEnd.Models.Facturacion
                 this.lugarExpedicionField = value;
             }
         }
+
+        public ComprobanteAddenda Addenda
+        {
+            get
+            {
+                return this.addendaField;
+            }
+            set
+            {
+                this.addendaField = value;
+            }
+        }
+
+        public bool ShouldAddenda() { return addendaField == null ? false : true; }
     }
 
     /// <remarks/>
@@ -523,7 +521,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute( AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
     public partial class ComprobanteReceptor
     {
 

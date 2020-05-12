@@ -19,5 +19,7 @@ namespace lluviaBackEnd.Models
         public int idRaq { get; set; }
 
         public int idPisoRaq { get; set; }
+
+        public string descripcionAlmacen { get; set; }
     }
 }
