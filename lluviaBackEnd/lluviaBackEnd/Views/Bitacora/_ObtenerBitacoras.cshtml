@@ -23,6 +23,7 @@ else
         <table class="table table-striped" id="tblBitacoras">
             <thead>
                 <tr>
+                    <th></th>
                     <th class="text-center">Id</th>
                     <th>Almacen Origen</th>
                     <th>Almacen Destino</th>
@@ -38,6 +39,7 @@ else
                 @foreach (lluviaBackEnd.Models.PedidosInternos c in pedidosInternos)
                 {
                     <tr>
+                        <td class="details-control" idPedido="@c.idPedidoInterno"></td>
                         <td>@contador</td>
                         <td>@c.almacenOrigen.descripcion</td>
                         <td>@c.almacenDestino.descripcion</td>
@@ -51,7 +53,7 @@ else
                                 {
                                     case 1:
                                         {
-                                            <div class="badge badge-light badge-shadow">@c.estatusPedido.descripcion</div>
+                                            <div class="badge badge-info badge-shadow">@c.estatusPedido.descripcion</div>
                                         }
                                         break;
 
@@ -74,7 +76,7 @@ else
                                         break;
                                     default:
                                         {
-                                            <div class="badge badge-dark badge-shadow">@c.estatusPedido.descripcion</div>
+                                            <div class="badge badge-warning badge-shadow">@c.estatusPedido.descripcion</div>
                                         }
                                         break;
                                 }
@@ -82,7 +84,7 @@ else
 
                         </td>
                     </tr>
-
+                  
                     contador = contador + 1;
                 }
 

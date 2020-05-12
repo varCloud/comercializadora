@@ -23,7 +23,7 @@ $(document).ready(function () {
         $('#fechaFin').val('');
         $("#frmBuscarBitacoras .select-multiple").trigger("change");
 
-    });
+    });  
 
 });
 
@@ -50,7 +50,7 @@ function InitTableBitacoras() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [1, 2, 3, 4, 5, 6,7,8]
                 },
             },
             {
@@ -59,7 +59,7 @@ function InitTableBitacoras() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [1, 2, 3, 4, 5, 6,7,8]
                 },
             },
         ],
@@ -68,6 +68,40 @@ function InitTableBitacoras() {
     tablaBitacoras.buttons(0, null).container().prependTo(
         tablaBitacoras.table().container()
     );
+
+    $('#tblBitacoras tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = tablaBitacoras.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            //  console.log(obtenerDetalleBitacora($(this).attr("idPedido")));
+            $.ajax({
+                url: rootUrl("/Bitacora/_DetalleBitacora"),
+                data: { idPedidoInterno: $(this).attr("idPedido") },
+                method: 'post',
+                dataType: 'html',
+                async: true,
+                beforeSend: function (xhr) {
+                    ShowLoader();
+                },
+                success: function (view) {
+                    OcultarLoader();
+                    row.child(view).show();
+                    tr.addClass('shown');
+                },
+                error: function (xhr, status) {
+                    OcultarLoader();
+                }
+            });
+
+        }
+    });
+
     }
 
 function onBeginSubmitObtenerBitacoras() {
@@ -87,4 +121,25 @@ function onSuccessResultObtenerBitacoras(data) {
 }
 function onFailureResultObtenerBitacoras() {
     OcultarLoader();
+}
+
+function obtenerDetalleBitacora(idPedidoInterno) {
+    $.ajax({
+        url: rootUrl("/Bitacora/_DetalleBitacora"),
+        data: { idPedidoInterno: idPedidoInterno },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (view) {           
+            OcultarLoader();           
+            html=view;
+        },
+        error: function (xhr, status) {            
+            OcultarLoader();
+        }
+    });
+
 }

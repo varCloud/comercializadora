@@ -82,6 +82,37 @@ namespace lluviaBackEnd.DAO
             return p;
         }
 
+        public Notificacion<List<PedidosInternos>> ObtenerDetallePedidosInternos(int idPedidoInterno)
+        {
+            Notificacion<List<PedidosInternos>> p = new Notificacion<List<PedidosInternos>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", idPedidoInterno == 0 ? (object)null : idPedidoInterno);
+                    var rs = db.QueryMultiple("SP_CONSULTA_DETALLE_PEDIDOS_INTERNOS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                        p.Modelo = rs.Read<PedidosInternos, Almacen, Almacen, Usuario, Status, Producto, PedidosInternos>(MapPedidosInternos, splitOn: "idAlmacenOrigen,idAlmacenDestino,idUsuario,idStatus,idProducto").ToList();
+                    }
+                    else
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return p;
+        }
         public PedidosInternos MapPedidosInternos(PedidosInternos p,Almacen almacenOrigen,Almacen almacenDestino,Usuario usuario,Status status,Producto producto)
         {
             p.almacenOrigen = almacenOrigen;

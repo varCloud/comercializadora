@@ -930,6 +930,8 @@
     <Content Include="assets\img\cards\mastercard.png" />
     <Content Include="assets\img\cards\paypal.png" />
     <Content Include="assets\img\cards\visa.png" />
+    <Content Include="assets\img\details_close.png" />
+    <Content Include="assets\img\details_open.png" />
     <Content Include="assets\img\favicon.ico" />
     <Content Include="assets\img\image-64.png" />
     <Content Include="assets\img\image-gallery\1.png" />
@@ -1214,6 +1216,7 @@
     <Content Include="Views\Factura\_ObtenerFacturas.cshtml" />
     <Content Include="Views\Bitacora\Bitacoras.cshtml" />
     <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
+    <Content Include="Views\Bitacora\_DetalleBitacora.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

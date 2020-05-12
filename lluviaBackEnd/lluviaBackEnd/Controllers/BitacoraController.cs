@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.DAO;
+using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace lluviaBackEnd.Controllers
 {
+    [SessionTimeout]
     public class BitacoraController : Controller
     {
         // GET: Bitacora
@@ -55,6 +57,22 @@ namespace lluviaBackEnd.Controllers
 
 
                 Notificacion<List<PedidosInternos>> p = new BitacoraDAO().ObtenerPedidosInternos(pedidosInternos);
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        
+        public ActionResult _DetalleBitacora(int idPedidoInterno)
+        {
+            try
+            {
+                Notificacion<List<PedidosInternos>> p = new BitacoraDAO().ObtenerDetallePedidosInternos(idPedidoInterno);
                 return PartialView(p);
             }
             catch (Exception ex)
