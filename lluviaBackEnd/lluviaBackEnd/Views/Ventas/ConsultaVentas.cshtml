@@ -107,6 +107,7 @@
 
                     <div class="col-lg-7">
                         <div class="section-title"><strong>Cliente: </strong></div>
+                        <input type="hidden" id="idVentaIVA" name="idVentaIVA" value="0">
                         <div class="form-group">
                             @Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idClienteIVA", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })
                         </div>
@@ -189,7 +190,7 @@
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="btnGuardarVenta" class="btn btn-success">Guardar</button>
+                            <button type="button" id="btnGuardarIVA" class="btn btn-success">Guardar</button>
                         </div>
                     </div>
                 </div>

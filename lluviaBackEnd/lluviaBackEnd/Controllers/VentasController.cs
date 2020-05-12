@@ -157,6 +157,21 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult GuardarIVA(Ventas venta)
+        {
+            try
+            {
+                Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+                notificacion = new VentasDAO().GuardarIVA(venta);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public ActionResult ImprimeTicket(Ventas venta )
         {
             Notificacion<Ventas> notificacion;
