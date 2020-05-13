@@ -1217,6 +1217,7 @@
     <Content Include="Views\Bitacora\Bitacoras.cshtml" />
     <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
     <Content Include="Views\Bitacora\_DetalleBitacora.cshtml" />
+    <Content Include="Views\Productos\_UbicacionesProducto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

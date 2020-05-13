@@ -165,6 +165,20 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult _UbicacionesProducto(Producto producto)
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerUbicacionProducto(producto);
+                return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 
 
