@@ -62,6 +62,16 @@ namespace lluviaBackEnd.Models
 
         public float precio { get; set; }
 
+        public int idPasillo { get; set; }
+        public string Pasillo { get; set; }
+        public int idRaq { get; set; }
+        public string Raq { get; set; }
+        public int idPiso { get; set; }
+        public string Piso { get; set; }
+        public int idAlmacen { get; set; }
+        public string Almacen { get; set; }
+
+
 
 
 
