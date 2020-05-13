@@ -320,6 +320,42 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<List<Producto>> ObtenerUbicacionProducto(Producto producto)
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", producto.idProducto);
+                    parameters.Add("@idAlmacen", producto.idAlmacen);
+                    var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS_X_UBICACION", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
 
 
     }
