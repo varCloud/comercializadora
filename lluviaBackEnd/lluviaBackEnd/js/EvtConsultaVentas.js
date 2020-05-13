@@ -332,7 +332,11 @@ function GuardarIVA(idVenta, montoIVA, idCliente, formaPago, usoCFDI) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-            GenerarFactura(idVenta);
+
+            if (data.Estatus == 200) {
+                GenerarFactura(idVenta);
+            }
+            
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
