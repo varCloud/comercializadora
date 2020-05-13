@@ -71,6 +71,7 @@ namespace lluviaBackEnd.Models
         public int usoCFDI { get; set; }
         public float descuento { get; set; }
         public float montoTotal { get; set; }
+        public float montoIVA { get; set; }
         public int idStatusVenta { get; set; }
         public int idFactFormaPago { get; set; }
         public int idFactUsoCFDI { get; set; }

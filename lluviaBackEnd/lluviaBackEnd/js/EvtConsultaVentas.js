@@ -184,9 +184,10 @@ function limpiaModalIVA() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#idCliente').val("0").trigger('change');
+    $('#idClienteIVA').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
     $('#usoCFDI').val("1").trigger('change');
+    $('#idVentaIVA').val(0);
 
 }
 
@@ -207,6 +208,7 @@ function modalFacturar(idVenta) {
     document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoFinal).toFixed(2) + "</h4>";
 
+    $('#idVentaIVA').val(idVenta);
     $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
@@ -241,7 +243,7 @@ function ConsultaVenta(idVenta) {
 }
 
 function GenerarFactura(idVenta) {
-    console.log("idventa", idVenta)
+    //console.log("idventa", idVenta)
     //ShowLoader();
     
     $.ajax({
@@ -256,6 +258,7 @@ function GenerarFactura(idVenta) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
+            $('#ModalFacturar').modal('hide');
             PintarTabla();
         },
         error: function (xhr, status) {
@@ -293,6 +296,57 @@ function ObtenerCliente(idCliente) {
     return result;
 }
 
+
+
+
+$('#btnGuardarIVA').click(function (e) {
+    console.log($('#idClienteIVA').val() );
+    if ($('#idClienteIVA').val() == "0") {
+        MuestraToast('warning', "Debe seleccionar un Cliente.");
+        return;
+    }
+
+    var montoIVA = parseFloat(document.getElementById("previoIVA").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var idVenta = $('#idVentaIVA').val();
+    var idCliente = $('#idClienteIVA').val();
+    var formaPago = $('#formaPago').val();
+    var usoCFDI = $('#usoCFDI').val();
+
+    GuardarIVA(idVenta, montoIVA, idCliente, formaPago, usoCFDI);
+    
+});
+
+
+
+function GuardarIVA(idVenta, montoIVA, idCliente, formaPago, usoCFDI) {
+
+    $.ajax({
+        url: rootUrl("/Ventas/GuardarIVA"),
+        data: { idVenta: idVenta, montoIVA: montoIVA, idCliente: idCliente, idFactFormaPago: formaPago, idFactUsoCFDI: usoCFDI },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+
+            if (data.Estatus == 200) {
+                GenerarFactura(idVenta);
+            }
+            
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
 
 $("#efectivo").on("keyup", function () {
     var cambio_ = parseFloat(0).toFixed(2);
