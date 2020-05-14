@@ -5,6 +5,7 @@
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
     List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
+    List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
     List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
     lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
     int idVenta = ViewBag.venta.idVenta;
@@ -346,13 +347,14 @@
                                     <div class="col-12 col-sm-12 col-lg-5">
                                         <div class="form-group">
                                             <label>Producto:</label>
-                                            @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProductoExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                            @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProductoExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-5">
                                         <div class="form-group">
                                             <label>Almacen:</label>
-                                            @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idAlmacenExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                            @*@Html.DropDownListFor(model => model.idAlmacen, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idAlmacenExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
+                                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales, new { id = "idSucursalExistencia", @class = "form-control", data_val = "false" })
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-2">
@@ -378,7 +380,9 @@
                         <div class="row mt-4">
                             <div class="col-md-12">
 
-                                <div class="table-responsive">
+                                <div id="existencias">
+
+                                @*<div class="table-responsive">
                                     <table class="table table-striped" id="tablaRangosPrecios">
                                         <thead>
                                             <tr>
@@ -393,6 +397,7 @@
                                         <tbody></tbody>
                                     </table>
                                     <div id="msgSin" align="center"></div>
+                                </div>*@
                                 </div>
 
                             </div>

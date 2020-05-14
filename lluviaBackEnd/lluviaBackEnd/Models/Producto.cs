@@ -71,8 +71,8 @@ namespace lluviaBackEnd.Models
         public int idAlmacen { get; set; }
         public string Almacen { get; set; }
 
-
-
+        public int idSucursal { get; set; }
+        public string Sucursal { get; set; }
 
 
     }

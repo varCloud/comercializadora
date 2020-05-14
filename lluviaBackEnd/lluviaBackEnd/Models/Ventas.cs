@@ -75,5 +75,6 @@ namespace lluviaBackEnd.Models
         public int idStatusVenta { get; set; }
         public int idFactFormaPago { get; set; }
         public int idFactUsoCFDI { get; set; }
+        public int idSucursal { get; set; }
     }
 }

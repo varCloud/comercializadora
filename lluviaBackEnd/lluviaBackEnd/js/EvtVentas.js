@@ -697,6 +697,64 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
 
 
+$('#btnBuscarExistencias').click(function (e) {
+
+    var idProducto = $('#idProductoExistencia').val();
+    var idSucursal = $('#idSucursalExistencia').val();
+
+    $.ajax({
+        url: rootUrl("/Productos/_UbicacionesProducto"),
+        data: { idProducto: idProducto, idSucursal: idSucursal },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $("#existencias").html(data);
+            //$('#modalUbicacionProducto').modal({ backdrop: 'static', keyboard: false, show: true });
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al intentar mostrar las ubicaciones del producto, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+
+});
+
+
+//function VerUbicacionesProducto(idProducto) {
+//    $.ajax({
+//        url: rootUrl("/Productos/_UbicacionesProducto"),
+//        data: { idProducto: idProducto },
+//        method: 'post',
+//        dataType: 'html',
+//        async: true,
+//        beforeSend: function (xhr) {
+//            ShowLoader();
+//        },
+//        success: function (data) {
+//            OcultarLoader();
+//            $("#existencias").html(data);
+//            //$('#modalUbicacionProducto').modal({ backdrop: 'static', keyboard: false, show: true });
+
+//        },
+//        error: function (xhr, status) {
+//            OcultarLoader();
+//            console.log('Hubo un problema al intentar mostrar las ubicaciones del producto, contactese con el administrador del sistema');
+//            console.log(xhr);
+//            console.log(status);
+//        }
+//    });
+//}
+
+
 $(document).ready(function () {
 
     actualizaTicketVenta();

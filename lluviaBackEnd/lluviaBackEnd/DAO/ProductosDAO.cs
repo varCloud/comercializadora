@@ -330,7 +330,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@idProducto", producto.idProducto);
-                    parameters.Add("@idAlmacen", producto.idAlmacen);
+                    parameters.Add("@idSucursal", producto.idSucursal);
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS_X_UBICACION", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
