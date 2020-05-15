@@ -267,11 +267,16 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestActualizarEstatusPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestGenerarPedidoInterno.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPisoPasilloRaq.cs" />
+    <Compile Include="WebServices\WsPedidoInternoController.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductos.cs" />
