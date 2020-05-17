@@ -133,8 +133,7 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Folio = factura.folio = factura.idVenta;
                 comprobante.Emisor.Rfc = "CMV980925LQ7";
                 comprobante.Emisor.Nombre = "CAJA MORELIA VALLADOLID S.C. DE A.P. DE R.L. DE C.V.";
-                comprobante.Emisor.RegimenFiscal = 603;
-                
+                comprobante.Emisor.RegimenFiscal = 603;                
 
                 Dictionary<string, object> items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 comprobante = (items["comprobante"] as Comprobante);
@@ -163,7 +162,8 @@ namespace lluviaBackEnd.Controllers
                     comprobanteTimbrado.Addenda = new ComprobanteAddenda();
                     comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
                     comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
-                    comprobanteTimbrado.Addenda.descripcionUsoCFDI= items["descripcionFormaPago"].ToString();
+                    comprobanteTimbrado.Addenda.descripcionUsoCFDI= items["descripcionUsoCFDI"].ToString();
+                    comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
 
 
                     Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + factura.idVenta + ".jpg"));
