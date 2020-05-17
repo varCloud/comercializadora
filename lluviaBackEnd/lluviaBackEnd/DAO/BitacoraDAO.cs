@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.WebServices.Modelos.Request;
+using lluviaBackEnd.WebServices.Modelos.Response;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -65,7 +67,7 @@ namespace lluviaBackEnd.DAO
                     {
                         p.Estatus = rs1.status;
                         p.Mensaje = rs1.mensaje;
-                        p.Modelo = rs.Read<PedidosInternos, Almacen, Almacen, Usuario, Status, Producto,PedidosInternos>(MapPedidosInternos, splitOn: "idAlmacenOrigen,idAlmacenDestino,idUsuario,idStatus,idProducto").ToList();
+                        p.Modelo = rs.Read<PedidosInternos, Almacen, Almacen, Usuario, Status, Producto, PedidosInternos>(MapPedidosInternos, splitOn: "idAlmacenOrigen,idAlmacenDestino,idUsuario,idStatus,idProducto").ToList();
                     }
                     else
                     {
@@ -113,7 +115,7 @@ namespace lluviaBackEnd.DAO
             }
             return p;
         }
-        public PedidosInternos MapPedidosInternos(PedidosInternos p,Almacen almacenOrigen,Almacen almacenDestino,Usuario usuario,Status status,Producto producto)
+        public PedidosInternos MapPedidosInternos(PedidosInternos p, Almacen almacenOrigen, Almacen almacenDestino, Usuario usuario, Status status, Producto producto)
         {
             p.almacenOrigen = almacenOrigen;
             p.almacenDestino = almacenDestino;
@@ -123,5 +125,98 @@ namespace lluviaBackEnd.DAO
             return p;
         }
 
+        #region SP APP MOVIL HAND HELD
+        public Notificacion<String> GenerarPedidoInterno(RequestGenerarPedidoInterno request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@idUsuario",request.idUsuario);
+                    parameters.Add("@idAlamacenOrigen",request.idAlmacenOrigen);
+                    parameters.Add("@idAlamacenDestino",request.idAlmacenDestino);
+                    parameters.Add("@cantidad", request.cantidad);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_GENERAR_PEDIDO_INTERNO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<String> ActualizarEstatusPedidoInterno(RequestActualizarEstatusPedidoInterno request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idEstatusPedidoInterno", request.idEstatusPedidoInterno);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PEDIDO_INTERNO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerPedidosInternosApp(RequestObtenerPedidosInternos request)
+        {
+            Notificacion<List<ResponseObtenerPedidosInternos>> lst = new Notificacion<List<ResponseObtenerPedidosInternos>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idEstatusPedido", request.idEstatusPedido == 0 ? (object)null : request.idEstatusPedido);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen == 0 ? (object)null : request.idAlmacenOrigen);
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino == 0 ? (object)null : request.idAlmacenDestino);
+                    parameters.Add("@idUsuario", request.idUsuario == 0 ? (object)null : request.idUsuario);
+                    parameters.Add("@fechaInicio", request.fechaInicio == DateTime.MinValue ? (object)null : request.fechaInicio);
+                    parameters.Add("@fechaFin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno == 0  ? (object)null : request.idPedidoInterno);
+                    var rs = db.QueryMultiple("SP_APP_OBTENER_PEDIDOS_INTERNOS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                        lst.Modelo = rs.Read<ResponseObtenerPedidosInternos, Producto , Almacen, Almacen,  ResponseObtenerPedidosInternos>((responseObtenerPedidosInternos, producto, almacenO, almacenD ) => {
+                            responseObtenerPedidosInternos.almacenOrigen = almacenO;
+                            responseObtenerPedidosInternos.almacenDestino = almacenD;
+                            responseObtenerPedidosInternos.producto = producto;
+                            return responseObtenerPedidosInternos;
+                            
+                        }, splitOn: "idProducto , idAlmacenOrigen,idAlmacenDestino").ToList();
+                    }
+                    else
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lst;
+        }
+        #endregion
     }
 }
