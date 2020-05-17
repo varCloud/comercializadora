@@ -18,7 +18,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                ViewBag.estaciones=new DAO.DashboardDAO().ObtenerVentasEstacion();
+                ViewBag.estaciones=new DAO.DashboardDAO().ObtenerVentasEstacion(null,null);
                 return View();
             }
             catch (Exception ex)
@@ -36,41 +36,42 @@ namespace lluviaBackEnd.Controllers
 
             if (tipoGrafico==EnumTipoGrafico.VentasPorFecha)
             {
-                Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
-                grafico.Estatus = estaciones.Estatus;
-                grafico.Mensaje = estaciones.Mensaje;
+                //Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
+                Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico);
+                grafico.Estatus = categorias.Estatus;
+                grafico.Mensaje = categorias.Mensaje;
 
                 List<Data> dataEstaciones = new List<Data>();
                 List<seriesDrilldown> SeriesDrilldown = new List<seriesDrilldown>();
                 
                 
-                if (estaciones.Estatus==200)
+                if (categorias.Estatus==200)
                 {
-                    foreach(Estacion estacion in estaciones.Modelo)
+                    foreach(Categoria categoria in categorias.Modelo)
                     {
-                        Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico,estacion.idEstacion);
-                        if(categorias.Estatus==200)
-                        {
-                            Data data = new Data();
-                            data.name = estacion.nombre;
-                            data.y = categorias.Modelo.Sum(x=>x.total);
-                            data.drilldown = estacion.idEstacion + "_" + estacion.nombre;
-                            dataEstaciones.Add(data);
+                        Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion(categoria.fechaIni,categoria.fechaFin);
+                        Data data = new Data();
+                        data.name = categoria.categoria;
+                        if (estaciones.Estatus==200)
+                        {                            
+                            data.y = estaciones.Modelo.Sum(x=>x.montoTotalDia);                           
 
                             List<List<Object>> DataDrilldown = new List<List<Object>>();
-                            foreach (Categoria c in categorias.Modelo)
+                            foreach (Estacion e in estaciones.Modelo)
                             {
-                                DataDrilldown.Add(new List<Object>() { c.categoria.ToString(), c.total });
+                                DataDrilldown.Add(new List<Object>() { e.nombre.ToString(), e.montoTotalDia });
                             }
 
 
                             SeriesDrilldown.Add(new seriesDrilldown()
                             {
-                                id = estacion.idEstacion + "_" + estacion.nombre,
-                                name = estacion.nombre,
+                                id = categoria.id + "_" + categoria.categoria,
+                                name = categoria.categoria,
                                 data = DataDrilldown
                             });
                         }
+                        data.drilldown = categoria.id + "_" + categoria.categoria;
+                        dataEstaciones.Add(data);
                     }
 
                     grafico.Modelo = new Grafico();

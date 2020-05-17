@@ -30,6 +30,7 @@ namespace lluviaBackEnd.Models
     {
         Semanal = 1,
         Mensuales = 2,
-        Anuales = 3
+        Anuales = 3,
+        Dia=4
     }
 }

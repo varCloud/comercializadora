@@ -50,14 +50,17 @@ namespace lluviaBackEnd.DAO
             return categoria;
         }
 
-        public Notificacion<List<Estacion>> ObtenerVentasEstacion()
+        public Notificacion<List<Estacion>> ObtenerVentasEstacion(DateTime ? fechaIni,DateTime ? fechaFin)
         {
             Notificacion<List<Estacion>> grafico = new Notificacion<List<Estacion>>();
             try
             {
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
-                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOTAL_VENTAS_POR_ESTACION", null, commandType: CommandType.StoredProcedure);
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@fechaIni",fechaIni==DateTime.MinValue ? (object) null : fechaIni);
+                    parameters.Add("@fechaFin",fechaFin==DateTime.MinValue ? (object) null : fechaFin);
+                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOTAL_VENTAS_POR_ESTACION", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
                     {

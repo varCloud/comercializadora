@@ -85,27 +85,27 @@
                             @foreach (Estacion estacion in estaciones.Modelo)
                             {
 
-                            <li class="media">
-                                <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cash-register.png">
-                                <div class="media-body">
-                                    <div class="media-title">@estacion.nombre</div>
-                                    <div class="text-job text-muted">@estacion.nombreAlmacen</div>
-                                </div>
-                                <div class="media-items">
-                                    <div class="media-item">
-                                        <div class="media-value">@estacion.montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
-                                        <div class="media-label">Hoy</div>
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cash-register.png">
+                                    <div class="media-body">
+                                        <div class="media-title">@estacion.nombre</div>
+                                        <div class="text-job text-muted">@estacion.nombreAlmacen</div>
                                     </div>
-                                    <div class="media-item">
-                                        <div class="media-value">@estacion.montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
-                                        <div class="media-label">Esta Semana</div>
+                                    <div class="media-items">
+                                        <div class="media-item">
+                                            <div class="media-value">@estacion.montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
+                                            <div class="media-label">Hoy</div>
+                                        </div>
+                                        <div class="media-item">
+                                            <div class="media-value">@estacion.montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
+                                            <div class="media-label">Esta Semana</div>
+                                        </div>
+                                        <div class="media-item">
+                                            <div class="media-value">@estacion.montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
+                                            <div class="media-label">Este Mes</div>
+                                        </div>
                                     </div>
-                                    <div class="media-item">
-                                        <div class="media-value">@estacion.montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
-                                        <div class="media-label">Este Mes</div>
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
 
                             }
                         </ul>
@@ -116,6 +116,25 @@
 
             </div>
         </div>
+        <div class="col-12 col-sm-12 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4></h4>
+                    <div class="card-header-action">
+                        <div class="btn active" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Dia)">Hoy</div>
+                        <div class="btn " tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Semanal)">Semana Actual</div>
+                        <div class="btn" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Mes Actual</div>
+                        <div class="btn" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Año Actual</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="ViewGraficoTopTenProductos">
+                             <div id="graficoTopTenProductos"></div>
+                    </div>                  
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </section>
@@ -130,438 +149,58 @@
     <script src="~/js/EvtDashboard.js"></script>
 }
 
-
-    @*<div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Assign Project List</h4>
-                            <div class="card-header-form">
-                                <form>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Cust.</th>
-                                            <th>Project</th>
-                                            <th>Assign Date</th>
-                                            <th>Team</th>
-                                            <th>Priority</th>
-                                            <th>Status</th>
-                                            <th>Edit</th>
-                                        </tr>
-                                    </thead>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-8.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Wordpress Website</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Airi Satou</span>
-                                            </p>
-                                        </td>
-                                        <td>20-02-2018</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-red">High</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">50%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-success" data-width="50%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-1.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Android Game App</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Sarah Smith</span>
-                                            </p>
-                                        </td>
-                                        <td>22-05-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-green">Low</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">55%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-purple" data-width="55%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-5.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Java Web Service</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Cara Stevens</span>
-                                            </p>
-                                        </td>
-                                        <td>11-04-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-blue">Medium</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">70%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar" data-width="70%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-9.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Wedding IOS App</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> John Doe</span>
-                                            </p>
-                                        </td>
-                                        <td>19-05-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-red">High</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">45%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-cyan" data-width="45%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-10.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Blize Admin Template</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Ashton Cox</span>
-                                            </p>
-                                        </td>
-                                        <td>25-07-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-blue">Medium</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">67%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-red" data-width="67%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-4.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">React js website</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Sarah Smith </span>
-                                            </p>
-                                        </td>
-                                        <td>11-08-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-green">Low</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">41%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-orange" data-width="41%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-10.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">SEO improvement</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Janak Gandhi</span>
-                                            </p>
-                                        </td>
-                                        <td>22-02-2018</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-red">High</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">70%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-success" data-width="70%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-img">
-                                            <img src="assets/img/users/user-6.png" alt="">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 font-13">Laravel Website</h6>
-                                            <p class="m-0 font-12">
-                                                Assigned to<span class="col-green font-weight-bold"> Mili Rain</span>
-                                            </p>
-                                        </td>
-                                        <td>31-03-2019</td>
-                                        <td class="text-truncate">
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Wildan Ahdian">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="John Deo">
-                                                </li>
-                                                <li class="team-member team-member-sm">
-                                                    <img class="rounded-circle"
-                                                         src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
-                                                         data-original-title="Sarah Smith">
-                                                </li>
-                                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <div class="badge-outline col-green">Low</div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="progress-text">55%</div>
-                                            <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-purple" data-width="55%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a data-toggle="tooltip" title="" data-original-title="Edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="far fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        <button type="button" id="facturar" class="btn btn-primary btn-lg btn-block" tabindex="4">
-            Facturar
-        </button>*@
-</section>
+<script>
+    // Build the chart
+    Highcharts.chart('graficoTopTenProductos', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: '5 PRODUCTOS MÀS VENDIDOS'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Total de Productos',
+            colorByPoint: true,
+            data: [{
+                name: 'Escoba',
+                y: 61,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Trapeador',
+                y: 10
+            }, {
+                name: 'Charola',
+                y: 10
+            }, {
+                name: 'Maceta',
+                y: 4
+            }, {
+                name: 'Vaso',
+                y: 4
+            }]
+        }]
+    });
+</script>
 
