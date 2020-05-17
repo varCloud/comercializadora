@@ -211,6 +211,7 @@
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="DAO\BitacoraDAO.cs" />
     <Compile Include="DAO\ComprasDAO.cs" />
+    <Compile Include="DAO\DashboardDAO.cs" />
     <Compile Include="DAO\EstacionesDAO.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Estacion.cs" />
@@ -931,6 +933,7 @@
     <Content Include="assets\img\cards\mastercard.png" />
     <Content Include="assets\img\cards\paypal.png" />
     <Content Include="assets\img\cards\visa.png" />
+    <Content Include="assets\img\cash-register.png" />
     <Content Include="assets\img\details_close.png" />
     <Content Include="assets\img\details_open.png" />
     <Content Include="assets\img\favicon.ico" />
@@ -1034,6 +1037,11 @@
     <Content Include="assets\js\page\gmaps-multiple-marker.js" />
     <Content Include="assets\js\page\gmaps-route.js" />
     <Content Include="assets\js\page\gmaps-simple.js" />
+    <Content Include="assets\js\page\highcharts\data.js" />
+    <Content Include="assets\js\page\highcharts\drilldown.js" />
+    <Content Include="assets\js\page\highcharts\exporting.js" />
+    <Content Include="assets\js\page\highcharts\highcharts-more.js" />
+    <Content Include="assets\js\page\highcharts\highcharts.js" />
     <Content Include="assets\js\page\index.js" />
     <Content Include="assets\js\page\index2.js" />
     <Content Include="assets\js\page\ion-icons.js" />
@@ -1071,6 +1079,7 @@
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
+    <Content Include="js\EvtDashboard.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
@@ -1219,6 +1228,7 @@
     <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
     <Content Include="Views\Bitacora\_DetalleBitacora.cshtml" />
     <Content Include="Views\Productos\_UbicacionesProducto.cshtml" />
+    <Content Include="Views\Dashboard\_Grafico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
