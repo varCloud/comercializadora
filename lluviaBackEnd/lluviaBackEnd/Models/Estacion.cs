@@ -35,7 +35,13 @@ namespace lluviaBackEnd.Models
 
         public int idStatus { get; set; }
 
+        public float montoTotalDia { get; set; }
+        public float montoTotalSemana { get; set; }
+        public float montoTotalMes { get; set; }
+        public float montoTotalAnio { get; set; }
 
-      
+
+
+
     }
 }

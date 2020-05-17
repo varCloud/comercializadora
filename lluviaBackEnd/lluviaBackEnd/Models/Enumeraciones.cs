@@ -18,6 +18,18 @@ namespace lluviaBackEnd.Models
         Facturada = 1,
         Cancelada,
         Error,
-        
+
+    }
+
+    public enum EnumTipoGrafico
+    {
+        VentasPorFecha = 1
+    }
+
+    public enum EnumTipoReporteGrafico
+    {
+        Semanal = 1,
+        Mensuales = 2,
+        Anuales = 3
     }
 }

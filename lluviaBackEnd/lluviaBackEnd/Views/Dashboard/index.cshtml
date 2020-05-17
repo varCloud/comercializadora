@@ -1,196 +1,134 @@
-﻿
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
 @{
     ViewBag.Title = "Dashboard";
 }
 
+@{
+    Notificacion<List<Estacion>> estaciones = ViewBag.estaciones;
+
+    float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
+    if (estaciones.Estatus == 200)
+    {
+        montoTotalDia = estaciones.Modelo.Sum(x => x.montoTotalDia);
+        montoTotalSemana = estaciones.Modelo.Sum(x => x.montoTotalSemana);
+        montoTotalMes = estaciones.Modelo.Sum(x => x.montoTotalMes);
+        montoTotalAnio = estaciones.Modelo.Sum(x => x.montoTotalAnio);
+    }
+
+}
+
+<script src="~/assets/js/page/highcharts/highcharts.js"></script>
+<script src="~/assets/js/page/highcharts/data.js"></script>
+<script src="~/assets/js/page/highcharts/drilldown.js"></script>
+<script src="~/assets/js/page/highcharts/exporting.js"></script>
+
 
 <section class="section">
-    <ul class="breadcrumb breadcrumb-style ">
-        <li class="breadcrumb-item">
-            <h4 class="page-title m-b-0">Dashboard</h4>
-        </li>
-
-
-    </ul>
-    @*<div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-statistic-4">
-                        <div class="info-box7-block">
-                            <h6 class="m-b-20 text-right">Ventas del mes</h6>
-                            <h4 class="text-right">
-                                <i class="fas fa-cart-plus pull-left bg-indigo c-icon"></i><span>7.12K</span>
-                            </h4>
-                            <p class="mb-0 mt-3 text-muted">
-                                <i class="fas fa-arrow-circle-up col-green m-r-5"></i><span class="text-success font-weight-bold">23%</span> mas que el mes anterior
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-statistic-4">
-                        <div class="info-box7-block">
-                            <h6 class="m-b-20 text-right">Compras del Mes</h6>
-                            <h4 class="text-right">
-                                <i class="fas fa-users pull-left bg-cyan c-icon"></i><span>22.3K</span>
-                            </h4>
-                            <p class="mb-0 mt-3 text-muted">
-                                <i class="fas fa-arrow-circle-up col-red m-r-5"></i><span class="col-red font-weight-bold">3%</span> menos del mes anterior
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-statistic-4">
-                        <div class="info-box7-block">
-                            <h6 class="m-b-20 text-right">Total de Prouductos</h6>
-                            <h4 class="text-right">
-                                <i class="fas fa-ticket-alt pull-left bg-deep-orange c-icon"></i><span>725</span>
-                            </h4>
-                            <p class="mb-0 mt-3 text-muted">
-                                <i class="fas fa-arrow-circle-up col-green m-r-5"></i><span class="text-success font-weight-bold">21%</span> mas que el mes anterior
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-statistic-4">
-                        <div class="info-box7-block">
-                            <h6 class="m-b-20 text-right">Total Ganancias</h6>
-                            <h4 class="text-right">
-                                <i class="fas fa-dollar-sign pull-left bg-green c-icon"></i><span>$3.58M</span>
-                            </h4>
-                            <p class="mb-0 mt-3 text-muted">
-                                <i class="fas fa-arrow-circle-down col-red m-r-5"></i><span class="col-red font-weight-bold">05%</span> que el mes anterior
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
     <div class="row">
-        <div class="col-xl-8 col-md-12 col-lg-8">
+        <div class="col-12 col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>Resumen de Ventas Anuales</h4>
+                    <h4></h4>
+                    <div class="card-header-action">
+                        <div class="btn active btnGraficoVentas" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Semanal)">Semana Actual</div>
+                        <div class="btn btnGraficoVentas" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Mensuales</div>
+                        <div class="btn btnGraficoVentas" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Anuales</div>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <ul class="list-inline text-center m-b-0">
-                        <li class="list-inline-item p-r-30">
-                            <i data-feather="arrow-up-circle" class="col-green"></i>
-                            <h5 class="m-b-0">$675</h5>
-                            <p class="text-muted font-14 m-b-0">Ganancia Semanal</p>
-                        </li>
-                        <li class="list-inline-item p-r-30">
-                            <i data-feather="arrow-down-circle" class="col-orange"></i>
-                            <h5 class="m-b-0">$1,587</h5>
-                            <p class="text-muted font-14 m-b-0">Ganancia Mensual</p>
-                        </li>
-                        <li class="list-inline-item p-r-30">
-                            <i data-feather="arrow-up-circle" class="col-green"></i>
-                            <h5 class="mb-0 m-b-0">$45,965</h5>
-                            <p class="text-muted font-14 m-b-0">Ganancia Anual</p>
-                        </li>
-                    </ul>
-                    <div id="revenue"></div>
+                    <div id="GraficoVentasPorFecha">
+                        @Html.Action("_Grafico", "DashBoard", new { tipoGrafico = lluviaBackEnd.Models.EnumTipoGrafico.VentasPorFecha, tipoReporteGrafico = lluviaBackEnd.Models.EnumTipoReporteGrafico.Semanal })
+                    </div>
+                    <div class="statistic-details mt-1">
+                        <div class="statistic-details-item">
+                            <div class="detail-value">@montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
+                            <div class="detail-name">Hoy</div>
+                        </div>
+                        <div class="statistic-details-item">
+                            <div class="detail-value">@montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
+                            <div class="detail-name">Esta Semana</div>
+                        </div>
+                        <div class="statistic-details-item">
+                            <div class="detail-value">@montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
+                            <div class="detail-name">Este mes</div>
+                        </div>
+                        <div class="statistic-details-item">
+                            <div class="detail-value">@montoTotalAnio.ToString("C", new CultureInfo("en-US"))</div>
+                            <div class="detail-name">Este año</div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-4 col-md-12 col-lg-4">
-
-
+        <div class="col-12 col-sm-12 col-lg-8">
             <div class="card">
-                <div class="card-statistic-4">
-                    <div class="info-box7-block">
-                        <h6 class="m-b-20 text-right">Compras del Mes</h6>
-                        <h4 class="text-right">
-                            <i class="fas fa-users pull-left bg-cyan c-icon"></i><span>22.3K</span>
-                        </h4>
-                        <p class="mb-0 mt-3 text-muted">
-                            <i class="fas fa-arrow-circle-up col-red m-r-5"></i><span class="col-red font-weight-bold">3%</span> menos del mes anterior
-                        </p>
-                    </div>
+                <div class="card-header">
+                    <h4>Ventas de Estaciones</h4>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-statistic-4">
-                    <div class="info-box7-block">
-                        <h6 class="m-b-20 text-right">Compras del Mes</h6>
-                        <h4 class="text-right">
-                            <i class="fas fa-users pull-left bg-cyan c-icon"></i><span>22.3K</span>
-                        </h4>
-                        <p class="mb-0 mt-3 text-muted">
-                            <i class="fas fa-arrow-circle-up col-red m-r-5"></i><span class="col-red font-weight-bold">3%</span> menos del mes anterior
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-statistic-4">
-                    <div class="info-box7-block">
-                        <h6 class="m-b-20 text-right">Total Ganancias</h6>
-                        <h4 class="text-right">
-                            <i class="fas fa-dollar-sign pull-left bg-green c-icon"></i><span>$3.58M</span>
-                        </h4>
-                        <p class="mb-0 mt-3 text-muted">
-                            <i class="fas fa-arrow-circle-down col-red m-r-5"></i><span class="col-red font-weight-bold">05%</span> que el mes anterior
-                        </p>
-                    </div>
-                </div>
-            </div>
+                <div class="card-body">
 
+                    @if (estaciones.Estatus != 200)
+                    {
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-question"></i>
+                            </div>
+                            <h2>@estaciones.Mensaje</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled user-details list-unstyled-border list-unstyled-noborder">
+
+                            @foreach (Estacion estacion in estaciones.Modelo)
+                            {
+
+                            <li class="media">
+                                <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cash-register.png">
+                                <div class="media-body">
+                                    <div class="media-title">@estacion.nombre</div>
+                                    <div class="text-job text-muted">@estacion.nombreAlmacen</div>
+                                </div>
+                                <div class="media-items">
+                                    <div class="media-item">
+                                        <div class="media-value">@estacion.montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
+                                        <div class="media-label">Hoy</div>
+                                    </div>
+                                    <div class="media-item">
+                                        <div class="media-value">@estacion.montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
+                                        <div class="media-label">Esta Semana</div>
+                                    </div>
+                                    <div class="media-item">
+                                        <div class="media-value">@estacion.montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
+                                        <div class="media-label">Este Mes</div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            }
+                        </ul>
+                    }
+
+
+                </div>
+
+            </div>
         </div>
 
-
-
-
-        @*<div class="col-xl-4 col-md-12 col-lg-4">
-                <div class="card l-bg-purple">
-                    <div class="card-body">
-                        <div class="text-white">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-5">
-                                    <h4 class="mb-0 font-26 text-white">$1,235</h4>
-                                    <p class="mb-2 text-white">Avg Sales Per Month</p>
-                                    <p class="mb-0 text-white">
-                                        <span class="font-20">+11.25% </span>Increase
-                                    </p>
-                                </div>
-                                <div class="col-md-6 col-lg-7">
-                                    <div class="sparkline-bar p-t-50"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card l-bg-cyan-dark">
-                    <div class="card-body">
-                        <div class="text-white">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-5">
-                                    <h4 class="mb-0 font-26 text-white">758</h4>
-                                    <p class="mb-2 text-white">Avg new Cust Per Month</p>
-                                    <p class="mb-0 text-white">
-                                        <span class="font-20">+25.11%</span> Increase
-                                    </p>
-                                </div>
-                                <div class="col-md-6 col-lg-7">
-                                    <div class="sparkline-inline p-t-50"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
     </div>
+</section>
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js/EvtDashboard.js"></script>
+}
 
 
     @*<div class="row">
@@ -626,3 +564,4 @@
             Facturar
         </button>*@
 </section>
+
