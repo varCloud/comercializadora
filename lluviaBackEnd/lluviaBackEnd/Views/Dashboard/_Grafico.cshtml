@@ -1,0 +1,88 @@
+﻿@using lluviaBackEnd.Models;
+@model Notificacion<Grafico>
+
+@{
+
+    Notificacion<Grafico> grafico = Model;
+    EnumTipoReporteGrafico tipoReporteGrafico = ViewBag.tipoReporteGrafico;
+    string titulo;
+    titulo = @Html.Raw(tipoReporteGrafico == EnumTipoReporteGrafico.Semanal ? "VENTAS DE LA SEMANA ACTUAL" : "VENTAS " + tipoReporteGrafico.ToString().ToUpper()).ToString();
+}
+
+@if (grafico.Estatus != 200)
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-question"></i>
+        </div>
+        <h2>@grafico.Mensaje</h2>
+    </div>
+}
+else
+{
+
+
+    <div id="graficoVentasEstaciones"></div>
+
+
+    <script type="text/javascript">
+    var data=@Html.Raw(Json.Encode(grafico.Modelo.data))
+    var series=@Html.Raw(Json.Encode(grafico.Modelo.seriesDrilldowns))
+        Highcharts.chart('graficoVentasEstaciones', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: @Html.Raw(Json.Encode(titulo))
+        },
+        subtitle: {
+            text: ''
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            }
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '${point.y:.2f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{point.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>${point.y:.2f}</b> M.N<br/>'
+        },
+
+        series: [
+            {
+                name: "Estaciones",
+                colorByPoint: true,
+                data: data
+            }
+        ],
+        drilldown: {
+            series: series
+        }
+    });
+    </script>
+
+
+}
+

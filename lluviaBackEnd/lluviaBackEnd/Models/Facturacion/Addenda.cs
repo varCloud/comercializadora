@@ -15,6 +15,8 @@ namespace lluviaBackEnd.Models.Facturacion
         public string descripcionUsoCFDI { get; set; }
 
         public string descripcionFormaPago { get; set; }
+
+        public string descripcionTipoComprobante { get; set; }
     }
 
     public class ConceptosAddenda

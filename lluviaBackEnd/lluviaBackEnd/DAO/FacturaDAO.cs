@@ -61,7 +61,7 @@ namespace lluviaBackEnd.DAO
                     c.FormaPago = receptor.FormaPago;
                     //OBTENEMOS LAS DESCRIPCIONES DE LA INFORMACION DEL PAGO 
                     items.Add("descripcionUsoCFDI", receptor.descripcionUsoCFDI);
-                    items.Add("descripcionFormaPago", receptor.descripcionUsoCFDI);
+                    items.Add("descripcionFormaPago", receptor.descripcionFormaPago);
 
                     ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
                     c.Receptor = new ComprobanteReceptor();

@@ -165,14 +165,14 @@ namespace lluviaBackEnd.Utilerias
                             </tr>
                             <tr>
                                 <td  width='15%'></td>
-                                <td  width='25%'></td> 
-                                <td  width='25%'></td> 
-                                <td  width='25%'></td> 
+                                <td  width='35%'></td> 
+                                <td  width='15%'></td> 
+                                <td  width='35%'></td> 
                             </tr>
                         </table>";
 
 
-                string html1 = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                string DatosDelEmisor = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                         <tr "+ cabeceraTablas + @">
                             <td colspan='3' >Datos del Emisor </td>    
                         </tr>
@@ -184,12 +184,12 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                         <tr " + centradas + @">
                             <td>" + c.Emisor.Rfc + @" </td> 
-                            <td>" + c.TipoDeComprobante + @" </td>   
+                            <td>" + c.TipoDeComprobante+" - "+c.Addenda.descripcionTipoComprobante + @" </td>   
                             <td>" + c.LugarExpedicion + @"</td>    
                         </tr>
                         </table>";
 
-                string html2 = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                string informacionDelPago = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                         <tr " + cabeceraTablas + @">
                             <td colspan='3'>Información del Pago</td>    
                         </tr>
@@ -201,7 +201,7 @@ namespace lluviaBackEnd.Utilerias
                         <tr " + centradas + @">
                                 <td>" + c.FormaPago +" - "+c.Addenda.descripcionFormaPago+@" </td>   
                                 <td>" + c.MetodoPago + "-  Pago en una sola exhibición" + @" </td>  
-                                <td>" + c.Moneda + @"</td>    
+                                <td>" + c.Moneda + @"- Peso Mexicano</td>    
                         </tr>
                         </table>";
 
@@ -331,7 +331,7 @@ namespace lluviaBackEnd.Utilerias
                 </table>";
 
 
-                html += html1 + html2 + DatosDelCliente + html4 + html5+QR;
+                html += DatosDelEmisor + informacionDelPago + DatosDelCliente + html4 + html5+QR;
 
                 //html = "<h1>Formato para solicitar la Domiciliación</h1>";
                 document.Open();
