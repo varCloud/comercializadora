@@ -86,6 +86,77 @@ namespace lluviaBackEnd.DAO
             return grafico;
         }
 
+        public Notificacion<List<Categoria>> ObtenerTopTen(EnumTipoReporteGrafico idTipoReporte, EnumTipoGrafico idTipoGrafico)
+        {
+            Notificacion<List<Categoria>> categoria = new Notificacion<List<Categoria>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoReporte", idTipoReporte);
+                    parameters.Add("@idTipoGrafico", idTipoGrafico);
+                    var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOP_TEN", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                        categoria.Modelo = rs.Read<Categoria>().ToList();
+                    }
+                    else
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return categoria;
+        }
+
+        public Notificacion<List<Categoria>> ObtenerInformacionGlobal(EnumTipoReporteGrafico idTipoReporte)
+        {
+            Notificacion<List<Categoria>> categoria = new Notificacion<List<Categoria>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoReporte", idTipoReporte);
+                    var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_INFORMACION_GLOBAL", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                        categoria.Modelo = rs.Read<Categoria>().ToList();
+                    }
+                    else
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return categoria;
+        }
+
 
     }
 }

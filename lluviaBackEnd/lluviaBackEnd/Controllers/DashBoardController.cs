@@ -18,13 +18,17 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                ViewBag.estaciones=new DAO.DashboardDAO().ObtenerVentasEstacion(null,null);
+                DashboardDAO dao = new DashboardDAO();
+                ViewBag.estaciones= dao.ObtenerVentasEstacion(null,null);
+                ViewBag.topTenProductos = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia,EnumTipoGrafico.TopTenProductos);
+                ViewBag.topTenClientes = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia, EnumTipoGrafico.TopTenClientes);
+                ViewBag.topTenProveedores = dao.ObtenerTopTen(EnumTipoReporteGrafico.Mensuales, EnumTipoGrafico.TopTenProvedores);
+                ViewBag.InformacionGlobal=dao.ObtenerInformacionGlobal(EnumTipoReporteGrafico.Dia);
                 return View();
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
            
         }
@@ -90,6 +94,32 @@ namespace lluviaBackEnd.Controllers
                 }
 
                                
+            }
+
+            if(tipoGrafico==EnumTipoGrafico.TopTenProductos || tipoGrafico == EnumTipoGrafico.TopTenClientes || tipoGrafico == EnumTipoGrafico.TopTenProvedores)
+            {
+                Notificacion<List<Categoria>> categorias= dao.ObtenerTopTen(tipoReporteGrafico, tipoGrafico);
+                grafico.Estatus = categorias.Estatus;
+                grafico.Mensaje = categorias.Mensaje;
+                if(categorias.Estatus==200)
+                {
+                    grafico.Modelo = new Grafico();
+                    grafico.Modelo.categorias = categorias.Modelo;
+                }
+
+            }
+
+            if (tipoGrafico == EnumTipoGrafico.InformacionGlobal)
+            {
+                Notificacion<List<Categoria>> categorias = dao.ObtenerInformacionGlobal(tipoReporteGrafico);
+                grafico.Estatus = categorias.Estatus;
+                grafico.Mensaje = categorias.Mensaje;
+                if (categorias.Estatus == 200)
+                {
+                    grafico.Modelo = new Grafico();
+                    grafico.Modelo.categorias = categorias.Modelo;
+                }
+
             }
 
             ViewBag.tipoGrafico = tipoGrafico;

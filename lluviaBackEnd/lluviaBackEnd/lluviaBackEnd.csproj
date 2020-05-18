@@ -939,6 +939,7 @@
     <Content Include="assets\img\cards\paypal.png" />
     <Content Include="assets\img\cards\visa.png" />
     <Content Include="assets\img\cash-register.png" />
+    <Content Include="assets\img\cliente.png" />
     <Content Include="assets\img\details_close.png" />
     <Content Include="assets\img\details_open.png" />
     <Content Include="assets\img\favicon.ico" />
@@ -997,11 +998,13 @@
     <Content Include="assets\img\posts\post7.png" />
     <Content Include="assets\img\posts\post8.png" />
     <Content Include="assets\img\posts\post9.png" />
+    <Content Include="assets\img\producto.png" />
     <Content Include="assets\img\products\product-1.png" />
     <Content Include="assets\img\products\product-2.png" />
     <Content Include="assets\img\products\product-3.png" />
     <Content Include="assets\img\products\product-4.png" />
     <Content Include="assets\img\products\product-5.png" />
+    <Content Include="assets\img\proveedor.png" />
     <Content Include="assets\img\spinner-white.svg" />
     <Content Include="assets\img\spinner.svg" />
     <Content Include="assets\img\typing.svg" />

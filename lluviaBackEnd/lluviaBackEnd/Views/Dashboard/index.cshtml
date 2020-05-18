@@ -6,6 +6,10 @@
 
 @{
     Notificacion<List<Estacion>> estaciones = ViewBag.estaciones;
+    Notificacion<List<Categoria>> topProductos = ViewBag.topTenProductos;
+    Notificacion<List<Categoria>> topClientes = ViewBag.topTenClientes;
+    Notificacion<List<Categoria>> topProveedores = ViewBag.topTenProveedores;
+    Notificacion<List<Categoria>> informacionGeneral = ViewBag.InformacionGlobal;
 
     float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
     if (estaciones.Estatus == 200)
@@ -15,6 +19,12 @@
         montoTotalMes = estaciones.Modelo.Sum(x => x.montoTotalMes);
         montoTotalAnio = estaciones.Modelo.Sum(x => x.montoTotalAnio);
     }
+
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="~/assets/bundles/owlcarousel2/dist/assets/owl.carousel.min.css">
 
 }
 
@@ -62,25 +72,27 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-12 col-sm-12 col-lg-8">
             <div class="card">
                 <div class="card-header">
                     <h4>Ventas de Estaciones</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="top-5-scroll">
 
                     @if (estaciones.Estatus != 200)
                     {
                         <div class="empty-state">
                             <div class="empty-state-icon">
-                                <i class="fas fa-question"></i>
+                                <i class="fas fa-ban"></i>
                             </div>
                             <h2>@estaciones.Mensaje</h2>
                         </div>
                     }
                     else
                     {
-                        <ul class="list-unstyled user-details list-unstyled-border list-unstyled-noborder">
+                        <ul class="list-unstyled list-unstyled-border">
 
                             @foreach (Estacion estacion in estaciones.Modelo)
                             {
@@ -106,7 +118,6 @@
                                         </div>
                                     </div>
                                 </li>
-
                             }
                         </ul>
                     }
@@ -116,26 +127,208 @@
 
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-lg-6">
+
+        <div class="col-12 col-sm-12 col-lg-4">
+
+
+            @if (informacionGeneral.Estatus == 200)
+            {
+                foreach (Categoria c in informacionGeneral.Modelo)
+                {
+                    string icon= "fa-chart-line", bg = "l-bg-orange";
+                    switch (c.id)
+                    {
+                        case 1:
+                            {
+                                icon = "fa-dollar-sign";
+                                bg = "l-bg-cyan";
+                            }
+                            break;
+
+                        case 2:
+                            {
+                                icon = "fa-shopping-cart";
+                                bg = "l-bg-purple";
+                            }
+                            break;
+
+                        case 3:
+                            {
+                                icon = "fa-briefcase";
+                                bg = "l-bg-green";
+                            }
+                            break;
+                    }
+
+                    <div class="card card-statistic-1">
+                        <div class="card-icon @bg">
+                            <i class="fas @icon"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-right">
+                                    <h3 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@Html.Raw(c.id==3 ? c.total.ToString() : c.total.ToString("C", new CultureInfo("en-US"))) 
+                                    </h3>
+                                    <span class="text-muted">@c.categoria</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h4></h4>
-                    <div class="card-header-action">
-                        <div class="btn active" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Dia)">Hoy</div>
-                        <div class="btn " tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Semanal)">Semana Actual</div>
-                        <div class="btn" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Mes Actual</div>
-                        <div class="btn" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Año Actual</div>
+                    <h4>Top Clientes</h4>
+                    <div class="card-header-action dropdown">
+                        <a id="btnTopClientes" data-toggle="dropdown" class="btn btn-success dropdown-toggle">Hoy</a>
+                        <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                            <li class="dropdown-title">Seleccione periodo</li>
+                            <li><a class="dropdown-item active btnTopClientes" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Dia)">Hoy</a></li>
+                            <li><a class="dropdown-item btnTopClientes" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Semanal)">Esta Semana</a></li>
+                            <li><a class="dropdown-item btnTopClientes" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Este Mes</a></li>
+                            <li><a class="dropdown-item btnTopClientes" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Este Año</a></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div id="ViewGraficoTopTenProductos">
-                             <div id="graficoTopTenProductos"></div>
-                    </div>                  
+                <div class="card-body" id="viewTopClientes">
+                    @if (topClientes.Estatus != 200)
+                    {
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <h2>@topClientes.Mensaje</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
+                            @foreach (Categoria c in topClientes.Modelo)
+                            {
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cliente.png">
+                                    <div class="media-body">
+                                        <div class="mt-0 mb-1 font-weight-bold">@c.categoria</div>
+                                        <div class="text-success text-small font-600-bold">@c.total.ToString("C", new CultureInfo("en-US"))</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
         </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card gradient-bottom">
+                <div class="card-header">
+                    <h4>Top Productos</h4>
+                    <div class="card-header-action dropdown">
+                        <a id="btnTopProductos" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Hoy</a>
+                        <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                            <li class="dropdown-title">Seleccione periodo</li>
+                            <li><a class="dropdown-item btnTopProductos active" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Dia)">Hoy</a></li>
+                            <li><a class="dropdown-item btnTopProductos" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Semanal)">Esta Semana</a></li>
+                            <li><a class="dropdown-item btnTopProductos" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Este Mes</a></li>
+                            <li><a class="dropdown-item btnTopProductos" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Este Año</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body" id="viewTopProductos">
+                    @if (topProductos.Estatus != 200)
+                    {
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <h2>@topProductos.Mensaje</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled list-unstyled-border">
+                            @foreach (Categoria p in topProductos.Modelo)
+                            {
+                                <li class="media">
+                                    <img class="mr-3 rounded" width="55" src="~/assets/img/producto.png" alt="product">
+                                    <div class="media-body">
+                                        <div class="float-right">
+                                            <div class="font-weight-600 text-muted text-small">@p.total</div>
+                                        </div>
+                                        <div class="media-title">@p.categoria</div>
+                                        @*<div class="mt-1">
+                                                <div class="budget-price">
+                                                    <div class="budget-price-square bg-primary" data-width="61%"></div>
+                                                    <div class="budget-price-label">$24,897</div>
+                                                </div>
+                                                <div class="budget-price">
+                                                    <div class="budget-price-square bg-danger" data-width="38%"></div>
+                                                    <div class="budget-price-label">$18,865</div>
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                </li>
 
-
+                            }
+                        </ul>
+                    }
+                </div>
+                @*<div class="card-footer pt-3 d-flex justify-content-center">
+                        <div class="budget-price justify-content-center">
+                            <div class="budget-price-square bg-primary" data-width="20"></div>
+                            <div class="budget-price-label">Precio de venta</div>
+                        </div>
+                        <div class="budget-price justify-content-center">
+                            <div class="budget-price-square bg-danger" data-width="20"></div>
+                            <div class="budget-price-label">Costo del producto</div>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Top Proveedores</h4>
+                    <a id="btnTopProveedores" data-toggle="dropdown" class="btn btn-danger dropdown-toggle">Este Mes</a>
+                    <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                        <li class="dropdown-title">Seleccione periodo</li>
+                        <li><a class="dropdown-item btnTopProveedores active" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Mensuales)">Este Mes</a></li>
+                        <li><a class="dropdown-item btnTopProveedores" tipoReporteGrafico="@Convert.ToInt16(EnumTipoReporteGrafico.Anuales)">Este Año</a></li>
+                    </ul>
+                </div>
+                <div class="card-body" id="viewTopProveedores">
+                    @if (topProveedores.Estatus != 200)
+                    {
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <h2>@topProveedores.Mensaje</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
+                            @foreach (Categoria p in topProveedores.Modelo)
+                            {
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/proveedor.png">
+                                    <div class="media-body">
+                                        <div class="mt-0 mb-1 font-weight-bold">@p.categoria</div>
+                                        <div class="text-success text-small font-600-bold">@p.total.ToString("C", new CultureInfo("en-US"))</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -146,61 +339,7 @@
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/owlcarousel2/dist/owl.carousel.min.js"></script>
     <script src="~/js/EvtDashboard.js"></script>
 }
-
-<script>
-    // Build the chart
-    Highcharts.chart('graficoTopTenProductos', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: '5 PRODUCTOS MÀS VENDIDOS'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
-        },
-        accessibility: {
-            point: {
-                valueSuffix: '%'
-            }
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        series: [{
-            name: 'Total de Productos',
-            colorByPoint: true,
-            data: [{
-                name: 'Escoba',
-                y: 61,
-                sliced: true,
-                selected: true
-            }, {
-                name: 'Trapeador',
-                y: 10
-            }, {
-                name: 'Charola',
-                y: 10
-            }, {
-                name: 'Maceta',
-                y: 4
-            }, {
-                name: 'Vaso',
-                y: 4
-            }]
-        }]
-    });
-</script>
 

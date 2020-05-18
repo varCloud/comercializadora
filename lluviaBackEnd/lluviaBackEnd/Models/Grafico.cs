@@ -10,6 +10,9 @@ namespace lluviaBackEnd.Models
         public List<Data> data { get; set; }
         public List<seriesDrilldown> seriesDrilldowns { get; set; }
 
+        public List<Categoria> categorias { get; set; }
+
+
     }
 
     public class Categoria

@@ -3,27 +3,36 @@
         evt.preventDefault();
         $(".btnGraficoVentas").removeClass("active");
         $(this).addClass("active");
+        CargaGrafico(1, $(this).attr("tipoReporteGrafico"), "GraficoVentasPorFecha");
 
-        $.ajax({
-            url: rootUrl("/DashBoard/_Grafico"),
-            data: { tipoGrafico: 1, tipoReporteGrafico: $(this).attr("tipoReporteGrafico") },
-            method: 'post',
-            dataType: 'html',
-            async: true,
-            beforeSend: function (xhr) {
-                ShowLoader();
-            },
-            success: function (data) {
-                OcultarLoader();
-                $("#GraficoVentasPorFecha").html(data);
-
-            },
-            error: function (xhr, status) {
-                OcultarLoader();
-            }
-        });
     });
 
+    $(".btnTopProductos").click(function (evt) {
+        evt.preventDefault();
+        $(".btnTopProductos").removeClass("active");
+        $(this).addClass("active");
+        $("#btnTopProductos").text($(this).text());
+        CargaGrafico(2, $(this).attr("tipoReporteGrafico"), "viewTopProductos");
+
+    });
+
+    $(".btnTopClientes").click(function (evt) {
+        evt.preventDefault();
+        $(".btnTopClientes").removeClass("active");
+        $(this).addClass("active");
+        $("#btnTopClientes").text($(this).text());
+        CargaGrafico(3, $(this).attr("tipoReporteGrafico"), "viewTopClientes");
+
+    });
+
+    $(".btnTopProveedores").click(function (evt) {
+        evt.preventDefault();
+        $(".btnTopProveedores").removeClass("active");
+        $(this).addClass("active");
+        $("#btnTopProveedores").text($(this).text());
+        CargaGrafico(4, $(this).attr("tipoReporteGrafico"), "viewTopProveedores");
+
+    });
 
     Highcharts.setOptions({
         lang: {
@@ -49,3 +58,25 @@
     });
 
 });
+
+function CargaGrafico(tipoGrafico, tipoReporteGrafico,nameDiv) {    
+    $.ajax({
+        url: rootUrl("/DashBoard/_Grafico"),
+        data: { tipoGrafico: tipoGrafico, tipoReporteGrafico: tipoReporteGrafico },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {            
+            $("#" + nameDiv).html(data);
+            OcultarLoader();
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+        }
+    });
+
+}
