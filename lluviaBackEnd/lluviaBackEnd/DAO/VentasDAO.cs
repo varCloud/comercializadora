@@ -127,7 +127,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta)
+        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA)
         {
             Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
             try
@@ -137,6 +137,13 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     parameters.Add("@XML", Serialize(venta));
+                    parameters.Add("@idCliente", idCliente);
+                    parameters.Add("@idFactFormaPago", formaPago);
+                    parameters.Add("@idFactUsoCFDI", usoCFDI);
+                    parameters.Add("@idVenta", idVenta);
+                    parameters.Add("@idUsuario", idUsuario);
+                    parameters.Add("@idEstacion", idEstacion);
+                    parameters.Add("@aplicaIVA", aplicaIVA);
 
                     var result = db.QueryMultiple("SP_REALIZA_VENTA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

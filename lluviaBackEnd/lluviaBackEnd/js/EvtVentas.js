@@ -398,24 +398,32 @@ function ObtenerCliente(idCliente) {
 $('#btnGuardarVenta').click(function (e) {
 
     var productos = [];
+    var idCliente = $('#idCliente').val();
+    var formaPago = $('#formaPago').val();
+    var usoCFDI = $('#usoCFDI').val();
+    var idVenta = $('#idVenta').val();
+    var aplicaIVA = parseInt(0);
+
+    if ($("#chkFacturar").is(":checked")) {
+        aplicaIVA = parseInt(1);
+    }
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
         var row_ = {
-            idCliente: $('#idCliente').val(),
+            //idCliente: $('#idCliente').val(),
             idProducto: fila.children[1].innerHTML,
             //cantidad: fila.children[4].innerHTML,
             cantidad: parseInt(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')),
-            idUsuario: 4,//fila.children[3].innerHTML,
-            formaPago: $('#formaPago').val(),
-            usoCFDI: $('#usoCFDI').val(),
-            idVenta: $('#idVenta').val(),
+            //idUsuario: 4,//fila.children[3].innerHTML,
+            //formaPago: $('#formaPago').val(),
+            //usoCFDI: $('#usoCFDI').val(),
+            //idVenta: $('#idVenta').val(),
         };
         productos.push(row_);
-
     });
 
-    dataToPost = JSON.stringify({ venta: productos });
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -472,14 +480,17 @@ function ImprimeTicket(idVenta) {
         data: { idVenta: idVenta },
         method: 'post',
         dataType: 'html',
-        async: false,
+        async: true,
         beforeSend: function (xhr) {
+            ShowLoader();
         },
         success: function (data) {
             console.log(data);
+            OcultarLoader();           
             MuestraToast('success', "Se envio el ticket a la impresora.");
         },
         error: function (xhr, status) {
+            OcultarLoader();           
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);

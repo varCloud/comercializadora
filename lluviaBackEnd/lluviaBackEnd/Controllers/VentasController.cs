@@ -61,12 +61,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarVenta(List<Ventas> venta)
+        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA)
         {
             try
             {
                 Notificacion<Ventas> result = new Notificacion<Ventas>();
-                result = new VentasDAO().GuardarVenta(venta);
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -185,6 +186,7 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
 
                 PrintDocument pd = new PrintDocument();
+                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                 PaperSize ps = new PaperSize("", 120, 540);
 
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);

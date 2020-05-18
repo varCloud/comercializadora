@@ -33,6 +33,7 @@ namespace lluviaBackEnd.DAO
 
                     parameters.Add("@usuario", sesion.usuario);
                     parameters.Add("@contrasena",sesion.contrasena);
+                    parameters.Add("@macAdress", sesion.macAdress);
                     var result = db.QueryMultiple("SP_VALIDA_CONTRASENA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

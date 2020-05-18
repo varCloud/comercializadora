@@ -39,6 +39,14 @@ namespace lluviaBackEnd.Controllers
                     ModelState.AddModelError(string.Empty, "Por favor comunicate con el Administrador");
                     return Json( new Notificacion<object>() {Estatus = -1 , Mensaje = "Error al validar el captcha" }, JsonRequestBehavior.AllowGet);
                 }
+
+                sesion.macAdress =  (
+                                        from nic in NetworkInterface.GetAllNetworkInterfaces()
+                                        where nic.OperationalStatus == OperationalStatus.Up
+                                        select nic.GetPhysicalAddress().ToString()
+                                    ).FirstOrDefault();
+
+
                 Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
                 if (n.Modelo.usuarioValido)
                 {

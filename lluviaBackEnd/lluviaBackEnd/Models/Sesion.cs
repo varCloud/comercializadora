@@ -33,6 +33,8 @@ namespace lluviaBackEnd.Models
         public string Almacen { get; set; }
         public string Rol { get; set; }
         public string configurado { get; set; }
+        public int idEstacion { get; set; }
+        public string macAdress { get; set; }
 
     }
 }
