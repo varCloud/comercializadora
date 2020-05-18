@@ -61,12 +61,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarVenta(List<Ventas> venta)
+        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA)
         {
             try
             {
                 Notificacion<Ventas> result = new Notificacion<Ventas>();
-                result = new VentasDAO().GuardarVenta(venta);
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -185,6 +186,7 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
 
                 PrintDocument pd = new PrintDocument();
+                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                 PaperSize ps = new PaperSize("", 120, 540);
 
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
@@ -283,6 +285,8 @@ namespace lluviaBackEnd.Controllers
                 //datosEnca.Y += 14;
 
                 float monto = 0;
+                float montoIVA = 0;
+                float montoAhorro = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
@@ -290,6 +294,8 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     monto += notificacion.Modelo[i].monto;
+                    montoIVA += notificacion.Modelo[i].montoIVA;
+                    montoAhorro += notificacion.Modelo[i].ahorro;
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
                     {
@@ -315,18 +321,33 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto * 0.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
+                if (montoIVA > 0)
+                {
+                    e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
 
                 e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto * 1.16).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
+                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
+                if ( montoAhorro >= 0 )
+                {
+                    Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
+                    e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
+                    datosfooter1.Y += espaciado;
+                }
 
-                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
-                e.Graphics.DrawString("GRACIAS POR SU PREFERENCIA.", font, drawBrush, datosfooter2, centrado);
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
                 datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+                // para mas espaciado al final del ticket
+                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
             }
             catch (InvalidPrinterException ex)
             {

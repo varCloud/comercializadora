@@ -21,6 +21,8 @@ namespace lluviaBackEnd.Models
         public int cantidadActualInvGeneral { get; set; }
         public int cantidadAnteriorInvGeneral { get; set; }
         public DateTime fechaAlta { get; set; }
+        public float montoIVA { get; set; }
+        public float ahorro { get; set; }
 
     }
 }
