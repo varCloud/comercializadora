@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
-
+using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -178,6 +178,36 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+
+
+
+        [HttpPost]
+        public JsonResult ImprimirCodigos(string articulo, string descProducto)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
+                //FacturaDAO facturacionDAO = new FacturaDAO();
+                //Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+
+                //    Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + factura.idVenta + ".jpg"));
+                //Utils.GenerarQR(articulo);
+                //notificacion.Modelo =
+                Utils.GenerarImprimibleCodigos(pathPdfCodigos, articulo, descProducto);
+
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Códigos generados correctamente.";
+                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
 
     }
 

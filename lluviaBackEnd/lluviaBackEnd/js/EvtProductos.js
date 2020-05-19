@@ -583,17 +583,29 @@ function eliminaFilaPrecios(index_) {
     
 }
 
-//function validaBtnGuardarPrecios() {
+function ImprimirCodigos(articulo, descProducto) {
+    $.ajax({
+        url: rootUrl("/Productos/ImprimirCodigos"),
+        data: { articulo: articulo, descProducto: descProducto },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
 
-//    var totalRows = $('#tablaRangosPrecios tr').length - 1;
-//    if (totalRows <= 0) {
-//        document.getElementById("btnGuardarPrecios").disabled = true;
-//    }
-//    else {
-//        document.getElementById("btnGuardarPrecios").disabled = false;
-//    }
-    
-//}
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
 
 function actualizaTablaPrecios() {
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {

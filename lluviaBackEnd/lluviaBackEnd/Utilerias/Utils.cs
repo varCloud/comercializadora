@@ -378,5 +378,154 @@ namespace lluviaBackEnd.Utilerias
 
         }
 
+
+
+        public static string ObtnerFolderCodigos()
+        {
+            string ruta = string.Empty;
+            try
+            {
+                ruta = HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathPdfCodigos"].ToString());
+                DateTime fecha = System.DateTime.Now;
+
+                if (!Directory.Exists(ruta))
+                    Directory.CreateDirectory(ruta);
+                string[] directorio = System.IO.Directory.GetDirectories(ruta);
+
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fecha.Month).ToUpper();
+                ruta = Path.Combine(ruta, fecha.Year.ToString());
+                if (directorio.ToList().Exists(p => p.Equals(ruta)))
+                {
+                    directorio = Directory.GetDirectories(ruta);
+                    ruta = Path.Combine(ruta, nombreMes);
+                    if (!Directory.Exists(ruta))
+                        Directory.CreateDirectory(ruta);
+
+                }
+                else
+                {
+                    ruta = Path.Combine(ruta, nombreMes);
+                    Directory.CreateDirectory(ruta);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("AL OBTENER LA RUTA DEL PDF", ex);
+            }
+            return ruta;
+        }
+
+        public static void GenerarImprimibleCodigos(string path, string articulo, string producto)
+        {
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string titulosCabeceras = "style='font-weight:bold;  color:3b3b3b;text-align:center'";
+            string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:7px;' ";
+            string color2 = "style='color:7b7b7b; text-align:center; font-size:7px;'";
+            string centradas = "style='text-align:center;'";
+            string titulosCabecerasAbre = "bgcolor='7D7D7D' style='font-weight:bold;  color:white;text-align:center'";
+
+            string tituloIndividual = "style='font-weight:bold;  color:3b3b3b;'";
+            Document document = new Document(PageSize.A4, 30, 30, 30, 110);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Códigos del Producto: ";
+            string qr = "data:image/png;base64," + Convert.ToBase64String(Utilerias.Utils.GenerarQR(articulo));
+            PDFWriter.PageEvent = eventos;
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "<br/>";
+
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr " + cabeceraTablas + @">
+                            <td colspan='4' >Producto: " + producto + @" </td>    
+                        </tr>
+                        <tr>
+                        
+                                <td>
+                                    <img src=" + qr + @" >
+                                </td>                               
+                                <td>Fecha</td>                               
+                                <td>Folio</td>
+                                <td>Fecha</td>
+                        </tr>
+                        
+                        </table>";
+
+                //$("#barra").attr('src', 'data:image/png;base64,' + data.barra);
+
+
+
+
+                //string QR = @"<table  width='100%'>
+                //    <tr>
+                //        <td width='80%'>
+                //            <table width='100%' height='100%'   style='font-size:8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
+                //                <tr>
+                //                    <td style='color:black;' ><b>CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT </b></td>
+                //                </tr>
+                //                <tr>
+                //                    <td  style='white-space: nowrap'>" + CadenaComplementos(c.Complemento.TimbreFiscalDigital) + @"</td>
+                //                </tr>
+                //                <tr>
+                //                    <td style='color:black;'><b>SELLO DIGITAL EMISOR</b></td>
+                //                </tr>
+                //                <tr>
+                //                    <td> " + c.Sello + @"</td>
+                //                </tr>
+                //                <tr>
+                //                    <td style='color:black;' ><b>SELLO DIGITAL SAT</b></td>
+                //                </tr>
+                //                <tr>
+                //                    <td> " + c.Complemento.TimbreFiscalDigital.SelloSAT + @"</td>
+                //                </tr>
+                //            </table>
+                //        </td>
+                //        <td width='20%'>
+                //                        <img src='" + Path.Combine(path, "Qr_" + idVenta + ".jpg") + @"' width = '110' height = '110' align='right' />
+                //        </td> 
+                //   </tr>
+                //</table>";
+
+
+
+                //html = "<h1>Formato para solicitar la Domiciliación</h1>";
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Factura");
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Codigos de Productos");
+                document.CloseDocument();
+                document.Close();
+
+                //PdfReader reader = new PdfReader(memStream.ToArray());
+                //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
+                byte[] content = memStream.ToArray();
+                using (FileStream fs = File.Create(Path.Combine(path, "Codigos_" + articulo + ".pdf")))
+                {
+                    fs.Write(content, 0, (int)content.Length);
+                }
+
+                //return content;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 }
