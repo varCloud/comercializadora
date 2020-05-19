@@ -10,6 +10,7 @@
     Notificacion<List<Categoria>> topClientes = ViewBag.topTenClientes;
     Notificacion<List<Categoria>> topProveedores = ViewBag.topTenProveedores;
     Notificacion<List<Categoria>> informacionGeneral = ViewBag.InformacionGlobal;
+    Sesion usuario = Session["UsuarioActual"] as Sesion;
 
     float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
     if (estaciones.Estatus == 200)

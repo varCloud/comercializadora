@@ -19,11 +19,18 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 DashboardDAO dao = new DashboardDAO();
-                ViewBag.estaciones= dao.ObtenerVentasEstacion(null,null);
-                ViewBag.topTenProductos = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia,EnumTipoGrafico.TopTenProductos);
-                ViewBag.topTenClientes = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia, EnumTipoGrafico.TopTenClientes);
-                ViewBag.topTenProveedores = dao.ObtenerTopTen(EnumTipoReporteGrafico.Mensuales, EnumTipoGrafico.TopTenProvedores);
-                ViewBag.InformacionGlobal=dao.ObtenerInformacionGlobal(EnumTipoReporteGrafico.Dia);
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                int idEstacion = 0;
+                if (usuario.idRol == 3)
+                {
+                    idEstacion = usuario.idEstacion;
+                }              
+
+                ViewBag.estaciones= dao.ObtenerVentasEstacion(null,null, idEstacion);
+                ViewBag.topTenProductos = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia,EnumTipoGrafico.TopTenProductos, idEstacion);
+                ViewBag.topTenClientes = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia, EnumTipoGrafico.TopTenClientes, idEstacion);
+                ViewBag.topTenProveedores = dao.ObtenerTopTen(EnumTipoReporteGrafico.Mensuales, EnumTipoGrafico.TopTenProvedores, idEstacion);
+                ViewBag.InformacionGlobal=dao.ObtenerInformacionGlobal(EnumTipoReporteGrafico.Dia, idEstacion);
                 return View();
             }
             catch (Exception ex)
@@ -37,11 +44,17 @@ namespace lluviaBackEnd.Controllers
         {
             DashboardDAO dao = new DashboardDAO();
             Notificacion<Grafico> grafico = new Notificacion<Grafico>();
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            int idEstacion = 0;
+            if (usuario.idRol == 3)
+            {
+                idEstacion = usuario.idEstacion;
+            }
 
             if (tipoGrafico==EnumTipoGrafico.VentasPorFecha)
             {
                 //Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
-                Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico);
+                Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico, idEstacion);
                 grafico.Estatus = categorias.Estatus;
                 grafico.Mensaje = categorias.Mensaje;
 
@@ -53,28 +66,32 @@ namespace lluviaBackEnd.Controllers
                 {
                     foreach(Categoria categoria in categorias.Modelo)
                     {
-                        Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion(categoria.fechaIni,categoria.fechaFin);
                         Data data = new Data();
                         data.name = categoria.categoria;
-                        if (estaciones.Estatus==200)
-                        {                            
-                            data.y = estaciones.Modelo.Sum(x=>x.montoTotalDia);                           
-
-                            List<List<Object>> DataDrilldown = new List<List<Object>>();
-                            foreach (Estacion e in estaciones.Modelo)
+                        data.y = categoria.total;
+                        if (idEstacion==0){
+                            Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion(categoria.fechaIni, categoria.fechaFin);
+                            if (estaciones.Estatus == 200)
                             {
-                                DataDrilldown.Add(new List<Object>() { e.nombre.ToString(), e.montoTotalDia });
+                                data.y = estaciones.Modelo.Sum(x => x.montoTotalDia);
+
+                                List<List<Object>> DataDrilldown = new List<List<Object>>();
+                                foreach (Estacion e in estaciones.Modelo)
+                                {
+                                    DataDrilldown.Add(new List<Object>() { e.nombre.ToString(), e.montoTotalDia });
+                                }
+
+
+                                SeriesDrilldown.Add(new seriesDrilldown()
+                                {
+                                    id = categoria.id + "_" + categoria.categoria,
+                                    name = categoria.categoria,
+                                    data = DataDrilldown
+                                });
                             }
-
-
-                            SeriesDrilldown.Add(new seriesDrilldown()
-                            {
-                                id = categoria.id + "_" + categoria.categoria,
-                                name = categoria.categoria,
-                                data = DataDrilldown
-                            });
-                        }
-                        data.drilldown = categoria.id + "_" + categoria.categoria;
+                            data.drilldown = categoria.id + "_" + categoria.categoria;
+                        }                   
+                     
                         dataEstaciones.Add(data);
                     }
 

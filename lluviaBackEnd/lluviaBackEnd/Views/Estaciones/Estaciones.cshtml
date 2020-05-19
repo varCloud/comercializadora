@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "Estaciones";
     List<lluviaBackEnd.Models.Estacion> lstEstaciones = ViewBag.lstEstaciones;
-    List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
+    List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
+    
 }
 
 
@@ -35,30 +36,39 @@
                 },
                 new { id = "frmEstacion" }))
                 {
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Nombre *</label>
-                                @Html.HiddenFor(x => x.idEstacion)
-                                @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
-                                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Numero *</label>
-                                @Html.TextBoxFor(x => x.numero, null, new { @class = "form-control", @id = "numero" })
-                                @Html.ValidationMessageFor(x => x.numero, null, new { @class = "text-danger was" })
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Almacen</label>
-                                @Html.DropDownListFor(x => x.idAlmacen, lstAlmacenes, new { id = "idAlmacen", @class = "form-control", data_val = "true" })
-                                @Html.ValidationMessageFor(x => x.idAlmacen, null, new { @class = "text-danger was" })
-                            </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Nombre *</label>
+                            @Html.HiddenFor(x => x.idEstacion)
+                            @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
+                            @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
                         </div>
                     </div>
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Numero *</label>
+                            @Html.TextBoxFor(x => x.numero, null, new { @class = "form-control", @id = "numero" })
+                            @Html.ValidationMessageFor(x => x.numero, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Sucursal</label>
+                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales,"--Seleccione--", new { id = "idSucursal", @class = "form-control", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.idSucursal, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Almacen</label>
+                            @Html.DropDownListFor(x => x.idAlmacen, new List<SelectListItem>(), "--Seleccione--", new { id = "idAlmacen", @class = "form-control", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.idAlmacen, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+                </div>
                     
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">

@@ -23,7 +23,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters= new DynamicParameters();
                     parameters.Add("@idTipoReporte", idTipoReporte);
-                    parameters.Add("@@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
+                    parameters.Add("@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOTAL_VENTAS_POR_FECHA", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if(rs1.status==200)
@@ -50,7 +50,7 @@ namespace lluviaBackEnd.DAO
             return categoria;
         }
 
-        public Notificacion<List<Estacion>> ObtenerVentasEstacion(DateTime ? fechaIni,DateTime ? fechaFin)
+        public Notificacion<List<Estacion>> ObtenerVentasEstacion(DateTime ? fechaIni,DateTime ? fechaFin,int idEstacion=0)
         {
             Notificacion<List<Estacion>> grafico = new Notificacion<List<Estacion>>();
             try
@@ -60,7 +60,8 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
                     parameters.Add("@fechaIni",fechaIni==DateTime.MinValue ? (object) null : fechaIni);
                     parameters.Add("@fechaFin",fechaFin==DateTime.MinValue ? (object) null : fechaFin);
-                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOTAL_VENTAS_POR_ESTACION", parameters, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
+                    var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOTAL_VENTAS_POR_ESTACION", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
                     {
@@ -86,7 +87,7 @@ namespace lluviaBackEnd.DAO
             return grafico;
         }
 
-        public Notificacion<List<Categoria>> ObtenerTopTen(EnumTipoReporteGrafico idTipoReporte, EnumTipoGrafico idTipoGrafico)
+        public Notificacion<List<Categoria>> ObtenerTopTen(EnumTipoReporteGrafico idTipoReporte, EnumTipoGrafico idTipoGrafico,int idEstacion = 0)
         {
             Notificacion<List<Categoria>> categoria = new Notificacion<List<Categoria>>();
             try
@@ -96,6 +97,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
                     parameters.Add("@idTipoReporte", idTipoReporte);
                     parameters.Add("@idTipoGrafico", idTipoGrafico);
+                    parameters.Add("@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_TOP_TEN", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
@@ -122,7 +124,7 @@ namespace lluviaBackEnd.DAO
             return categoria;
         }
 
-        public Notificacion<List<Categoria>> ObtenerInformacionGlobal(EnumTipoReporteGrafico idTipoReporte)
+        public Notificacion<List<Categoria>> ObtenerInformacionGlobal(EnumTipoReporteGrafico idTipoReporte, int idEstacion=0)
         {
             Notificacion<List<Categoria>> categoria = new Notificacion<List<Categoria>>();
             try
@@ -131,6 +133,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@idTipoReporte", idTipoReporte);
+                    parameters.Add("@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
                     var rs = db.QueryMultiple("SP_DASHBOARD_CONSULTA_INFORMACION_GLOBAL", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
