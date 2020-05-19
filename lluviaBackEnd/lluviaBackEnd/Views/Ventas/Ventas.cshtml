@@ -48,7 +48,19 @@
                     <div class="card-body">
 
                         <div class="row">
+
                             <div class="col-12 col-sm-12 col-lg-3">
+                                <label>Herramientas</label>
+                                <div class="buttons">
+
+                                    <a href="javascript:AbrirModalConsultaExistencias();" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Consultar Existencias"><i class="fas fa-eye"></i></a>
+                                    <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Cierre de Caja (Exceso de Efectivo)"><i class="fas fa-dollar-sign"></i></a>
+                                    <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-dollar-sign"></i></a>
+
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Producto</label>
                                     @Html.HiddenFor(x => idVenta)
@@ -64,14 +76,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-3">
-
-                            </div>
-
-                            <div class="col-12 col-sm-12 col-lg-3">
-                                <label></label></br>
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <label>&nbsp;</label></br>
                                 <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
                             </div>
+
                         </div>
 
                     </div>
@@ -84,7 +93,7 @@
 
         <div class="row mt-sm-12">
 
-            <div class="col-12 col-md-12 col-lg-1">
+            @*<div class="col-12 col-md-12 col-lg-1">
 
 
                 <div class="card-body" style="padding: 20px 10px">
@@ -97,10 +106,10 @@
 
                     </div>
                 </div>
-            </div>
+            </div>*@
 
 
-            <div class="col-12 col-md-12 col-lg-11">
+            <div class="col-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="padding-20">
                         <div class="col-md-12">
@@ -449,7 +458,7 @@
                                         <div class="col-md-12">
                                             <address>
                                                 <strong>Resumen:</strong><br>
-                                                <div id="ventasDelDia"># Ventas del día:  12 </div> 
+                                                <div id="ventasDelDia">Ventas del día:  12 </div> 
                                                 <div id="cantidadEfectivo">Cantidad en Efectivo:  12 </div> 
                                                 <div id="cantidadRetirada">Cantidad Retirada del día:  12 </div>
                                             </address>

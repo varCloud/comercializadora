@@ -155,15 +155,17 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Artículo</label>
-                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
-                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group">
                                 <label>Clave de Producto</label>
                                 @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, new { @class = "form-control", id = "cbClaveProdServ" })
                                 @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
                             </div>
+                            
+                            <div class="form-group">
+                                <label>Artículo</label>
+                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
+                            </div>
+
                             <div class="form-group">
 
 
