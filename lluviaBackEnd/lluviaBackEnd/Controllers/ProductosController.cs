@@ -189,14 +189,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
-                //FacturaDAO facturacionDAO = new FacturaDAO();
-                //Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-
-                //    Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + factura.idVenta + ".jpg"));
-                //Utils.GenerarQR(articulo);
-                //notificacion.Modelo =
-                Utils.GenerarImprimibleCodigos(pathPdfCodigos, articulo, descProducto);
-
+                notificacion.Modelo = Utils.GenerarImprimibleCodigos(pathPdfCodigos, articulo, descProducto);
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Códigos generados correctamente.";
                 return Json(notificacion, JsonRequestBehavior.AllowGet); ;

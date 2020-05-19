@@ -596,7 +596,9 @@ function ImprimirCodigos(articulo, descProducto) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-
+            console.log(data);
+            window.open("http://" + window.location.host + "/Codigos/" + data.Modelo, "_blank");
+            console.log("http://" +window.location.host + "/Codigos/" + data.Modelo);
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
