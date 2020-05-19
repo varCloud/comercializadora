@@ -97,6 +97,8 @@ function EditarEstacion(idEstacion) {
         $('#idEstacion').val(idEstacion);
         $('#nombre').val(data.Modelo[0].nombre);
         $('#numero').val(data.Modelo[0].numero);
+        $('#idSucursal').val(data.Modelo[0].idSucursal);
+        $("#idSucursal").change();
         $('#idAlmacen').val(data.Modelo[0].idAlmacen);
         $('#mdlAgregarEstacion').modal({ backdrop: 'static', keyboard: false, show: true })
 
@@ -216,15 +218,49 @@ function InitBtnAgregar() {
         $('#idEstacion').val('0');
         $('#btnResetGuardarEstacion').trigger('click');
         $('#btnGuardarEstacion').css('display', '');
+        $('#idAlmacen').empty();
+        $('#idAlmacen').append($('<option/>').val("").text("--Seleccione--"));
         //$('#idCliente').val('0');
         //para abrir el modal
         $('#mdlAgregarEstacion').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalEstacion').html("Agregar Estación");
 
     });
+
+
 }
 
 $(document).ready(function () {
     InitTableEstaciones();
-    $('#btnResetGuardarEstacion').css('display','none');
+    $('#btnResetGuardarEstacion').css('display', 'none');
+
+    $("#idSucursal").change(function (evt) {
+
+        evt.preventDefault();
+        $.ajax({
+            url: rootUrl("/Estaciones/ObtenerAlmacenSucursal"),
+            data: { idSucursal: $("#idSucursal").val(), idTipoAlmacen: 3 },
+            method: 'post',
+            dataType: 'json',
+            async: false,
+            beforeSend: function (xhr) {
+                ShowLoader("Cargando");
+            },
+            success: function (data) {
+                console.log(data);
+                $('#idAlmacen').empty();
+                $('#idAlmacen').append($('<option/>').val("").text("--Seleccione--"));
+                $.each(data, function () {
+                    $('#idAlmacen').append($('<option/>').val(this.Value).text(this.Text));
+                });
+                OcultarLoader();
+            },
+            error: function (xhr, status) {
+                OcultarLoader();
+                console.log('hubo un problema pongase en contacto con el administrador del sistema');
+                console.log(xhr);
+                console.log(status);
+            }
+        });
+    });
 });

@@ -1,6 +1,7 @@
 ﻿using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,24 @@ namespace lluviaBackEnd.Controllers
             Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
             notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = 0 });
             ViewBag.lstEstaciones = notificacion.Modelo;
-            ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerAlmacenSucursal(int idSucursal = 0, int idTipoAlmacen = 0)
+        {
+            try
+            {
+               
+                string a=JsonConvert.SerializeObject(new UsuarioDAO().ObtenerAlmacenes(idSucursal, idTipoAlmacen));
+                return Json(new UsuarioDAO().ObtenerAlmacenes(idSucursal, idTipoAlmacen), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpPost]

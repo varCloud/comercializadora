@@ -28,7 +28,7 @@ namespace lluviaBackEnd.DAO
                 {
                     db.Open();
                     db.CreateParameters(1);
-                    db.AddParameters(0, "@idUsuario", usr.idUsuario); 
+                    db.AddParameters(0, "@idUsuario", usr.idUsuario);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_USUARIOS]");
 
                     while (db.DataReader.Read())
@@ -156,7 +156,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public List<SelectListItem> ObtenerAlmacenes()
+        public List<SelectListItem> ObtenerAlmacenes(int idSucursal = 0, int idTipoAlmacen = 0)
         {
             List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
             try
@@ -164,17 +164,19 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    //db.CreateParameters(0);
-                    //db.AddParameters(0, "@idRol", rol.idRol);
+                    db.CreateParameters(2);
+                    db.AddParameters(0, "@idSucursal", idSucursal == 0 ? (object)null : idSucursal);
+                    db.AddParameters(1, "@idTipoAlmacen", idTipoAlmacen == 0 ? (object)null : idTipoAlmacen);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ALMACENES]");
                     while (db.DataReader.Read())
                     {
-                        lstAlmacenes.Add(
-                            new SelectListItem
-                            {
-                                Text = db.DataReader["descripcion"].ToString(),
-                                Value = db.DataReader["idAlmacen"].ToString()
-                            });
+                        if (Convert.ToInt16(db.DataReader["status"]) == 200)
+                            lstAlmacenes.Add(
+                                new SelectListItem
+                                {
+                                    Text = db.DataReader["descripcion"].ToString(),
+                                    Value = db.DataReader["idAlmacen"].ToString()
+                                });
                     }
                 }
             }
@@ -198,7 +200,8 @@ namespace lluviaBackEnd.DAO
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_SUCURSALES]");
                     while (db.DataReader.Read())
                     {
-                        lstSucursales.Add(
+                        if (Convert.ToInt16(db.DataReader["status"]) == 200)
+                            lstSucursales.Add(
                             new SelectListItem
                             {
                                 Text = db.DataReader["descripcion"].ToString(),
