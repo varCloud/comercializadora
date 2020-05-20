@@ -689,11 +689,15 @@ function AbrirModalConsultaExistencias() {
 
 function AbrirModalCierreCajaExcedentes() {
 
+    ConsultRetiros();
+    ConsultaInfoCierre();
     $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
 
 function AbrirModalCierreDia() {
+
+
 
     $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
 
@@ -706,6 +710,61 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
 });
 
+function ConsultRetiros() {
+
+    $.ajax({
+        url: rootUrl("/Ventas/_ObtenerRetiros"),
+        data: { idRetiro: 0 },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();          
+            $('#tblRetiros_').html(data);
+            
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();           
+        }
+    });
+
+}
+
+
+function ConsultaInfoCierre() {
+
+    $.ajax({
+        url: rootUrl("/Ventas/ConsultaInfoCierre"),
+        //data: { idVenta: idVenta, montoIVA: montoIVA, idCliente: idCliente, idFactFormaPago: formaPago, idFactUsoCFDI: usoCFDI },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            //MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+            $('#ventasDelDia').html("Ventas del día:  <strong>" + data.Modelo.totalVentas + "</strong>");
+            $('#cantidadEfectivo').html("Cantidad en Efectivo: <strong> $" + data.Modelo.efectivoDisponible + "</strong>");
+            $('#cantidadRetirada').html("Cantidad Retirada del día: <strong> $" + data.Modelo.retirosHechosDia + "</strong>");
+
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
 
 
 $('#btnBuscarExistencias').click(function (e) {

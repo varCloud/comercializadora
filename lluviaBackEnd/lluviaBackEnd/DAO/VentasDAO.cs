@@ -325,5 +325,81 @@ namespace lluviaBackEnd.DAO
         }
 
 
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Herramientas
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public Notificacion<Cierre> ConsultaInfoCierre(Cierre cierre)
+        {
+            Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idEstacion", cierre.idEstacion);
+                    var result = db.QueryMultiple("SP_CONSULTA_INFO_CIERRE", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.ReadSingle<Cierre>(); ;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = cierre;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public Notificacion<List<Retiros>> ConsultaRetirosEfectivo(Retiros retiros)
+        {
+            Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idEstacion", retiros.idEstacion);
+                    var result = db.QueryMultiple("SP_CONSULTA_RETIROS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Retiros>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Retiros> { retiros };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+
+
+
+
     }
 }

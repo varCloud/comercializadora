@@ -174,6 +174,48 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Herramientas
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        [HttpPost]
+        public ActionResult ConsultaInfoCierre()
+        {
+            try
+            {
+                Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=usuario.idEstacion} );
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ActionResult _ObtenerRetiros(Retiros retiros)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                retiros.idEstacion = usuario.idEstacion;
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros); //BitacoraDAO().ObtenerPedidosInternos(pedidosInternos);
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Impresion de Ticket
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public ActionResult ImprimeTicket(Ventas venta )
         {
             Notificacion<Ventas> notificacion;

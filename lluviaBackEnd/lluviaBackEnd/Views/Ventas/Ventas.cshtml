@@ -458,9 +458,9 @@
                                         <div class="col-md-12">
                                             <address>
                                                 <strong>Resumen:</strong><br>
-                                                <div id="ventasDelDia">Ventas del día:  12 </div> 
-                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  12 </div> 
-                                                <div id="cantidadRetirada">Cantidad Retirada del día:  12 </div>
+                                                <div id="ventasDelDia">Ventas del día:  0 </div> 
+                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div> 
+                                                <div id="cantidadRetirada">Cantidad Retirada del día:  0 </div>
                                             </address>
                                         </div>
 
@@ -471,7 +471,7 @@
 
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <div class="form-group">
-                                    <label>Cantidad</label>
+                                    <label>Cantidad a Retirar:</label>
                                     @*<input id="montoCierreExceso" type="text" class="form-control" onkeypress="return esNumero(event)">*@
 
                                     <div class="input-group mb-3">
@@ -503,23 +503,8 @@
 
                         <div class="row mt-4">
                             <div class="col-md-12">
-                                <h6>Retiros de Efectivo por hechas en el día.</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-striped" id="tablaRangosPrecios">
-                                        <thead>
-                                            <tr>
-                                                <th data-width="40" style="width: 40px;">#</th>
-                                                <th class="text-center">Id</th>
-                                                <th class="text-center">Producto</th>
-                                                <th class="text-center">Precio</th>
-                                                <th class="text-center">Cantidad</th>
-                                                <th class="text-center">Disponibles</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    <div id="msgSin" align="center"></div>
-                                </div>
+                                
+                                <div id="tblRetiros_"></div>
 
                             </div>
                         </div>
