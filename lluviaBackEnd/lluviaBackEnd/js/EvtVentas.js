@@ -698,8 +698,9 @@ function AbrirModalCierreCajaExcedentes() {
 
 function AbrirModalCierreDia() {
 
-
-    $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
+    ConsultRetirosV2();
+    ConsultaInfoCierreDia();
+    $('#modalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
 
@@ -779,6 +780,31 @@ function ConsultRetiros() {
 }
 
 
+function ConsultRetirosV2() {
+
+    $.ajax({
+        url: rootUrl("/Ventas/_ObtenerRetirosV2"),
+        data: { idRetiro: 0 },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $('#retirosDelDiaV2').html(data);
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
+
 function ConsultaInfoCierre() {
 
     $.ajax({
@@ -808,6 +834,36 @@ function ConsultaInfoCierre() {
 
 }
 
+
+function ConsultaInfoCierreDia() {
+
+    $.ajax({
+        url: rootUrl("/Ventas/ConsultaInfoCierre"),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            //MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+
+            $('#vtasDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día:</span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
+            $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">" + data.Modelo.efectivoDisponible + "</span></p>"););
+            $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">" + data.Modelo.retirosHechosDia + "</span></p>"););
+            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\"> >Cantidad para Cierre:</span><span class=\"float-right text-muted\">" + data.Modelo.montoCierre + "</span></p>"););
+
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
 
 $('#btnBuscarExistencias').click(function (e) {
 

@@ -379,10 +379,6 @@
                     </div>
                 </div>
 
-
-
-
-
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
 
@@ -390,40 +386,18 @@
                             <div class="col-md-12">
 
                                 <div id="existencias">
-
-                                @*<div class="table-responsive">
-                                    <table class="table table-striped" id="tablaRangosPrecios">
-                                        <thead>
-                                            <tr>
-                                                <th data-width="40" style="width: 40px;">#</th>
-                                                <th class="text-center">Id</th>
-                                                <th class="text-center">Producto</th>
-                                                <th class="text-center">Precio</th>
-                                                <th class="text-center">Cantidad</th>
-                                                <th class="text-center">Disponibles</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    <div id="msgSin" align="center"></div>
-                                </div>*@
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                            @*<button type="button" id="btnGuardarPrecios" class="btn btn-success">Guardar</button>*@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -441,13 +415,8 @@
                 </button>
             </div>
             <div class="modal-body">
-
-
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
-                        @*<div class="card">*@
-
-                        @*<div class="card-body">*@
 
                         <div class="row">
 
@@ -473,8 +442,6 @@
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <div class="form-group">
                                     <label>Cantidad a Retirar:</label>
-                                    @*<input id="montoCierreExceso" type="text" class="form-control" onkeypress="return esNumero(event)">*@
-
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
@@ -483,21 +450,13 @@
                                         <div class="input-group-append">
                                             <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
                                         </div>
-
                                     </div>
 
                                 </div>
                             </div>
-
                         </div>
-                        @*</div>*@
-                        @*</div>*@
                     </div>
                 </div>
-
-
-
-
 
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
@@ -528,10 +487,115 @@
 
 
 
+@*Modal Cierre de Dia *@
+<div class="modal fade  bd-example-modal-lg" id="modalCierre" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalExistencias">Cierre de Caja fin de Día:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div id="retirosDelDiaV2">
+                                                                                         
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-1">
+                            </div>
+
+                                <div class="col-12 col-sm-12 col-lg-5">
+                                    <div class="form-group">
+
+                                        <h5>Resumen:</h5>
+                                        
+                                        <div class="py-4">
+                                            <div id="vtasDelDiaCierre">
+                                                <p class="clearfix">
+                                                    <span class="float-left">Ventas del día:</span>
+                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                </p>
+                                            </div>
+
+                                            <div id="totalEfectivoCierre">
+                                                <p class="clearfix">
+                                                    <span class="float-left">Total Efectivo:</span>
+                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                </p>
+                                            </div>
+
+                                            <div id="retirosDelDiaCierre">
+                                                <p class="clearfix">
+                                                    <span class="float-left">Retiros del Día:</span>
+                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                </p>
+                                            </div>
+
+                                            <div id="totalCierre">
+                                                <p class="clearfix">
+                                                    <span class="float-left">Cantidad para Cierre:</span>
+                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                </p>
+                                            </div>
+                                        </div>
 
 
+                                        <div class="input-group mb-3">
 
+                                            <button class="btn btn-success " id="btnCierreDia" type="button">Hacer Cierre de Dia</button>
 
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+
+                                <div id="tblRetiros_"></div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+  
 
 @section scripts {
 

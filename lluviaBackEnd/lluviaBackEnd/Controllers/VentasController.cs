@@ -199,7 +199,23 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 retiros.idEstacion = usuario.idEstacion;
-                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros); //BitacoraDAO().ObtenerPedidosInternos(pedidosInternos);
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros); 
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ActionResult _ObtenerRetirosV2(Retiros retiros)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                retiros.idEstacion = usuario.idEstacion;
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros);
                 return PartialView(p);
             }
             catch (Exception ex)
