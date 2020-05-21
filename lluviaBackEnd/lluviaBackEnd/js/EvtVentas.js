@@ -156,8 +156,6 @@ $('#previoVenta').click(function (e) {
         total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
         descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     });
-    //console.log("total" + " " + total);
-    //console.log("descuento" + " " + descuento);
 
     if (total > 0) {
         document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total+descuento).toFixed(2) + "</h4>";
@@ -170,15 +168,7 @@ $('#previoVenta').click(function (e) {
         MuestraToast('warning', "Debe tener productos agregados para continuar con la venta.");
     }
 
-    //document.getElementById("previoTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
-    //document.getElementById("previoDescuento").innerHTML = "<h4>$" + parseFloat(0.0).toFixed(2) + "</h4>";
-    //document.getElementById("previoSubTotal").innerHTML = document.getElementById("divSubTotal").innerHTML;
-    //document.getElementById("previoIVA").innerHTML = document.getElementById("divIva").innerHTML;
-    //document.getElementById("previoFinal").innerHTML = document.getElementById("divTotal").innerHTML;
-
 });
-
-
 
 
 $('#btnAgregarProducto').click(function (e) {
@@ -188,18 +178,15 @@ $('#btnAgregarProducto').click(function (e) {
     }
     else {
 
-        //var precio = parseFloat($('#precio').val());
         var idProducto = $('#idProducto').val();
         var cantidad = $('#cantidad').val();
         var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
         var precio = parseFloat(data.Modelo[0].costo);
         var descuento = parseFloat(data.Modelo[0].descuento);
-        //console.log("desc_" + $("#vaConDescuento").val());
         if (precio == 0) {
             preguntaAltaPrecios();
         }
         else {
-           // console.log($("#idProducto").find("option:selected").text());
             var row_ =  "<tr>" +
                         "  <td>1</td>" +
                         "  <td> " + $('#idProducto').val() + "</td>" +
@@ -241,7 +228,6 @@ $('#btnAgregarProducto').click(function (e) {
 
 
 function actualizaTicketVenta() {
-    //alert();
     console.log("actualizaTicketVenta");
     var totalPiezas = parseFloat(0);
     var totalAhorro = parseFloat(0);
@@ -252,16 +238,8 @@ function actualizaTicketVenta() {
         totalPiezas += parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', ''));
         totalAhorro += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     });
-    //console.log("totalPiezas" + " " + totalPiezas);
-    //console.log("totalAhorro" + " " + totalAhorro);
-
-    //actualizar los totales
-    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
-
-    //totalPiezas = obtenerNumArticulos();
 
     if (totalPiezas >= 12) {
-        //console.log("ya son 12 o+");
         // si hay 12 o mas piezas y todavia no se agrega el descuento al tikcet
         if (totalAhorro == 0) {
             agregarDescuentos();
@@ -275,7 +253,6 @@ function actualizaTicketVenta() {
             quitarDescuentos();
         }
     }
-
     actualizarSubTotal();
 }
 
@@ -299,7 +276,6 @@ function agregarDescuentos() {
             fila.children[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
             fila.children[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
             fila.children[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
-
         }
         
     });
@@ -342,7 +318,6 @@ function actualizarSubTotal() {
     });
 
     document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
-
 }
 
 
@@ -372,7 +347,7 @@ function ObtenerProductoPorPrecio(idProducto, cantidad, vaConDescuento) {
 }
 
 function ObtenerCliente(idCliente) {
-    var result = "";//{ "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
+    var result = "";
     $.ajax({
         url: rootUrl("/Clientes/ObtenerCliente"),
         data: { idCliente: idCliente },
@@ -411,14 +386,8 @@ $('#btnGuardarVenta').click(function (e) {
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
         var row_ = {
-            //idCliente: $('#idCliente').val(),
             idProducto: fila.children[1].innerHTML,
-            //cantidad: fila.children[4].innerHTML,
             cantidad: parseInt(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')),
-            //idUsuario: 4,//fila.children[3].innerHTML,
-            //formaPago: $('#formaPago').val(),
-            //usoCFDI: $('#usoCFDI').val(),
-            //idVenta: $('#idVenta').val(),
         };
         productos.push(row_);
     });
@@ -594,7 +563,6 @@ $("#cantidad").on("keyup", function (event) {
 });
 
 
-
 $("#idCliente").on("change", function () {
 
     $('#efectivo').val('');
@@ -654,54 +622,27 @@ $("#idCliente").on("change", function () {
             "</address>";
     }
 
-
     document.getElementById("nombreCliente").innerHTML = row_;
-
 }); 
 
 
-
-
 function AbrirModalConsultaExistencias() {
-
-    //$('#btnGuardarProducto').prop('disabled', true);
-
-    //var data = ObtenerProducto(idProducto);
-
-    //$('#idProducto').val(idProducto);
-    //$('#activo').val(data.activo);
-    //$('#descripcion').val(data.descripcion).prop('disabled', true);
-    //$('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', true);
-    //$('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
-    //$('#claveProdServ').val(data.claveProdServ).prop('disabled', true);
-    //$('#claveUnidad').val(data.claveUnidad).prop('disabled', true);
-    //$('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
-    //$('#articulo').val(data.articulo).prop('disabled', true);
-    //$('.field-validation-error').html("");
-    //document.getElementById('barra').src = '';
-    //document.getElementById('qr').src = '';
-    //obtenerCodigos();
-
+    $('#existencias').html('');
     //para abrir el modal
     $('#ModalExistencias').modal({ backdrop: 'static', keyboard: false, show: true });
-
 }
 
 function AbrirModalCierreCajaExcedentes() {
-
     ConsultRetiros();
     ConsultaInfoCierre();
     $('#montoARetirar').val('');
     $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
-
 }
 
 function AbrirModalCierreDia() {
-
     ConsultRetirosV2();
     ConsultaInfoCierreDia();
-    $('#modalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
-
+    $('#ModalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
 
@@ -725,6 +666,54 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
     // si todo bien
     retirarExcesoEfectivo(montoARetirar);
 
+});
+
+
+$('#btnCierreDia').click(function (e) {
+    var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+
+    if ((monto) <= 0.0) {
+        MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
+        return
+    }
+
+    console.log(monto);
+    swal({
+        title: 'Mensaje',
+        text: '¿Estas seguro que desea hacer el cierre para esta Estación?',
+        icon: 'warning',
+        buttons: ["Cancelar", "Aceptar"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: rootUrl("/Ventas/RealizaCierreEstacion"),
+                    data: { monto: monto },
+                    method: 'post',
+                    dataType: 'json',
+                    async: true,
+                    beforeSend: function (xhr) {
+                        ShowLoader();
+                    },
+                    success: function (data) {
+                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+                        $('#ModalCierre').modal('hide');
+                        OcultarLoader();
+                    },
+                    error: function (xhr, status) {
+                        console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
+                        console.log(xhr);
+                        console.log(status);
+                        OcultarLoader();
+                    }
+                });
+
+            } else {
+                console.log("cancelar");
+            }
+        });
 });
 
 function retirarExcesoEfectivo(montoRetiro) {
@@ -754,7 +743,6 @@ function retirarExcesoEfectivo(montoRetiro) {
 }
 
 function ConsultRetiros() {
-
     $.ajax({
         url: rootUrl("/Ventas/_ObtenerRetiros"),
         data: { idRetiro: 0 },
@@ -766,8 +754,7 @@ function ConsultRetiros() {
         },
         success: function (data) {
             OcultarLoader();          
-            $('#tblRetiros_').html(data);
-            
+            $('#tblRetiros_').html(data);            
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
@@ -776,12 +763,10 @@ function ConsultRetiros() {
             OcultarLoader();           
         }
     });
-
 }
 
 
 function ConsultRetirosV2() {
-
     $.ajax({
         url: rootUrl("/Ventas/_ObtenerRetirosV2"),
         data: { idRetiro: 0 },
@@ -802,11 +787,9 @@ function ConsultRetirosV2() {
             OcultarLoader();
         }
     });
-
 }
 
 function ConsultaInfoCierre() {
-
     $.ajax({
         url: rootUrl("/Ventas/ConsultaInfoCierre"),
         method: 'post',
@@ -816,13 +799,10 @@ function ConsultaInfoCierre() {
             ShowLoader()
         },
         success: function (data) {
-            //MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
             $('#ventasDelDia').html("Ventas del día:  <strong>" + data.Modelo.totalVentas + "</strong>");
             $('#cantidadEfectivo').html("Cantidad en Efectivo: <strong> $" + data.Modelo.efectivoDisponible + "</strong>");
             $('#cantidadRetirada').html("Cantidad Retirada del día: <strong> $" + data.Modelo.retirosHechosDia + "</strong>");
-            //$('#cantidadCierre').html("Cantidad de Cierre:  <strong> $" + data.Modelo.montoCierre + "</strong>");
-            
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -831,12 +811,10 @@ function ConsultaInfoCierre() {
             OcultarLoader();
         }
     });
-
 }
 
 
 function ConsultaInfoCierreDia() {
-
     $.ajax({
         url: rootUrl("/Ventas/ConsultaInfoCierre"),
         method: 'post',
@@ -846,14 +824,11 @@ function ConsultaInfoCierreDia() {
             ShowLoader()
         },
         success: function (data) {
-            //MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-
             $('#vtasDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día:</span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
-            $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">" + data.Modelo.efectivoDisponible + "</span></p>"););
-            $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">" + data.Modelo.retirosHechosDia + "</span></p>"););
-            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\"> >Cantidad para Cierre:</span><span class=\"float-right text-muted\">" + data.Modelo.montoCierre + "</span></p>"););
-
+            $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
+            $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$" + data.Modelo.retirosHechosDia + "</span></p>");
+            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$" + data.Modelo.montoCierre + "</span></p>");
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -862,16 +837,13 @@ function ConsultaInfoCierreDia() {
             OcultarLoader();
         }
     });
-
 }
 
 $('#btnBuscarExistencias').click(function (e) {
-
     var idProducto = $('#idProductoExistencia').val();
     var idSucursal = $('#idSucursalExistencia').val();
-
     $.ajax({
-        url: rootUrl("/Productos/_UbicacionesProducto"),
+        url: rootUrl("/Productos/_UbicacionesProductoPrecio"),
         data: { idProducto: idProducto, idSucursal: idSucursal },
         method: 'post',
         dataType: 'html',
@@ -880,47 +852,70 @@ $('#btnBuscarExistencias').click(function (e) {
             ShowLoader();
         },
         success: function (data) {
-            OcultarLoader();
             $("#existencias").html(data);
-            //$('#modalUbicacionProducto').modal({ backdrop: 'static', keyboard: false, show: true });
-
+            ObtenerPrecios(idProducto);
+            ObtenerIndividualMenudeo(idProducto);
+            OcultarLoader();
         },
         error: function (xhr, status) {
             OcultarLoader();
-            console.log('Hubo un problema al intentar mostrar las ubicaciones del producto, contactese con el administrador del sistema');
+            console.log('Hubo un problema al intentar mostrar las existencias del producto, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }
     });
-
-
 });
 
 
-//function VerUbicacionesProducto(idProducto) {
-//    $.ajax({
-//        url: rootUrl("/Productos/_UbicacionesProducto"),
-//        data: { idProducto: idProducto },
-//        method: 'post',
-//        dataType: 'html',
-//        async: true,
-//        beforeSend: function (xhr) {
-//            ShowLoader();
-//        },
-//        success: function (data) {
-//            OcultarLoader();
-//            $("#existencias").html(data);
-//            //$('#modalUbicacionProducto').modal({ backdrop: 'static', keyboard: false, show: true });
+function ObtenerPrecios(idProducto) {
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/_PreciosProducto"),
+        data: { idProducto: idProducto },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            $("#Precios_").html(data);
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
 
-//        },
-//        error: function (xhr, status) {
-//            OcultarLoader();
-//            console.log('Hubo un problema al intentar mostrar las ubicaciones del producto, contactese con el administrador del sistema');
-//            console.log(xhr);
-//            console.log(status);
-//        }
-//    });
-//}
+
+function ObtenerIndividualMenudeo(idProducto) {
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductos"),
+        data: { idProducto: idProducto },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            $('#precioIndividual_').html("$"+data.precioIndividual);
+            $('#precioMenudeo_').html("$"+data.precioMenudeo);
+            console.log(data);
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
 
 
 $(document).ready(function () {

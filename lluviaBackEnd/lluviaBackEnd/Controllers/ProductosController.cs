@@ -179,8 +179,37 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult _UbicacionesProductoPrecio(Producto producto)
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerUbicacionProducto(producto);
+                return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
+        public ActionResult _PreciosProducto(Producto producto)
+        {
+            try
+            {
+                Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+                notificacion = new ProductosDAO().ObtenerPrecios(new Precio() { idProducto=producto.idProducto });
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
 
+                //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                //notificacion = new ProductosDAO().ObtenerUbicacionProducto(producto);
+                return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [HttpPost]
         public JsonResult ImprimirCodigos(string articulo, string descProducto)

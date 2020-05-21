@@ -433,6 +433,42 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<Retiros> RealizaCierreEstacion(Retiros retiros)
+        {
+            Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idEstacion", retiros.idEstacion);
+                    parameters.Add("@idUsuario", retiros.idUsuario);
+                    parameters.Add("@monto", retiros.montoRetiro);
+                    parameters.Add("@caso", 2);
+                    var result = db.QueryMultiple("SP_RETIRA_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = retiros;// result.ReadSingle<Retiros>(); ;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = retiros;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
 
     }
 }

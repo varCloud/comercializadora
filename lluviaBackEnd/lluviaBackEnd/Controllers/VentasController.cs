@@ -247,6 +247,27 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult RealizaCierreEstacion(float monto)
+        {
+            try
+            {
+                Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Retiros retiros = new Retiros();
+                retiros.idEstacion = usuario.idEstacion;
+                retiros.idUsuario = usuario.idUsuario;
+                retiros.montoRetiro = monto;
+                notificacion = new VentasDAO().RealizaCierreEstacion(retiros);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Impresion de Ticket
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

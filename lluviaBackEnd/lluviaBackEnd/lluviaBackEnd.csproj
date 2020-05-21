@@ -1242,6 +1242,8 @@
     <Content Include="Views\Dashboard\_Grafico.cshtml" />
     <Content Include="Views\Ventas\_ObtenerRetiros.cshtml" />
     <Content Include="Views\Ventas\_ObtenerRetirosV2.cshtml" />
+    <Content Include="Views\Productos\_UbicacionesProductoPrecio.cshtml" />
+    <Content Include="Views\Productos\_PreciosProducto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

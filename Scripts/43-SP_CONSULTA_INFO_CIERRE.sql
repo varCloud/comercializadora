@@ -36,6 +36,7 @@ as
 						@efectivoDisponible		money = 0,
 						@montoCierre			money = 0,
 						@retirosHechosDia		money = 0,
+						@montoCerrado			money = 0,
 						@hoy					datetime
 						
 
@@ -58,6 +59,12 @@ as
 				where	idEstacion = @idEstacion
 					and cast(fechaAlta as date) = @hoy
 
+				select	@montoCerrado = coalesce( sum(monto),0 )
+				from	RetirosCierreDia
+				where	idEstacion = @idEstacion
+					and cast(fechaAlta as date) = @hoy
+
+				select @retirosHechosDia = @retirosHechosDia + @montoCerrado
 				select @montoCierre = @efectivoDisponible - @retirosHechosDia
 				
 			end -- principal
@@ -84,7 +91,8 @@ as
 			select	@totalVentas as totalVentas,
 					@efectivoDisponible as efectivoDisponible,
 					@retirosHechosDia as retirosHechosDia,
-					@montoCierre as montoCierre
+					@montoCierre as montoCierre,
+					@montoCerrado as montoCerrado
 								
 		end -- reporte de estatus
 

@@ -1,0 +1,51 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Precio>>
+
+@{
+    List<lluviaBackEnd.Models.Precio> ubicaciones = Model.Modelo;
+    int contador = 1;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-question"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblUbicacionesProducto" style="width:700px">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width:15%">#</th>
+                    <th class="text-center" style="width:30%">Cantidad Mínima</th>
+                    <th class="text-center" style="width:30%">Cantidad Máxima</th>
+                    <th class="text-center" style="width:25%">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.Precio p in ubicaciones)
+                {
+                    <tr>
+                        <td class="text-center" >@contador</td>
+                        <td class="text-center" >@p.min</td>
+                        <td class="text-center" >@p.max</td>
+                        <td class="text-center" >$@p.costo</td>
+                    </tr>
+                    contador = contador + 1;
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+

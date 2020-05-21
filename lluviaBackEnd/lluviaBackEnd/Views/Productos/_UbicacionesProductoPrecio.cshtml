@@ -1,0 +1,103 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Producto>>
+
+@{
+    List<lluviaBackEnd.Models.Producto> ubicaciones = Model.Modelo;
+    int contador = 1;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-question"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+
+
+    <div class="card">
+        <div class="padding-20">
+            <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="existencias" data-toggle="tab" href="#about" role="tab" aria-selected="true">Existencias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="rangoPrecios" data-toggle="tab" href="#settings" role="tab" aria-selected="false">Precios del Producto</a>
+                </li>
+            </ul>
+            <div class="tab-content tab-bordered" id="myTab3Content">
+
+                <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="existencias">
+                   
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblUbicacionesProducto">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Id</th>
+                                    <th>Almacen</th>
+                                    <th>Piso</th>
+                                    <th>Pasillo</th>
+                                    <th>Raq</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (lluviaBackEnd.Models.Producto u in ubicaciones)
+                {
+                                    <tr>
+                                        <td>@contador</td>
+                                        <td>@u.Almacen</td>
+                                        <td>@u.Piso</td>
+                                        <td>@u.Pasillo</td>
+                                        <td>@u.Raq</td>
+                                        <td>@u.cantidad</td>
+                                    </tr>
+                                    contador = contador + 1;
+                                }
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+
+                <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="rangoPrecios">
+                    <div class="row">
+                        <div class="col-md-3 col-6 b-r">
+                            <strong>Precio Individual</strong>
+                            <br>
+                            <p class="text-muted"><div id="precioIndividual_">0</div></p>
+                        </div>
+                        <div class="col-md-3 col-6 b-r">
+                            <strong>Precio de Menudeo</strong>
+                            <br>
+                            <p class="text-muted"><div id="precioMenudeo_">0</div></p>
+                        </div>
+                        <div class="col-md-3 col-6 b-r">
+                        </div>
+                        <div class="col-md-3 col-6">
+                        </div>
+
+                        <div id="Precios_"></div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+}

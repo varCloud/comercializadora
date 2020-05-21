@@ -36,7 +36,6 @@ as
 						@error_line				varchar(255) = '',
 						@error_procedure		varchar(255) = ''
 						
-
 			end  --declaraciones 
 
 			begin -- principal
@@ -58,6 +57,10 @@ as
 							RetirosCierreDia 
 								(monto,idUsuario,idEstacion,fechaAlta)
 						values	(@monto, @idUsuario, @idEstacion, getdate())
+
+						select	@mensaje = 'Se realizo el cierre de la Estacion:' + nombre + ' correctamente.'
+						from	Estaciones 
+						where	idEstacion = @idEstacion
 					end
 
 			end -- principal
