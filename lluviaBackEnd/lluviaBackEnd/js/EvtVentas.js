@@ -691,12 +691,12 @@ function AbrirModalCierreCajaExcedentes() {
 
     ConsultRetiros();
     ConsultaInfoCierre();
+    $('#montoARetirar').val('');
     $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
 
 function AbrirModalCierreDia() {
-
 
 
     $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -706,9 +706,51 @@ function AbrirModalCierreDia() {
 
 $('#btnRetirarExcesoEfectivo').click(function (e) {
 
-    alert();
+    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('Cantidad en Efectivo: <strong> $', '').replace('</strong>', '').replace(' ', '')).toFixed(2);
+    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('Cantidad Retirada del día: <strong> $', '').replace('</strong>', '').replace(' ', '')).toFixed(2);
+    var montoARetirar = parseFloat($('#montoARetirar').val()).toFixed(2); 
+    
+    if ( $('#montoARetirar').val() == "") {
+        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
+        return
+    }
+
+    if ( ( (cantidadEfectivo - cantidadRetirada) - montoARetirar) < 0.0 )
+    {
+        MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo - cantidadRetirada).toString() + " para retirar.");
+        return
+    }
+
+    // si todo bien
+    retirarExcesoEfectivo(montoARetirar);
 
 });
+
+function retirarExcesoEfectivo(montoRetiro) {
+    
+    $.ajax({
+        url: rootUrl("/Ventas/RetirarExcesoEfectivo"),
+        data: { montoRetiro: montoRetiro },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            $('#ModalCierreExceso').modal('hide');
+
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
 
 function ConsultRetiros() {
 
@@ -741,7 +783,6 @@ function ConsultaInfoCierre() {
 
     $.ajax({
         url: rootUrl("/Ventas/ConsultaInfoCierre"),
-        //data: { idVenta: idVenta, montoIVA: montoIVA, idCliente: idCliente, idFactFormaPago: formaPago, idFactUsoCFDI: usoCFDI },
         method: 'post',
         dataType: 'json',
         async: true,
@@ -754,7 +795,8 @@ function ConsultaInfoCierre() {
             $('#ventasDelDia').html("Ventas del día:  <strong>" + data.Modelo.totalVentas + "</strong>");
             $('#cantidadEfectivo').html("Cantidad en Efectivo: <strong> $" + data.Modelo.efectivoDisponible + "</strong>");
             $('#cantidadRetirada').html("Cantidad Retirada del día: <strong> $" + data.Modelo.retirosHechosDia + "</strong>");
-
+            //$('#cantidadCierre').html("Cantidad de Cierre:  <strong> $" + data.Modelo.montoCierre + "</strong>");
+            
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');

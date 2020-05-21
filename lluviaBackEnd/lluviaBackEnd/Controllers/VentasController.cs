@@ -210,6 +210,25 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult RetirarExcesoEfectivo(float montoRetiro)
+        {
+            try
+            {
+                Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Retiros retiros = new Retiros();
+                retiros.idEstacion = usuario.idEstacion;
+                retiros.idUsuario = usuario.idUsuario;
+                retiros.montoRetiro = montoRetiro;
+                notificacion = new VentasDAO().RetirarExcesoEfectivo(retiros);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +247,7 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
 
                 PrintDocument pd = new PrintDocument();
-                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                 PaperSize ps = new PaperSize("", 120, 540);
 
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);

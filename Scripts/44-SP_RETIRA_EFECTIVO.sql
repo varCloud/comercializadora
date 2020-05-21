@@ -32,7 +32,7 @@ as
 			begin --declaraciones 
 
 				declare @status					int = 200,
-						@mensaje				varchar(255) = '',
+						@mensaje				varchar(255) = 'Se inserto correctamente el retiro de dinero.',
 						@error_line				varchar(255) = '',
 						@error_procedure		varchar(255) = ''
 						

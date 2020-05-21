@@ -461,6 +461,7 @@
                                                 <div id="ventasDelDia">Ventas del día:  0 </div> 
                                                 <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div> 
                                                 <div id="cantidadRetirada">Cantidad Retirada del día:  0 </div>
+                                                @*<div id="cantidadCierre">Cantidad de Cierre:  0 </div>*@
                                             </address>
                                         </div>
 
@@ -478,7 +479,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input id="montoCierreExceso" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esNumero(event)">
                                         <div class="input-group-append">
                                             <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
                                         </div>
@@ -515,8 +516,7 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="btnGuardarPrecios" class="btn btn-success">Guardar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
