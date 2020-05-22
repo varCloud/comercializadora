@@ -1,6 +1,9 @@
 ﻿var tblCompras
 $(document).ready(function () {
-    InitTableCompras();
+    if ($("#tblCompras").length > 0) {       
+        InitTableCompras();
+    }
+   
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
     //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));

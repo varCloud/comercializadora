@@ -28,7 +28,7 @@ namespace lluviaBackEnd.DAO
                 {
                     db.Open();
                     db.CreateParameters(1);
-                    db.AddParameters(0, "@idProveedor", proveedor.idProveedor); 
+                    db.AddParameters(0, "@idProveedor", proveedor.idProveedor);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PROVEEDORES]");
 
                     while (db.DataReader.Read())
@@ -86,7 +86,7 @@ namespace lluviaBackEnd.DAO
                                 idProveedor = Convert.ToInt32(db.DataReader["idProveedor"].ToString()),
                                 nombre = db.DataReader["nombreProveedor"].ToString()
                             };
- 
+
                         }
                     }
                 }
@@ -146,12 +146,16 @@ namespace lluviaBackEnd.DAO
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PROVEEDORES]");
                     while (db.DataReader.Read())
                     {
-                        lstProveedores.Add(
-                            new SelectListItem
-                            {
-                                Text = db.DataReader["nombre"].ToString(),
-                                Value = db.DataReader["idProveedor"].ToString()
-                            });
+                        if (Convert.ToInt32(db.DataReader["status"]) == 200)
+                        {
+                            lstProveedores.Add(
+                                        new SelectListItem
+                                        {
+                                            Text = db.DataReader["nombre"].ToString(),
+                                            Value = db.DataReader["idProveedor"].ToString()
+                                        });
+                        }
+
                     }
                 }
             }
@@ -160,7 +164,8 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
 
-            lstProveedores.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            if (lstProveedores.Count > 0)
+                lstProveedores.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
 
             return lstProveedores;
         }
