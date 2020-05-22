@@ -1,6 +1,9 @@
 ﻿var tblFacturas
 $(document).ready(function () {
-    InitTableFacturas();
+    if ($("#tblFacturas").length > 0) {
+        InitTableFacturas();
+    }
+    
     InitRangePicker('rangeFacturas', 'fechaIni', 'fechaFin');
     //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));

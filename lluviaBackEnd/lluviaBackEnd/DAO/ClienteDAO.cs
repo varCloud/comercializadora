@@ -73,7 +73,7 @@ namespace lluviaBackEnd.DAO
 
         public List<Cliente> ObtenerClientes(Cliente c)
         {
-            List<Cliente> lstClientes = null;
+            List<Cliente> lstClientes = new List<Cliente>();
             try
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))

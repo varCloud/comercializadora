@@ -1,6 +1,8 @@
 ﻿var tablaBitacoras;
 $(document).ready(function () {
-    InitTableBitacoras();
+    if ($("#tblBitacoras ").length > 0) {
+        InitTableBitacoras();
+    }
     InitRangePicker('rangeBitacoras', 'fechaIni', 'fechaFin');
 
     $('#rangeBitacoras').val('');

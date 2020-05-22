@@ -62,7 +62,7 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
             ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
-            ViewBag.lstCompras = notificacion.Modelo;
+            ViewBag.lstCompras = notificacion.Estatus==200 ?  notificacion.Modelo : new List<Compras>();
             return View();
         }
 

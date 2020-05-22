@@ -105,7 +105,7 @@
 
 
 <div id="rowCompras">
-    @Html.Partial("_Compras", new lluviaBackEnd.Models.Compras() { idCompra = 0 })
+    @Html.Action("BuscarCompras","Reportes", new lluviaBackEnd.Models.Compras() { idCompra = 0 })
 </div>
 
 
