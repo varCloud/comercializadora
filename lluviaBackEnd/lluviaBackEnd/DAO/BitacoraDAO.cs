@@ -61,6 +61,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", pedidosInternos.producto.idProducto == 0 ? (object)null : pedidosInternos.producto.idProducto);
                     parameters.Add("@fechaIni", pedidosInternos.fechaIni == DateTime.MinValue ? (object)null : pedidosInternos.fechaIni);
                     parameters.Add("@fechaFin", pedidosInternos.fechaFin == DateTime.MinValue ? (object)null : pedidosInternos.fechaFin);
+                    parameters.Add("@idPedidoInterno", pedidosInternos.idPedidoInterno == 0 ? (object)null : pedidosInternos.idPedidoInterno);
                     var rs = db.QueryMultiple("SP_CONSULTA_PEDIDOS_INTERNOS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)

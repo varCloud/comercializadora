@@ -142,8 +142,8 @@ function VerUsuario(idUsuario) {
     $('#apellidoMaterno').val(data.apellidoMaterno).prop('disabled', true);
     $('#telefono').val(data.telefono).prop('disabled', true);
     $('#idRolGuardar').val(data.idRol).change().prop('disabled', true);
-    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', true);
     $('#idSucursalGuardar').val(data.idSucursal).change().prop('disabled', true);
+    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', true);    
     $('.field-validation-error').html("");
 
     //$('#activo').trigger('click');
@@ -171,9 +171,9 @@ function EditarUsuario(idUsuario) {
     $('#apellidoPaterno').val(data.apellidoPaterno).prop('disabled', false);
     $('#apellidoMaterno').val(data.apellidoMaterno).prop('disabled', false);
     $('#telefono').val(data.telefono).prop('disabled', false);
-    $('#idRolGuardar').val(data.idRol).change().prop('disabled', false);
-    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', false);
+    $('#idRolGuardar').val(data.idRol).change().prop('disabled', false);   
     $('#idSucursalGuardar').val(data.idSucursal).change().prop('disabled', false);
+    $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', false);
     $('.field-validation-error').html("");
 
     //$('#activo').trigger('click');
@@ -203,8 +203,8 @@ function InitBtnAgregar() {
         $('#apellidoMaterno').val('').prop('disabled', false);
         $('#telefono').val('').prop('disabled', false);
         $('#idRolGuardar').val('').change().prop('disabled', false);
-        $('#idAlmacenGuardar').val('').change().prop('disabled', false);
-        $('#idSucursalGuardar').val('').change().prop('disabled', false);
+        $('#idSucursalGuardar').val('1').change().prop('disabled', false);
+        $('#idAlmacenGuardar').val('').change().prop('disabled', false);        
         $('.field-validation-error').html("");
 
         //$('#activo').trigger('click');
@@ -213,6 +213,7 @@ function InitBtnAgregar() {
         $('#TituloModalUsuario').html("Agregar Usuario");
 
     });
+  
 }
 
 
@@ -256,5 +257,39 @@ function EliminarUsuario(idUsuario) {
 
 
 $(document).ready(function () {
-    InitTableUsuarios();    
+    InitTableUsuarios(); 
+
+    $("#idSucursalGuardar").change(function (evt) {
+        evt.preventDefault();
+        $('#idAlmacenGuardar').empty();
+        $('#idAlmacenGuardar').append($('<option/>').val("").text("--SELECCIONA--"));
+        if ($("#idSucursalGuardar").val() > 0)
+        {
+            $.ajax({
+                url: rootUrl("/Usuarios/ObtenerAlmacenSucursal"),
+                data: { idSucursal: $("#idSucursalGuardar").val() },
+                method: 'post',
+                dataType: 'json',
+                async: false,
+                beforeSend: function (xhr) {
+                    ShowLoader("Cargando");
+                },
+                success: function (data) {
+                    console.log(data);                    
+                    $.each(data, function () {
+                        $('#idAlmacenGuardar').append($('<option/>').val(this.Value).text(this.Text));
+                    });
+                    OcultarLoader();
+                },
+                error: function (xhr, status) {
+                    OcultarLoader();
+                    console.log('hubo un problema pongase en contacto con el administrador del sistema');
+                    console.log(xhr);
+                    console.log(status);
+                }
+            });
+
+        }
+    });
+
 });

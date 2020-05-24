@@ -6,7 +6,6 @@
     
 }
 
-
 <h2>Estaciones</h2>
 
 <div id="rowTblEstaciones">
@@ -56,7 +55,7 @@
                     <div class="col-12 col-sm-12 col-lg-4">
                         <div class="form-group">
                             <label>Sucursal</label>
-                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales,"--Seleccione--", new { id = "idSucursal", @class = "form-control", data_val = "true" })
+                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales, "--SELECCIONA--", new { id = "idSucursal", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
                             @Html.ValidationMessageFor(x => x.idSucursal, null, new { @class = "text-danger was" })
                         </div>
                     </div>
@@ -64,7 +63,7 @@
                     <div class="col-12 col-sm-12 col-lg-4">
                         <div class="form-group">
                             <label>Almacen</label>
-                            @Html.DropDownListFor(x => x.idAlmacen, new List<SelectListItem>(), "--Seleccione--", new { id = "idAlmacen", @class = "form-control", data_val = "true" })
+                            @Html.DropDownListFor(x => x.idAlmacen, new List<SelectListItem>(), "--SELECCIONA--", new { id = "idAlmacen", @class = "form-control", data_val = "true" })
                             @Html.ValidationMessageFor(x => x.idAlmacen, null, new { @class = "text-danger was" })
                         </div>
                     </div>
