@@ -63,7 +63,7 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Telefono *</label>
-                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono" })
+                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono", onkeypress = "return esNumero(event)" })
                                 @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Codigo Postal</label>
-                                @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "cp" })
+                                @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "cp", onkeypress = "return esNumero(event)" })
                                 @Html.ValidationMessageFor(x => x.cp, null, new { @class = "text-danger was" })
                             </div>
                         </div>

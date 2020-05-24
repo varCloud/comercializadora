@@ -47,7 +47,7 @@
                     <div class="col-12 col-sm-12 col-lg-4">
                         <div class="form-group">
                             <label>Numero *</label>
-                            @Html.TextBoxFor(x => x.numero, null, new { @class = "form-control", @id = "numero" })
+                            @Html.TextBoxFor(x => x.numero, null, new { @class = "form-control", @id = "numero", onkeypress = "return esNumero(event)" })
                             @Html.ValidationMessageFor(x => x.numero, null, new { @class = "text-danger was" })
                         </div>
                     </div>

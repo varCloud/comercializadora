@@ -89,7 +89,7 @@
 
                         <div class="form-group col-lg-6">
                             <label>Telefono</label>
-                            @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono" })
+                            @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono", onkeypress = "return esNumero(event)" })
                             @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
                         </div>
 
