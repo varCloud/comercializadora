@@ -74,6 +74,7 @@ namespace lluviaBackEnd.Models
         public int idSucursal { get; set; }
         public string Sucursal { get; set; }
 
+        public string descripcionConExistencias { get; set; }
 
     }
 }

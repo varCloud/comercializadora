@@ -25,7 +25,7 @@ function preguntaAltaPrecios() {
     swal({
         title: 'Mensaje',
         text: 'Este producto no tiene un precio configurado, ¿Desea Configurarlo?',
-        icon: 'warning',
+        icon: 'info',
         buttons: ["No", "Sí"],
         dangerMode: true,
     })
@@ -183,6 +183,7 @@ $('#btnAgregarProducto').click(function (e) {
         var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
         var precio = parseFloat(data.Modelo[0].costo);
         var descuento = parseFloat(data.Modelo[0].descuento);
+
         if (precio == 0) {
             preguntaAltaPrecios();
         }
@@ -190,7 +191,7 @@ $('#btnAgregarProducto').click(function (e) {
             var row_ =  "<tr>" +
                         "  <td>1</td>" +
                         "  <td> " + $('#idProducto').val() + "</td>" +
-                        "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
+                        "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
                         "  <td class=\"text-center\">$" + precio + "</td>" +
                         //"  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
                         "  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\"><input type='text' style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
@@ -917,11 +918,19 @@ function ObtenerIndividualMenudeo(idProducto) {
     return result;
 }
 
+function revisarExistenciasCombo() {
+    $('select[id*="idProducto"] option').each(function (index, value) {
+        if ($(this).text().includes(' - (SIN EXISTENCIAS)')) {
+            $("#idProducto>option[value='" + $(this).val() + "']").prop('disabled', true);
+        }
+    });
+}
 
 $(document).ready(function () {
 
     actualizaTicketVenta();
     InitSelect2Productos();
+    revisarExistenciasCombo();
     document.getElementById("divUsoCFDI").style.display = 'none';
-
+  
 });
