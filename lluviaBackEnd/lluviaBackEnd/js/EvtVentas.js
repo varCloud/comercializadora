@@ -194,7 +194,7 @@ $('#btnAgregarProducto').click(function (e) {
                         "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
                         "  <td class=\"text-center\">$" + precio + "</td>" +
                         //"  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
-                        "  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\"><input type='text' style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
+                        "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
                         "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
                         "  <td class=\"text-center\">$" + descuento + "</td>" +
                         "  <td class=\"text-center\">" +
@@ -206,21 +206,25 @@ $('#btnAgregarProducto').click(function (e) {
             $('#cantidad').val('');
 
             actualizaTicketVenta();
-
+            initInputsTabla();
             
-            $('#tablaRepVentas input').on('change', function () {
-                //alert("cambio");
-                console.log("cambio");
-                //console.log("change_name_val__" + $(this).name());
-                //var theInput = $(this);
-                ////theInput.setAttribute('value', '99'); 
-                //document.querySelector('input[value="2"]').value = "99";
-                //console.log("theInput_"+theInput.val());
-                //console.log("change_n_val__" +  this.value);
-                //console.log("change_new_val__" + $(this).val());
+            //$('#tablaRepVentas input').on('change', function () {
 
-                //actualizaTicketVenta();
-            });
+            //    var thisInput = $(this);
+
+            //    if ((thisInput.val() == "") || (thisInput.val() == "0")) {
+            //        MuestraToast('warning', "Debe escribir la cantidad de productos.");
+            //        document.execCommand('undo');
+            //    }
+            //    else {
+            //        actualizaPreciosTabla('tablaRepVentas');
+            //        actualizaTicketVenta();
+            //    }
+                
+            //});
+
+            //actualizaTicketVenta();
+
         }
 
     }
@@ -229,83 +233,99 @@ $('#btnAgregarProducto').click(function (e) {
 
 
 function actualizaTicketVenta() {
-    console.log("actualizaTicketVenta");
+    
     var totalPiezas = parseFloat(0);
     var totalAhorro = parseFloat(0);
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
         fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        totalPiezas += parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', ''));
         totalAhorro += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     });
 
-    if (totalPiezas >= 12) {
-        // si hay 12 o mas piezas y todavia no se agrega el descuento al tikcet
-        if (totalAhorro == 0) {
-            agregarDescuentos();
-            //$("#vaConDescuento").val("1");
+    //sacar piezas
+    var tblVtas = document.getElementById('tablaRepVentas');
+    var rCount = tblVtas.rows.length;
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            totalPiezas += parseFloat(tblVtas.rows[i].cells[4].children[0].value);
         }
     }
+    //console.log('totalPiezas_' + totalPiezas);
+    //console.log('totalAhorro_' + totalAhorro);
+    if (totalPiezas >= 12) {
+        // si hay 12 o mas piezas y todavia no se agrega el descuento al tikcet
+        //if (totalAhorro == 0) {
+            //agregarDescuentos();
+            $("#vaConDescuento").val("1");
+            actualizaPreciosTabla('tablaRepVentas');
+        //}
+    }
     else {
-        
-        if (totalAhorro > 0) {
-            //$("#vaConDescuento").val("0");
-            quitarDescuentos();
-        }
+        //if (totalAhorro > 0) {
+            //quitarDescuentos();
+            $("#vaConDescuento").val("0");
+            actualizaPreciosTabla('tablaRepVentas');
+        //}
     }
     actualizarSubTotal();
 }
 
 
-function agregarDescuentos() {
+function initInputsTabla() {
 
-    $("#vaConDescuento").val("1");
+    $('#tablaRepVentas input').on('change', function () {
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+        var thisInput = $(this);
 
-        var idProducto = parseFloat(fila.children[1].innerHTML);
-        var cantidad = parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')); //parseFloat(fila.children[4].innerHTML);
-        
-        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-        var precio = parseFloat(data.Modelo[0].costo);
-
-        if (precio == 0) {
-            console.log("error_precio_" + precio);
+        if ((thisInput.val() == "") || (thisInput.val() == "0")) {
+            MuestraToast('warning', "Debe escribir la cantidad de productos.");
+            document.execCommand('undo');
         }
         else {
-            fila.children[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
-            fila.children[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
-            fila.children[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+            actualizaPreciosTabla('tablaRepVentas');
+            actualizaTicketVenta();
         }
-        
-    });
 
+    });
 }
 
+//function agregarDescuentos() {
 
-function quitarDescuentos() {
+//    $("#vaConDescuento").val("1");
+//    actualizaPreciosTabla('tablaRepVentas');
+//}
 
-    $("#vaConDescuento").val("0");
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+//function quitarDescuentos() {
+//    $("#vaConDescuento").val("0");
+//    actualizaPreciosTabla('tablaRepVentas');
+//}
 
-        var idProducto = parseFloat(fila.children[1].innerHTML);
-        var cantidad = parseFloat(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')); //parseFloat(fila.children[4].innerHTML);
 
-        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-        var precio = parseFloat(data.Modelo[0].costo);
+function actualizaPreciosTabla(tabla) {
 
-        if (precio == 0) {
-            console.log("error_precio_" + precio);
+    var tblVtas = document.getElementById(tabla);
+    var rCount = tblVtas.rows.length;
+
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+
+            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
+            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
+            var precio = parseFloat(data.Modelo[0].costo);
+
+            if (precio == 0) {
+                console.log("error_precio_" + precio);
+            }
+            else {
+                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
+                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
+                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+            }
         }
-        else {
-            fila.children[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
-            fila.children[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
-            fila.children[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
-        }
-    });
-
+    }
 }
 
 function actualizarSubTotal() {
@@ -470,9 +490,28 @@ function ImprimeTicket(idVenta) {
 }
 
 
+function numerico(evt) {
+    evt = (evt) ? evt : window.event;
+
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+    if (charCode === 27) {
+        document.execCommand('undo');
+    }
+
+    if (charCode === 13) {
+        $(':focus').blur();
+    }
+
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
 function listenerDobleClick(element) {
     element.contentEditable = true;
-
+    
     $(element).keydown(function (evt) {
         el = evt.target;
 
@@ -481,16 +520,41 @@ function listenerDobleClick(element) {
             element.contentEditable = false;
         }
 
-        if (
-             evt.keyCode == 13 ||
-            (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))
-           )
+        if  (
+            evt.keyCode != 8 || //backspace
+            evt.keyCode != 9 || //tab
+            evt.keyCode != 13 || //enter
+            evt.keyCode != 37 || // left arrow 
+            evt.keyCode != 39 || // right arrow 
+            evt.keyCode != 46 || //delete
+            evt.keyCode != 48 || //0
+            evt.keyCode != 49 || //1
+            evt.keyCode != 50 || //2
+            evt.keyCode != 51 || //3
+            evt.keyCode != 52 || //4
+            evt.keyCode != 53 || //5
+            evt.keyCode != 54 || //6
+            evt.keyCode != 55 || //7
+            evt.keyCode != 56 || //8
+            evt.keyCode != 57    //9
+            
+            )
         {
             event.preventDefault();
             element.contentEditable = false;
+            
         }
-        else {       // si es un numero         
-        }
+
+        //if (
+        //     evt.keyCode == 13 ||
+        //    (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))
+        //   )
+        //{
+        //    event.preventDefault();
+        //    element.contentEditable = false;
+        //}
+        //else {       // si es un numero         
+        //}
     });
 
     setTimeout(function () {
@@ -931,6 +995,9 @@ $(document).ready(function () {
     actualizaTicketVenta();
     InitSelect2Productos();
     revisarExistenciasCombo();
+    initInputsTabla();
     document.getElementById("divUsoCFDI").style.display = 'none';
+
+
   
 });

@@ -136,16 +136,16 @@
                                             <tbody>
                                                 @foreach (var item in notificacion.Modelo)
                                                 {
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>@item.idProducto</td>
-                                                        <td>@item.descProducto</td>
-                                                        <td class="text-center">$@item.monto</td>
-                                                        <td class="text-center" onclick="listenerDobleClick(this);" onchange="onChangeCantidad();" onblur="this.contentEditable=false;">@item.cantidad</td>
-                                                        <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
-                                                        <td class="text-center">0</td>
-                                                        <td class="text-center">7</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descProducto</td>
+                                                    <td class="text-center">$@item.monto</td>
+                                                    <td class="text-center"><input type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
+                                                    <td class="text-center">0</td>
+                                                    <td class="text-center">7</td>
+                                                </tr>
 
                                                 }
 
