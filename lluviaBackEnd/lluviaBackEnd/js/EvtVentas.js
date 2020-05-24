@@ -404,14 +404,18 @@ $('#btnGuardarVenta').click(function (e) {
         aplicaIVA = parseInt(1);
     }
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+    var tblVtas = document.getElementById('tablaRepVentas');
+    var rCount = tblVtas.rows.length;
 
-        var row_ = {
-            idProducto: fila.children[1].innerHTML,
-            cantidad: parseInt(fila.children[4].innerHTML.replace('<input type="text" style="text-align: center; border: none; border-color: transparent;  background: transparent; " value="', '').replace('">', '')),
-        };
-        productos.push(row_);
-    });
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            var row_ = {
+                idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+            };
+            productos.push(row_);
+        }
+    }
 
     dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA });
 
@@ -427,7 +431,8 @@ $('#btnGuardarVenta').click(function (e) {
         },
         success: function (data) {
             OcultarLoader();
-            MuestraToast('success', data.Mensaje);
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+
             $('#ModalPrevioVenta').modal('hide');
             limpiarTicket();
             ImprimeTicket(data.Modelo.idVenta);
