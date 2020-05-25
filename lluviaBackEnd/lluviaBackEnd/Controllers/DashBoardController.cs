@@ -4,14 +4,17 @@ using lluviaBackEnd.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace lluviaBackEnd.Controllers
 {
     [SessionTimeout]
     public class DashBoardController : Controller
     {
+        public object DefaultAuthenticationTypes { get; private set; }
 
         // GET: DashBoard
         public ActionResult index()
@@ -144,6 +147,13 @@ namespace lluviaBackEnd.Controllers
 
 
             return PartialView(grafico);
+        }
+
+        public ActionResult CerrarSesion()
+        {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
+            return RedirectToAction("Login", "Login");
         }
 
     }

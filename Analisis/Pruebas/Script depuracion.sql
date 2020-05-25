@@ -59,6 +59,34 @@
 --DBCC CHECKIDENT ('[LineaProducto]',RESEED, 18)
 
 
+/************************************************/
+/**   PARA LIMPAR INVENTARIO
+************************************************/
+
+
+DELETE FROM ComprasDetalle
+DBCC CHECKIDENT ('[ComprasDetalle]',RESEED, 0)
+
+
+DELETE FROM Compras
+DBCC CHECKIDENT ('[compras]',RESEED, 0)
+
+DELETE FROM InventarioGeneral
+DBCC CHECKIDENT ('[InventarioGeneral]',RESEED, 0)
+
+
+DELETE FROM InventarioDetalleLog
+DBCC CHECKIDENT ('[InventarioDetalleLog]',RESEED, 0)
+
+delete from InventarioDetalle
+DBCC CHECKIDENT ('[InventarioDetalle]',RESEED, 0)
+
+delete from MovimientosDeMercancia
+DBCC CHECKIDENT ('[MovimientosDeMercancia]',RESEED, 0)
+
+-- DELETE from Usuarios where idRol != 1
+
+
 
 
 
