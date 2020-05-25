@@ -424,13 +424,47 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <address>
+                                            @*<address>
                                                 <strong>Resumen:</strong><br>
-                                                <div id="ventasDelDia">Ventas del día:  0 </div> 
-                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div> 
+                                                <div id="ventasDelDia">Ventas del día:  0 </div>
+                                                <div id="montoVentasDelDia">Monto de Ventas:  0 </div>
+                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div>
                                                 <div id="cantidadRetirada">Cantidad Retirada del día:  0 </div>
-                                                @*<div id="cantidadCierre">Cantidad de Cierre:  0 </div>*@
-                                            </address>
+                                            </address>*@
+
+                                            <div class="py-4">
+                                                <div id="ventasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Ventas del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="montoVentasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Monto de Ventas:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadEfectivo">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad en Efectivo:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadRetirada">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad Retirada del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+
+
                                         </div>
 
                                     </div>
@@ -445,7 +479,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esPrecio(event)">
                                         <div class="input-group-append">
                                             <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
                                         </div>
@@ -528,28 +562,28 @@
                                             <div id="vtasDelDiaCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Ventas del día:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="totalEfectivoCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Total Efectivo:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="retirosDelDiaCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Retiros del Día:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="totalCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Cantidad para Cierre:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
                                         </div>

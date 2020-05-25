@@ -632,6 +632,13 @@ $("#cantidad").on("keyup", function (event) {
     }
 });
 
+$("#montoARetirar").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnRetirarExcesoEfectivo").click();
+    }
+});
+
 
 $("#idCliente").on("change", function () {
 
@@ -718,36 +725,37 @@ function AbrirModalCierreDia() {
 
 $('#btnRetirarExcesoEfectivo').click(function (e) {
 
-    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('Cantidad en Efectivo: <strong> $', '').replace('</strong>', '').replace(' ', '')).toFixed(2);
-    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('Cantidad Retirada del día: <strong> $', '').replace('</strong>', '').replace(' ', '')).toFixed(2);
-    var montoARetirar = parseFloat($('#montoARetirar').val()).toFixed(2); 
+    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2); 
     
     if ( $('#montoARetirar').val() == "") {
         MuestraToast('warning', "Debe seleccionar un monto para retirar.");
         return
     }
 
-    if ( ( (cantidadEfectivo - cantidadRetirada) - montoARetirar) < 0.0 )
+    if ( ( (cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0 )
     {
         MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo - cantidadRetirada).toString() + " para retirar.");
         return
     }
-
     // si todo bien
-    retirarExcesoEfectivo(montoARetirar);
+    retirarExcesoEfectivo(montoARetirar_);
 
 });
 
 
 $('#btnCierreDia').click(function (e) {
-    var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-
+    //var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    var totEfe = parseFloat($('#totalEfectivoCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    var monto = totEfe - totRet;
+    
     if ((monto) <= 0.0) {
         MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
         return
     }
 
-    console.log(monto);
     swal({
         title: 'Mensaje',
         text: '¿Estas seguro que desea hacer el cierre para esta Estación?',
@@ -790,7 +798,7 @@ function retirarExcesoEfectivo(montoRetiro) {
     
     $.ajax({
         url: rootUrl("/Ventas/RetirarExcesoEfectivo"),
-        data: { montoRetiro: montoRetiro },
+        data: { montoRetiro: parseFloat(montoRetiro) },
         method: 'post',
         dataType: 'json',
         async: true,
@@ -870,9 +878,10 @@ function ConsultaInfoCierre() {
         },
         success: function (data) {
             OcultarLoader();
-            $('#ventasDelDia').html("Ventas del día:  <strong>" + data.Modelo.totalVentas + "</strong>");
-            $('#cantidadEfectivo').html("Cantidad en Efectivo: <strong> $" + data.Modelo.efectivoDisponible + "</strong>");
-            $('#cantidadRetirada').html("Cantidad Retirada del día: <strong> $" + data.Modelo.retirosHechosDia + "</strong>");
+            $('#ventasDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
+            $('#montoVentasDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Monto de Ventas: </span><span class=\"float-right text-muted\">$" + data.Modelo.montoVentasDelDia + "</span></p>");
+            $('#cantidadEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
+            $('#cantidadRetirada').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$" + data.Modelo.retirosHechosDia + "</span></p>");
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -898,7 +907,7 @@ function ConsultaInfoCierreDia() {
             $('#vtasDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día:</span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
             $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
             $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$" + data.Modelo.retirosHechosDia + "</span></p>");
-            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$" + data.Modelo.montoCierre + "</span></p>");
+            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
