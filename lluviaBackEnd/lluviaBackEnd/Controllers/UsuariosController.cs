@@ -19,13 +19,26 @@ namespace lluviaBackEnd.Controllers
             //List<Models.Usuario> LstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idRol = 1 });
             ViewBag.lstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idUsuario = 0 });
             ViewBag.lstRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
-            ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+            //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
             
             return View();
         }
 
+        [HttpPost]
+        public ActionResult ObtenerAlmacenSucursal(int idSucursal = 0, int idTipoAlmacen = 0)
+        {
+            try
+            {
 
+                return Json(new UsuarioDAO().ObtenerAlmacenes(idSucursal, idTipoAlmacen), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
 
         public ActionResult ObtenerUsuario(int idUsuario)
@@ -47,9 +60,9 @@ namespace lluviaBackEnd.Controllers
             {
                 //List<Models.Socio> Lstsocio = new SocioDAO().ObtenerSocios(new Models.Socio() { IdSocio = 0 });
                 ViewBag.lstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idUsuario = 0 });
-                ViewBag.lstRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
-                ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
-                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+               // ViewBag.lstRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
+                //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
                 return PartialView("_ObtenerUsuarios");
             }
             catch (Exception ex)

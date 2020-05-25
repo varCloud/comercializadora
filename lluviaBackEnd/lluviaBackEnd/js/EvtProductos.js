@@ -630,7 +630,7 @@ $(document).ready(function () {
 
     InitTableProductos();
     InitRangePicker();
-    $('#idLineaProductoBusqueda').val('0');
+    //$('#idLineaProductoBusqueda').val('0');
 
     document.getElementById('articulo').onchange = function () {
         obtenerCodigos();

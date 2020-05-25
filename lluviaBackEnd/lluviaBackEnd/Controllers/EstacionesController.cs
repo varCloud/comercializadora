@@ -28,9 +28,8 @@ namespace lluviaBackEnd.Controllers
         public ActionResult ObtenerAlmacenSucursal(int idSucursal = 0, int idTipoAlmacen = 0)
         {
             try
-            {
-               
-                string a=JsonConvert.SerializeObject(new UsuarioDAO().ObtenerAlmacenes(idSucursal, idTipoAlmacen));
+            {               
+
                 return Json(new UsuarioDAO().ObtenerAlmacenes(idSucursal, idTipoAlmacen), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

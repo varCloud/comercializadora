@@ -92,9 +92,9 @@ $(document).ready(function () {
 
     InitDataTableCompras();
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
-    $('#idLineaProductoBusqueda').val('0');
-    $('#lstProveedoresBusqueda').val('0');
-    $('#lstUsuariosBusqueda').val('0');
+    //$('#idLineaProductoBusqueda').val('0');
+    //$('#lstProveedoresBusqueda').val('0');
+    //$('#lstUsuariosBusqueda').val('0');
     $('#fechaIni').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 

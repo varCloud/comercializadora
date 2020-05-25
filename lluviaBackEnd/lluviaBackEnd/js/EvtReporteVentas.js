@@ -189,9 +189,9 @@ $(document).ready(function () {
     InitDataTableVentas();
     //InitSelect2Productos();
     InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
-    $('#idLineaProductoBusqueda').val('0');
-    $('#idClienteBusqueda').val('0');
-    $('#idUsuarioBusqueda').val('0');
+    //$('#idLineaProductoBusqueda').val('0');
+    //$('#idClienteBusqueda').val('0');
+    //$('#idUsuarioBusqueda').val('0');
     $('#fechaIni').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
