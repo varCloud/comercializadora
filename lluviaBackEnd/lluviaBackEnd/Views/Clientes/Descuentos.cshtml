@@ -48,7 +48,7 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <div class="form-group">
                                 <label>Descuento en % *</label>
-                                @Html.TextBoxFor(x => x.descuento, null, new { @class = "form-control", @id = "descuento" })
+                                @Html.TextBoxFor(x => x.descuento, null, new { @class = "form-control", @id = "descuento", onkeypress = "return esPrecio(event)" })
                                 @Html.ValidationMessageFor(x => x.descuento, null, new { @class = "text-danger was" })
                             </div>
                         </div>

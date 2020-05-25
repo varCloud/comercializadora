@@ -11,7 +11,7 @@
 
     <div class="empty-state">
         <div class="empty-state-icon">
-            <i class="fas fa-question"></i>
+            <i class="fas fa-info"></i>
         </div>
         <h2>@Model.Mensaje</h2>
     </div>
@@ -24,7 +24,7 @@ else
             <thead>
                 <tr>
                     <th></th>
-                    <th class="text-center">Id</th>
+                    <th class="text-center">Folio</th>
                     <th>Almacen Origen</th>
                     <th>Almacen Destino</th>
                     <th>Usuario</th>
@@ -40,7 +40,7 @@ else
                 {
                     <tr>
                         <td class="details-control" idPedido="@c.idPedidoInterno"></td>
-                        <td>@contador</td>
+                        <td>@c.idPedidoInterno</td>
                         <td>@c.almacenOrigen.descripcion</td>
                         <td>@c.almacenDestino.descripcion</td>
                         <td>@c.usuario.nombreCompleto</td>

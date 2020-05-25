@@ -25,7 +25,9 @@
 
     $('#btnAgregarProducto').click(function (e) {
 
-        if ($('#precio').val() == "") {
+        if ($('#idProducto').val()<=0) {
+            MuestraToast('warning', "Debe seleccionar un producto.");
+        }else if ($('#precio').val() == "") {
             MuestraToast('warning', "Debe escribir el precio de productos que va a agregar.");
         }
         else if ($('#cantidad').val() == "") {
@@ -53,6 +55,7 @@
             $("#tblComprasDetalle tbody").append(row_);
             $('#cantidad').val('');
             $('#precio').val('');
+            $('#idProducto').val('').trigger('change');
             actualizaTicket();
 
 

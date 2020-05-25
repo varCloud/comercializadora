@@ -90,7 +90,7 @@ $(document).ready(function () {
 
     InitDataTableInventario();
     InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
-    $('#idLineaProductoBusqueda').val('0');
+    //$('#idLineaProductoBusqueda').val('0');
     $('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 

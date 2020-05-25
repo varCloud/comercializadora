@@ -49,45 +49,44 @@
 
                         <div class="row">
 
-                            <div class="col-12 col-sm-12 col-lg-3">
+                            <div class="col-12 col-sm-12 col-lg-2">
                                 <label>Herramientas</label>
                                 <div class="buttons">
-
-                                    <a href="javascript:AbrirModalConsultaExistencias();" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Consultar Existencias"><i class="fas fa-eye"></i></a>
-                                    <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Cierre de Caja (Exceso de Efectivo)"><i class="fas fa-dollar-sign"></i></a>
-                                    <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-dollar-sign"></i></a>
-
+                                    <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                        <a href="javascript:AbrirModalConsultaExistencias();" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Consultar Existencias"><i class="fas fa-eye"></i></a>
+                                        <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Cierre de Caja (Exceso de Efectivo)"><i class="fas fa-dollar-sign"></i></a>
+                                        <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-dollar-sign"></i></a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="col-12 col-sm-12 col-lg-7">
                                 <div class="form-group">
                                     <label>Producto</label>
                                     @Html.HiddenFor(x => idVenta)
                                     <input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">
-                                    @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                    @Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcionConExistencias"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Cantidad</label>
-                                    <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                        <div class="input-group-append">
+                                            <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="col-12 col-sm-12 col-lg-2">
-                                <label>&nbsp;</label></br>
-                                <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
-                            </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
-
-
         </div>
 
 
@@ -137,16 +136,16 @@
                                             <tbody>
                                                 @foreach (var item in notificacion.Modelo)
                                                 {
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>@item.idProducto</td>
-                                                        <td>@item.descProducto</td>
-                                                        <td class="text-center">$@item.monto</td>
-                                                        <td class="text-center" onclick="listenerDobleClick(this);" onchange="onChangeCantidad();" onblur="this.contentEditable=false;">@item.cantidad</td>
-                                                        <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
-                                                        <td class="text-center">0</td>
-                                                        <td class="text-center">7</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descProducto</td>
+                                                    <td class="text-center">$@item.monto</td>
+                                                    <td class="text-center"><input type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$@Convert.ToInt32(item.cantidad * @item.monto)</td>
+                                                    <td class="text-center">0</td>
+                                                    <td class="text-center">7</td>
+                                                </tr>
 
                                                 }
 
@@ -425,13 +424,47 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <address>
+                                            @*<address>
                                                 <strong>Resumen:</strong><br>
-                                                <div id="ventasDelDia">Ventas del día:  0 </div> 
-                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div> 
+                                                <div id="ventasDelDia">Ventas del día:  0 </div>
+                                                <div id="montoVentasDelDia">Monto de Ventas:  0 </div>
+                                                <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div>
                                                 <div id="cantidadRetirada">Cantidad Retirada del día:  0 </div>
-                                                @*<div id="cantidadCierre">Cantidad de Cierre:  0 </div>*@
-                                            </address>
+                                            </address>*@
+
+                                            <div class="py-4">
+                                                <div id="ventasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Ventas del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="montoVentasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Monto de Ventas:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadEfectivo">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad en Efectivo:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadRetirada">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad Retirada del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+
+
                                         </div>
 
                                     </div>
@@ -446,7 +479,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esPrecio(event)">
                                         <div class="input-group-append">
                                             <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
                                         </div>
@@ -529,28 +562,28 @@
                                             <div id="vtasDelDiaCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Ventas del día:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="totalEfectivoCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Total Efectivo:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="retirosDelDiaCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Retiros del Día:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
 
                                             <div id="totalCierre">
                                                 <p class="clearfix">
                                                     <span class="float-left">Cantidad para Cierre:</span>
-                                                    <span class="float-right text-muted">30-05-1998</span>
+                                                    <span class="float-right text-muted">0</span>
                                                 </p>
                                             </div>
                                         </div>

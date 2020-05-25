@@ -11,80 +11,10 @@
 
 @if (Model.Estatus != 200)
 {
-    <h2>@Model.Mensaje</h2>
+    <h4>@Model.Mensaje</h4>
 }
 else
 {
-    @*<div class="row">
-            @foreach (lluviaBackEnd.Models.PedidosInternos c in pedidosInternos)
-            {
-
-                switch (c.estatusPedido.idStatus)
-                {
-                    case 1:
-                        {
-                            classColor = "bg-info";
-
-                        }
-                        break;
-
-                    case 2:
-                        {
-                            classColor = "bg-primary";
-
-                        }
-                        break;
-
-                    case 3:
-                        {
-                            classColor = "bg-danger";
-
-                        }
-                        break;
-
-                    case 4:
-                        {
-                            classColor = "bg-success";
-
-                        }
-                        break;
-                    default:
-                        {
-                            classColor = "bg-warning";
-
-                        }
-                        break;
-                }
-
-                difFechas = "";
-
-                if (fechaAnt != DateTime.MinValue)
-                {
-                    TimeSpan span = (c.fechaAlta - fechaAnt);
-                    difFechas = String.Format("{0} dias, {1} horas, {2} minutos, {3} segundos",
-            span.Days, span.Hours, span.Minutes, span.Seconds);
-                }
-                <div class="col-xl-4 col-lg-6">
-                    <div class="card @classColor">
-                        <div class="card-statistic-3">
-                            <div class="card-content">
-                                <h6 class="card-title">@c.estatusPedido.descripcion</h6>
-                                <span>@c.usuario.nombreCompleto</span>
-
-                                <p class="mb-0 text-sm">
-                                    <span class="mr-2"><i class="fa fa-clock"></i>@Html.Raw(string.IsNullOrEmpty(difFechas) ? "N/A" : difFechas)</span>
-                                    <span class="text-nowrap">@c.fechaAlta</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                fechaAnt = c.fechaAlta;
-
-            }
-        </div>*@
-
     <ul class="list-unstyled list-unstyled-border row">
         @foreach (lluviaBackEnd.Models.PedidosInternos c in pedidosInternos)
         {

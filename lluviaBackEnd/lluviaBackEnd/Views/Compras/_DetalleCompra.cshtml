@@ -61,7 +61,7 @@
         <div class="form-group col-lg-6">
             <label>Proveedor</label>
             <div class="input-group">
-                @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "Seleccione", new { id = "idProveedor", @class = "custom-select select-multiple", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
+                @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", @class = "custom-select select-multiple", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
 
                 @Html.ValidationMessageFor(model => model.proveedor.idProveedor, null, new { @class = "text-danger was" })
                 <div class="input-group-append">
@@ -73,7 +73,7 @@
 
         <div class="form-group col-lg-6">
             <label>Estatus de la compra</label>
-            @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "Seleccione", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
+            @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
             @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
         </div>
 

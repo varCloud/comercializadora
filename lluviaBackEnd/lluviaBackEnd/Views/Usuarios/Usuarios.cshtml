@@ -4,7 +4,7 @@
     ViewBag.Title = "Usuarios";
     List<lluviaBackEnd.Models.Usuario> lstUsuario = ViewBag.lstUsuario;
     List<SelectListItem> lstRoles = (List<SelectListItem>)ViewBag.lstRoles;
-    List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
+    //List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
     List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
 
 }
@@ -54,70 +54,65 @@
                     @Html.HiddenFor(x => x.activo, new { @id = "activo" })
 
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <div class="form-group">
-                                <label>Usuario</label>
-                                @Html.TextBoxFor(x => x.usuario, null, new { @class = "form-control", @id = "usuario" })
-                                @Html.ValidationMessageFor(x => x.usuario, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group">
-                                <label>Nombre</label>
-                                @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre", required = "required", data_val_required = "El nombre no puede ir vacio", data_val = "true" })
-                                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
-                            </div>
 
-                            <div class="form-group">
-                                <label>Apellido Materno</label>
-                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno" })
-                                @Html.ValidationMessageFor(x => x.apellidoMaterno, null, new { @class = "text-danger was" })
-                            </div>
-
-
-                            <div class="form-group">
-                                <label>Almacen</label>
-                                @Html.DropDownListFor(x => x.idAlmacenGuardar, lstAlmacenes, new { id = "idAlmacenGuardar", @class = "form-control", data_val = "true" })
-                                @Html.ValidationMessageFor(x => x.idAlmacenGuardar, null, new { @class = "text-danger was" })
-                            </div>
-
-                            <div class="form-group">
-                                <label>Telefono</label>
-                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono" })
-                                @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
-                            </div>
+                        <div class="form-group col-lg-6">
+                            <label>Usuario</label>
+                            @Html.TextBoxFor(x => x.usuario, null, new { @class = "form-control", @id = "usuario" })
+                            @Html.ValidationMessageFor(x => x.usuario, null, new { @class = "text-danger was" })
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <div class="form-group">
-                                <label>Contraseña</label>
-                                @Html.TextBoxFor(x => x.contrasena, null, new { @class = "form-control", @id = "contrasena", type = "password" })
-                                @Html.ValidationMessageFor(x => x.contrasena, null, new { @class = "text-danger was" })
-                            </div>
 
-                            <div class="form-group">
-                                <label>Apellido Paterno</label>
-                                @Html.TextBoxFor(x => x.apellidoPaterno, null, new { @class = "form-control", @id = "apellidoPaterno" })
-                                @Html.ValidationMessageFor(x => x.apellidoPaterno, null, new { @class = "text-danger was" })
-                            </div>
 
-                            <div class="form-group">
-                                <label>Rol</label>
-                                @Html.DropDownListFor(x => x.idRolGuardar, lstRoles, new { id = "idRolGuardar", @class = "form-control", data_val = "true" })
-                                @Html.ValidationMessageFor(x => x.idRolGuardar, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group">
-                                <label>Sucursal</label>
-                                @Html.DropDownListFor(x => x.idSucursalGuardar, lstSucursales, new { id = "idSucursalGuardar", @class = "form-control", data_val = "true" })
-                                @Html.ValidationMessageFor(x => x.idSucursalGuardar, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group mb-0">
-                                @*<div class="pretty p-icon p-smooth">
-                                        @Html.CheckBoxFor(x => x.activo, new { id = "activo", value = "false" })
-                                        <div class="state p-success">
-                                            <i class="icon fa fa-check"></i>
-                                            <label> Activo</label>
-                                        </div>
-                                    </div>*@
-                            </div>
+                        <div class="form-group col-lg-6">
+                            <label>Contraseña</label>
+                            @Html.TextBoxFor(x => x.contrasena, null, new { @class = "form-control", @id = "contrasena", type = "password" })
+                            @Html.ValidationMessageFor(x => x.contrasena, null, new { @class = "text-danger was" })
                         </div>
+
+
+                        <div class="form-group col-lg-6">
+                            <label>Nombre</label>
+                            @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre", required = "required", data_val_required = "El nombre no puede ir vacio", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Apellido Paterno</label>
+                            @Html.TextBoxFor(x => x.apellidoPaterno, null, new { @class = "form-control", @id = "apellidoPaterno" })
+                            @Html.ValidationMessageFor(x => x.apellidoPaterno, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Apellido Materno</label>
+                            @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno" })
+                            @Html.ValidationMessageFor(x => x.apellidoMaterno, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Telefono</label>
+                            @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono", onkeypress = "return esNumero(event)" })
+                            @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Sucursal</label>
+                            @Html.DropDownListFor(x => x.idSucursalGuardar, lstSucursales,"---Selecciona---", new { id = "idSucursalGuardar", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(x => x.idSucursalGuardar, null, new { @class = "text-danger was" })
+                        </div>
+
+
+                        <div class="form-group col-lg-6">
+                            <label>Almacen</label>
+                            @Html.DropDownListFor(x => x.idAlmacenGuardar, new List<SelectListItem>(), "---Selecciona---", new { id = "idAlmacenGuardar", @class = "form-control", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.idAlmacenGuardar, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Rol</label>
+                            @Html.DropDownListFor(x => x.idRolGuardar, lstRoles,"---Selecciona---", new { id = "idRolGuardar", @class = "form-control", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.idRolGuardar, null, new { @class = "text-danger was" })
+                        </div>
+
+
                     </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">

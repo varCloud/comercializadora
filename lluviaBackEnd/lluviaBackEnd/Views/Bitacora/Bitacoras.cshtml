@@ -46,29 +46,35 @@
                     },
                     new { id = "frmBuscarBitacoras" }))
                     {
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="form-group">
-                                    <label>Usuario</label>
-                                    @Html.DropDownListFor(x => x.usuario.idUsuario, (List<SelectListItem>)ViewBag.listUsuarios, new { @class = "select-multiple", data_val = "false" })
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="form-group">
-                                    <label>Almacen Origen</label>
-                                    @Html.DropDownListFor(x => x.almacenOrigen.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="form-group">
-                                    <label>Almacen Destino</label>
-                                    @Html.DropDownListFor(x => x.almacenDestino.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
-
-                                </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-2">
+                            <div class="form-group">
+                                <label>Folio</label>
+                                @Html.TextBoxFor(x => x.idPedidoInterno, new { @class = "form-control", data_val = "false", onkeypress = "return esNumero(event)" })
                             </div>
                         </div>
+                        <div class="col-12 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label>Almacen Origen</label>
+                                @Html.DropDownListFor(x => x.almacenOrigen.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label>Almacen Destino</label>
+                                @Html.DropDownListFor(x => x.almacenDestino.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
 
-                        <div class="row">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                @Html.DropDownListFor(x => x.usuario.idUsuario, (List<SelectListItem>)ViewBag.listUsuarios, new { @class = "select-multiple", data_val = "false" })
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="row">                      
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Estatus</label>

@@ -55,7 +55,7 @@ function EliminarEstacion(idEstacion) {
             if (willDelete) {
                 $.ajax({
                     url: rootUrl("/Estaciones/EliminarEstacion"),
-                    data: { idEstacion: idEstacion, idStatus :2  },
+                    data: { idEstacion: idEstacion, idStatus: 2 },
                     method: 'post',
                     dataType: 'json',
                     async: true,
@@ -93,7 +93,7 @@ function EditarEstacion(idEstacion) {
         $("#frmEstacion select").prop("disabled", false)
         $('#btnGuardarEstacion').css('display', '');
         $('#TituloModalEstacion').html("Actualizar Estación");
-        
+
         $('#idEstacion').val(idEstacion);
         $('#nombre').val(data.Modelo[0].nombre);
         $('#numero').val(data.Modelo[0].numero);
@@ -107,9 +107,8 @@ function EditarEstacion(idEstacion) {
     }
 }
 
-function ObtenerEstacion(idEstacion)
-{
-    result = { "Estatus" : -1 ,  "Mensaje":"Espere un momento y vuelva a intentarlo"};
+function ObtenerEstacion(idEstacion) {
+    result = { "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
     $.ajax({
         url: rootUrl("/Estaciones/ObtenerEstacion"),
         data: { idEstacion: idEstacion },
@@ -127,7 +126,7 @@ function ObtenerEstacion(idEstacion)
             console.log(xhr);
             console.log(status);
         }
-    }); 
+    });
     return result;
 }
 
@@ -145,8 +144,8 @@ function InitTableEstaciones() {
                 title: "Estaciones",
                 customize: function (doc) {
 
-                    doc.defaultStyle.fontSize = 8; 
-                    doc.styles.tableHeader.fontSize = 10; 
+                    doc.defaultStyle.fontSize = 8;
+                    doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
                     doc.content[1].table.widths = ['10%', '25%', '25%', '15%', '15%', '10%'];
 
@@ -164,7 +163,7 @@ function InitTableEstaciones() {
                                     alignment: 'center',
                                     fontSize: 14,
                                     text: "Estaciones",
-                                    margin: [0, 40 ,80]
+                                    margin: [0, 40, 80]
                                 }
                             ],
                             margin: [10, 0]
@@ -178,7 +177,7 @@ function InitTableEstaciones() {
                                     text: ['pagina ', { text: page.toString() }, ' de ', { text: pages.toString() }]
                                 }
                             ],
-                            margin: [0, 0,30]
+                            margin: [0, 0, 30]
                         }
                     });	// fin del doc footer*/	
                 },
@@ -212,14 +211,16 @@ function InitBtnAgregar() {
     $('#btnAgregarEstacion').click(function (e) {
         $('.field-validation-error').html("");
 
-       
+
         $("#frmEstacion input").prop("disabled", false);
         $("#frmEstacion select").prop("disabled", false);
         $('#idEstacion').val('0');
         $('#btnResetGuardarEstacion').trigger('click');
         $('#btnGuardarEstacion').css('display', '');
-        $('#idAlmacen').empty();
-        $('#idAlmacen').append($('<option/>').val("").text("--Seleccione--"));
+        $('#idSucursal').val(1);
+        $("#idSucursal").change();
+        //$('#idAlmacen').empty();
+        //$('#idAlmacen').append($('<option/>').val("").text("--SELECCIONA--"));
         //$('#idCliente').val('0');
         //para abrir el modal
         $('#mdlAgregarEstacion').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -235,32 +236,34 @@ $(document).ready(function () {
     $('#btnResetGuardarEstacion').css('display', 'none');
 
     $("#idSucursal").change(function (evt) {
-
         evt.preventDefault();
-        $.ajax({
-            url: rootUrl("/Estaciones/ObtenerAlmacenSucursal"),
-            data: { idSucursal: $("#idSucursal").val(), idTipoAlmacen: 3 },
-            method: 'post',
-            dataType: 'json',
-            async: false,
-            beforeSend: function (xhr) {
-                ShowLoader("Cargando");
-            },
-            success: function (data) {
-                console.log(data);
-                $('#idAlmacen').empty();
-                $('#idAlmacen').append($('<option/>').val("").text("--Seleccione--"));
-                $.each(data, function () {
-                    $('#idAlmacen').append($('<option/>').val(this.Value).text(this.Text));
-                });
-                OcultarLoader();
-            },
-            error: function (xhr, status) {
-                OcultarLoader();
-                console.log('hubo un problema pongase en contacto con el administrador del sistema');
-                console.log(xhr);
-                console.log(status);
-            }
-        });
+        $('#idAlmacen').empty();
+        $('#idAlmacen').append($('<option/>').val("").text("--SELECCIONA--"));
+
+        if ($("#idSucursal").val() > 0) {
+            $.ajax({
+                url: rootUrl("/Estaciones/ObtenerAlmacenSucursal"),
+                data: { idSucursal: $("#idSucursal").val(), idTipoAlmacen: 3 },
+                method: 'post',
+                dataType: 'json',
+                async: false,
+                beforeSend: function (xhr) {
+                    ShowLoader("Cargando");
+                },
+                success: function (data) {
+                    console.log(data);
+                    $.each(data, function () {
+                        $('#idAlmacen').append($('<option/>').val(this.Value).text(this.Text));
+                    });
+                    OcultarLoader();
+                },
+                error: function (xhr, status) {
+                    OcultarLoader();
+                    console.log('hubo un problema pongase en contacto con el administrador del sistema');
+                    console.log(xhr);
+                    console.log(status);
+                }
+            });
+        }
     });
 });
