@@ -42,7 +42,7 @@ DBCC CHECKIDENT ('[Estaciones]',RESEED, 0)
 DELETE from [dbo].[Facturas]
 DBCC CHECKIDENT ('[Facturas]',RESEED, 0)
 
-DELETE FROM [dbo].[Clientes]
+DELETE FROM [dbo].[Clientes] where idCliente > 1
 DBCC CHECKIDENT ('[Clientes]',RESEED, 0)
 
 
@@ -101,8 +101,11 @@ DBCC CHECKIDENT ('[MovimientosDeMercancia]',RESEED, 0)
  DBCC CHECKIDENT ('[ProductosPorPrecio]',RESEED, 0)
 
 
-DELETE FROM CatTipoCliente
+DELETE FROM CatTipoCliente where idTipoCliente >1
 DBCC CHECKIDENT ('[CatTipoCliente]',RESEED, 0)
+
+--select * from CatTipoCliente
+
 
 
 
