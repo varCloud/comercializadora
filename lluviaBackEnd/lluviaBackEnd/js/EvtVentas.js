@@ -173,11 +173,15 @@ $('#previoVenta').click(function (e) {
 
 $('#btnAgregarProducto').click(function (e) {
 
+    if ($('#idProducto').val() == "" ) {
+        MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
+        return
+    }
+
     if ($('#cantidad').val() == "") {
         MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
     }
     else {
-
         var idProducto = $('#idProducto').val();
         var cantidad = $('#cantidad').val();
         var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
