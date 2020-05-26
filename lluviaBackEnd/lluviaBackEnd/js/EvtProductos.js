@@ -459,24 +459,36 @@ $('#btnAgregarPrecio').click(function (e) {
                 if ((parseFloat($('#min_').val())) >= (parseFloat($('#max_').val()))) {
                     MuestraToast('warning', "El máximo debe ser mayor al mínimo del rango que quiere agregar.");
                 }
-                else if (parseFloat($('#precio').val()) >= parseFloat($('#precioIndividual').val()) || parseFloat($('#precio').val()) >= parseFloat($('#precioMenudeo').val())) {
-                    MuestraToast('warning', "El precio debe ser menor que el precio individual y que el precio menudeo.");
-
-                }
                 else {
 
                     var maximo = parseFloat(0);
+                    var precioMinimo = parseFloat(0);
 
                     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
                         console.log(fila.children[1].innerHTML + ", " + fila.children[2].innerHTML);
                         var maximo_actual = parseFloat(fila.children[2].innerHTML);
+                        var PrecioActual = parseFloat(fila.children[3].innerHTML);
                         if (maximo_actual > maximo) {
                             maximo = maximo_actual;
                         }
+                        if (precioMinimo == 0)
+                            precioMinimo = PrecioActual
+
+                        if (PrecioActual < precioMinimo) {
+                            precioMinimo = PrecioActual
+                        }
+
                     });
+
 
                     if (parseFloat(maximo) >= parseFloat($('#min_').val())) {
                         MuestraToast('warning', "El mínimo que intenta insertar debe ser mayor al maximo del rango anterior");
+                    }
+                    else if ((precioMinimo == parseFloat(0)) && (parseFloat($('#precio').val()) >= parseFloat($('#precioIndividual').val()) || parseFloat($('#precio').val()) >= parseFloat($('#precioMenudeo').val()))) {
+                        MuestraToast('warning', "El precio debe ser menor que el precio individual y que el precio menudeo.");
+                    }
+                    else if (precioMinimo>0 && parseFloat($('#precio').val()) >= precioMinimo) {
+                        MuestraToast('warning', "El precio que intenta insertar debe ser menor al precio minimo del rango anterior.");
                     }
                     else {
 
