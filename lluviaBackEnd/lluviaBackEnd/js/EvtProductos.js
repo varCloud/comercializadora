@@ -15,7 +15,7 @@ function VerUbicacionesProducto(idProducto) {
         },
         success: function (data) {
             OcultarLoader();
-            $("#ubicacionProducto").html(data);           
+            $("#ubicacionProducto").html(data);
             $('#modalUbicacionProducto').modal({ backdrop: 'static', keyboard: false, show: true });
 
         },
@@ -36,7 +36,7 @@ function onCompleteSubmitProductos() {
     console.log("onCompleteSubmit___");
 }
 function onSuccessResultProductos(data) {
-    console.log("onSuccessResult", JSON.stringify(data) );
+    console.log("onSuccessResult", JSON.stringify(data));
 
     tablaProductos.destroy();
     $('#rowProductos').html(data);
@@ -55,7 +55,7 @@ function onCompleteSubmitGuardarProducto() {
     console.log("onCompleteSubmit___");
 }
 function onSuccessResultGuardarProducto(data) {
-    console.log("onSuccessResult", JSON.stringify(data));   
+    console.log("onSuccessResult", JSON.stringify(data));
     if (data.Estatus == 200) {
         MuestraToast('success', data.Mensaje);
         PintarTabla();
@@ -128,7 +128,7 @@ function InitTableProductos() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['25%', '25%',  '25%', '25%'];
+                    doc.content[1].table.widths = ['25%', '25%', '25%', '25%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Productos");
@@ -154,9 +154,9 @@ function InitTableProductos() {
         tablaProductos.table().container()
     );
 
-  
 
-    $('#' + NombreTabla+'_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProducto" data-toggle="tooltip" title="Agregar Producto"><i class="fas fa-plus"></i></a>');
+
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProducto" data-toggle="tooltip" title="Agregar Producto"><i class="fas fa-plus"></i></a>');
     InitBtnAgregar();
 }
 
@@ -223,11 +223,11 @@ function VerPrecios(idProducto) {
     //document.getElementById("btnGuardarPrecios").disabled = true;
     ObtenerPrecios(idProducto);
     ObtenerIndividualMenudeo(idProducto);
-    
+
     //para abrir el modal
     $('#RangosPreciosProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalRangosPrecios').html("Precios por Producto");
-    
+
 }
 
 function ObtenerPrecios(idProducto) {
@@ -318,8 +318,8 @@ function pintarPrecios(data) {
 $('#tablaProductos tbody').on('click', 'td', function () {
 
     var col_ = tablaProductos.row(this).data();
-    document.getElementById("descNombreProducto").innerHTML = "<strong>Descripción: &nbsp;</strong> " + col_[1]; 
-    
+    document.getElementById("descNombreProducto").innerHTML = "<strong>Descripción: &nbsp;</strong> " + col_[1];
+
 });
 
 function EditarProducto(idProducto) {
@@ -333,7 +333,7 @@ function EditarProducto(idProducto) {
     $('#descripcion').val(data.descripcion).prop('disabled', false);
     $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', false);
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
-    console.log("idClaveProdServ", data.idClaveProdServ )
+    console.log("idClaveProdServ", data.idClaveProdServ)
     $('#cbClaveProdServ').val(data.idClaveProdServ).prop('disabled', false);
     $('#claveUnidad').val(data.claveUnidad).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
@@ -362,7 +362,7 @@ function InitBtnAgregar() {
         $('.field-validation-error').html("");
         document.getElementById('barra').src = '';
         document.getElementById('qr').src = '';
-        
+
         //para abrir el modal
         $('#EditarProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalProducto').html("Agregar Producto");
@@ -437,17 +437,17 @@ $('#btnAgregarPrecio').click(function (e) {
     //console.log($('#min_').val());
     //console.log($('#max_').val());
     //console.log($('#precio').val());
-    if ( $('#min_').val() == "" || $('#max_').val() == "" || $('#precio').val() == ""  ) {
+    if ($('#min_').val() == "" || $('#max_').val() == "" || $('#precio').val() == "") {
         MuestraToast('warning', "Debe poner todos los datos para insertar el rango de precios.");
     }
     else {
 
-        if  (
-                (parseFloat($('#min_').val()) >= parseFloat(0) && parseFloat($('#min_').val()) <= parseFloat(11)) ||
-                (parseFloat($('#max_').val()) >= parseFloat(0) && parseFloat($('#max_').val()) <= parseFloat(11))
+        if (
+            (parseFloat($('#min_').val()) >= parseFloat(0) && parseFloat($('#min_').val()) <= parseFloat(11)) ||
+            (parseFloat($('#max_').val()) >= parseFloat(0) && parseFloat($('#max_').val()) <= parseFloat(11))
 
-            ) {
-            MuestraToast('warning', "Para precios de prductos entre 1 y 11 artículos debe asignar el Precio Individual.");
+        ) {
+            MuestraToast('warning', "Para precios de productos entre 1 y 11 artículos debe asignar el Precio Individual.");
         }
         else {
 
@@ -458,6 +458,10 @@ $('#btnAgregarPrecio').click(function (e) {
 
                 if ((parseFloat($('#min_').val())) >= (parseFloat($('#max_').val()))) {
                     MuestraToast('warning', "El máximo debe ser mayor al mínimo del rango que quiere agregar.");
+                }
+                else if (parseFloat($('#precio').val()) >= parseFloat($('#precioIndividual').val()) || parseFloat($('#precio').val()) >= parseFloat($('#precioMenudeo').val())) {
+                    MuestraToast('warning', "El precio debe ser menor que el precio individual y que el precio menudeo.");
+
                 }
                 else {
 
@@ -497,7 +501,7 @@ $('#btnAgregarPrecio').click(function (e) {
                         validaBtnGuardarPrecios();
                     }
                 }
-            }            
+            }
         }
     }
 });
@@ -505,17 +509,20 @@ $('#btnAgregarPrecio').click(function (e) {
 
 $('#btnGuardarPrecios').click(function (e) {
 
-
+    var error = 0;
     if ($('#precioIndividual').val() == "" || $('#precioMenudeo').val() == "" || $('#precioIndividual').val() == "0" || $('#precioMenudeo').val() == "0") {
         MuestraToast('warning', "Por favor asigne un valor para los precios de Individual y Menudeo.");
+    }
+    else if (parseFloat($('#precioIndividual').val()) < parseFloat($('#precioMenudeo').val())) {
+        MuestraToast('warning', "El precio individual debe ser mayor que el precio menudeo.");
     }
     else {
 
         var idProducto = parseInt(0);
-            idProducto = $('#idProductoRango').val();
+        idProducto = $('#idProductoRango').val();
 
         var rangos = [];
-        
+
         $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
 
             var row_ = {
@@ -525,38 +532,46 @@ $('#btnGuardarPrecios').click(function (e) {
                 costo: fila.children[3].innerHTML
                 //idProducto: $('#idProductoRango').val()
             };
+
+            if (parseFloat(row_.costo) >= parseFloat($('#precioIndividual').val()) || row_.costo >= parseFloat($('#precioMenudeo').val())) {
+                error = error + 1;
+                MuestraToast('warning', "El precio de " + row_.min + " a " + row_.max + " productos debe ser menor que el precio individual y que el precio menudeo.");
+                return
+            }
             rangos.push(row_);
         });
 
-        var producto = {
-            idProducto: idProducto,
-            precioIndividual: $('#precioIndividual').val(),
-            precioMenudeo: $('#precioMenudeo').val()
-        };
+        if (error == 0) {
 
-        dataToPost = JSON.stringify({ precios: rangos, producto: producto });
+            var producto = {
+                idProducto: idProducto,
+                precioIndividual: $('#precioIndividual').val(),
+                precioMenudeo: $('#precioMenudeo').val()
+            };
 
-        $.ajax({
-            url: rootUrl("/Productos/GuardarPrecios"),
-            data: dataToPost,
-            method: 'POST',
-            dataType: 'JSON',
-            contentType: "application/json; charset=utf-8", // specify the content type
-            async: false,
-            beforeSend: function (xhr) {
-            },
-            success: function (data) {
-                //MuestraToast('success', data.Mensaje);
-                MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-                $('#RangosPreciosProductoModal').modal('hide');
-            },
-            error: function (xhr, status) {
-                console.log('Hubo un problema al insertar el rango, contactese con el administrador del sistema');
-                console.log(xhr);
-                console.log(status);
-            }
-        });
+            dataToPost = JSON.stringify({ precios: rangos, producto: producto });
 
+            $.ajax({
+                url: rootUrl("/Productos/GuardarPrecios"),
+                data: dataToPost,
+                method: 'POST',
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8", // specify the content type
+                async: false,
+                beforeSend: function (xhr) {
+                },
+                success: function (data) {
+                    //MuestraToast('success', data.Mensaje);
+                    MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+                    $('#RangosPreciosProductoModal').modal('hide');
+                },
+                error: function (xhr, status) {
+                    console.log('Hubo un problema al insertar el rango, contactese con el administrador del sistema');
+                    console.log(xhr);
+                    console.log(status);
+                }
+            });
+        }
     }
 
 
@@ -565,7 +580,7 @@ $('#btnGuardarPrecios').click(function (e) {
 function eliminaFilaPrecios(index_) {
 
     var max_id = parseFloat(0);
- 
+
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
         var maximo_actual = parseFloat(fila.children[0].innerHTML);
         if (maximo_actual > max_id) {
@@ -580,7 +595,7 @@ function eliminaFilaPrecios(index_) {
 
     actualizaTablaPrecios();
     //validaBtnGuardarPrecios();
-    
+
 }
 
 function ImprimirCodigos(articulo, descProducto) {
@@ -598,7 +613,7 @@ function ImprimirCodigos(articulo, descProducto) {
             OcultarLoader();
             console.log(data);
             window.open("http://" + window.location.host + "/Codigos/" + data.Modelo, "_blank");
-            console.log("http://" +window.location.host + "/Codigos/" + data.Modelo);
+            console.log("http://" + window.location.host + "/Codigos/" + data.Modelo);
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -641,8 +656,7 @@ $(document).ready(function () {
     });
 
     $('#descripcion').keyup(function () {
-        if ( ($('#idLineaProducto').val()) !== null )
-        {
+        if (($('#idLineaProducto').val()) !== null) {
             $('#articulo').val($("#idLineaProducto option:selected").text().replace('Linea ', '').substring(0, 2).concat('-').concat($("#descripcion").val().substring(0, 3)).toUpperCase());
             obtenerCodigos();
         }
