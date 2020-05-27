@@ -404,6 +404,11 @@ $('#btnGuardarVenta').click(function (e) {
     var idVenta = $('#idVenta').val();
     var aplicaIVA = parseInt(0);
 
+    if ($('#efectivo').val() == "") {
+        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+        return
+    }
+
     if ($("#chkFacturar").is(":checked")) {
         aplicaIVA = parseInt(1);
     }
