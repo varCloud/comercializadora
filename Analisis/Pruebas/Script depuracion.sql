@@ -1,5 +1,6 @@
- 
 
+delete from CatRoles where idRol >8
+DBCC CHECKIDENT ('CatRoles',RESEED, 8)
 
 DELETE FROM Compras
 DBCC CHECKIDENT ('Compras',RESEED, 0)
@@ -43,7 +44,7 @@ DELETE from [dbo].[Facturas]
 DBCC CHECKIDENT ('[Facturas]',RESEED, 0)
 
 DELETE FROM [dbo].[Clientes] where idCliente > 1
-DBCC CHECKIDENT ('[Clientes]',RESEED, 0)
+DBCC CHECKIDENT ('[Clientes]',RESEED, 1)
 
 
 DELETE a from [dbo].[InventarioGeneral] a

@@ -127,7 +127,7 @@ namespace lluviaBackEnd.Controllers
                 string pathFactura = Utils.ObtnerFolder() + @"/";
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                factura.idVenta = "64";
+                //factura.idVenta = "64";
                 factura.idUsuario = UsuarioActual.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = factura.idVenta;
