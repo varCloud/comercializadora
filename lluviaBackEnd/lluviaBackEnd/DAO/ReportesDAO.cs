@@ -25,11 +25,11 @@ namespace lluviaBackEnd.DAO
 
             try
             {
-                if (producto.fechaIni == (new DateTime(0001, 01, 01)))
-                    producto.fechaIni = new DateTime(1900, 01, 01);
+                //if (producto.fechaIni == (new DateTime(0001, 01, 01)))
+                //    producto.fechaIni = new DateTime(1900, 01, 01);
 
-                if (producto.fechaFin == (new DateTime(0001, 01, 01)))
-                    producto.fechaFin = new DateTime(1900, 01, 01);
+                //if (producto.fechaFin == (new DateTime(0001, 01, 01)))
+                //    producto.fechaFin = new DateTime(1900, 01, 01);
 
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
@@ -41,8 +41,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", producto.idLineaProducto);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                    parameters.Add("@fechaIni", producto.fechaIni);
-                    parameters.Add("@fechaFin", producto.fechaFin);
+                    parameters.Add("@fechaIni", producto.fechaIni==DateTime.MinValue ? (object) null : producto.fechaIni);
+                    parameters.Add("@fechaFin", producto.fechaFin == DateTime.MinValue ? (object)null : producto.fechaFin);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

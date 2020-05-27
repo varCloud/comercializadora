@@ -5,19 +5,19 @@ var tablaInventario;
 
 //busqueda
 function onBeginSubmitProductos() {
-    console.log("onBeginSubmit___");
+    ShowLoader("Buscando...");
 }
 function onCompleteSubmitProductos() {
     console.log("onCompleteSubmit___");
 }
-function onSuccessResultProductos(data) {
-    console.log("onSuccessResult", JSON.stringify(data) );    
+function onSuccessResultProductos(data) {  
     tablaInventario.destroy();
     $('#rowProductos').html(data);
     InitDataTableInventario();
+    OcultarLoader();
 }
 function onFailureResultProductos() {
-    console.log("onFailureResult___");
+    OcultarLoader();
 }
 
 function PintarTabla() {
@@ -89,9 +89,9 @@ function InitDataTableInventario() {
 $(document).ready(function () {
 
     InitDataTableInventario();
-    InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
-    //$('#idLineaProductoBusqueda').val('0');
-    $('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
+    ////$('#idLineaProductoBusqueda').val('0');
+    //$('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });
