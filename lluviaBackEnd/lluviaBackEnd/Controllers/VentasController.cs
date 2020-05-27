@@ -25,8 +25,10 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Ventas(Ventas venta)
         {
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+            notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario });
             ViewBag.lstProductos = notificacion.Modelo;
 
             Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
@@ -51,6 +53,20 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
                 notificacion = new VentasDAO().ObtenerProductoPorPrecio(precio);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ActionResult ObtenerProductoPorPrecioVenta(Precio precio)
+        {
+            try
+            {
+                Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+                notificacion = new VentasDAO().ObtenerProductoPorPrecioVenta(precio);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
