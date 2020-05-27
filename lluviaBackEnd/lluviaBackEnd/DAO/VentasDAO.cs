@@ -60,6 +60,41 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<Precio>> ObtenerProductoPorPrecioVenta(Precio precio)
+        {
+            Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", precio.idProducto);
+                    parameters.Add("@cantidad", precio.cantidad);
+                    parameters.Add("@vaConDescuento", precio.vaConDescuento);
+                    parameters.Add("@productosAdicionales", precio.productosAdicionales);
+                    var result = db.QueryMultiple("SP_CONSULTA_PRECIO_X_VOLUMEN", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Precio>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Precio> { precio };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
         public Notificacion<List<FormaPago>> ObtenerFormasPago()
         {

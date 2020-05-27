@@ -76,5 +76,7 @@ namespace lluviaBackEnd.Models
 
         public string descripcionConExistencias { get; set; }
 
+        public int idUsuario { get; set; }
+
     }
 }
