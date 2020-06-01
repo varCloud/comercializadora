@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Xml;
 using lluviaBackEnd.DAO;
@@ -124,7 +126,9 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
-                string pathFactura = Utils.ObtnerFolder() + @"/";
+                string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\","/");
+                string pathServer = Utils.ObtnerFolder() + @"/";
+                
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 //factura.idVenta = "64";
@@ -165,10 +169,12 @@ namespace lluviaBackEnd.Controllers
                     comprobanteTimbrado.Addenda.descripcionUsoCFDI= items["descripcionUsoCFDI"].ToString();
                     comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
 
+                    
+                    Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
+                    Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta);
+                    System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
 
-                    Utils.GenerarQRSAT(comprobanteTimbrado, pathFactura + ("Qr_" + factura.idVenta + ".jpg"));
-                    Utils.GenerarFactura(comprobanteTimbrado, pathFactura, factura.idVenta);
-                    System.IO.File.WriteAllText(pathFactura + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
+                    factura.pathFactura = pathFactura;
                     factura.estatusFactura = EnumEstatusFactura.Facturada;
                     factura.mensajeError = "OK";
                     factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;

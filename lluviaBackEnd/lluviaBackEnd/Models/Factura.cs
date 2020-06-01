@@ -26,6 +26,8 @@ namespace lluviaBackEnd.Models
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
 
+        public string pathFactura { get; set; }
+
 
 
     }
