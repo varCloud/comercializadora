@@ -1001,6 +1001,7 @@
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtFacturas.js" />
+    <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
@@ -1150,6 +1151,8 @@
     <Content Include="Views\Ventas\_ObtenerRetirosV2.cshtml" />
     <Content Include="Views\Productos\_UbicacionesProductoPrecio.cshtml" />
     <Content Include="Views\Productos\_PreciosProducto.cshtml" />
+    <Content Include="Views\Ventas\Retiros.cshtml" />
+    <Content Include="Views\Ventas\_ObtenerRetirosAutorizacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

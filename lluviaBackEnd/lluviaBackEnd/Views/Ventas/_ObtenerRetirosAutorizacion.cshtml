@@ -1,0 +1,61 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Retiros>>
+
+@{
+    List<lluviaBackEnd.Models.Retiros> retiros = Model.Modelo;
+
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <h6>Retiros de Efectivo por hechas en el día.</h6>
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblRetiros">
+            <thead>
+                <tr>
+                    <th>Tipo Retiro</th>
+                    <th>Monto</th>
+                    <th>Usuario</th>
+                    <th>Estación</th>
+                    <th>Estatus</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.Retiros c in retiros)
+                {
+                    <tr>
+                        <td>@c.tipoRetiro.ToString()</td>
+                        <td>$@c.montoRetiro</td>
+                        <td>@c.nombreUsuario</td>
+                        <td>@c.nombreEstacion</td>
+                        <td>@c.estatusRetiro.descripcion</td>
+                        <td>@c.fechaAlta.ToShortDateString()</td>
+                        <td></td>
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+
+
+
+

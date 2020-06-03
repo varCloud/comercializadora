@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -24,10 +25,10 @@ namespace lluviaBackEnd.Models
     public enum EnumTipoGrafico
     {
         VentasPorFecha = 1,
-        TopTenProductos=2,
-        TopTenClientes=3,
-        TopTenProvedores=4,
-        InformacionGlobal=5
+        TopTenProductos = 2,
+        TopTenClientes = 3,
+        TopTenProvedores = 4,
+        InformacionGlobal = 5
     }
 
     public enum EnumTipoReporteGrafico
@@ -35,6 +36,15 @@ namespace lluviaBackEnd.Models
         Semanal = 1,
         Mensuales = 2,
         Anuales = 3,
-        Dia=4
+        Dia = 4
+    }
+
+    public enum EnumTipoRetiro
+    {
+        [Description("Retiros Exceso Efectivo")]
+        RetirosExcesoEfectivo =1,
+
+        [Description("Retiros Cierre Diario")]
+        RetirosCierreDia=2
     }
 }
