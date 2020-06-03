@@ -112,6 +112,25 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
+        public static string ObtnerAnoMesFolder()
+        {
+            string ruta = string.Empty;
+            try
+            {
+                //ruta = HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
+                DateTime fecha = System.DateTime.Now;                
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fecha.Month).ToUpper();
+                ruta = Path.Combine(ruta, fecha.Year.ToString());
+                ruta = Path.Combine(ruta, nombreMes);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("call ObtnerAnoMesFolder()", ex);
+            }
+            return ruta;
+        }
+
         public static void GenerarFactura(Comprobante c, string path ,string idVenta)
         {
             string TamañoLetra = "10px";
