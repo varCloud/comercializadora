@@ -407,14 +407,14 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idEstacion", retiros.idEstacion);
+                    parameters.Add("@idEstacion", retiros.idEstacion==0 ? (object) null : retiros.idEstacion);
                     var result = db.QueryMultiple("SP_CONSULTA_RETIROS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Retiros>().ToList();
+                        notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros,splitOn: "idStatus").ToList();
                     }
                     else
                     {
@@ -429,6 +429,48 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
+        }
+
+
+        public Notificacion<List<Retiros>> ConsultaRetiros(Retiros retiros)
+        {
+            Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idEstacion", retiros.idEstacion == 0 ? (object)null : retiros.idEstacion);
+                    parameters.Add("@idTipoRetiro", retiros.tipoRetiro == 0 ? (object)null : retiros.tipoRetiro);
+                    parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
+                    var result = db.QueryMultiple("SP_CONSULTA_RETIROS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros, splitOn: "idStatus").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Retiros> { retiros };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public Retiros MapRetiros(Retiros r,Status s)
+        {
+            r.estatusRetiro = s;
+            return r;
         }
 
 
