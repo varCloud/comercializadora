@@ -271,6 +271,24 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult ActualizaEstatusRetiro(Retiros retiros)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;                
+                retiros.idUsuario = usuario.idUsuario;
+                notificacion = new VentasDAO().ActualizaEstatusRetiro(retiros);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
         [HttpPost]
         public ActionResult RetirarExcesoEfectivo(float montoRetiro)

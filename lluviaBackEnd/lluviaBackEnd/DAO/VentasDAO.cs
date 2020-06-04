@@ -466,6 +466,30 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<string> ActualizaEstatusRetiro(Retiros retiros)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idRetiro", retiros.idRetiro);
+                    parameters.Add("@idStatus", retiros.estatusRetiro.idStatus);
+                    parameters.Add("@monto", retiros.montoAutorizado);
+                    parameters.Add("@idUsuario", retiros.idUsuario);
+                    parameters.Add("@idTipoRetiro", retiros.tipoRetiro);
+                    notificacion = db.QuerySingle<Notificacion<string>>("SP_ACTUALIZA_STATUS_RETIROS", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
 
         public Retiros MapRetiros(Retiros r,Status s)
         {

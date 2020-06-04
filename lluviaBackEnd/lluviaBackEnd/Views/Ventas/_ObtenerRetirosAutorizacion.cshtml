@@ -1,4 +1,5 @@
 ﻿@using System.Globalization;
+@using lluviaBackEnd.Models
 @model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Retiros>>
 
 @{
@@ -19,7 +20,6 @@
 }
 else
 {
-    <h6>Retiros de Efectivo por hechas en el día.</h6>
     <div class="table-responsive">
         <table class="table table-striped" id="tblRetiros">
             <thead>
@@ -37,18 +37,70 @@ else
 
                 @foreach (lluviaBackEnd.Models.Retiros c in retiros)
                 {
-                    <tr>
-                        <td>@c.tipoRetiro.ToString()</td>
-                        <td>$@c.montoRetiro</td>
-                        <td>@c.nombreUsuario</td>
-                        <td>@c.nombreEstacion</td>
-                        <td>@c.estatusRetiro.descripcion</td>
-                        <td>@c.fechaAlta.ToShortDateString()</td>
-                        <td></td>
-                    </tr>
+                <tr>
+
+                    <td><div class="badge @Html.Raw(c.tipoRetiro==lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "badge-success" : "badge-primary") badge-shadow">@Html.Raw(c.tipoRetiro == lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "Retiros al cierre del dìa" : "Retiros por exceso de efectivo")</div></td>
+                    <td>@c.montoRetiro.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.nombreUsuario</td>
+                    <td>@c.nombreEstacion</td>
+                
+                    <td>
+                        @{
+                            switch (c.estatusRetiro.idStatus)
+                            {
+                                case 1:
+                                    {
+                                        <div class="badge badge-warning badge-shadow">@c.estatusRetiro.descripcion</div>
+                                    }
+                                    break;
+
+                                case 2:
+                                    {
+                                        <div class="badge badge-primary badge-shadow">@c.estatusRetiro.descripcion</div>
+                                    }
+                                    break;
+
+                                case 3:
+                                    {
+                                        <div class="badge badge-danger badge-shadow">@c.estatusRetiro.descripcion</div>
+                                    }
+                                    break;
+                               
+                                default:
+                                    {
+                                        <div class="badge badge-light badge-shadow">@c.estatusRetiro.descripcion</div>
+                                    }
+                                    break;
+                            }
+                        }
+
+                    </td>
+
+                  
+                    <td>@c.fechaAlta</td>
+                    <td>
+                        @if (c.fechaAlta.ToShortDateString() == DateTime.Now.ToShortDateString() && c.estatusRetiro.idStatus == 1)
+                        {
+                            <div class="row">
+                                <div class="input-group col-lg-10">
+                                    @Html.TextBoxFor(x => c.montoRetiro, new { @class = "form-control", data_val = "true", @id = "Monto_" + c.idRetiro, onkeypress = "return esPrecio(event)" })
+                                    <div class="input-group-append">
+                                        <a href="javascript:ActualizarEstatusRetiro(@c.idRetiro,@Convert.ToInt32(c.tipoRetiro),2);" class="btn btn-icon btn-primary input-group-text" data-toggle="tooltip" title="Autorizar"><i class="fas fa-check"></i></a>
+                                        <a href="javascript:ActualizarEstatusRetiro(@c.idRetiro,@Convert.ToInt32(c.tipoRetiro),3);" class="btn btn-icon btn-danger input-group-text" data-toggle="tooltip" title="Cancelar"><i class="fas fa-times"></i></a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                           @Html.Raw("Monto autorizado: " + c.montoAutorizado.ToString("C", new CultureInfo("en-US")))
+                        }
+
+                    </td>
+                </tr>
 
                 }
-
             </tbody>
 
         </table>

@@ -50,13 +50,13 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Estacion</label>
-                                    @Html.DropDownListFor(x => x.idEstacion, estaciones, new { @class = "form-control", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idEstacion, estaciones,"--TODOS--", new { @class = "form-control", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Fecha</label>
-                                    @Html.TextBoxFor(x => x.fechaAlta, new { @class = "form-control", data_val = "false" })
+                                    @Html.TextBoxFor(x => x.fechaAlta, new { @class = "form-control datepicker", data_val = "false" })
 
                                 </div>
                             </div>
