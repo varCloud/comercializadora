@@ -180,7 +180,7 @@ function EliminarLineaProducto(idLineaProducto) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a esta Linea de Producto?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

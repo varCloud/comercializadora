@@ -94,7 +94,7 @@
         swal({
             title: '',
             text: $("#idCompra").val() > 0 ? 'Estas seguro que deseas actualizar esta Compra?' : 'Estas seguro que deseas guardar esta Compra?',
-            icon: 'warning',
+            icon: '',
             buttons: ["Cancelar", "Aceptar"],
             dangerMode: true,
         })

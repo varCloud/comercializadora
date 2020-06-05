@@ -105,7 +105,7 @@ function EliminarCompra(idCompra) {
     swal({
         title: '',
         text: 'Estas seguro que deseas eliminar a esta Compra?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
