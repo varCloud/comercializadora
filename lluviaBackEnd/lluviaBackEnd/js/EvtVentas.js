@@ -448,6 +448,7 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            $('#ModalPrevioVenta').modal('hide');
 
             if (data.Estatus == 200) {
 
@@ -460,7 +461,6 @@ $('#btnGuardarVenta').click(function (e) {
                 }
                 
                 InitSelect2Productos();
-                $('#ModalPrevioVenta').modal('hide');
 
             }
 
