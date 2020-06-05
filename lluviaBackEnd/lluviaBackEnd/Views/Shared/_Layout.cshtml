@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using lluviaBackEnd.Models;
+@{ Sesion sesion = Session["UsuarioActual"] as Sesion;}
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -78,8 +80,8 @@
                     <div class="sidebar-user">
 
                         <div class="sidebar-user-details">
-                            <div class="user-name">LLuvia</div>
-                            <div class="user-role">Administrador</div>
+                            <div class="user-name">@sesion.nombre @sesion.apellidoPaterno @sesion.apellidoMaterno</div>
+                            <div class="user-role">@sesion.Rol</div>
                         </div>
                     </div>
                     <ul class="sidebar-menu">
