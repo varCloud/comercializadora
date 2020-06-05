@@ -242,6 +242,54 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        public ActionResult Retiros()
+        {
+            try
+            {
+                Notificacion<List<Estacion>> notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion());
+                ViewBag.Estaciones = notificacion.Modelo!=null ? notificacion.Modelo : new List<Estacion>();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ActionResult _ObtenerRetirosAutorizacion(Retiros retiros)
+        {
+            try
+            {                
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetiros(retiros);
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult ActualizaEstatusRetiro(Retiros retiros)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;                
+                retiros.idUsuario = usuario.idUsuario;
+                notificacion = new VentasDAO().ActualizaEstatusRetiro(retiros);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         [HttpPost]
         public ActionResult RetirarExcesoEfectivo(float montoRetiro)
         {
