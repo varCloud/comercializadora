@@ -223,7 +223,7 @@ function EliminarUsuario(idUsuario) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este usuario?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

@@ -47,7 +47,7 @@ function EliminarEstacion(idEstacion) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar esta Estación?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

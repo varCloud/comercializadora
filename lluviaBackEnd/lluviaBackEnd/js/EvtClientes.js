@@ -50,7 +50,7 @@ function EliminarCliente(idCliente) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar este cliente?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

@@ -193,7 +193,7 @@ function EliminarProveedor(idProveedor) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este Proveedor?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

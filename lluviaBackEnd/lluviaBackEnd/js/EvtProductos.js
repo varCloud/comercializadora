@@ -374,7 +374,7 @@ function EliminarProducto(idProducto) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a este Producto?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

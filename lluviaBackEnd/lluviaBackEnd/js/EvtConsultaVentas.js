@@ -132,7 +132,7 @@ function CancelaVenta(idVenta) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar a esta Venta?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
@@ -169,7 +169,7 @@ function CancelarFactura(idVenta) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas cancelar la factura de Venta?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })

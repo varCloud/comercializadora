@@ -44,7 +44,7 @@ function EliminarTipoCliente(idTipoCliente) {
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas eliminar este tipo de cliente?',
-        icon: 'warning',
+        icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
     })
