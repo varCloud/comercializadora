@@ -19,14 +19,15 @@
                         <table class="table table-striped" id="tablaRepVentas">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    @*<th class="text-center">
                                         Id
-                                    </th>
+                                    </th>*@
                                     <th>Cliente</th>
                                     <th>Producto</th>
                                     <th>Cantidad</th>
                                     <th>Precio c/u</th>
                                     <th>Costo c/u</th>
+                                    <th>Utilidad</th>
                                     <th>Usuario</th>
                                     <th>Fecha</th>
                                 </tr>
@@ -34,17 +35,21 @@
                             <tbody>
                                 @foreach (var item in lstVentas)
                                 {
-                                    <tr>
-                                        <td>@item.contador</td>
-                                        <td>@item.nombreCliente</td>
-                                        <td>@item.descripcionProducto</td>
-                                        <td>@item.cantidad</td>
-                                        <td>@item.precio.ToString("C", new CultureInfo("en-US"))</td>
-                                        <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
-                                        <td>@item.nombreUsuario</td>
-                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                    float precioTotal = item.precio * item.cantidad;
+                                    float costoTotal = item.costo * item.cantidad;
+                                    float gananciaTotal = item.ganancia * item.cantidad;
+                                <tr>
+                                    @*<td>@item.contador</td>*@
+                                    <td>@item.nombreCliente</td>
+                                    <td>@item.descripcionProducto</td>
+                                    <td>@item.cantidad</td>
+                                    <td>@item.precio.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@gananciaTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.nombreUsuario</td>
+                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
 
-                                    </tr>
+                                </tr>
                                 }
                             </tbody>
                         </table>
