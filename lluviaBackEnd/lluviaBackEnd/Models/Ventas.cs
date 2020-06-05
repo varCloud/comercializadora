@@ -61,6 +61,7 @@ namespace lluviaBackEnd.Models
 
         public int contador { get; set; }
         public float precio { get; set; }
+        public float costo { get; set; }
         public int formaPago { get; set; }
         public int tipoConsulta { get; set; }
 
