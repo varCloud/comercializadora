@@ -25,7 +25,42 @@ namespace lluviaBackEnd.DAO
         //  Nuevas Ventas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public Notificacion<List<Precio>> ObtenerProductoPorPrecio(Precio precio)
+        //public Notificacion<List<Precio>> ObtenerProductoPorPrecio(Precio precio)
+        //{
+        //    Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idProducto", precio.idProducto);
+        //            parameters.Add("@cantidad", precio.cantidad);
+        //            parameters.Add("@vaConDescuento", precio.vaConDescuento);
+        //            var result = db.QueryMultiple("SP_CONSULTA_PRECIO_X_VOLUMEN", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = result.Read<Precio>().ToList();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = new List<Precio> { precio };
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
+
+
+        public Notificacion<List<Precio>> ObtenerPreciosDeProductos(List<Precio> precios)
         {
             Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
             try
@@ -33,9 +68,7 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idProducto", precio.idProducto);
-                    parameters.Add("@cantidad", precio.cantidad);
-                    parameters.Add("@vaConDescuento", precio.vaConDescuento);
+                    parameters.Add("@PRODUCTOS", SerializePrecios(precios));
                     var result = db.QueryMultiple("SP_CONSULTA_PRECIO_X_VOLUMEN", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
@@ -48,43 +81,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new List<Precio> { precio };
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return notificacion;
-        }
-
-
-        public Notificacion<List<Precio>> ObtenerProductoPorPrecioVenta(Precio precio)
-        {
-            Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
-            try
-            {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@idProducto", precio.idProducto);
-                    parameters.Add("@cantidad", precio.cantidad);
-                    parameters.Add("@vaConDescuento", precio.vaConDescuento);
-                    parameters.Add("@productosAdicionales", precio.productosAdicionales);
-                    var result = db.QueryMultiple("SP_CONSULTA_PRECIO_X_VOLUMEN", parameters, commandType: CommandType.StoredProcedure);
-                    var r1 = result.ReadFirst();
-                    if (r1.status == 200)
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Precio>().ToList();
-                    }
-                    else
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new List<Precio> { precio };
+                        notificacion.Modelo = precios;
                     }
                 }
             }
@@ -211,6 +208,19 @@ namespace lluviaBackEnd.DAO
             using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {
                 xmlSerializer.Serialize(xmlWriter, venta);
+            }
+
+            return stringBuilder.ToString();
+
+        }
+
+        public string SerializePrecios(List<Precio> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
             }
 
             return stringBuilder.ToString();

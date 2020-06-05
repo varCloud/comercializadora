@@ -63,7 +63,7 @@ function facturaVenta(idVenta) {
     });
 }
 
-function InitSelect2Productos() {
+function InitSelect2() {
     $('.select-multiple').select2({
         width: "100%",
         language: {
@@ -172,106 +172,115 @@ $('#previoVenta').click(function (e) {
 
 
 $('#btnAgregarProducto').click(function (e) {
-
-    if ($('#idProducto').val() == "" ) {
+    
+    if ( ($('#idProducto').val() == "") || ($('#idProducto').val() == null ) ) {
         MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
-        return
+        return;
     }
 
     if ($('#cantidad').val() == "") {
         MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
+        return;
     }
-    else {
-        var idProducto = $('#idProducto').val();
-        var cantidad = $('#cantidad').val();
-        var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-        var precio = parseFloat(data.Modelo[0].costo);
-        var descuento = parseFloat(data.Modelo[0].descuento);
 
-        if (precio == 0) {
-            preguntaAltaPrecios();
-        }
-        else {
-            var row_ =  "<tr>" +
-                        "  <td>1</td>" +
-                        "  <td> " + $('#idProducto').val() + "</td>" +
-                        "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
-                        "  <td class=\"text-center\">$" + precio + "</td>" +
-                        //"  <td class=\"text-center\" onclick=\"listenerDobleClick(this);\"  onblur=\"this.contentEditable=false;\">" + cantidad + "</td>" +
-                        "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
-                        "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
-                        "  <td class=\"text-center\">$" + descuento + "</td>" +
-                        "  <td class=\"text-center\">" +
-                        "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
-                        "  </td>" +
-                        "</tr >";
+    // aki falta validar que se tengan existencias para vender
 
-            $("table tbody").append(row_);
-            $('#cantidad').val('');
+    var cantidad = $('#cantidad').val();
+    var precio = parseFloat(0).toFixed(2); 
+    var descuento = parseFloat(0).toFixed(2); 
 
-            actualizaTicketVenta();
-            initInputsTabla();
+    // si todo bien    
+    var row_ =  "<tr>" +
+                "  <td>1</td>" +
+                "  <td> " + $('#idProducto').val() + "</td>" +
+                "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
+                "  <td class=\"text-center\">$" + precio + "</td>" +
+                "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
+                "  <td class=\"text-center\">$" + precio + "</td>" +
+                "  <td class=\"text-center\">$" + descuento + "</td>" +
+                "  <td class=\"text-center\">" +
+                "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                "  </td>" +
+                "</tr >";
+
+    $("table tbody").append(row_);
+    $('#cantidad').val('');
+
+    actualizaTicketVenta();
+    initInputsTabla();
             
-            //$('#tablaRepVentas input').on('change', function () {
-
-            //    var thisInput = $(this);
-
-            //    if ((thisInput.val() == "") || (thisInput.val() == "0")) {
-            //        MuestraToast('warning', "Debe escribir la cantidad de productos.");
-            //        document.execCommand('undo');
-            //    }
-            //    else {
-            //        actualizaPreciosTabla('tablaRepVentas');
-            //        actualizaTicketVenta();
-            //    }
-                
-            //});
-
-            //actualizaTicketVenta();
-
-        }
-
-    }
-    
 });
 
 
 function actualizaTicketVenta() {
     
-    var totalPiezas = parseFloat(0);
-    var totalAhorro = parseFloat(0);
-
+    // acttualizamos el id y la funcion de eliminar fila
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
         fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        totalAhorro += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     });
 
-    //sacar piezas
+    // contabilizamos todos los productos para consultar que precio le corresponde a cada uno
+    var productos = [];
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
+
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            totalPiezas += parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+            var row_ = {
+                idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+            };
+            productos.push(row_);
         }
     }
-    //console.log('totalPiezas_' + totalPiezas);
-    //console.log('totalAhorro_' + totalAhorro);
-    if (totalPiezas >= 12) {
-        // si hay 12 o mas piezas y todavia no se agrega el descuento al tikcet
-        //if (totalAhorro == 0) {
-            //agregarDescuentos();
-            $("#vaConDescuento").val("1");
-            actualizaPreciosTabla('tablaRepVentas');
-        //}
-    }
-    else {
-        //if (totalAhorro > 0) {
-            //quitarDescuentos();
-            $("#vaConDescuento").val("0");
-            actualizaPreciosTabla('tablaRepVentas');
-        //}
-    }
+
+    dataToPost = JSON.stringify({ precios: productos });
+
+    $.ajax({
+        url: rootUrl("/Ventas/ObtenerPreciosDeProductos"),
+        data: dataToPost,
+        method: 'POST',
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader("Cargando...");
+        },
+        success: function (data) {
+            OcultarLoader();
+
+            if (data.Estatus == 200) {
+                console.log(data);
+                var j = 0;
+                for (j = 0; j < data.Modelo.length; j++) {
+
+                    var tblVtas = document.getElementById('tablaRepVentas');
+                    var rCount = tblVtas.rows.length;
+
+                    if (rCount >= 2) {
+                        for (var i = 1; i < rCount; i++) {
+
+                            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+
+                            if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
+                                tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
+                                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
+                                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al consultar los precios de los productos, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
     actualizarSubTotal();
 }
 
@@ -287,10 +296,8 @@ function initInputsTabla() {
             document.execCommand('undo');
         }
         else {
-            actualizaPreciosTabla('tablaRepVentas');
             actualizaTicketVenta();
         }
-
     });
 }
 
@@ -442,13 +449,21 @@ $('#btnGuardarVenta').click(function (e) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
 
-            $('#ModalPrevioVenta').modal('hide');
-            limpiarTicket();
-            ImprimeTicket(data.Modelo.idVenta);
-            if ($("#chkFacturar").is(":checked")) {
-                console.log(" is checked!- facturar\n");
-                facturaVenta(data.Modelo.idVenta);
+            if (data.Estatus == 200) {
+
+                limpiarTicket();
+                ImprimeTicket(data.Modelo.idVenta);
+
+                if ($("#chkFacturar").is(":checked")) {
+                    console.log(" is checked!- facturar\n");
+                    facturaVenta(data.Modelo.idVenta);
+                }
+                
+                InitSelect2Productos();
+                $('#ModalPrevioVenta').modal('hide');
+
             }
+
         },
         error: function (xhr, status) {
             OcultarLoader();
@@ -1005,22 +1020,75 @@ function ObtenerIndividualMenudeo(idProducto) {
     return result;
 }
 
-function revisarExistenciasCombo() {
-    $('select[id*="idProducto"] option').each(function (index, value) {
-        if ($(this).text().includes(' - (SIN EXISTENCIAS)')) {
-            $("#idProducto>option[value='" + $(this).val() + "']").prop('disabled', true);
+//function revisarExistenciasCombo() {
+//    $('select[id*="idProducto"] option').each(function (index, value) {
+//        if ($(this).text().includes(' - (S/E)')) {
+//            $("#idProducto>option[value='" + $(this).val() + "']").prop('disabled', true);
+//        }
+//    });
+//}
+
+
+function InitSelect2Productos() {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
+        data: { idProducto: 0, idUsuario : 0, activo: true },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
         }
     });
+
+    var i;
+    for (i = 0; i < result.Modelo.length; i++) {
+        result.Modelo[i].id = result.Modelo[i]['idProducto'];
+        result.Modelo[i].text = result.Modelo[i]['descripcionConExistencias'];
+        if (result.Modelo[i].cantidad == 0)
+            result.Modelo[i].disabled = true;
+        else
+            result.Modelo[i].disabled = false;
+    }
+
+    $("#idProducto").html('').select2();
+    $('#idProducto').select2({
+        width: "100%",
+        placeholder: "--SELECCIONA--",
+        data: result.Modelo,
+
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        }
+    });
+
+    $('#idProducto').val("0").trigger('change');
+
 }
 
-$(document).ready(function () {
 
-    actualizaTicketVenta();
+
+$(document).ready(function () {
+    
+    //actualizaTicketVenta();
     InitSelect2Productos();
-    revisarExistenciasCombo();
+    InitSelect2(); // los demas select2
+    //revisarExistenciasCombo();
     initInputsTabla();
     document.getElementById("divUsoCFDI").style.display = 'none';
-
-
   
 });

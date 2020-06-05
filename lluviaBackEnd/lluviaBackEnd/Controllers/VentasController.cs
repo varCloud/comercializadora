@@ -28,7 +28,7 @@ namespace lluviaBackEnd.Controllers
             Sesion usuario = Session["UsuarioActual"] as Sesion;
 
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario });
+            notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
             ViewBag.lstProductos = notificacion.Modelo;
 
             Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
@@ -47,26 +47,26 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult ObtenerProductoPorPrecio(Precio precio)
-        {
-            try
-            {
-                Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
-                notificacion = new VentasDAO().ObtenerProductoPorPrecio(precio);
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public ActionResult ObtenerProductoPorPrecio(Precio precio)
+        //{
+        //    try
+        //    {
+        //        Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
+        //        notificacion = new VentasDAO().ObtenerProductoPorPrecio(precio);
+        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        public ActionResult ObtenerProductoPorPrecioVenta(Precio precio)
+        public ActionResult ObtenerPreciosDeProductos(List<Precio> precios)
         {
             try
             {
                 Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
-                notificacion = new VentasDAO().ObtenerProductoPorPrecioVenta(precio);
+                notificacion = new VentasDAO().ObtenerPreciosDeProductos(precios);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
