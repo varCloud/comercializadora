@@ -1,9 +1,9 @@
 "use strict";
 
 $(function () {
-    chart1();
-    chart2();
-    chart3();
+    //chart1();
+    //chart2();
+    //chart3();
 
     var sparkline_values = [10, 7, 4, 8, 5, 8, 6, 5, 2, 4, 7, 4, 9, 6, 5, 9];
     var sparkline_values_chart = [2, 6, 4, 8, 3, 5, 2, 7];
