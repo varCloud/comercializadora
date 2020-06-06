@@ -1077,6 +1077,14 @@
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />
     <None Include="Resources\keyProductivo.key" />
+    <None Include="Resources\lluvia.cer" />
+    <None Include="Resources\lluvia.key" />
+    <None Include="Resources\lluvia.pfx" />
+    <None Include="Resources\lluviaArchivoPfx.pfx" />
+    <None Include="Resources\lluviacer.cer" />
+    <None Include="Resources\lluviacer.pem" />
+    <None Include="Resources\lluviakey.key" />
+    <None Include="Resources\lluviaPfx.pfx" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

@@ -127,4 +127,13 @@
   <data name="keyProductivo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\keyProductivo.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="lluviaArchivoPfx" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\lluviaArchivoPfx.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lluviacer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\lluviacer.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lluviakey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\lluviakey.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

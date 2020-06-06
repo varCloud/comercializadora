@@ -398,9 +398,7 @@ namespace lluviaBackEnd.Utilerias
             return x.Replace(" ", "").ToString().Insert(95, " &nbsp;");
 
         }
-
-
-
+               
         public static string ObtnerFolderCodigos()
         {
             string ruta = string.Empty;

@@ -89,5 +89,35 @@ namespace lluviaBackEnd {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] lluviaArchivoPfx {
+            get {
+                object obj = ResourceManager.GetObject("lluviaArchivoPfx", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] lluviacer {
+            get {
+                object obj = ResourceManager.GetObject("lluviacer", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] lluviakey {
+            get {
+                object obj = ResourceManager.GetObject("lluviakey", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
