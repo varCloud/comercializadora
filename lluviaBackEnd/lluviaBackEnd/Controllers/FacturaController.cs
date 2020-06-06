@@ -135,9 +135,11 @@ namespace lluviaBackEnd.Controllers
                 factura.idUsuario = UsuarioActual.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = factura.idVenta;
+                /*
                 comprobante.Emisor.Rfc = "COVO781128LJ1";
                 comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
                 comprobante.Emisor.RegimenFiscal = 621;                
+                */
 
                 Dictionary<string, object> items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 comprobante = (items["comprobante"] as Comprobante);
