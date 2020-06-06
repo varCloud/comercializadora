@@ -1,4 +1,5 @@
-﻿@model lluviaBackEnd.Models.Producto
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Producto
 @{
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
 
@@ -22,20 +23,25 @@
                                     <th>Linea de Producto</th>
                                     <th>Artículo</th>
                                     <th>Cantidad</th>
+                                    <th>Costo c/u</th>
+                                    <th>Total</th>
                                     <th>Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstProductos)
                                 {
-                                <tr>
-                                    <td>@item.contador</td>
-                                    <td>@item.descripcion</td>
-                                    <td>@item.DescripcionLinea</td>
-                                    <td>@item.articulo</td>
-                                    <td>@item.cantidad</td>
-                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
-                                </tr>
+                                    item.total= item.costo * item.cantidad;
+                                    <tr>
+                                        <td>@item.contador</td>
+                                        <td>@item.descripcion</td>
+                                        <td>@item.DescripcionLinea</td>
+                                        <td>@item.articulo</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.total.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

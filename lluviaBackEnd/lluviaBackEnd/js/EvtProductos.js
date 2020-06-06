@@ -128,14 +128,14 @@ function InitTableProductos() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['25%', '25%', '25%', '25%'];
+                    doc.content[1].table.widths = ['10%','30%', '30%', '20%', '10%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Productos");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2, 3,4]
                 },
             },
             {
@@ -144,7 +144,7 @@ function InitTableProductos() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2, 3,4]
                 },
             },
         ],
