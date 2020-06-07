@@ -16,11 +16,11 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Inventario()
         {
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+            //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+            //notificacion = new ReportesDAO().ObtenerInventario(new Models.Producto() { idProducto = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            ViewBag.lstProductos = notificacion.Modelo;
+            //ViewBag.lstProductos = notificacion.Modelo;
             return View();
         }
 
@@ -31,7 +31,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerProductos(producto);
+                notificacion = new ReportesDAO().ObtenerInventario(producto);
 
                 if (notificacion.Modelo != null)
                 {

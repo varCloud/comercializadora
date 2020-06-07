@@ -78,5 +78,9 @@ namespace lluviaBackEnd.Models
 
         public int idUsuario { get; set; }
 
+        public float costo { get; set; }
+        public float total { get; set; }
+
+
     }
 }

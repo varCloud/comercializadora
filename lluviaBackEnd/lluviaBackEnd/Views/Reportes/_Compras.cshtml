@@ -1,4 +1,5 @@
-﻿@model lluviaBackEnd.Models.Compras
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Compras
 @{
     List<lluviaBackEnd.Models.Compras> lstCompras = ViewBag.lstCompras;
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
@@ -26,20 +27,22 @@
                                     <th>Proveedor</th>
                                     <th>Usuario</th>
                                     <th>Cantidad</th>
+                                    <th>Precio</th>
                                     <th>Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstCompras)
                                 {
-                                <tr>
-                                    <td>@contador</td>
-                                    <td>@item.producto.descripcion</td>
-                                    <td>@item.proveedor.nombre</td>
-                                    <td>@item.usuario.idUsuario</td>
-                                    <td>@item.producto.cantidad</td>
-                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
-                                </tr>
+                                    <tr>
+                                        <td>@contador</td>
+                                        <td>@item.producto.descripcion</td>
+                                        <td>@item.proveedor.nombre</td>
+                                        <td>@item.usuario.nombreCompleto</td>
+                                        <td>@item.producto.cantidad</td>
+                                        <td>@item.producto.precio.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                    </tr>
 
                                     contador = contador + 1;
                                 }
