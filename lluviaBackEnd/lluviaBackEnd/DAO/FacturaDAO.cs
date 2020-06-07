@@ -14,7 +14,7 @@ namespace lluviaBackEnd.DAO
     public class FacturaDAO
     {
         private IDbConnection _db;
-      
+
 
         public Comprobante ObtenerConfiguracionComprobante()
         {
@@ -43,7 +43,7 @@ namespace lluviaBackEnd.DAO
             Dictionary<string, object> items = null;
             List<ComprobanteConcepto> listConceptos = null;
             List<ConceptosAddenda> listConceptosAdenda = null;
-            
+
             try
             {
                 // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
@@ -67,15 +67,15 @@ namespace lluviaBackEnd.DAO
                     c.Receptor = new ComprobanteReceptor();
                     c.Receptor.Nombre = receptor.Nombre;
                     c.Receptor.Rfc = receptor.Rfc;
-                    c.Receptor.UsoCFDI = receptor.UsoCFDI;      
+                    c.Receptor.UsoCFDI = receptor.UsoCFDI;
 
                     //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
                     listConceptos = result.Read<ComprobanteConcepto>().ToList();
                     if (listConceptos != null)
                     {
-                        listConceptos.ForEach(data =>  data.Impuestos = new ComprobanteConceptoImpuestos()
+                        listConceptos.ForEach(data => data.Impuestos = new ComprobanteConceptoImpuestos()
                         {
-                            
+
                             Traslados = new ComprobanteConceptoImpuestosTraslados()
                             {
                                 Traslado = new ComprobanteConceptoImpuestosTrasladosTraslado()
@@ -83,7 +83,7 @@ namespace lluviaBackEnd.DAO
                                     Base = data.Importe,
                                     TasaOCuota = 0.160000M,
                                     Impuesto = "002",
-                                    TipoFactor="Tasa",
+                                    TipoFactor = "Tasa",
                                     Importe = Math.Round((data.Importe * 0.16M), 2, MidpointRounding.AwayFromZero)
                                 }
                             }
@@ -93,17 +93,18 @@ namespace lluviaBackEnd.DAO
 
                     //OBTENEMOS LOS CONCEPTOS PARA LA ADDENDA
                     listConceptosAdenda = result.Read<ConceptosAddenda>().ToList();
-                    if (listConceptos != null) {
+                    if (listConceptos != null)
+                    {
                         listConceptosAdenda.ForEach(item => item.IVA = Math.Round((item.Importe * 0.16M), 2, MidpointRounding.AwayFromZero));
                     }
                     items.Add("comprobante", c);
                     items.Add("conceptosAddenda", listConceptosAdenda);
                 }
-               
-                
-               
+
+
+
             }
-             
+
             catch (Exception ex)
             {
                 throw ex;
@@ -151,19 +152,20 @@ namespace lluviaBackEnd.DAO
             }
         }
 
-        public Notificacion<String> GuardarFactura( Factura f) {
+        public Notificacion<String> GuardarFactura(Factura f)
+        {
 
-            Notificacion<String> n  = new Notificacion<String>();
+            Notificacion<String> n = new Notificacion<String>();
             try
             {
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
                 parameters.Add("@idVenta", f.folio);
-                
+
                 parameters.Add("@idUsuario", f.idUsuario);
-                parameters.Add("@fechaTimbrado",(f.fechaTimbrado == DateTime.MinValue ? DateTime.Now : (f.fechaTimbrado)));
+                parameters.Add("@fechaTimbrado", (f.fechaTimbrado == DateTime.MinValue ? DateTime.Now : (f.fechaTimbrado)));
                 parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)null : f.UUID);
-                parameters.Add("@idEstatusFactura",f.estatusFactura);
+                parameters.Add("@idEstatusFactura", f.estatusFactura);
                 parameters.Add("@msjError", f.mensajeError);
                 parameters.Add("@pathArchivo", f.pathFactura);
                 n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA", parameters, commandType: CommandType.StoredProcedure);
@@ -179,23 +181,23 @@ namespace lluviaBackEnd.DAO
         public Notificacion<String> CancelarFactura(Factura f)
         {
 
-                Notificacion<String> n = new Notificacion<String>();
-                try
-                {
+            Notificacion<String> n = new Notificacion<String>();
+            try
+            {
 
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@idVenta", f.idVenta);
-                    parameters.Add("@idUsuario", f.idUsuario );
-                    parameters.Add("@idEstatusFactura", f.estatusFactura);
-                    parameters.Add("@msjError", f.mensajeError);
-                    n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA_CANCELADA", parameters, commandType: CommandType.StoredProcedure);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            return n; 
+                var parameters = new DynamicParameters();
+                parameters.Add("@idVenta", f.idVenta);
+                parameters.Add("@idUsuario", f.idUsuario);
+                parameters.Add("@idEstatusFactura", f.estatusFactura);
+                parameters.Add("@msjError", f.mensajeError);
+                n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA_CANCELADA", parameters, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return n;
         }
 
         public Notificacion<List<Factura>> ObtenerFacturas(Factura factura)
@@ -210,7 +212,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", factura.idUsuario == 0 ? (object)null : factura.idUsuario);
                     parameters.Add("@fechaIni", factura.fechaIni == DateTime.MinValue ? (object)null : factura.fechaIni);
                     parameters.Add("@fechaFin", factura.fechaFin == DateTime.MinValue ? (object)null : factura.fechaFin);
-                    var rs = _db.QueryMultiple("SP_CONSULTA_FACTURAS", parameters, commandType: CommandType.StoredProcedure);                   
+                    var rs = _db.QueryMultiple("SP_CONSULTA_FACTURAS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
                     {
@@ -233,6 +235,41 @@ namespace lluviaBackEnd.DAO
             }
 
             return facturas;
+        }
+
+        public Cancelacion ObtenerCancelacionFactura(Factura factura)
+        {
+            Cancelacion c = null;
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", factura.idVenta);
+
+                    var rs = _db.QueryMultiple("SP_OBTENER_CANCELACION_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+
+                        var dataCancelacion = rs.ReadFirst();
+                        if (dataCancelacion != null)
+                        {
+                            c = new Cancelacion();
+                            c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                            c.RfcEmisor = dataCancelacion.Rfc;
+                            c.Folios = new Folios();
+                            c.Folios.UUID = dataCancelacion.UUID;
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return c;
         }
 
 

@@ -1,0 +1,11 @@
+
+
+
+
+pkcs8 -in key.key -inform DER -out key.pem
+
+x509 -in cer.cer –inform DER -out cer.pem
+
+pkcs12 -export -inkey key.pem -in cer.pem -out archivoPfx.pfx
+
+COVO781128LJ1

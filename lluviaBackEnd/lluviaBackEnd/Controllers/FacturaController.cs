@@ -61,56 +61,61 @@ namespace lluviaBackEnd.Controllers
         public ActionResult CancelarFactura(Factura factura)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
+            Cancelacion c = null;
             try
             {
-                Cancelacion c = new Cancelacion();
+               
                 Sesion UsuarioActual =(Sesion) Session["UsuarioActual"];
                 factura.idUsuario = UsuarioActual.idUsuario;
-                c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-                c.RfcEmisor = "CMV980925LQ7";
-                c.Folios = new Folios();
-                c.Folios.UUID = "38b622d6-e612-4d87-82bf-b49e278f0d8e";
-
-                string pathFactura = Utils.ObtnerFolder() + '/';
-                string documentoOriginal = Utilerias.ManagerSerealization<Cancelacion>.SerealizarToString(c);
-
-                XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
-                originalXmlDocument.LoadXml(documentoOriginal);
-
-                // --------------------------------------------------------------------------
-                // III. GENERAR ELEMENTO <Signature> USANDO EL CSD DEL EMISOR
-                // --------------------------------------------------------------------------
-
-                XmlElement signatureElement = ProcesaCfdi.GenerateXmlSignature(originalXmlDocument);
-
-                // --------------------------------------------------------------------------
-                // IV. INCRUSTAR EL ELEMENTO <Signature> DENTRO DEL DOCUMENTO XML ORIGINAL
-                // --------------------------------------------------------------------------
-
-                originalXmlDocument.DocumentElement.AppendChild(originalXmlDocument.ImportNode(signatureElement, true));
-
-                // --------------------------------------------------------------------------
-                // V. EL XML RESULTANTE ES LA SOLICITUD FIRMADA DE CANCELACIÓN
-                // --------------------------------------------------------------------------
-
-                //Debug.WriteLine(originalXmlDocument.OuterXml);
-
-                enviaAcuseCancelacion enviaCancelacion = new enviaAcuseCancelacion();
-                string result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
-                System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + ".xml", result);
-                AcuseCancelacionResponseWS cancelacion = ManagerSerealization<AcuseCancelacionResponseWS>.DeserializeXMLStringToObject(result);
-                if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
+                c = new FacturaDAO().ObtenerCancelacionFactura(factura);
+                if (c != null)
                 {
-                    factura.estatusFactura = EnumEstatusFactura.Cancelada;
-                    factura.mensajeError = "Cancelada correctamente";
+                    string pathFactura = Utils.ObtnerFolder() + '/';
+                    string documentoOriginal = Utilerias.ManagerSerealization<Cancelacion>.SerealizarToString(c);
 
+                    XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
+                    originalXmlDocument.LoadXml(documentoOriginal);
+
+                    // --------------------------------------------------------------------------
+                    // III. GENERAR ELEMENTO <Signature> USANDO EL CSD DEL EMISOR
+                    // --------------------------------------------------------------------------
+
+                    XmlElement signatureElement = ProcesaCfdi.GenerateXmlSignature(originalXmlDocument);
+
+                    // --------------------------------------------------------------------------
+                    // IV. INCRUSTAR EL ELEMENTO <Signature> DENTRO DEL DOCUMENTO XML ORIGINAL
+                    // --------------------------------------------------------------------------
+
+                    originalXmlDocument.DocumentElement.AppendChild(originalXmlDocument.ImportNode(signatureElement, true));
+
+                    // --------------------------------------------------------------------------
+                    // V. EL XML RESULTANTE ES LA SOLICITUD FIRMADA DE CANCELACIÓN
+                    // --------------------------------------------------------------------------
+
+                    //Debug.WriteLine(originalXmlDocument.OuterXml);
+
+                    enviaAcuseCancelacion enviaCancelacion = new enviaAcuseCancelacion();
+                    string result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + ".xml", result);
+                    AcuseCancelacionResponseWS cancelacion = ManagerSerealization<AcuseCancelacionResponseWS>.DeserializeXMLStringToObject(result);
+                    if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
+                    {
+                        factura.estatusFactura = EnumEstatusFactura.Cancelada;
+                        factura.mensajeError = "Cancelada correctamente";
+
+                    }
+                    else
+                    {
+                        factura.estatusFactura = EnumEstatusFactura.Cancelada;
+                        factura.mensajeError = "Ocurrio un error al intentar cancelar la factura, codigo error :" + cancelacion.Folios.EstatusUUID;
+                    }
+                    notificacion = new FacturaDAO().CancelarFactura(factura);
                 }
-                else
-                {
-                    factura.estatusFactura = EnumEstatusFactura.Cancelada;
-                    factura.mensajeError = "Ocurrio un error al intentar cancelar la factura, codigo error :" + cancelacion.Folios.EstatusUUID;
+                else {
+                    notificacion.Estatus = -1;
+                    notificacion.Mensaje = "Ocurrio un error al intentar cancelar la factura";
                 }
-                notificacion = new FacturaDAO().CancelarFactura(factura);
+                
                 return Json(notificacion, JsonRequestBehavior.AllowGet); ;
 
             }
