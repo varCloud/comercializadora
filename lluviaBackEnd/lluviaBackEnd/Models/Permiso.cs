@@ -10,5 +10,7 @@ namespace lluviaBackEnd.Models
         public int idPermiso { get; set; }
         public string modulo { get; set; }
         public string descripcion { get; set; }
+        public int idModulo { get; set; }
+        public Boolean tienePermiso { get; set; }
     }
 }

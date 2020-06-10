@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http.Filters;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace lluviaBackEnd.Filters
 {
-    public class PermisoAttribute 
+    public class PermisoAttribute :ActionFilterAttribute
     {
         public EnumRolesPermisos Permiso { get; set; }
 
-       /* public override void OnActionExecuting(ActionExecutingContext filterContext)
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
             if (!Models.Sesion.TienePermiso(this.Permiso))
@@ -23,6 +23,6 @@ namespace lluviaBackEnd.Filters
                     action = "SinPermisos"
                 }));
             }
-        }*/
+        }
     }
 }

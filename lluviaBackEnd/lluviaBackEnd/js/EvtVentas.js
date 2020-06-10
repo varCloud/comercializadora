@@ -1090,5 +1090,6 @@ $(document).ready(function () {
     //revisarExistenciasCombo();
     initInputsTabla();
     document.getElementById("divUsoCFDI").style.display = 'none';
+    $('#idSucursalExistencia').val('1').change().prop('disabled', false);
   
 });

@@ -3,6 +3,7 @@
     //List<lluviaBackEnd.Models.Usuario> lstUsuario = Model;
     //List<lluviaBackEnd.Models.Usuario> lstUsuario = ViewBag.lstUsuario;
     List<lluviaBackEnd.Models.Usuario> lstUsuario = ViewBag.lstUsuario;
+    System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
     //List<SelectListItem> lstRoles = (List<SelectListItem>)ViewBag.lstRoles;
     //List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
     //List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
@@ -34,7 +35,7 @@
                                 {
                                 <tr>
                                     <td>@item.contador</td>
-                                    <td>@item.nombre</td>
+                                    <td>@ti.ToTitleCase(@item.nombre)&nbsp;@ti.ToTitleCase(@item.apellidoPaterno.ToLower())&nbsp;@ti.ToTitleCase(@item.apellidoMaterno)</td>
                                     <td>@item.Sucursal</td>
                                     <td>@item.Almacen</td>
 

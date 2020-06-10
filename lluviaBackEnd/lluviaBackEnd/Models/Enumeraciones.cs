@@ -92,4 +92,16 @@ namespace lluviaBackEnd.Models
         #endregion
 
     }
+
+    public enum EnumRoles
+    {
+        Administrador = 1,
+        Encargado_de_almacen,
+        Cajero,
+        Montacarguista,
+        Distribuidor,
+        Picker,
+        Almacenista,
+        Usuario_de_Compras
+    }
 }

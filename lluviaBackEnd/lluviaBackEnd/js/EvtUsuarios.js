@@ -145,9 +145,10 @@ function VerUsuario(idUsuario) {
     $('#idSucursalGuardar').val(data.idSucursal).change().prop('disabled', true);
     $('#idAlmacenGuardar').val(data.idAlmacen).change().prop('disabled', true);    
     $('.field-validation-error').html("");
-
+    //InitBtnMestraContrasena();
     //$('#activo').trigger('click');
     //para abrir el modal
+    $('#contrasena').attr('type', 'password');
     $('#EditarUsuarioModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalUsuario').html("Información del Usuario");
 
@@ -178,12 +179,11 @@ function EditarUsuario(idUsuario) {
 
     //$('#activo').trigger('click');
     //para abrir el modal
+    $('#contrasena').attr('type', 'password');
     $('#EditarUsuarioModal').modal({ backdrop: 'static', keyboard: false, show: true });
     $('#TituloModalUsuario').html("Editar Usuario");
 
 }
-
-
 
 function InitBtnAgregar() {
     $('#btnAgregarUsuario').click(function (e) {
@@ -206,6 +206,7 @@ function InitBtnAgregar() {
         $('#idSucursalGuardar').val('1').change().prop('disabled', false);
         $('#idAlmacenGuardar').val('').change().prop('disabled', false);        
         $('.field-validation-error').html("");
+        $('#contrasena').attr('type', 'password');
 
         //$('#activo').trigger('click');
         //para abrir el modal
@@ -216,7 +217,16 @@ function InitBtnAgregar() {
   
 }
 
-
+function InitBtnMestraContrasena() {
+    
+    $("#MostrarPassword").click(function (evt) {
+        evt.preventDefault();
+        if ($('#contrasena').attr('type') === 'password')
+            $('#contrasena').attr('type', 'text');
+        else
+            $('#contrasena').attr('type', 'password');  
+    });
+}
 
 function EliminarUsuario(idUsuario) {
 
@@ -258,6 +268,7 @@ function EliminarUsuario(idUsuario) {
 
 $(document).ready(function () {
     InitTableUsuarios(); 
+    InitBtnMestraContrasena();
 
     $("#idSucursalGuardar").change(function (evt) {
         evt.preventDefault();

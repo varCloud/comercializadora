@@ -363,7 +363,7 @@
                                         <div class="form-group">
                                             <label>Almacen:</label>
                                             @*@Html.DropDownListFor(model => model.idAlmacen, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idAlmacenExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
-                                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales, new { id = "idSucursalExistencia-", @class = "form-control", data_val = "false" })
+                                            @Html.DropDownListFor(x => x.idSucursal, lstSucursales, "-- SELECCIONA --  " ,new { id = "idSucursalExistencia", @class = "form-control readonly", data_val = "false" , @readonly = "readonly" })
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-2">

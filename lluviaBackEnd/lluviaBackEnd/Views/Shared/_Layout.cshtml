@@ -85,81 +85,106 @@
                         </div>
                     </div>
                     <ul class="sidebar-menu">
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_DashBoard && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Dashboard" ? "dropdown active" : "")">
+                                <a href="@Url.Action("index", "DashBoard")">
+                                    <i data-feather="monitor"></i><span>Dashboard</span>
+                                </a>
+                            </li>
+                        }
 
-                        <li class="@(ViewBag.Title.ToString() == "Dashboard" ? "dropdown active" : "")">
-                            <a href="@Url.Action("index", "DashBoard")">
-                                <i data-feather="monitor"></i><span>Dashboard</span>
-                            </a>
-                        </li>
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Usuarios && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Usuarios" ? "dropdown active" : "")">
+                                <a href="@Url.Action("Usuarios", "Usuarios")">
+                                    <i data-feather="users"></i><span>Usuarios</span>
+                                </a>
+                            </li>
+                        }
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Estaciones && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Estaciones" ? "dropdown active" : "")">
+                                <a href="@Url.Action("Estaciones", "Estaciones")">
+                                    <i data-feather="airplay"></i><span>Estaciones</span>
+                                </a>
+                            </li>
+                        }
 
-                        <li class="@(ViewBag.Title.ToString() == "Usuarios" ? "dropdown active" : "")">
-                            <a href="@Url.Action("Usuarios", "Usuarios")">
-                                <i data-feather="users"></i><span>Usuarios</span>
-                            </a>
-                        </li>
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Proveedores && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Proveedores" ? "dropdown active" : "")">
+                                <a href="@Url.Action("Proveedores", "Proveedores")">
+                                    <i data-feather="truck"></i><span>Proveedores</span>
+                                </a>
+                            </li>
+                        }
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Compras && p.tienePermiso))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Facturas" ? "dropdown active" : "")" href="@Url.Action("Facturas", "Factura")">Facturas</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Retiros" ? "dropdown active" : "")" href="@Url.Action("Retiros", "Ventas")">Retiros de Efectivo</a></li>
 
-                        <li class="@(ViewBag.Title.ToString() == "Estaciones" ? "dropdown active" : "")">
-                            <a href="@Url.Action("Estaciones", "Estaciones")">
-                                <i data-feather="airplay"></i><span>Estaciones</span>
-                            </a>
-                        </li>
+                                </ul>
+                            </li>
+                        }
 
-                        <li class="@(ViewBag.Title.ToString() == "Proveedores" ? "dropdown active" : "")">
-                            <a href="@Url.Action("Proveedores", "Proveedores")">
-                                <i data-feather="truck"></i><span>Proveedores</span>
-                            </a>
-                        </li>
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Clientes && p.tienePermiso))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="briefcase"></i><span>Clientes</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Clientes" ? "dropdown active" : "")" href="@Url.Action("Clientes", "Clientes")">Administrar Clientes</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Descuentos" ? "dropdown active" : "")" href="@Url.Action("Descuentos", "Clientes")">Descuentos</a></li>
+                                </ul>
+                            </li>
+                        }
 
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
-                            </ul>
-                        </li>
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Productos && p.tienePermiso))
+                        {
 
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Facturas" ? "dropdown active" : "")" href="@Url.Action("Facturas", "Factura")">Facturas</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Retiros" ? "dropdown active" : "")" href="@Url.Action("Retiros", "Ventas")">Retiros de Efectivo</a></li>
-
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="briefcase"></i><span>Clientes</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Clientes" ? "dropdown active" : "")" href="@Url.Action("Clientes", "Clientes")">Administrar Clientes</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Descuentos" ? "dropdown active" : "")" href="@Url.Action("Descuentos", "Clientes")">Descuentos</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="@(ViewBag.Title.ToString() == "Bitacoras" ? "dropdown active" : "")">
-                            <a href="@Url.Action("Bitacoras", "Bitacora")">
-                                <i data-feather="file-text"></i><span>Bitacoras</span>
-                            </a>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Inventario" ? "dropdown active" : "")" href="@Url.Action("Inventario", "Reportes")">Inventario</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Reportes")">Compras</a></li>
-                                <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Reportes")">Ventas</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Bitacoras && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Bitacoras" ? "dropdown active" : "")">
+                                <a href="@Url.Action("Bitacoras", "Bitacora")">
+                                    <i data-feather="file-text"></i><span>Bitacoras</span>
+                                </a>
+                            </li>
+                        }
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Reportes && p.tienePermiso))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Inventario" ? "dropdown active" : "")" href="@Url.Action("Inventario", "Reportes")">Inventario</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Reportes")">Compras</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Reportes")">Ventas</a></li>
+                                </ul>
+                            </li>
+                        }
+                        </ul>
                 </aside>
             </div>
 

@@ -38,9 +38,18 @@ else
                 <tr>
                     <td>@contador</td>
                     <td>@u.Almacen</td>
-                    <td>@u.Piso</td>
-                    <td>@u.Pasillo</td>
-                    <td>@u.Raq</td>
+
+                    @if (lluviaBackEnd.Utilerias.Utils.mercanciaAcomodada(u.idPasillo.ToString(), u.idPiso.ToString(), u.idRaq.ToString()))
+                    {
+                        <td colspan="3" style="text-align: center;font-weight: 800;color: chocolate;">Sin Acomodar</td>
+                    }
+                    else
+                    {
+                        <td>@u.Piso</td>
+                        <td>@u.Pasillo</td>
+                        <td>@u.Raq</td>
+                    }
+
                     <td>@u.cantidad</td>
                 </tr>
                     contador = contador + 1;

@@ -34,13 +34,16 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                string controladorAccion = "Login/Login";
+
+
                 if (!ReCaptchaPassed(sesion.Token))
                 {
                     ModelState.AddModelError(string.Empty, "Por favor comunicate con el Administrador");
-                    return Json( new Notificacion<object>() {Estatus = -1 , Mensaje = "Error al validar el captcha" }, JsonRequestBehavior.AllowGet);
+                    return Json(new Notificacion<object>() { Estatus = -1, Mensaje = "Error al validar el captcha" }, JsonRequestBehavior.AllowGet);
                 }
 
-                sesion.macAdress =  (
+                sesion.macAdress = (
                                         from nic in NetworkInterface.GetAllNetworkInterfaces()
                                         where nic.OperationalStatus == OperationalStatus.Up
                                         select nic.GetPhysicalAddress().ToString()
@@ -50,11 +53,23 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
                 if (n.Modelo.usuarioValido)
                 {
+                    if (n.Modelo.idRol == (int)EnumRoles.Administrador)
+                    {
+                        controladorAccion = "Dashboard/Index/";
+                    }
+                    else if (n.Modelo.idRol == (int)EnumRoles.Cajero)
+                    {
+                        controladorAccion = "Ventas/Ventas/";
+                    }
+                    else if (n.Modelo.idRol == (int)EnumRoles.Encargado_de_almacen)
+                    {
+                        controladorAccion = "Bitacora/Bitacoras/";
+                    }
                     Session["UsuarioActual"] = n.Modelo;
                     n.Modelo.configurado = WebConfigurationManager.AppSettings["configurado"].ToString();
 
                 }
-                return Json(n, JsonRequestBehavior.AllowGet);
+                return Json(new { notificacion = n, controladorAccion = controladorAccion }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -76,7 +91,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Estacion> n = new Notificacion<Estacion>();
 
-                estacion.macAdress =    (
+                estacion.macAdress = (
                                             from nic in NetworkInterface.GetAllNetworkInterfaces()
                                             where nic.OperationalStatus == OperationalStatus.Up
                                             select nic.GetPhysicalAddress().ToString()
@@ -86,7 +101,8 @@ namespace lluviaBackEnd.Controllers
 
                 n = new EstacionesDAO().GuardarEstacion(estacion);
 
-                if (n.Estatus == 200) {
+                if (n.Estatus == 200)
+                {
 
                     string key = "configurado";
                     string value = "1";
