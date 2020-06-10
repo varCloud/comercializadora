@@ -223,12 +223,14 @@
     <Compile Include="DAO\ProveedorDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
     <Compile Include="DAO\LoginDAO.cs" />
+    <Compile Include="Filters\PermisoAttribute.cs" />
     <Compile Include="Filters\SessionTimeout.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
+    <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Estacion.cs" />

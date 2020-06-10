@@ -115,8 +115,6 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-
-
         public bool ReCaptchaPassed(string gRecaptchaResponse)
         {
             HttpClient httpClient = new HttpClient();
@@ -130,6 +128,19 @@ namespace lluviaBackEnd.Controllers
                 return false;
 
             return true;
+        }
+
+        public ActionResult SinPermisos()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
     }
 }
