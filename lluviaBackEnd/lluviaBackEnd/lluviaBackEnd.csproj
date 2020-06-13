@@ -278,6 +278,8 @@
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestGenerarPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternos.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternosAlamcen.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternosUsuario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProveedores.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternos.cs" />
