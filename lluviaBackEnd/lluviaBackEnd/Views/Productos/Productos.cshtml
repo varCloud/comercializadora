@@ -124,55 +124,47 @@
                     @Html.HiddenFor(x => x.idProducto, new { @id = "idProducto" })
                     @Html.HiddenFor(x => x.activo, new { @id = "activo" })
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <div class="form-group">
-                                <label>Descripción</label>
-                                @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
-                                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group">
-                                <label>Unidad de Medida</label>
-                                @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, "--SELECCIONA--", new { id = "idUnidadMedida", @class = "form-control"})
-                                @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
-                            </div>
+                <div class="row">
 
-                            <div class="form-group">
-                                <label>Linea de Producto</label>
-                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, "--SELECCIONA--", new { id = "idLineaProducto", @class = "form-control" })
-                                @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
-                            </div>
-                          
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-lg-6">
-
-                            <div class="form-group">
-                                <label>Cantidad Unidad de Medida</label>
-                                @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
-                                @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
-
-                            </div>
-
-                            <div class="form-group">
-                                <label>Clave de Producto</label>
-                                @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, "--SELECCIONA--", new { @class = "form-control", id = "cbClaveProdServ" })
-                                @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Artículo</label>
-                                @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
-                                @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
-                            </div>
-
-                            <div class="form-group">
-
-
-                            </div>
-
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>Descripción</label>
+                        @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                        @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
                     </div>
+
+                    <div class="form-group col-lg-6">
+                        <label>Cantidad Unidad de Medida</label>
+                        @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
+                        @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
+
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label>Unidad de Medida</label>
+                        @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, "--SELECCIONA--", new { id = "idUnidadMedida", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label>Clave de Producto</label>
+                        @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, "--SELECCIONA--", new { @class = "form-control", id = "cbClaveProdServ" })
+                        @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label>Linea de Producto</label>
+                        @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, "--SELECCIONA--", new { id = "idLineaProducto", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
+                    </div>
+
+
+                    <div class="form-group col-lg-6">
+                        <label>Artículo</label>
+                        @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                        @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
+                    </div>
+
+                </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12" style="text-align:center">
                             <div class="form-group">
