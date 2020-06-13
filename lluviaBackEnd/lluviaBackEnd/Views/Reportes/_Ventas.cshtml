@@ -21,17 +21,18 @@
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Sucursal</th>
-                                    <th>Cajero o vendedor</th>
-                                    <th>Folio de venta</th>
-                                    <th>Nombre del cliente</th>
-                                    <th>Tipo de cliente</th>
+                                    <th>Cajero</th>
+                                    <th>Folio</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo Cliente</th>
                                     <th>Código Barras</th>
                                     <th>Línea</th>
                                     <th>Producto</th>
                                     <th>Cantidad</th>
-                                    <th>Precio venta</th>
+                                    <th>Precio Venta</th>
                                     @*<th>Total Venta</th>*@
                                     <th>Costo Compra</th>
+                                    <th>Margen Bruto</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,6 +41,7 @@
                                     float precioTotal = item.precio * item.cantidad;
                                     float costoTotal = item.costo * item.cantidad;
                                     float gananciaTotal = item.ganancia * item.cantidad;
+                                    float margenBruto = gananciaTotal==0 ? 0 : (gananciaTotal/precioTotal)*100;
                                 <tr>
                                     <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
                                     <td>@item.descSucursal</td>
@@ -54,6 +56,7 @@
                                     <td>@item.precio.ToString("C", new CultureInfo("en-US"))</td>
                                     @*<td>@precioTotal.ToString("C", new CultureInfo("en-US"))</td>*@
                                     <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@Decimal.Round(Convert.ToDecimal(margenBruto),2) %</td>
                                 </tr>
                                 }
                             </tbody>

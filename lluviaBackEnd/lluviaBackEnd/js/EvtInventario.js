@@ -40,7 +40,7 @@ function InitDataTableInventario() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4,5,6,7]
+                    columns: [0, 1, 2, 3, 4,5,6]
                 },
             },
             {
@@ -49,7 +49,7 @@ function InitDataTableInventario() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4,5,6,7]
+                    columns: [0, 1, 2, 3, 4,5,6]
                 },
             },
         ],
@@ -64,9 +64,9 @@ function InitDataTableInventario() {
 $(document).ready(function () {
 
     InitDataTableInventario();
-    //InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
+    InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
     ////$('#idLineaProductoBusqueda').val('0');
-    //$('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    //$('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });
