@@ -42,7 +42,7 @@ function InitDataTableVentas() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6,7,8,9,10,11]
+                    columns: [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]
                 },
             },
             {
@@ -51,7 +51,7 @@ function InitDataTableVentas() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12]
                 },
             },
         ],

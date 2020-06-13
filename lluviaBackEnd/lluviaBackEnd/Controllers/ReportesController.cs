@@ -19,7 +19,8 @@ namespace lluviaBackEnd.Controllers
             //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             //notificacion = new ReportesDAO().ObtenerInventario(new Models.Producto() { idProducto = 0 });
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            //ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
             //ViewBag.lstProductos = notificacion.Modelo;
             return View();
         }

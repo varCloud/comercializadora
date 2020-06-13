@@ -33,8 +33,9 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@descripcion", string.IsNullOrEmpty(producto.descripcion) ? (object)null : producto.descripcion);                    
                     parameters.Add("@idLineaProducto", string.IsNullOrEmpty(producto.idLineaProducto) ? (object)null : Convert.ToInt32(producto.idLineaProducto));                    
                     parameters.Add("@articulo", string.IsNullOrEmpty(producto.articulo) ? (object)null : producto.articulo);
-                    parameters.Add("@fecha", producto.fechaFin==DateTime.MinValue ? (object)null : producto.fechaFin);
-                    
+                    parameters.Add("@idAlmacen", producto.idAlmacen==0 ? (object)null : producto.idAlmacen);
+                    parameters.Add("@fechaIni", producto.fechaIni==DateTime.MinValue ? (object)null : producto.fechaIni);
+                    parameters.Add("@fechaFin", producto.fechaFin == DateTime.MinValue ? (object)null : producto.fechaFin);
                     var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
