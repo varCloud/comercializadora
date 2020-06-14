@@ -33,19 +33,19 @@ function InitDataTableCompras() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Compras",
+                title: "Reporte Compras",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['5%','20%', '20%', '20%', '10%', '10%', '15%'];
+                    //doc.content[1].table.widths = ['5%','20%', '20%', '20%', '10%', '10%', '15%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
-                    doc['header'] = SetHeaderPDF("Compras");
+                    doc['header'] = SetHeaderPDF("Reporte Compras");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6]
+                    columns: [0, 1, 2, 3, 4, 5,6,7,8,9]
                 },
             },
             {
@@ -54,7 +54,7 @@ function InitDataTableCompras() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
             },
         ],
@@ -71,11 +71,20 @@ $(document).ready(function () {
 
     InitDataTableCompras();
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
+    $('#rangeCompras').val('');
     //$('#idLineaProductoBusqueda').val('0');
     //$('#lstProveedoresBusqueda').val('0');
     //$('#lstUsuariosBusqueda').val('0');
-    $('#fechaIni').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaIni').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeCompras').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
+    $("#btnLimpiarForm").click(function (evt) {
+        $("#frmBuscarCompras").trigger("reset");
+        $('#fechaIni').val('');
+        $('#fechaFin').val('');
+        $("#frmBuscarCompras .select-multiple").trigger("change");
+
+    });
 
 
 });

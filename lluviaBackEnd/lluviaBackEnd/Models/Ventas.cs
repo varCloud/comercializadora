@@ -79,5 +79,10 @@ namespace lluviaBackEnd.Models
         public int idFactUsoCFDI { get; set; }
         public int idSucursal { get; set; }
         public Boolean ticketVistaPrevia { get; set; }
+        public string descSucursal { get; set; }
+        public string tipoCliente { get; set; }
+        public string codigoBarras { get; set; }
+        public string descripcionLineaProducto { get; set; }
+
     }
 }

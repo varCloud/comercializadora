@@ -42,9 +42,66 @@ namespace lluviaBackEnd.Models
     public enum EnumTipoRetiro
     {
         [Description("Retiros Exceso Efectivo")]
-        RetirosExcesoEfectivo =1,
+        RetirosExcesoEfectivo = 1,
 
         [Description("Retiros Cierre Diario")]
-        RetirosCierreDia=2
+        RetirosCierreDia = 2
+    }
+
+    public enum EnumRolesPermisos
+    {
+        #region  DashBoard
+        Puede_visualizar_DashBoard = 1,
+        #endregion
+
+        #region Usuarios
+        Puede_visualizar_Usuarios,
+        #endregion
+
+        #region Estaciones
+        Puede_visualizar_Estaciones,
+        #endregion
+
+        #region Proveedores
+        Puede_visualizar_Proveedores,
+        #endregion
+
+
+        #region Compras
+        Puede_visualizar_Compras,
+        #endregion
+
+        #region Ventas
+        Puede_visualizar_Ventas,
+        #endregion
+
+        #region  Clientes
+        Puede_visualizar_Clientes,
+        #endregion
+
+        #region Productos
+        Puede_visualizar_Productos,
+        #endregion
+
+        #region Bitacoras
+        Puede_visualizar_Bitacoras,
+        #endregion
+
+        #region Reportes
+        Puede_visualizar_Reportes
+        #endregion
+
+    }
+
+    public enum EnumRoles
+    {
+        Administrador = 1,
+        Encargado_de_almacen,
+        Cajero,
+        Montacarguista,
+        Distribuidor,
+        Picker,
+        Almacenista,
+        Usuario_de_Compras
     }
 }

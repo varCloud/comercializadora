@@ -1,6 +1,6 @@
 ﻿@model List<lluviaBackEnd.Models.Cliente>
 @{
-
+    System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
 
 }
 
@@ -29,7 +29,7 @@
                                 {
                                     <tr>
                                         <td class="text-center">@item.contador</td>
-                                        <td>@item.nombres &nbsp; @item.apellidoPaterno &nbsp; @item.apellidoMaterno</td>
+                                        <td>@ti.ToTitleCase(@item.nombres.ToLower()) &nbsp;@ti.ToTitleCase(@item.apellidoPaterno.ToLower()) &nbsp; @ti.ToTitleCase(@item.apellidoMaterno.ToLower())</td>
                                         <td class="text-center">@item.calle &nbsp; @item.colonia &nbsp; @item.estado</td>
                                         <td>@item.rfc</td>
                                         <td>@item.telefono</td>

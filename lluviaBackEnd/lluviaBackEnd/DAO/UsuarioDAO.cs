@@ -223,6 +223,7 @@ namespace lluviaBackEnd.DAO
             Result result = new Result();
             result.status = -1;
             result.Mensaje = "Existió un error al hacer la actualización.";
+            System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
             try
             {
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -236,9 +237,9 @@ namespace lluviaBackEnd.DAO
                     db.AddParameters(4, "@contrasena", usr.contrasena);
                     db.AddParameters(5, "@idAlmacen", usr.idAlmacenGuardar[0]);
                     db.AddParameters(6, "@idSucursal", usr.idSucursalGuardar[0]);
-                    db.AddParameters(7, "@nombre", usr.nombre);
-                    db.AddParameters(8, "@apellidoPaterno", usr.apellidoPaterno);
-                    db.AddParameters(9, "@apellidoMaterno", usr.apellidoMaterno);
+                    db.AddParameters(7, "@nombre", string.IsNullOrEmpty(usr.nombre) ? "" : ti.ToTitleCase(usr.nombre.ToLower()));
+                    db.AddParameters(8, "@apellidoPaterno", string.IsNullOrEmpty(usr.apellidoPaterno) ? "" : ti.ToTitleCase(usr.apellidoPaterno.ToLower()));
+                    db.AddParameters(9, "@apellidoMaterno", string.IsNullOrEmpty(usr.apellidoMaterno) ? "" : ti.ToTitleCase(usr.apellidoMaterno.ToLower()));
                     db.AddParameters(10, "@fecha_alta", DateTime.Now);
                     db.AddParameters(11, "@activo", usr.activo);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_INSERTA_ACTUALIZA_USUARIOS]");

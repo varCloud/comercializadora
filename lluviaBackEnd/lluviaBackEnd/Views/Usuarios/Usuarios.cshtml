@@ -64,7 +64,14 @@
 
                         <div class="form-group col-lg-6">
                             <label>Contraseña</label>
-                            @Html.TextBoxFor(x => x.contrasena, null, new { @class = "form-control", @id = "contrasena", type = "password" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.contrasena, null, new { @class = "form-control", @id = "contrasena", type = "password" })
+                                <div class="input-group-append" style="cursor:pointer">
+                                    <div class="input-group-text" id="MostrarPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
                             @Html.ValidationMessageFor(x => x.contrasena, null, new { @class = "text-danger was" })
                         </div>
 
@@ -95,7 +102,7 @@
 
                         <div class="form-group col-lg-6">
                             <label>Sucursal</label>
-                            @Html.DropDownListFor(x => x.idSucursalGuardar, lstSucursales,"---Selecciona---", new { id = "idSucursalGuardar", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
+                            @Html.DropDownListFor(x => x.idSucursalGuardar, lstSucursales, "---Selecciona---", new { id = "idSucursalGuardar", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
                             @Html.ValidationMessageFor(x => x.idSucursalGuardar, null, new { @class = "text-danger was" })
                         </div>
 
@@ -108,7 +115,7 @@
 
                         <div class="form-group col-lg-6">
                             <label>Rol</label>
-                            @Html.DropDownListFor(x => x.idRolGuardar, lstRoles,"---Selecciona---", new { id = "idRolGuardar", @class = "form-control", data_val = "true" })
+                            @Html.DropDownListFor(x => x.idRolGuardar, lstRoles, "---Selecciona---", new { id = "idRolGuardar", @class = "form-control", data_val = "true" })
                             @Html.ValidationMessageFor(x => x.idRolGuardar, null, new { @class = "text-danger was" })
                         </div>
 

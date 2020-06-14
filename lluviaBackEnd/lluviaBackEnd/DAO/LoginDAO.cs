@@ -41,6 +41,7 @@ namespace lluviaBackEnd.DAO
                         n.Estatus = 200;
                         n.Mensaje = "OK";
                         n.Modelo = result.ReadSingle<Sesion>();
+                        n.Modelo.permisosModulo = result.Read<Permiso>().ToList();
                     }
                     else {
                         n.Estatus = -1;

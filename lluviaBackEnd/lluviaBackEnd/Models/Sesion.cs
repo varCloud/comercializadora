@@ -36,5 +36,15 @@ namespace lluviaBackEnd.Models
         public int idEstacion { get; set; }
         public string macAdress { get; set; }
 
+        public List<Permiso> permisosModulo { get; set; }
+
+        public static bool TienePermiso(EnumRolesPermisos valor)
+        {
+            HttpContext context = HttpContext.Current;
+            Sesion sesion = (Sesion)context.Session["UsuarioActual"];
+
+            return sesion.permisosModulo.Where(x => (EnumRolesPermisos)x.idPermiso == valor).Any();
+        }
+
     }
 }

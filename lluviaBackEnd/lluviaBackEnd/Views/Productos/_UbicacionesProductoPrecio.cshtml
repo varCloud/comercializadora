@@ -51,14 +51,21 @@ else
 
                                 @foreach (lluviaBackEnd.Models.Producto u in ubicaciones)
                 {
-                                    <tr>
-                                        <td>@contador</td>
-                                        <td>@u.Almacen</td>
+                                <tr>
+                                    <td>@contador</td>
+                                    <td>@u.Almacen</td>
+                                    @if (lluviaBackEnd.Utilerias.Utils.mercanciaAcomodada(u.idPasillo.ToString(), u.idPiso.ToString(), u.idRaq.ToString()))
+                                    {
+                                        <td colspan="3" style="text-align: center;font-weight: 800;color: chocolate;">Sin Acomodar</td>
+                                    }
+                                    else
+                                    {
                                         <td>@u.Piso</td>
                                         <td>@u.Pasillo</td>
                                         <td>@u.Raq</td>
-                                        <td>@u.cantidad</td>
-                                    </tr>
+                                    }
+                                    <td>@u.cantidad</td>
+                                </tr>
                                     contador = contador + 1;
                                 }
 
@@ -78,7 +85,7 @@ else
                             <p class="text-muted"><div id="precioIndividual_">0</div></p>
                         </div>
                         <div class="col-md-3 col-6 b-r">
-                            <strong>Precio de Menudeo</strong>
+                            <strong>Precio Mayoreo</strong>
                             <br>
                             <p class="text-muted"><div id="precioMenudeo_">0</div></p>
                         </div>

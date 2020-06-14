@@ -506,6 +506,11 @@ namespace lluviaBackEnd.Utilerias
             return "Codigos_" + articulo + ".pdf";
         }
 
+        public static bool mercanciaAcomodada(string idPasillo, string idRaq, string idPiso)
+        {
+            return (idPasillo == "0" && idRaq == "0" && idPiso == "0") || idPasillo == "ninguno" && idRaq == "ninguno" && idPiso == "ninguno" ? true : false;
+        }
+
 
     }
 }

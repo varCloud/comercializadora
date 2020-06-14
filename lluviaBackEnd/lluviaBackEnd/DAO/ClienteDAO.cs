@@ -19,15 +19,16 @@ namespace lluviaBackEnd.DAO
         public Notificacion<Cliente> GuardarCliente(Cliente c)
         {
             Notificacion<Cliente> n;
+            System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
             try
             {
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
 
                 parameters.Add("@idCliente", c.idCliente);
-                parameters.Add("@nombres" , c.nombres);
-                parameters.Add("@apellidoPaterno" , c.apellidoPaterno);
-                parameters.Add("@apellidoMaterno", c.apellidoMaterno);
+                parameters.Add("@nombres" ,string.IsNullOrEmpty(c.nombres) ? "": ti.ToTitleCase(c.nombres));
+                parameters.Add("@apellidoPaterno" , string.IsNullOrEmpty(c.apellidoPaterno) ? "" : ti.ToTitleCase(c.apellidoPaterno));
+                parameters.Add("@apellidoMaterno", string.IsNullOrEmpty(c.apellidoMaterno) ? "" : ti.ToTitleCase(c.apellidoMaterno));
                 parameters.Add("@telefono",c.telefono);
                 parameters.Add("@correo" , c.correo);
                 parameters.Add("@rfc",c.rfc);

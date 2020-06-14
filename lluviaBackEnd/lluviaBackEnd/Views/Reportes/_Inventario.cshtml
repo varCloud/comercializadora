@@ -16,32 +16,30 @@
                         <table class="table table-striped" id="tablaRepProductos">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
-                                        Id
-                                    </th>
-                                    <th>Descripción</th>
-                                    <th>Linea de Producto</th>
-                                    <th>Artículo</th>
-                                    <th>Cantidad</th>
-                                    <th>Costo c/u</th>
-                                    <th>Total</th>
+                                    @*<th class="text-center">            Id
+        </th>*@
                                     <th>Fecha</th>
+                                    <th>Almacen</th>
+                                    <th>Linea de Producto</th>
+                                    <th>Producto</th>
+                                    <th>Codigo de barras</th>
+                                    <th>Cantidad a la fecha</th>
+                                    <th>Costo compra</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstProductos)
                                 {
                                     item.total= item.costo * item.cantidad;
-                                    <tr>
-                                        <td>@item.contador</td>
-                                        <td>@item.descripcion</td>
-                                        <td>@item.DescripcionLinea</td>
-                                        <td>@item.articulo</td>
-                                        <td>@item.cantidad</td>
-                                        <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
-                                        <td>@item.total.ToString("C", new CultureInfo("en-US"))</td>
-                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
-                                    </tr>
+                                <tr>
+                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                    <td>@item.Almacen</td>
+                                    <td>@item.DescripcionLinea</td>
+                                    <td>@item.descripcion</td>
+                                    <td>@item.codigoBarras</td>
+                                    <td>@item.cantidad</td>
+                                    <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
