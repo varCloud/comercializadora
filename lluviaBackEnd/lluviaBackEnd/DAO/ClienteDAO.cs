@@ -8,6 +8,7 @@ using System.Web;
 using Dapper;
 using System.Data;
 using System.Web.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace lluviaBackEnd.DAO
 {
@@ -84,6 +85,7 @@ namespace lluviaBackEnd.DAO
                     var r1 = result.ReadFirst();
                     if (r1.status == 200) {
                         lstClientes = result.Read<Cliente, TipoCliente, Cliente>(MapResults ,splitOn: "idTipoCliente").ToList();
+                        lstClientes.Select(x => { x.nombreCompleto_ = x.nombres.ToUpper() + " " + x.apellidoPaterno.ToUpper() + " " + x.apellidoMaterno.ToUpper() ; return x; }).ToList();
                     }
                 }
             }

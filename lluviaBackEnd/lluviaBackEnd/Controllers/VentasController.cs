@@ -40,7 +40,7 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0});
 
             ViewBag.venta = venta;
 
@@ -344,23 +344,53 @@ namespace lluviaBackEnd.Controllers
 
                 notificacion = new Notificacion<Ventas>();
                 notificacion.Mensaje = "Se envio el ticket a la impresora.";
+                notificacion.Estatus = 200;
 
                 this.idVenta = venta.idVenta;
 
                 PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
-                PaperSize ps = new PaperSize("", 120, 540);
 
+                if ( venta.ticketVistaPrevia )
+                {
+                    notificacion.Mensaje = "Abriendo Ticket.";
+                    string nombreImpresora = string.Empty;
+                    foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                    {
+                        if (strPrinter.Contains("PDF"))
+                        {
+                            nombreImpresora = strPrinter;
+                        }
+                    }
+
+                    if (nombreImpresora == string.Empty)
+                    {
+                        notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                        notificacion.Estatus = -1;
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    }
+                    else
+                    {
+                        pd.PrinterSettings = new PrinterSettings
+                        {
+                            PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                            PrintToFile = true,
+                            PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
+                        };
+                    }
+                }
+                else
+                {
+                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                }
+
+                PaperSize ps = new PaperSize("", 285, 540);
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
-
                 pd.PrintController = new StandardPrintController();
-                pd.DefaultPageSettings.Margins.Left = 0;
+                pd.DefaultPageSettings.Margins.Left = 10;
                 pd.DefaultPageSettings.Margins.Right = 0;
                 pd.DefaultPageSettings.Margins.Top = 0;
                 pd.DefaultPageSettings.Margins.Bottom = 0;
-
                 pd.DefaultPageSettings.PaperSize = ps;
-
                 pd.Print();
 
                 return Json(notificacion, JsonRequestBehavior.AllowGet);

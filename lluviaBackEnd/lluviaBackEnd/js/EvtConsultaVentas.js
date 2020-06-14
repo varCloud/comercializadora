@@ -59,6 +59,39 @@ function ImprimeTicket(idVenta) {
     });
 }
 
+
+
+
+function VerTicket(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicket"),
+        data: { idVenta: idVenta, ticketVistaPrevia: true },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Generando Ticket...");
+        },
+        success: function (data) {
+            console.log(data);
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+
+            if (data.Estatus == 200)
+            {
+                setTimeout(function () { window.open("http://" + window.location.host + "/Tickets/" + idVenta + "_preview.pdf", "_blank"); }, 4000);
+            }
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 function PintarTabla() {
     $.ajax({
         url: "/Ventas/_ObtenerVentas",
