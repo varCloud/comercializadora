@@ -48,6 +48,14 @@ namespace lluviaBackEnd.Models
         RetirosCierreDia = 2
     }
 
+    public enum EnumTipoMargenBruto
+    {
+        Global=1,
+        Linea=2,
+        Producto=3,
+        Venta_Producto=4
+    }
+
     public enum EnumRolesPermisos
     {
         #region  DashBoard

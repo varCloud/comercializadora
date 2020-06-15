@@ -230,6 +230,7 @@
     </Compile>
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
+    <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
@@ -1005,6 +1006,7 @@
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtFacturas.js" />
+    <Content Include="js\evtReporteMargenBruto.js" />
     <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
@@ -1165,6 +1167,8 @@
     <Content Include="Views\Productos\_PreciosProducto.cshtml" />
     <Content Include="Views\Ventas\Retiros.cshtml" />
     <Content Include="Views\Ventas\_ObtenerRetirosAutorizacion.cshtml" />
+    <Content Include="Views\Reportes\MargenBruto.cshtml" />
+    <Content Include="Views\Reportes\_MargenBruto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

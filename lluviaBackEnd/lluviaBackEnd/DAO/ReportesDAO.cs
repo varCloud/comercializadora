@@ -109,52 +109,40 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<MargenBruto>> ObtenerMargenBruto(MargenBruto margenBruto)
+        {
+            Notificacion<List<MargenBruto>> notificacion = new Notificacion<List<MargenBruto>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
 
-        //public Notificacion<List<Compras>> ObtenerCompras(Compras compras)
-        //{
-        //    Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
+                    parameters.Add("@idTipoMargenBruto", margenBruto.tipoMargenBruto);
+                   parameters.Add("@fechaIni", margenBruto.fechaIni == DateTime.MinValue ? (object)null : margenBruto.fechaIni);
+                    parameters.Add("@fechaFin", margenBruto.fechaFin == DateTime.MinValue ? (object)null : margenBruto.fechaFin);
+                    var result = db.QueryMultiple("SP_INDICADOR_MARGEN_BRUTO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<MargenBruto>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
 
-        //    try
-        //    {
-        //        if (compras.fechaIni == (new DateTime(0001, 01, 01)))
-        //            compras.fechaIni = new DateTime(1900, 01, 01);
-
-        //        if (compras.fechaFin == (new DateTime(0001, 01, 01)))
-        //            compras.fechaFin = new DateTime(1900, 01, 01);
-
-        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-        //        {
-        //            var parameters = new DynamicParameters();
-
-        //            parameters.Add("@idProducto", compras.producto.idProducto);
-        //            parameters.Add("@descProducto", compras.producto.descripcion);
-        //            parameters.Add("@idProveedor", compras.proveedor.idProveedor);
-        //            parameters.Add("@idLineaProducto", compras.producto.idLineaProducto);
-        //            parameters.Add("@idUsuario", compras.usuario.idUsuario);
-        //            parameters.Add("@fechaIni", compras.fechaIni);
-        //            parameters.Add("@fechaFin", compras.fechaFin);
-
-        //            var result = db.QueryMultiple("SP_CONSULTA_REPORTE_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
-        //            var r1 = result.ReadFirst();
-        //            if (r1.status == 200)
-        //            {
-        //                notificacion.Estatus = r1.status;
-        //                notificacion.Mensaje = r1.mensaje;
-        //                notificacion.Modelo = result.Read<Compras>().ToList();
-        //            }
-        //            else
-        //            {
-        //                notificacion.Estatus = r1.status;
-        //                notificacion.Mensaje = r1.mensaje;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    return notificacion;
-        //}
+        }
 
     }
 }
