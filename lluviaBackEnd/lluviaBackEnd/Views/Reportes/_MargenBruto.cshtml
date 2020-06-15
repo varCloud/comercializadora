@@ -1,0 +1,52 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.MargenBruto>>
+
+@{
+    List<lluviaBackEnd.Models.MargenBruto> margenBrutos = Model.Modelo;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblMargenBruto">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Descripcion</th>
+                    <th>Total de Ventas</th>
+                    <th>Costo de Ventas</th>
+                    <th>Contribuciòn Marginal</th>
+                    <th>Margen Bruto</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.MargenBruto c in margenBrutos)
+                {
+                    <tr>
+                        <td>@c.id</td>
+                        <td>@c.descripcion</td>
+                        <td>@c.totalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.CostoVentas.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.ContribucionMarginal.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.margenBruto %</td>                
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+}
+

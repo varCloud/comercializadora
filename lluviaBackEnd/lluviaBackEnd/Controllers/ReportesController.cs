@@ -146,6 +146,28 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //REPORTE MARGEN BRUTO
+
+        public ActionResult MargenBruto()
+        {           
+            return View(new MargenBruto() { tipoMargenBruto = EnumTipoMargenBruto.Global });
+        }
+
+        public ActionResult BuscarMargenBruto(MargenBruto margenBruto)
+        {
+            try
+            {
+                Notificacion<List<MargenBruto>> notificacion = new ReportesDAO().ObtenerMargenBruto(margenBruto);
+                return PartialView("_MargenBruto", notificacion);             
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
     }
 
