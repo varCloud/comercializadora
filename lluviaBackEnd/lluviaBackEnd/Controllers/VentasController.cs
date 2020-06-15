@@ -19,6 +19,8 @@ namespace lluviaBackEnd.Controllers
     public class VentasController : Controller
     {
         int idVenta = 0;
+        Retiros retiro = new Retiros();
+        
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -421,7 +423,6 @@ namespace lluviaBackEnd.Controllers
                 notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
                 //Logos
-                //Image newImage = Image.FromFile(Application.StartupPath + "\\Imagenes\\logo_lluvia_150.jpg");
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
 
                 int ancho = 258;
@@ -462,7 +463,7 @@ namespace lluviaBackEnd.Controllers
 
                 Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
                 Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
-                Rectangle datosPrecio = new Rectangle(225, 270, 40, 82);
+                Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
 
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
@@ -484,7 +485,8 @@ namespace lluviaBackEnd.Controllers
                 {
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+
                     monto += notificacion.Modelo[i].monto;
                     montoIVA += notificacion.Modelo[i].montoIVA;
                     montoAhorro += notificacion.Modelo[i].ahorro;
@@ -502,6 +504,15 @@ namespace lluviaBackEnd.Controllers
                         datosPrecio.Y += espaciado;
                     }
 
+                    // si hay descuentos por mayoreo o rango de precios
+                    if (notificacion.Modelo[i].ahorro > 0 )
+                    {
+                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString("-"+(notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        datosProducto.Y += espaciado;
+                        datosCantidad.Y += espaciado;
+                        datosPrecio.Y += espaciado;
+                    }
 
                 }
 
@@ -510,21 +521,21 @@ namespace lluviaBackEnd.Controllers
                 datosfooter1.Y += espaciado;
 
                 e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
+                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
                 if (montoIVA > 0)
                 {
                     e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                 }
 
                 e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 267, datosfooter1.Y, derecha);
+                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
-                if ( montoAhorro >= 0 )
+                if ( montoAhorro > 0 )
                 {
                     Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
                     e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
@@ -559,6 +570,248 @@ namespace lluviaBackEnd.Controllers
 
             
         }
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Impresion de Ticket de Retiro por Exceso de Efectivo
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public ActionResult ImprimeTicketRetiro(Retiros retiros)
+        {
+            Notificacion<Retiros> notificacion;
+            try
+            {
+
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Se envio el ticket de cierre por exceso de efectivo a la impresora.";
+                notificacion.Estatus = 200;
+                PrintDocument pd = new PrintDocument();
+                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                this.retiro = retiros;
+                this.retiro.idEstacion = usuario.idEstacion;
+                PaperSize ps = new PaperSize("", 285, 540);
+                pd.PrintPage += new PrintPageEventHandler(pd_PrintPageRetiro);
+                pd.PrintController = new StandardPrintController();
+                pd.DefaultPageSettings.Margins.Left = 10;
+                pd.DefaultPageSettings.Margins.Right = 0;
+                pd.DefaultPageSettings.Margins.Top = 0;
+                pd.DefaultPageSettings.Margins.Bottom = 0;
+                pd.DefaultPageSettings.PaperSize = ps;
+                pd.Print();
+
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        void pd_PrintPageRetiro(object sender, PrintPageEventArgs e)
+        {
+            Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
+            try
+            {
+                string titulo = string.Empty;
+
+                if ( this.retiro.tipoRetiro == EnumTipoRetiro.RetirosExcesoEfectivo ) {
+                    notificacion = new VentasDAO().ConsultaRetirosEfectivo(this.retiro);
+                    titulo = "\nCOMPROBANTE DE RETIRO" + "\n" + "POR EXCESO DE EFECTIVO";
+                }
+                else {
+                    notificacion = new VentasDAO().ConsultaRetiros(this.retiro);
+                    titulo = "\nCOMPROBANTE DE RETIRO" + "\n" + "POR CIERRE DE CAJA DEL DIA";
+                }
+
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+
+                int ancho = 258;
+                int espaciado = 14;
+
+                //Configuración Global
+                GraphicsUnit units = GraphicsUnit.Pixel;
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+                //Configuración Texto
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;//Cetrado
+                StringFormat izquierda = new StringFormat();
+                izquierda.Alignment = StringAlignment.Near; //Izquierda
+                StringFormat derecha = new StringFormat();
+                derecha.Alignment = StringAlignment.Far; //Izquierda
+
+                //Tipo y tamaño de letra
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
+
+                //Color de texto
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+                //Se pinta logo 
+                Rectangle logo = new Rectangle(80, 15, 280, 81);
+                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                e.Graphics.DrawString(titulo, Bold, drawBrush, datos, centrado);
+
+                Rectangle datosDescripcion = new Rectangle(5, 160, 280, 82);
+                Rectangle datosTikcet = new Rectangle(120, 160, 180, 82);
+
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosDescripcion, izquierda);
+                datosDescripcion.Y += 14;
+                datosTikcet.Y += 14;
+
+                e.Graphics.DrawString("Usuario: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(notificacion.Modelo[0].nombreUsuario.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Fecha: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(notificacion.Modelo[0].fechaAlta.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Sucursal: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(/*notificacion.Modelo[0].descripcionSucursal.ToString()*/"", font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Alamcen: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(/*notificacion.Modelo[0].descripcionAlmacen.ToString()*/"", font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Estación: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(notificacion.Modelo[0].nombreEstacion.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+
+                e.Graphics.DrawString("Monto: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(""+notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, datosTikcet, izquierda);
+
+                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+
+                Rectangle datosfooter1 = new Rectangle(5, datosDescripcion.Y, 280, 82);
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado+50;
+
+
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado;
+
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 5, 280, 82);
+
+                e.Graphics.DrawString("  AUTORIZO  ", font, drawBrush, datosfooter2, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+                // para mas espaciado al final del ticket
+                e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y+30, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+            }
+            catch (InvalidPrinterException ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+        }
+
+
+
+
+
+
 
     }
 

@@ -817,6 +817,7 @@ $('#btnCierreDia').click(function (e) {
                         MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
                         $('#ModalCierre').modal('hide');
                         OcultarLoader();
+                        ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
@@ -847,7 +848,7 @@ function retirarExcesoEfectivo(montoRetiro) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             $('#ModalCierreExceso').modal('hide');
-
+            ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -1093,6 +1094,35 @@ function InitSelect2Productos() {
     $('#idProducto').val("0").trigger('change');
 
 }
+
+
+
+function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketRetiro"),
+        data: { idRetiro: idRetiro, idCliente: idRetiro, tipoRetiro: tipoRetiro },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+
 
 
 
