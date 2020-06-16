@@ -199,6 +199,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
@@ -1186,6 +1187,7 @@
     <Folder Include="assets\img\users\" />
     <Folder Include="Views\Facturas\" />
     <Folder Include="Views\Inicio\" />
+    <Folder Include="Views\TareasProgramadas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

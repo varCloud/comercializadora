@@ -29,21 +29,23 @@ else
                     <th>Usuario</th>
                     <th>Estación</th>
                     <th>Fecha</th>
+                    <th>Reimprimir</th>
                 </tr>
             </thead>
             <tbody>
 
                 @foreach (lluviaBackEnd.Models.Retiros c in retiros)
                 {
-                    <tr>
-                        <td class="text-center">@c.idRetiro</td>
-                        <td>$@c.montoRetiro</td>
-                        <td>@c.nombreUsuario</td>
-                        <td>@c.nombreEstacion</td>
-                        @*<td>@c.fechaAlta</td>*@
-                        <td>@c.fechaAlta.ToShortDateString()</td>
+                <tr>
+                    <td class="text-center">@c.idRetiro</td>
+                    <td>$@c.montoRetiro</td>
+                    <td>@c.nombreUsuario</td>
+                    <td>@c.nombreEstacion</td>
+                    @*<td>@c.fechaAlta</td>*@
+                    <td>@c.fechaAlta.ToShortDateString()</td>
+                    <td class="text-center"><a href="javascript:ImprimeTicketRetiro(@c.idRetiro)" data-toggle="tooltip" title="" data-original-title="Reimprimir Ticket"><i class="fas fa-print"></i></a> </td>
 
-                    </tr>
+                </tr>
 
                 }
 

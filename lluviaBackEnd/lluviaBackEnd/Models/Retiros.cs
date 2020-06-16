@@ -10,6 +10,7 @@ namespace lluviaBackEnd.Models
     {
 
         public int idRetiro { get; set; }
+        public int idCierre { get; set; }
         public float montoRetiro { get; set; }
         public int idUsuario { get; set; }
         public string nombreUsuario { get; set; }
@@ -21,7 +22,8 @@ namespace lluviaBackEnd.Models
         public string nombreUsuarioAut { get; set; }
         public EnumTipoRetiro tipoRetiro { get; set; }
         public Status estatusRetiro { get; set; }
-
+        public string descripcionSucursal { get; set; }
+        public string descripcionAlmacen { get; set; }
         public Retiros()
         {
             estatusRetiro = new Status();

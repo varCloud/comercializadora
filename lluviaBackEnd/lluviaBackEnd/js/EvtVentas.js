@@ -138,8 +138,9 @@ function limpiaModalPrevio() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#idCliente').val("0").trigger('change');
+    $('#idCliente').val("1").trigger('change');
     $('#formaPago').val("1").trigger('change'); 
+    $('#usoCFDI').val("3").trigger('change'); 
 
 }
 
@@ -456,7 +457,7 @@ $('#btnGuardarVenta').click(function (e) {
                 ImprimeTicket(data.Modelo.idVenta);
 
                 if ($("#chkFacturar").is(":checked")) {
-                    console.log(" is checked!- facturar\n");
+                    //console.log(" is checked!- facturar\n");
                     facturaVenta(data.Modelo.idVenta);
                 }
                 
@@ -477,6 +478,15 @@ $('#btnGuardarVenta').click(function (e) {
 
 
 $('#chkFacturar').click(function () {
+
+    var idCliente = $('#idCliente').val();
+
+    if (idCliente == 1) {
+        MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
+        document.getElementById("chkFacturar").checked = false;
+        return
+    }
+
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     var subTotal = parseFloat(document.getElementById("previoSubTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
@@ -668,13 +678,17 @@ $("#idCliente").on("change", function () {
 
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("chkFacturar").checked = false;
+    document.getElementById("divUsoCFDI").style.display = 'none';
+    $('#usoCFDI').val("3").trigger('change'); 
+    $('#formaPago').val("1").trigger('change'); 
 
     var idCliente = parseFloat($('#idCliente').val());
     var data = ObtenerCliente(idCliente);
     var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
     var descuento = parseFloat(0.0);
-
-    if (idCliente != 0) {
+    
+    if (idCliente != 1) {
         descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
     }
 
@@ -691,7 +705,7 @@ $("#idCliente").on("change", function () {
 
     // si lleva iva
     if ($("#chkFacturar").is(":checked")) {
-        console.log(" is checked!- facturar\n");
+        //console.log(" is checked!- facturar\n");
         iva = parseFloat(subTotal * 0.16).toFixed(2);
     }
 
@@ -712,7 +726,7 @@ $("#idCliente").on("change", function () {
         "    <br>" +
         "</address>";
 
-    if ((data.idCliente != 0) && (idCliente != 0)) {
+    if ((data.idCliente != 1) && (idCliente != 1)) {
         row_ = "<address>" +
             "    <strong>Datos del Cliente:</strong><br>" +
             "    Nombre: " + nombre.toUpperCase() + "<br>" +
@@ -803,6 +817,7 @@ $('#btnCierreDia').click(function (e) {
                         MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
                         $('#ModalCierre').modal('hide');
                         OcultarLoader();
+                        ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
@@ -833,7 +848,7 @@ function retirarExcesoEfectivo(montoRetiro) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             $('#ModalCierreExceso').modal('hide');
-
+            ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -1079,6 +1094,35 @@ function InitSelect2Productos() {
     $('#idProducto').val("0").trigger('change');
 
 }
+
+
+
+function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketRetiro"),
+        data: { idRetiro: idRetiro, idCliente: idRetiro, tipoRetiro: tipoRetiro },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+
 
 
 
