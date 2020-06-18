@@ -233,7 +233,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 retiros.idEstacion = usuario.idEstacion;
-                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros);
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetiros(retiros);
                 return PartialView(p);
             }
             catch (Exception ex)
@@ -588,7 +588,11 @@ namespace lluviaBackEnd.Controllers
 
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 notificacion = new Notificacion<Retiros>();
-                notificacion.Mensaje = "Se envio el ticket de cierre por exceso de efectivo a la impresora.";
+                if (retiros.tipoRetiro == EnumTipoRetiro.RetirosExcesoEfectivo)
+                    notificacion.Mensaje = "Se envio el ticket de cierre por exceso de efectivo a la impresora.";
+                else
+                    notificacion.Mensaje = "Se envio el ticket de cierre de día a la impresora.";
+
                 notificacion.Estatus = 200;
                 PrintDocument pd = new PrintDocument();
                 //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
@@ -712,7 +716,7 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 e.Graphics.DrawString("Sucursal: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(/*notificacion.Modelo[0].descripcionSucursal.ToString()*/"", font, drawBrush, datosTikcet, izquierda);
+                e.Graphics.DrawString(notificacion.Modelo[0].descripcionSucursal.ToString(), font, drawBrush, datosTikcet, izquierda);
 
                 if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
                 {
@@ -726,7 +730,7 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 e.Graphics.DrawString("Alamcen: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(/*notificacion.Modelo[0].descripcionAlmacen.ToString()*/"", font, drawBrush, datosTikcet, izquierda);
+                e.Graphics.DrawString(notificacion.Modelo[0].descripcionAlmacen.ToString(), font, drawBrush, datosTikcet, izquierda);
 
                 if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
                 {
