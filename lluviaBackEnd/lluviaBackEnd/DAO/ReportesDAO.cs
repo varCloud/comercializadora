@@ -153,7 +153,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
 
-                    parameters.Add("@idTipoMargenBruto", diasPromedioInventario.tipoMargenBruto);
+                    parameters.Add("@idTipoInventarioPromedio", diasPromedioInventario.tipoMargenBruto);
                     parameters.Add("@fechaIni", diasPromedioInventario.fechaIni == DateTime.MinValue ? (object)null : diasPromedioInventario.fechaIni);
                     parameters.Add("@fechaFin", diasPromedioInventario.fechaFin == DateTime.MinValue ? (object)null : diasPromedioInventario.fechaFin);
                     var result = db.QueryMultiple("SP_INDICADOR_DIAS_PROMEDIO_INVENTARIO", parameters, commandType: CommandType.StoredProcedure);
