@@ -26,9 +26,31 @@ else
     @foreach (lluviaBackEnd.Models.Retiros r in retiros)
     {
         <li>
-            <i class="activity-icon bg-info"></i>
+            @if (r.tipoRetiro == lluviaBackEnd.Models.EnumTipoRetiro.RetirosExcesoEfectivo)
+            {
+                <i class="activity-icon bg-info"></i>
+            }
+            else
+            {
+                <i class="activity-icon bg-success"></i>
+            }
+
             <h6>@r.nombreUsuario <small class="float-right text-muted">@r.fechaAlta</small></h6>
-            <span class="font-12">Monto: $@r.montoRetiro</span>
+
+            @if (r.tipoRetiro == lluviaBackEnd.Models.EnumTipoRetiro.RetirosExcesoEfectivo)
+            {
+                <span class="font-12">Monto: $@r.montoRetiro</span>
+            }
+            else
+            {
+                <span class="font-12">Monto: $@r.montoRetiro</span> <small class="float-right text-muted"><strong>Cierre de Día</strong></small><br>
+                <small class="float-right text-muted"> <a href="javascript:ImprimeTicketRetiro(@r.idRetiro,2)" data-toggle="tooltip" title="" data-original-title="Reimprimir Ticket"><i class="fas fa-print"></i> Reimprimir Ticket</a> </small>
+                
+            }
+
+
+
+
         </li>
     }
 
