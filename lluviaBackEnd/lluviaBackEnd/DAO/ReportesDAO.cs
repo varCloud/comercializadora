@@ -144,5 +144,41 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<List<DiasPromedioInventario>> ObtenerDiasPromedioInventario(DiasPromedioInventario diasPromedioInventario)
+        {
+            Notificacion<List<DiasPromedioInventario>> notificacion = new Notificacion<List<DiasPromedioInventario>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idTipoMargenBruto", diasPromedioInventario.tipoMargenBruto);
+                    parameters.Add("@fechaIni", diasPromedioInventario.fechaIni == DateTime.MinValue ? (object)null : diasPromedioInventario.fechaIni);
+                    parameters.Add("@fechaFin", diasPromedioInventario.fechaFin == DateTime.MinValue ? (object)null : diasPromedioInventario.fechaFin);
+                    var result = db.QueryMultiple("SP_INDICADOR_DIAS_PROMEDIO_INVENTARIO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<DiasPromedioInventario>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
     }
 }

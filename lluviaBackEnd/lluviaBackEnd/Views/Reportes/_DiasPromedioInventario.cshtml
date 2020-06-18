@@ -1,0 +1,55 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.DiasPromedioInventario>>
+
+@{
+    List<lluviaBackEnd.Models.DiasPromedioInventario> diasPromedioInventarios = Model.Modelo;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblDiasPromedioInventario">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Descripcion</th>
+                    <th>Costo del Inventario Promedio</th>
+                    <th>Dìas del periodo</th>
+                    <th>Total de Ventas</th>
+                    <th>Costo de Ventas</th>
+                    <th>Dìas Promedio Inventario</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.DiasPromedioInventario c in diasPromedioInventarios)
+                {
+                <tr>
+                    <td>@c.id</td>
+                    <td>@c.descripcion</td>
+                    <td>@c.costoInventarioPromedio</td>
+                    <td>@c.diasPeriodo</td>
+                    <td>@c.TotalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.costoVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.diasPromedioInventario %</td>
+                </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+}
+
+

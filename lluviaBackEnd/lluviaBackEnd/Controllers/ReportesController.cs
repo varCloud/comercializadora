@@ -167,6 +167,26 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //REPORTE DIAS PROMEDIO INVENTARIO
+        public ActionResult DiasPromedioInventario()
+        {
+            return View(new DiasPromedioInventario() { tipoMargenBruto = EnumTipoMargenBruto.Global });
+        }
+
+        public ActionResult ObtenerDiasPromedioInventario(DiasPromedioInventario diasPromedioInventario)
+        {
+            try
+            {
+                Notificacion<List<DiasPromedioInventario>> notificacion = new ReportesDAO().ObtenerDiasPromedioInventario(diasPromedioInventario);
+                return PartialView("_DiasPromedioInventario", notificacion);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
 
     }

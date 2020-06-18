@@ -199,6 +199,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\MargenBruto.cs" />
@@ -1006,6 +1008,7 @@
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtFacturas.js" />
+    <Content Include="js\evtReporteDiasPromedioInventario.js" />
     <Content Include="js\evtReporteMargenBruto.js" />
     <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
@@ -1169,6 +1172,8 @@
     <Content Include="Views\Ventas\_ObtenerRetirosAutorizacion.cshtml" />
     <Content Include="Views\Reportes\MargenBruto.cshtml" />
     <Content Include="Views\Reportes\_MargenBruto.cshtml" />
+    <Content Include="Views\Reportes\DiasPromedioInventario.cshtml" />
+    <Content Include="Views\Reportes\_DiasPromedioInventario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1182,6 +1187,7 @@
     <Folder Include="assets\img\users\" />
     <Folder Include="Views\Facturas\" />
     <Folder Include="Views\Inicio\" />
+    <Folder Include="Views\TareasProgramadas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
