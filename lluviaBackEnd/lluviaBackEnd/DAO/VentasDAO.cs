@@ -159,7 +159,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA)
+        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos)
         {
             Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
             try
@@ -176,6 +176,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", idUsuario);
                     parameters.Add("@idEstacion", idEstacion);
                     parameters.Add("@aplicaIVA", aplicaIVA);
+                    parameters.Add("@numClientesAtendidos", numClientesAtendidos);
 
                     var result = db.QueryMultiple("SP_REALIZA_VENTA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

@@ -411,7 +411,10 @@ $('#btnGuardarVenta').click(function (e) {
     var usoCFDI = $('#usoCFDI').val();
     var idVenta = $('#idVenta').val();
     var aplicaIVA = parseInt(0);
+    var numClientesAtendidos = parseInt(0);
 
+
+    // validaciones
     if ($('#efectivo').val() == "") {
         MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
         return
@@ -421,6 +424,19 @@ $('#btnGuardarVenta').click(function (e) {
         aplicaIVA = parseInt(1);
     }
 
+    if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
+
+        if ($('#numClientesAtendidos').val() == "") {
+            MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+            return;
+        }
+        else {
+            numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
+        }
+    }
+
+
+    // si todo bien
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
@@ -434,7 +450,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA });
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -705,7 +721,6 @@ $("#idCliente").on("change", function () {
 
     // si lleva iva
     if ($("#chkFacturar").is(":checked")) {
-        //console.log(" is checked!- facturar\n");
         iva = parseFloat(subTotal * 0.16).toFixed(2);
     }
 
@@ -735,6 +750,19 @@ $("#idCliente").on("change", function () {
             "    RFC: " + data.Modelo.rfc + "<br>" +
             "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
             "</address>";
+    }
+
+    // para los tipo de clietne ruta
+    if (data.Modelo.nombres.includes('RUTA')) {
+        row_ = "<div id =\"divClientesAtendidos\">" +
+               "     <div class=\"section-title\"><strong>  </strong></div>" +
+               "     <div class=\"input-group mb-3\">" +
+               "         <div class=\"input-group-prepend\">" +
+               "             <span class=\"input-group-text\">Número de Clientes Atendidos por Ruta:</span>" +
+               "         </div>" +
+               "         <input id=\"numClientesAtendidos\" type=\"text\" class=\"form-control\" onkeypress=\"return esNumero(event)\">" +
+               "     </div>" +
+               "</div><br><br><br><br>";
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;

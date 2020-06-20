@@ -66,7 +66,6 @@
                                     <label>Producto</label>
                                     @Html.HiddenFor(x => idVenta)
                                     <input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">
-                                    @*@Html.DropDownListFor(model => model.precio, new SelectList(lstProductos, "idProducto", "descripcionConExistencias"),"--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
                                     <select id="idProducto"></select>
                                 </div>
                             </div>
@@ -269,7 +268,7 @@
                                 @Html.DropDownListFor(model => model.usoCFDI, new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
                             </div>
                         </div>
-
+                        
                     </div>
 
                     <div class="col-lg-5 text-right">
