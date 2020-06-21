@@ -544,6 +544,30 @@ function ImprimeTicket(idVenta) {
     });
 }
 
+function AbrirCajonDinero() {
+    $.ajax({
+        url: rootUrl("/Ventas/AbrirCajon"),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Abriendo Cajón...");
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al intentar abrir el cajón del dinero.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 
 function numerico(evt) {
     evt = (evt) ? evt : window.event;
@@ -660,18 +684,29 @@ function listenerDobleClick(element) {
 
 
 
-$("#efectivo").on("keyup", function () {
-    var cambio_     = parseFloat(0).toFixed(2);
-    var efectivo_   = parseFloat($('#efectivo').val()).toFixed(2);
-    var total_      = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+$("#efectivo").on("keyup", function (event) {
 
-    if (parseFloat(efectivo_) > parseFloat(total_)) {
-        cambio_ = efectivo_ - total_;
-        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+    if (event.keyCode === 13) {
+
+        event.preventDefault();
+        document.getElementById("btnGuardarVenta").click();
+
     }
     else {
-        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+        var cambio_ = parseFloat(0).toFixed(2);
+        var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+        var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+        if (parseFloat(efectivo_) > parseFloat(total_)) {
+            cambio_ = efectivo_ - total_;
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+        }
+        else {
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+        }
     }
+
 });
 
 

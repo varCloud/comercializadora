@@ -595,7 +595,7 @@ namespace lluviaBackEnd.Controllers
 
                 notificacion.Estatus = 200;
                 PrintDocument pd = new PrintDocument();
-                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                 this.retiro = retiros;
                 this.retiro.idEstacion = usuario.idEstacion;
                 PaperSize ps = new PaperSize("", 285, 540);
@@ -811,6 +811,71 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Apertura de Cajon
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public ActionResult AbrirCajon()
+        {
+            Notificacion<Retiros> notificacion;
+            try
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Abriendo Cajón del Dinero.";
+                notificacion.Estatus = 200;
+                PrintDocument pd = new PrintDocument();
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
+                PaperSize ps = new PaperSize("", 285, 540);
+                pd.PrintPage += new PrintPageEventHandler(pd_PrintAbreCajon);
+                pd.PrintController = new StandardPrintController();
+                pd.Print();
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        void pd_PrintAbreCajon(object sender, PrintPageEventArgs e)
+        {
+            Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
+            try
+            {
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+                Rectangle datos = new Rectangle(5, 0, 0, 0);
+                e.Graphics.DrawString(" ", Bold, drawBrush, datos, centrado);
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+            }
+            catch (Exception ex)
+            {
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+            }
+
+        }
 
 
 
