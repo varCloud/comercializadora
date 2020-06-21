@@ -24,11 +24,13 @@ else
                 <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
-                    <th>Costo del Inventario Promedio</th>
+                    <th>Costo Producto</th>
+                    <th>Inventario Promedio Periodo</th>
+                    <th>Costo Inventario Promedio</th>
                     <th>Dìas del periodo</th>
-                    <th>Total de Ventas</th>
-                    <th>Costo de Ventas</th>
+                    <th>Costo Vendido</th>
                     <th>Dìas Promedio Inventario</th>
+                    <th>Rotaciòn Inventario</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,11 +40,13 @@ else
                 <tr>
                     <td>@c.id</td>
                     <td>@c.descripcion</td>
-                    <td>@c.costoInventarioPromedio</td>
+                    <td>@c.CostoProducto.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.InventarioPromedioPeriodo</td>
+                    <td>@c.CostoInvPromedio.ToString("C", new CultureInfo("en-US"))</td>
                     <td>@c.diasPeriodo</td>
-                    <td>@c.TotalVentas.ToString("C", new CultureInfo("en-US"))</td>
-                    <td>@c.costoVentas.ToString("C", new CultureInfo("en-US"))</td>
-                    <td>@c.diasPromedioInventario %</td>
+                    <td>@c.CostoVendido.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.diasPromedioInventario</td>
+                    <td>@c.rotacionInventario</td>
                 </tr>
                 }
             </tbody>

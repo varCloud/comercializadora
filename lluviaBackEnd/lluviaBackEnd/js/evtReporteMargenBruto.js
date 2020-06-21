@@ -25,7 +25,7 @@ function onSuccessResultMargenBruto(data) {
         tblMargenBruto.destroy();
 
     $('#ViewMargenBruto').html(data);
-    if (data.Estatus == 200)
+    if ($("#tblMargenBruto").length > 0)
         InitDataTableMargenBruto();
     OcultarLoader();
 }

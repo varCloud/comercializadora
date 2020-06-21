@@ -12,15 +12,14 @@ namespace lluviaBackEnd.Models
         public EnumTipoMargenBruto tipoMargenBruto { get; set; }
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
-        public float costoInventarioPromedio { get; set; }
+        public float CostoProducto { get; set; }
+        public float InventarioPromedioPeriodo { get; set; }
+        public float CostoInvPromedio { get; set; }
         public int diasPeriodo { get; set; }
-        public float costoVentas { get; set; }
+        public float CostoVendido { get; set; }
+        public float diasPromedioInventario { get; set; }        
+        public float rotacionInventario { get; set; }
         public float TotalVentas { get; set; }
-        public float diasPromedioInventario { get; set; }
-
-
-
-
 
     }
 }
