@@ -164,7 +164,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idEstatusPedidoInterno", request.idEstatusPedidoInterno);
                     parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
                     parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);
-                    parameters.Add("@idUbcacion", request.idAlmacenDestino);
+                    parameters.Add("@idUbcacion", request.idUbicacion);
                     notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PEDIDO_INTERNO", parameters, commandType: CommandType.StoredProcedure);
                 }
             }

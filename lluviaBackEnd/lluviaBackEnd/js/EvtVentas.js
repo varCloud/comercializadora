@@ -184,6 +184,27 @@ $('#btnAgregarProducto').click(function (e) {
         return;
     }
 
+    if ($('#idProducto').select2('data')[0].precioIndividual <= 0 && $('#idProducto').select2('data')[0].precioMenudeo <= 0) {
+        preguntaAltaPrecios();
+        return
+    }
+
+    if ($('#idProducto').select2('data')[0].cantidad < parseInt($('#cantidad').val())) {
+        MuestraToast('warning', "no existe suficiente producto en inventario");
+        return;
+    }
+
+    if ($('#idProducto').select2('data')[0].precioIndividual <= 0) {
+        MuestraToast('warning', "Debe configurar el precio invidual del producto.");
+        return;
+    }
+
+    if ($('#idProducto').select2('data')[0].precioMenudeo <= 0) {
+        MuestraToast('warning', "Debe configurar el precio Mayoreo del producto.");
+        return;
+    }
+
+    //console.log("datos", $('#idProducto').select2('data'), 'item: ', $('#idProducto').select2('data')[0].descripcion, "costo del item: ", $('#idProducto').select2('data')[0].costo)
     // aki falta validar que se tengan existencias para vender
 
     var cantidad = $('#cantidad').val();

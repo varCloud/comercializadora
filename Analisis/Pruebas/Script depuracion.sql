@@ -102,7 +102,7 @@ DBCC CHECKIDENT ('[MovimientosDeMercancia]',RESEED, 0)
  DBCC CHECKIDENT ('[ProductosPorPrecio]',RESEED, 0)
 
 
-DELETE FROM CatTipoCliente where idTipoCliente >1
+DELETE FROM CatTipoCliente where idTipoCliente >2
 DBCC CHECKIDENT ('[CatTipoCliente]',RESEED, 0)
 
 --select * from CatTipoCliente
