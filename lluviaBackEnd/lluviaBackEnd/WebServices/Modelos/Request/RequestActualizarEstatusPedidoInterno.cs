@@ -24,5 +24,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         ///por tal razon solo es necesario cuando el @idEstatusPedidoInterno = 2
         /// </summary>
         public int idUbicacion { get; set; }
+
+        public string observacion { get; set; }
     }
 }

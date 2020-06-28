@@ -2,13 +2,16 @@
 delete from CatRoles where idRol >8
 DBCC CHECKIDENT ('CatRoles',RESEED, 8)
 
-DELETE FROM Compras
-DBCC CHECKIDENT ('Compras',RESEED, 0)
 
 DELETE FROM ComprasDetalle
 DBCC CHECKIDENT ('ComprasDetalle',RESEED, 0)
 
+
+DELETE FROM Compras
+DBCC CHECKIDENT ('Compras',RESEED, 0)
+
 DELETE FROM Proveedores
+DBCC CHECKIDENT ('Proveedores',RESEED, 0)
 
 DELETE from MovimientosDeMercancia
 DBCC CHECKIDENT ('MovimientosDeMercancia',RESEED, 0)
@@ -29,6 +32,10 @@ DELETE FROM  [dbo].[InventarioDetalleLog]
 DBCC CHECKIDENT ('[InventarioDetalleLog]',RESEED, 0)
 
 DELETE Usuarios where usuario!='admin' and contrasena!='admin'
+
+
+DELETE FROM [dbo].[ClientesAtendidosRuta]
+DBCC CHECKIDENT ('ClientesAtendidosRuta',RESEED, 0)
 
 
 DELETE FROM [dbo].[VentasDetalle]
@@ -55,11 +62,6 @@ DELETE a from [dbo].[ProductosPorPrecio] a
 join Productos b on a.idProducto=b.idProducto
 where b.idProducto>627
 
-DELETE from Productos 
-where idProducto>627
-
-DELETE from [dbo].[LineaProducto] where idLineaProducto>18
-DBCC CHECKIDENT ('[LineaProducto]',RESEED, 18)
 
 
 /************************************************/
@@ -73,6 +75,10 @@ DBCC CHECKIDENT ('[ComprasDetalle]',RESEED, 0)
 
 DELETE FROM Compras
 DBCC CHECKIDENT ('[compras]',RESEED, 0)
+
+
+DELETE from [dbo].[InventarioGeneralLog]
+DBCC CHECKIDENT ('InventarioGeneralLog',RESEED, 0)
 
 DELETE FROM InventarioGeneral
 DBCC CHECKIDENT ('[InventarioGeneral]',RESEED, 0)
@@ -101,11 +107,20 @@ DBCC CHECKIDENT ('[MovimientosDeMercancia]',RESEED, 0)
  DELETE from ProductosPorPrecio
  DBCC CHECKIDENT ('[ProductosPorPrecio]',RESEED, 0)
 
+ DELETE from Productos 
+where idProducto>627
+
+DELETE from [dbo].[LineaProducto] where idLineaProducto>18
+DBCC CHECKIDENT ('[LineaProducto]',RESEED, 18)
+
+
 
 DELETE FROM CatTipoCliente where idTipoCliente >2
 DBCC CHECKIDENT ('[CatTipoCliente]',RESEED, 0)
 
 --select * from CatTipoCliente
+
+
 
 
 

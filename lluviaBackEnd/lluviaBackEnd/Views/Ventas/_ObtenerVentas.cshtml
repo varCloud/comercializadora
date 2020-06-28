@@ -49,7 +49,7 @@
                                             @if (item.idEstatusFactura == 0 || item.idEstatusFactura == (int)lluviaBackEnd.Models.EnumEstatusFactura.Cancelada)
                                             {
                                                 <a href="javascript:modalFacturar(@item.idVenta);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Generar Factura"><i class="fas fa-file-invoice-dollar"></i></a>
-                                                @*<a href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta })" class="btn btn-icon btn-info" data-toggle="tooltip" title="Editar Venta"><i class="far fa-edit"></i></a>*@
+                                                <a href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta })" class="btn btn-icon btn-info" data-toggle="tooltip" title="Editar Venta"><i class="far fa-edit"></i></a>
                                                 <a href="javascript:CancelaVenta(@item.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Venta"><i class="fas fa-times"></i></a>
                                             }
 
