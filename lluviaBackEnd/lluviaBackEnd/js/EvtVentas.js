@@ -40,7 +40,7 @@ function preguntaAltaPrecios() {
 }
 
 function facturaVenta(idVenta) {
-    console.log(idVenta);
+    console.log("facturaVenta_" + idVenta);
     $.ajax({
         url: rootUrl("/Factura/GenerarFactura"),
         data: { idVenta: idVenta },
@@ -433,12 +433,19 @@ $('#btnGuardarVenta').click(function (e) {
     var idVenta = $('#idVenta').val();
     var aplicaIVA = parseInt(0);
     var numClientesAtendidos = parseInt(0);
+    var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
 
     // validaciones
     if ($('#efectivo').val() == "") {
         MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
         return
+    }
+    
+    if (parseFloat(efectivo_) < parseFloat(total_)) {
+        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
+        return;
     }
 
     if ($("#chkFacturar").is(":checked")) {
@@ -476,8 +483,8 @@ $('#btnGuardarVenta').click(function (e) {
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
         data: dataToPost,
-        method: 'POST',
-        dataType: 'JSON',
+        method: 'post',
+        dataType: 'json',
         contentType: "application/json; charset=utf-8", 
         async: true,
         beforeSend: function (xhr) {
@@ -486,11 +493,9 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            $('#ModalPrevioVenta').modal('hide');
-
+            //console.log(data);
             if (data.Estatus == 200) {
 
-                limpiarTicket();
                 ImprimeTicket(data.Modelo.idVenta);
 
                 if ($("#chkFacturar").is(":checked")) {
@@ -499,9 +504,10 @@ $('#btnGuardarVenta').click(function (e) {
                 }
                 
                 InitSelect2Productos();
-
+                limpiarTicket();
             }
-
+            $('#ModalPrevioVenta').modal('hide');
+            
         },
         error: function (xhr, status) {
             OcultarLoader();
@@ -858,7 +864,13 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
     if ( ( (cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0 )
     {
-        MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo - cantidadRetirada).toString() + " para retirar.");
+        var cantidadPorRetirar = parseFloat(0).toFixed(2);
+        if ((parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2)) < 0)
+            cantidadPorRetirar = parseFloat(0);
+        else
+            cantidadPorRetirar = parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2);
+
+        MuestraToast('warning', "Solo tiene : $" + (cantidadPorRetirar).toString() + " para retirar.");
         return
     }
     // si todo bien

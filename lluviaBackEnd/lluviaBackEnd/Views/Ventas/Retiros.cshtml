@@ -6,13 +6,14 @@
 @model Retiros
 
 @{
-    List<SelectListItem> estaciones = new SelectList(ViewBag.Estaciones, "idEstacion", "nombreAlmacen").ToList();
-   
+    List<SelectListItem> almacenes = new SelectList(ViewBag.Estaciones, "idAlmacen", "nombreAlmacen").ToList();
+    int idAlmacenUsuario = ViewBag.idAlmacenUsuario;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
 }
 
@@ -41,19 +42,26 @@
                     new { id = "frmRetiros" }))
                     {
                         <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Tipo Retiro</label>
                                     @Html.EnumDropDownListFor(x => x.tipoRetiro, "-- TODOS --", new { @class = "form-control", data_val = "false" })
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
-                                    <label>Estacion</label>
-                                    @Html.DropDownListFor(x => x.idEstacion, estaciones,"--TODOS--", new { @class = "form-control", data_val = "false" })
+                                    <label>Almacen</label>
+                                    @Html.DropDownListFor(x => x.idEstacion, almacenes, "--TODOS--", new { @class = "form-control", data_val = "false" })
+                                    @Html.HiddenFor(x => idAlmacenUsuario)
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="col-12 col-sm-12 col-lg-3">
+                                <div class="form-group">
+                                    <label>Usuarios</label>
+                                    <br><select id="idUsuario"></select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Fecha</label>
                                     @Html.TextBoxFor(x => x.fechaAlta, new { @class = "form-control datepicker", data_val = "false" })
@@ -98,5 +106,6 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtRetiros.js"></script>
 }

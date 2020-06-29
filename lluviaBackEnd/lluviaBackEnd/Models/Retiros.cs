@@ -13,8 +13,10 @@ namespace lluviaBackEnd.Models
         public int idCierre { get; set; }
         public float montoRetiro { get; set; }
         public int idUsuario { get; set; }
+        public int idRol { get; set; }
         public string nombreUsuario { get; set; }
         public int idEstacion { get; set; }
+        public int idAlmacen { get; set; }
         public string nombreEstacion { get; set; }
         public DateTime fechaAlta { get; set; }
         public float montoAutorizado { get; set; }
