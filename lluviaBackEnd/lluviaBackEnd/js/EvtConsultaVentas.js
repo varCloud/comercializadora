@@ -276,9 +276,9 @@ function modalFacturar(idVenta) {
     var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
 
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
-    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4><strike>$" + parseFloat(montoTotal).toFixed(2) + "</strike></h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
-    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoFinal).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
 
     $('#idVentaIVA').val(idVenta);
     $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -372,9 +372,22 @@ function ObtenerCliente(idCliente) {
 
 
 $('#btnGuardarIVA').click(function (e) {
-    console.log($('#idClienteIVA').val() );
+    //console.log($('#idClienteIVA').val());
+    var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
     if ($('#idClienteIVA').val() == "0") {
         MuestraToast('warning', "Debe seleccionar un Cliente.");
+        return;
+    }
+    console.log(efectivo_ + " - " + total_)
+    if ($('#efectivo').val() == "") {
+        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+        return
+    }
+
+    if (parseFloat(efectivo_) < parseFloat(total_)) {
+        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo del iva faltante: " + total_.toString());
         return;
     }
 

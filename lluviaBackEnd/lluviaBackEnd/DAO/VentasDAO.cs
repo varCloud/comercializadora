@@ -386,6 +386,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@idEstacion", cierre.idEstacion);
+                    parameters.Add("@idUsuario", cierre.idUsuario);
                     var result = db.QueryMultiple("SP_CONSULTA_INFO_CIERRE", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
@@ -419,7 +420,11 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@idEstacion", retiros.idEstacion==0 ? (object) null : retiros.idEstacion);
+                    parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
                     parameters.Add("@idRetiro", retiros.idRetiro==0 ? (object) null : retiros.idRetiro);
+                    parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
+                    parameters.Add("@idAlmacen", retiros.idAlmacen == 0 ? (object)null : retiros.idAlmacen);
+                    
                     var result = db.QueryMultiple("SP_CONSULTA_RETIROS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
@@ -455,11 +460,13 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idEstacion", retiros.idEstacion == 0 ? (object)null : retiros.idEstacion);
                     parameters.Add("@idTipoRetiro", retiros.tipoRetiro == 0 ? (object)null : retiros.tipoRetiro);
                     parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
+                    parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
+                    parameters.Add("@idAlmacen", retiros.idAlmacen == 0 ? (object)null : retiros.idAlmacen);
                     var result = db.QueryMultiple("SP_CONSULTA_RETIROS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {
-                        notificacion.Estatus = r1.status;
+                        notificacion.Estatus = r1.status;   
                         notificacion.Mensaje = r1.mensaje;
                         notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros, splitOn: "idStatus").ToList();
                     }

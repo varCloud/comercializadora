@@ -103,5 +103,21 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ObtenerUsuariosPorAlmacenyRol(Usuario usuario)
+        {
+            try
+            {
+                //Sesion usuario_ = (Sesion)Session["UsuarioActual"];
+                //List<Usuario> lstUsuarios = new List<Usuario>();
+                //lstUsuarios = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idUsuario = 0, idAlmacen = usuario_.idAlmacen, idRol =  });
+                return Json(new UsuarioDAO().ObtenerUsuarios(usuario), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

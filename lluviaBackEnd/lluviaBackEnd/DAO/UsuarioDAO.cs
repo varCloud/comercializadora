@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Web.Mvc;
+using Dapper;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace lluviaBackEnd.DAO
 {
@@ -16,6 +19,7 @@ namespace lluviaBackEnd.DAO
     {
 
         private DBManager db = null;
+        private IDbConnection db_ = null;
 
 
         public List<Usuario> ObtenerUsuarios(Usuario usr)
@@ -27,8 +31,10 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.CreateParameters(1);
+                    db.CreateParameters(3);
                     db.AddParameters(0, "@idUsuario", usr.idUsuario);
+                    db.AddParameters(1, "@idAlmacen", usr.idAlmacen);
+                    db.AddParameters(2, "@idRol", usr.idRol);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_USUARIOS]");
 
                     while (db.DataReader.Read())
@@ -297,6 +303,42 @@ namespace lluviaBackEnd.DAO
             }
             return result;
         }
+
+
+        //public Notificacion<List<Usuario>> ObtenerUsuariosPorAlmacen(int idAlmacen)
+        //{
+        //    Notificacion<List<Usuario>> notificacion = new Notificacion<List<Usuario>>();
+        //    try
+        //    {
+        //        using (db_ = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idEstacion", retiros.idEstacion == 0 ? (object)null : retiros.idEstacion);
+        //            parameters.Add("@idTipoRetiro", retiros.tipoRetiro == 0 ? (object)null : retiros.tipoRetiro);
+        //            parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
+        //            parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
+        //            var result = db_.QueryMultiple("SP_CONSULTA_RETIROS", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros, splitOn: "idStatus").ToList();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = new List<Retiros> { retiros };
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
     }
 }

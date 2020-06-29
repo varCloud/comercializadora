@@ -202,7 +202,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=usuario.idEstacion} );
+                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=0, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen} );
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -217,6 +217,17 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 retiros.idEstacion = usuario.idEstacion;
+                retiros.idAlmacen = usuario.idAlmacen;
+
+                if (usuario.idRol == 1 || usuario.idRol == 2)
+                {
+                    retiros.idUsuario = 0;
+                }
+                else
+                {
+                    retiros.idUsuario = usuario.idUsuario;
+                }
+
                 Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros); 
                 return PartialView(p);
             }
@@ -233,6 +244,17 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 retiros.idEstacion = usuario.idEstacion;
+                retiros.idAlmacen = usuario.idAlmacen;
+
+                if (usuario.idRol == 1 || usuario.idRol == 2)
+                {
+                    retiros.idUsuario = 0;
+                }
+                else
+                {
+                    retiros.idUsuario = usuario.idUsuario;
+                }
+
                 Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetiros(retiros);
                 return PartialView(p);
             }
@@ -248,8 +270,14 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
                 Notificacion<List<Estacion>> notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion());
                 ViewBag.Estaciones = notificacion.Modelo!=null ? notificacion.Modelo : new List<Estacion>();
+                if ((usuario.idRol == 1) || (usuario.idRol == 2))
+                    ViewBag.idAlmacenUsuario = 0;
+                else
+                    ViewBag.idAlmacenUsuario = usuario.idAlmacen;
+                
                 return View();
             }
             catch (Exception ex)
@@ -263,6 +291,19 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {                
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.idRol = usuario.idRol;
+
+                if (usuario.idRol == 1 || usuario.idRol == 2)
+                {
+                    retiros.idUsuario = 0;
+                }
+                else
+                {
+                    retiros.idUsuario = usuario.idUsuario;
+                }
+
+
                 Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetiros(retiros);
                 return PartialView(p);
             }
@@ -635,6 +676,17 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 string titulo = string.Empty;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                retiro.idAlmacen = usuario.idAlmacen;
+                if (usuario.idRol == 1 || usuario.idRol == 2)
+                {
+                    this.retiro.idUsuario = 0;
+                }
+                else
+                {
+                    this.retiro.idUsuario = usuario.idUsuario;
+                }
+
 
                 if ( this.retiro.tipoRetiro == EnumTipoRetiro.RetirosExcesoEfectivo ) {
                     notificacion = new VentasDAO().ConsultaRetirosEfectivo(this.retiro);
