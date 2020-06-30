@@ -188,6 +188,26 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        //REPORTE DROPSIZE
+        public ActionResult DropSize()
+        {
+            return View(new DropSize() { tipoMargenBruto = EnumTipoMargenBruto.Global });
+        }
+
+        public ActionResult ObtenerDropSize(DropSize dropSize)
+        {
+            try
+            {
+                Notificacion<List<DropSize>> notificacion = new ReportesDAO().ObtenerDropSize(dropSize);
+                return PartialView("_DropSize", notificacion);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 
