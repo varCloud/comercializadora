@@ -230,6 +230,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DiasPromedioInventario.cs" />
+    <Compile Include="Models\DropSize.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\MargenBruto.cs" />
@@ -1004,6 +1005,7 @@
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
+    <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
@@ -1174,6 +1176,8 @@
     <Content Include="Views\Reportes\_MargenBruto.cshtml" />
     <Content Include="Views\Reportes\DiasPromedioInventario.cshtml" />
     <Content Include="Views\Reportes\_DiasPromedioInventario.cshtml" />
+    <Content Include="Views\Reportes\DropSize.cshtml" />
+    <Content Include="Views\Reportes\_DropSize.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

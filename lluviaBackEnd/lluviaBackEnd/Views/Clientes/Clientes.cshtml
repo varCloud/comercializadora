@@ -53,8 +53,8 @@
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
-                                <label>Apellido Paterno</label>
-                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno" })
+                                <label>Apellido Materno</label>
+                                @Html.TextBoxFor(x => x.apellidoMaterno, null, new { @class = "form-control", @id = "apellidoMaterno",data_val="false" })
                                 @Html.ValidationMessageFor(x => x.apellidoMaterno, null, new { @class = "text-danger was" })
                             </div>
                         </div>

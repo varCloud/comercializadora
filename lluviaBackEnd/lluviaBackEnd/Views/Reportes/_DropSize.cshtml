@@ -1,0 +1,56 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.DropSize>>
+
+@{
+    List<lluviaBackEnd.Models.DropSize> dropSizes = Model.Modelo;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblDropSize">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Descripcion</th>
+                    <th>Total de Clientes</th>
+                    <th>Total de Ventas</th>
+                    <th>Total de Productos</th>
+                    <th>DropSize Ventas</th>
+                    <th>DropSize Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.DropSize c in dropSizes)
+                {
+                    <tr>
+                        <td>@c.id</td>
+                        <td>@c.descripcion</td>
+                        <td>@c.TotalClientes</td>
+                        <td>@c.TotalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.TotalProductos</td>                    
+                        <td>@c.dropSizeVentas.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.dropSizeCantidad</td>                 
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+}
+
+
+

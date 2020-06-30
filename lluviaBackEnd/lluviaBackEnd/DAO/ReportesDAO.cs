@@ -179,6 +179,41 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<List<DropSize>> ObtenerDropSize(DropSize dropSize)
+        {
+            Notificacion<List<DropSize>> notificacion = new Notificacion<List<DropSize>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idTipoDropSize", dropSize.tipoMargenBruto);
+                    parameters.Add("@fechaIni", dropSize.fechaIni == DateTime.MinValue ? (object)null : dropSize.fechaIni);
+                    parameters.Add("@fechaFin", dropSize.fechaFin == DateTime.MinValue ? (object)null : dropSize.fechaFin);
+                    var result = db.QueryMultiple("SP_INDICADOR_DROPSIZE", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<DropSize>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
 
     }
 }
