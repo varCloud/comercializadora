@@ -202,7 +202,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=0, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen} );
+                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen} );
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -271,13 +271,23 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                Notificacion<List<Estacion>> notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion());
-                ViewBag.Estaciones = notificacion.Modelo!=null ? notificacion.Modelo : new List<Estacion>();
+                Estacion estacion = new Estacion();
+
                 if ((usuario.idRol == 1) || (usuario.idRol == 2))
+                {
                     ViewBag.idAlmacenUsuario = 0;
+                }
                 else
+                {
                     ViewBag.idAlmacenUsuario = usuario.idAlmacen;
-                
+                    estacion.idEstacion = usuario.idEstacion;
+                    estacion.idAlmacen = usuario.idAlmacen;
+                }
+
+                Notificacion<List<Estacion>> notificacion = new EstacionesDAO().ObtenerEstaciones(estacion);
+                ViewBag.Estaciones = notificacion.Modelo!=null ? notificacion.Modelo : new List<Estacion>();
+
+               
                 return View();
             }
             catch (Exception ex)
@@ -298,11 +308,11 @@ namespace lluviaBackEnd.Controllers
                 {
                     retiros.idUsuario = 0;
                 }
-                else
-                {
-                    retiros.idUsuario = usuario.idUsuario;
-                }
-
+                //else
+                //{
+                //    retiros.idUsuario = usuario.idUsuario;
+                //}
+                //retiros.idAlmacen = usuario.idAlmacen;
 
                 Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetiros(retiros);
                 return PartialView(p);
