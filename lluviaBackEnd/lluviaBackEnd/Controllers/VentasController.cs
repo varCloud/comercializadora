@@ -276,10 +276,12 @@ namespace lluviaBackEnd.Controllers
                 if ((usuario.idRol == 1) || (usuario.idRol == 2))
                 {
                     ViewBag.idAlmacenUsuario = 0;
+                    ViewBag.idUsuarioLogueado = 0;
                 }
                 else
                 {
                     ViewBag.idAlmacenUsuario = usuario.idAlmacen;
+                    ViewBag.idUsuarioLogueado = usuario.idUsuario;                    
                     estacion.idEstacion = usuario.idEstacion;
                     estacion.idAlmacen = usuario.idAlmacen;
                 }

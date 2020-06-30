@@ -8,6 +8,7 @@
 @{
     List<SelectListItem> almacenes = new SelectList(ViewBag.Estaciones, "idAlmacen", "nombreAlmacen").ToList();
     int idAlmacenUsuario = ViewBag.idAlmacenUsuario;
+    int idUsuarioLogueado = ViewBag.idUsuarioLogueado;
 }
 
 @section Styles {
@@ -51,14 +52,15 @@
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Almacen</label>
-                                    @Html.DropDownListFor(x => x.idEstacion, almacenes, "--TODOS--", new { @class = "form-control", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idAlmacen, almacenes, "--TODOS--", new { @class = "form-control", data_val = "false" })
                                     @Html.HiddenFor(x => idAlmacenUsuario)
+                                    @Html.HiddenFor(x => idUsuarioLogueado)
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Usuarios</label>
-                                    <br><select id="idUsuario"></select>
+                                    <br><select id="idUsuario" name="idUsuario"></select>
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-3">
