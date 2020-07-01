@@ -1,22 +1,10 @@
 ﻿var tblRetiros;
 $(document).ready(function () {
-    var idAlmacenUsuario = $('#idAlmacenUsuario').val();
-    var idUsuarioLogueado = $('#idUsuarioLogueado').val();
-    
-    //console.log(idAlmacenUsuario);
-    if (idAlmacenUsuario > 0) {
-        $('#idAlmacen').val(idAlmacenUsuario).trigger('change');
-        $('#idUsuario').val(idUsuarioLogueado).trigger('change');
-        $('#idAlmacen').prop('disabled', true);
-        $('#idUsuario').prop('disabled', true);
-    }
-    else {
-        InitSelect2Usuarios(0);
-    }
-    //alert($('#idUsuario').val());
-
     $("#frmRetiros").submit();
-    //InitDataTableRetiros();
+    $("#idAlmacen").on("change", function () {
+        var idAlmacen = parseInt($('#idAlmacen').val());        
+        InitSelect2Usuarios(idAlmacen);
+    }); 
 });
 
 
@@ -152,24 +140,12 @@ function ActualizarEstatusRetiro(idRetiro, tipoRetiro,idStatus) {
 
 
 
-$("#idAlmacen").on("change", function () {
 
-    var idAlmacen = parseInt($('#idAlmacen').val());
-    //alert(idAlmacen);
-
-    if (idAlmacen > 0) {
-        InitSelect2Usuarios(idAlmacen);
-    }
-    else {
-        InitSelect2Usuarios(idAlmacen);
-    }
-    
-}); 
 
 function InitSelect2Usuarios(idAlmacen) {
 
-    var result = '';
-    $('#idUsuario').prop('disabled', false);
+    $('#idUsuario').empty();
+    $('#idUsuario').append($('<option/>').val("").text("--TODOS--"));
 
     $.ajax({
         url: rootUrl("/Usuarios/ObtenerUsuariosPorAlmacenyRol"),
@@ -180,6 +156,9 @@ function InitSelect2Usuarios(idAlmacen) {
         beforeSend: function (xhr) {
         },
         success: function (data) {
+            $.each(data, function () {
+                $('#idUsuario').append($('<option/>').val(this.idUsuario).text(this.nombre + ' ' + this.apellidoPaterno + ' ' + this.apellidoMaterno));
+            });
             result = data;
         },
         error: function (xhr, status) {
@@ -188,34 +167,4 @@ function InitSelect2Usuarios(idAlmacen) {
             console.log(status);
         }
     });
-
-    var i;
-    for (i = 0; i < result.length; i++) {
-        result[i].id = result[i]['idUsuario'];
-        result[i].text = result[i]['nombre'] + " " + result[i]['apellidoPaterno'] + " " + result[i]['apellidoMaterno'];
-    }
-    //console.log(result);
-
-    $("#idUsuario").html('').select2();
-    $('#idUsuario').select2({
-        width: "100%",
-        placeholder: "-- TODOS --",
-        data: result,
-
-        language: {
-            noResults: function () {
-                return "No hay resultado";
-            },
-            searching: function () {
-                return "Buscando..";
-            }
-        }
-    });
-
-    $('#idUsuario').val("0").trigger('change');
-
-    if (result.length <= 0) {
-        $('#idUsuario').prop('disabled', true);
-    }
-
 }

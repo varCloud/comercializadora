@@ -57,6 +57,8 @@ namespace lluviaBackEnd.DAO
                             u.idSucursal = Convert.ToInt32(db.DataReader["idSucursal"].ToString());
                             u.telefono = db.DataReader["telefono"].ToString();
                             u.activo = Convert.ToBoolean(db.DataReader["activo"]);
+                            u.nombreCompleto = db.DataReader["nombreCompleto"].ToString();
+                            
                             lstUsuarios.Add(u);
                         }
                     }

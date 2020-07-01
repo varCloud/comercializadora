@@ -271,26 +271,20 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                Estacion estacion = new Estacion();
-
-                if ((usuario.idRol == 1) || (usuario.idRol == 2))
-                {
-                    ViewBag.idAlmacenUsuario = 0;
-                    ViewBag.idUsuarioLogueado = 0;
-                }
-                else
-                {
-                    ViewBag.idAlmacenUsuario = usuario.idAlmacen;
-                    ViewBag.idUsuarioLogueado = usuario.idUsuario;                    
-                    estacion.idEstacion = usuario.idEstacion;
-                    estacion.idAlmacen = usuario.idAlmacen;
-                }
-
-                Notificacion<List<Estacion>> notificacion = new EstacionesDAO().ObtenerEstaciones(estacion);
-                ViewBag.Estaciones = notificacion.Modelo!=null ? notificacion.Modelo : new List<Estacion>();
-
                
-                return View();
+                Retiros retiros = new Retiros();
+                retiros.fechaAlta = DateTime.Now;
+                if ((usuario.idRol != 1) && (usuario.idRol != 2))
+                {
+                    retiros.idAlmacen = usuario.idAlmacen;
+                    retiros.idUsuario = usuario.idUsuario;
+
+                }
+                ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idUsuario = retiro.idUsuario, idAlmacen = retiros.idAlmacen, idRol = 3 }), "idUsuario", "nombreCompleto").ToList();
+
+                ViewBag.Usuarios = listUsuarios;
+                return View(retiros);
             }
             catch (Exception ex)
             {
@@ -306,10 +300,10 @@ namespace lluviaBackEnd.Controllers
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.idRol = usuario.idRol;
 
-                if (usuario.idRol == 1 || usuario.idRol == 2)
-                {
-                    retiros.idUsuario = 0;
-                }
+                //if (usuario.idRol == 1 || usuario.idRol == 2)
+                //{
+                //    retiros.idUsuario = 0;
+                //}
                 //else
                 //{
                 //    retiros.idUsuario = usuario.idUsuario;

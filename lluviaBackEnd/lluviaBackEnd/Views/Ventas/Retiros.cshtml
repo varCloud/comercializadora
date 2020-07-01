@@ -6,9 +6,10 @@
 @model Retiros
 
 @{
-    List<SelectListItem> almacenes = new SelectList(ViewBag.Estaciones, "idAlmacen", "nombreAlmacen").ToList();
-    int idAlmacenUsuario = ViewBag.idAlmacenUsuario;
-    int idUsuarioLogueado = ViewBag.idUsuarioLogueado;
+    //List<SelectListItem> almacenes = new SelectList(ViewBag.Estaciones, "idAlmacen", "nombreAlmacen").ToList();
+    // int idAlmacenUsuario = ViewBag.idAlmacenUsuario;
+    // int idUsuarioLogueado = ViewBag.idUsuarioLogueado;
+    
 }
 
 @section Styles {
@@ -52,22 +53,37 @@
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Almacen</label>
-                                    @Html.DropDownListFor(x => x.idAlmacen, almacenes, "--TODOS--", new { @class = "form-control", data_val = "false" })
-                                    @Html.HiddenFor(x => idAlmacenUsuario)
-                                    @Html.HiddenFor(x => idUsuarioLogueado)
+                                    @if (Model.idAlmacen > 0)
+                                    {
+                                        @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes, "--TODOS--", new { @class = "form-control readonly", data_val = "false", id = "idAlmacen", @readonly = "readonly" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes, "--TODOS--", new { @class = "form-control", data_val = "false", id = "idAlmacen" })
+                                    }
+
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Usuarios</label>
-                                    <br><select id="idUsuario" name="idUsuario"></select>
+                                    @if (Model.idUsuario > 0)
+                                    {
+                                        @Html.DropDownListFor(x => x.idUsuario, (List<SelectListItem>)ViewBag.Usuarios, "---TODOS---", new { id = "idUsuario", @class = "form-control readonly", data_val = "false", @readonly = "readonly" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(x => x.idUsuario, (List<SelectListItem>)ViewBag.Usuarios, "---TODOS---", new { id = "idUsuario", @class = "form-control", data_val = "false" })
+                                    }
+
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Fecha</label>
-                                    @Html.TextBoxFor(x => x.fechaAlta, new { @class = "form-control datepicker", data_val = "false" })
-
+                                    <input type="text" id="fechaAlta" name="fechaAlta" class="form-control datepicker"/>                       
                                 </div>
                             </div>
                         </div>
