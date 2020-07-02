@@ -258,7 +258,7 @@ function limpiaModalIVA() {
     $('#efectivo').val('');
     $('#idClienteIVA').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
-    $('#usoCFDI').val("1").trigger('change');
+    $('#usoCFDI').val("3").trigger('change');
     $('#idVentaIVA').val(0);
 
 }
@@ -274,13 +274,15 @@ function modalFacturar(idVenta) {
     var montoTotal = parseFloat(data.Modelo.montoTotal).toFixed(2);
     var montoIVA = parseFloat(data.Modelo.montoTotal * 0.16).toFixed(2);
     var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
-
+    var idCliente = parseInt(data.Modelo.idCliente);
+    
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
     document.getElementById("previoSubTotal").innerHTML = "<h4><strike>$" + parseFloat(montoTotal).toFixed(2) + "</strike></h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
 
     $('#idVentaIVA').val(idVenta);
+    $('#idClienteIVA').val(idCliente).trigger('change'); 
     $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
@@ -380,14 +382,19 @@ $('#btnGuardarIVA').click(function (e) {
         MuestraToast('warning', "Debe seleccionar un Cliente.");
         return;
     }
-    console.log(efectivo_ + " - " + total_)
+    
     if ($('#efectivo').val() == "") {
         MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-        return
+        return;
     }
 
     if (parseFloat(efectivo_) < parseFloat(total_)) {
         MuestraToast('warning', "El efectivo no alcanza a cubrir el costo del iva faltante: " + total_.toString());
+        return;
+    }
+
+    if ($('#idClienteIVA').val() == "1") {
+        MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idClienteIVA").find("option:selected").text());
         return;
     }
 
@@ -434,17 +441,28 @@ function GuardarIVA(idVenta, montoIVA, idCliente, formaPago, usoCFDI) {
 }
 
 $("#efectivo").on("keyup", function () {
-    var cambio_ = parseFloat(0).toFixed(2);
-    var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
-    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
-    if (parseFloat(efectivo_) > parseFloat(total_)) {
-        cambio_ = efectivo_ - total_;
-        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+    if (event.keyCode === 13) {
+
+        event.preventDefault();
+        document.getElementById("btnGuardarIVA").click();
+
     }
     else {
-        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+        var cambio_ = parseFloat(0).toFixed(2);
+        var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+        var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+        if (parseFloat(efectivo_) > parseFloat(total_)) {
+            cambio_ = efectivo_ - total_;
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+        }
+        else {
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+        }
     }
+
 });
 
 
