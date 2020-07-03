@@ -27,11 +27,13 @@ else
                     <th>Tipo Retiro</th>
                     <th>Monto</th>
                     <th>Usuario</th>
+                    <th>Usuario Autorizo</th>
                     <th>Estación</th>
                     <th>Estatus</th>
                     <th>Fecha</th>
-                    @if ( idRol == 1 || idRol == 2 ) {
-                    <th>Acciones</th>
+                    @if (idRol == 1 || idRol == 2)
+                    {
+                        <th>Acciones</th>
                     }
                 </tr>
             </thead>
@@ -44,6 +46,7 @@ else
                     <td><div class="badge @Html.Raw(c.tipoRetiro==lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "badge-success" : "badge-primary") badge-shadow">@Html.Raw(c.tipoRetiro == lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "Retiros al cierre del dìa" : "Retiros por exceso de efectivo")</div></td>
                     <td>@c.montoRetiro.ToString("C", new CultureInfo("en-US"))</td>
                     <td>@c.nombreUsuario</td>
+                    <td>@c.nombreUsuarioAut</td>
                     <td>@c.nombreEstacion</td>
 
                     <td>
@@ -88,7 +91,7 @@ else
                             {
                                 <div class="row">
                                     <div class="input-group col-lg-10">
-                                        @Html.TextBoxFor(x => c.montoRetiro, new { @class = "form-control", data_val = "true", @id = "Monto_" + c.idRetiro, onkeypress = "return esPrecio(event)" })
+                                        @Html.TextBoxFor(x => c.montoRetiro, new { @class = "form-control", data_val = "true", @id = "Monto_" + c.idRetiro + "_" + Convert.ToInt32(c.tipoRetiro), onkeypress = "return esPrecio(event)" })
                                         <div class="input-group-append">
                                             <a href="javascript:ActualizarEstatusRetiro(@c.idRetiro,@Convert.ToInt32(c.tipoRetiro),2);" class="btn btn-icon btn-primary input-group-text" data-toggle="tooltip" title="Autorizar"><i class="fas fa-check"></i></a>
                                             <a href="javascript:ActualizarEstatusRetiro(@c.idRetiro,@Convert.ToInt32(c.tipoRetiro),3);" class="btn btn-icon btn-danger input-group-text" data-toggle="tooltip" title="Cancelar"><i class="fas fa-times"></i></a>
@@ -104,7 +107,7 @@ else
 
                         </td>
                     }
-                    </tr>
+                </tr>
                 }
             </tbody>
 
