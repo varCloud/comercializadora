@@ -24,14 +24,14 @@ function InitDataTableRetiros() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['20%', '10%', '20%', '20%', '10%', '10%', '10%'];
+                    //doc.content[1].table.widths = ['20%', '10%', '20%', '20%', '10%', '10%', '10%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Retiros de Efectivo");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6]
+                    columns: [0, 1, 2, 3, 4, 5,6,7]
                 },
             },
             {
@@ -40,7 +40,7 @@ function InitDataTableRetiros() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6]
+                    columns: [0, 1, 2, 3, 4, 5,6,7]
                 },
             },
         ],
@@ -70,10 +70,11 @@ function onFailureResultRetirosAutorizacion() {
 }
 
 function ActualizarEstatusRetiro(idRetiro, tipoRetiro,idStatus) {
-
+   
+   
     if (idStatus == 2) {     
  
-        if ($("#Monto_" + idRetiro).val() == "" || parseFloat($("#Monto_" + idRetiro).val()) <= 0) {
+        if ($("#Monto_" + idRetiro + "_" + tipoRetiro).val() == "" || parseFloat($("#Monto_" + idRetiro + "_" + tipoRetiro).val()) <= 0) {
             MuestraToast("error", "Debe de capturar el monto por el cual va a autorizar el retiro");
             return;
         }  
@@ -101,7 +102,7 @@ function ActualizarEstatusRetiro(idRetiro, tipoRetiro,idStatus) {
                     idRetiro: idRetiro,
                     tipoRetiro: tipoRetiro,
                     estatusRetiro: Status,
-                    montoAutorizado: parseFloat($("#Monto_" + idRetiro).val())
+                    montoAutorizado: $("#Monto_" + idRetiro + "_" + tipoRetiro).val()
                 };
 
                 dataToPost = JSON.stringify({ retiros: Retiro });
@@ -109,7 +110,7 @@ function ActualizarEstatusRetiro(idRetiro, tipoRetiro,idStatus) {
 
                 $.ajax({
                     url: rootUrl("/Ventas/ActualizaEstatusRetiro"),
-                    data: { idRetiro: idRetiro, tipoRetiro: tipoRetiro, estatusRetiro: Status, montoAutorizado: (idStatus == 2 ? parseFloat($("#Monto_" + idRetiro).val())  : 0)},
+                    data: { idRetiro: idRetiro, tipoRetiro: tipoRetiro, estatusRetiro: Status, montoAutorizado: (idStatus == 2 ? $("#Monto_" + idRetiro + "_" + tipoRetiro).val()  : 0)},
                     method: 'post',
                     dataType: 'json',
                     async: true,
