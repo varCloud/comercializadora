@@ -30,7 +30,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@cantidad", request.cantidad);
                     parameters.Add("@idUsuario", request.idUsuario);
                     parameters.Add("@idAlmacen", request.idAlmacen);
-                    parameters.Add("@idTipoMovInventario", request.idTipoInventario);
+                    parameters.Add("@idTipoMovInventario", request.idTipoMovInventario);
                     notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }

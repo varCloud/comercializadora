@@ -80,6 +80,10 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult EstacionesDisponibles()
         {
+            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+            
+           Notificacion<List<Estacion>> lst= new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = usuarioSesion.idAlmacen });
+            ViewBag.Notificacion = lst;
             return View();
         }
 

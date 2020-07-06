@@ -1,9 +1,10 @@
 ﻿@model lluviaBackEnd.Models.Sesion
 @{
     ViewBag.Title = "Estaciones Disponibles";
-    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Estacion>> lstEstaciones =
-        new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = 1 });
-    Layout = null;
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Estacion>> lstEstaciones = ViewBag.Notificacion;
+    //lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Estacion>> lstEstaciones =
+    //    new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = 1 });
+            Layout = null;
 }
 <!DOCTYPE HTML>
 <html lang="en">
