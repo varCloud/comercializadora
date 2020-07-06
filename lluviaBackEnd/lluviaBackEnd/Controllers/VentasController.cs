@@ -12,6 +12,8 @@ using System.Globalization;
 using System.Web.Configuration;
 using lluviaBackEnd.Filters;
 using System.Diagnostics;
+using lluviaBackEnd.Utilerias;
+
 
 namespace lluviaBackEnd.Controllers
 {
@@ -560,7 +562,7 @@ namespace lluviaBackEnd.Controllers
                     // si hay descuentos por mayoreo o rango de precios
                     if (notificacion.Modelo[i].ahorro > 0 )
                     {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
                         e.Graphics.DrawString("-"+(notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
@@ -942,7 +944,28 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Visualizacion de Ticket 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+        [HttpPost]
+        public JsonResult VerTicket(int idVenta)
+        {
+            try
+            {
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                Notificacion<String> notificacion = new Notificacion<string>();                
+                notificacion.Modelo = Utils.GeneraTicketPDF(ticket.Modelo);
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
 
