@@ -72,7 +72,7 @@ else
                                                     }
 
                                                     <a href="javascript:ImprimeTicket(@item.idVenta);" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Imprimir Ticket"><i class="fas fa-print"></i></a>
-                                                    <a href="javascript:VerTicket(@item.idVenta);" class="btn btn-icon btn-dark" data-toggle="tooltip" title="Ver Ticket"><i class="fas fa-eye"></i></a>
+                                                    <a href="@Url.Action("VerTicket", "Ventas", new {idVenta=item.idVenta})" class="btn btn-icon btn-success" data-toggle="tooltip" title="Ver Ticket" target="_blank"><i class="fas fa-eye"></i></a>
 
                                                 </div>
                                             </td>

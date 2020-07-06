@@ -942,25 +942,24 @@ namespace lluviaBackEnd.Controllers
         //  Visualizacion de Ticket 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        [HttpPost]
-        public JsonResult VerTicket(int idVenta)
+        public ActionResult VerTicket(int idVenta)
         {
+            Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
-                Notificacion<String> notificacion = new Notificacion<string>();                
-                notificacion.Modelo = Utils.GeneraTicketPDF(ticket.Modelo);
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                return View();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-
 
 
     }
