@@ -14,10 +14,16 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
         public int cantidadAtendida { get; set; }
         public DateTime fechaAlta { get; set; }
         public DateTime fechaAtendido { get; set; }
+
+        public DateTime fechaRechazado { get; set; }
+
+        public DateTime fechaAutoriza { get; set; }
         public string observacion { get; set; }
 
         public string usuarioSolicito{ get; set; }
         public string usuarioAtendio { get; set; }
+        public string usuarioRechaza { get; set; }
+        public string usuarioAutoriza { get; set; }
         public Almacen almacenOrigen { get; set; }
         public Almacen almacenDestino { get; set; }
         public Producto producto { get; set; }

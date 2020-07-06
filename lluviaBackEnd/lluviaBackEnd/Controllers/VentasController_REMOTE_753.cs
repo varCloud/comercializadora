@@ -12,11 +12,8 @@ using System.Globalization;
 using System.Web.Configuration;
 using lluviaBackEnd.Filters;
 using System.Diagnostics;
-
-using System.Runtime.InteropServices;
-using System.Drawing.Imaging;
-
 using lluviaBackEnd.Utilerias;
+
 
 namespace lluviaBackEnd.Controllers
 {
@@ -25,7 +22,7 @@ namespace lluviaBackEnd.Controllers
     {
         int idVenta = 0;
         Retiros retiro = new Retiros();
-
+        
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +44,7 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0});
 
             ViewBag.venta = venta;
 
@@ -108,8 +105,8 @@ namespace lluviaBackEnd.Controllers
         public ActionResult ConsultaVentas()
         {
             Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2 });
-            ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
+            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta=2 });
+            ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 } );
             ViewBag.lstVentas = notificacion.Modelo;
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
@@ -143,7 +140,7 @@ namespace lluviaBackEnd.Controllers
                     ViewBag.mensaje = notificacion.Mensaje;
                     return PartialView("_SinResultados");
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -207,7 +204,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
+                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion=usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen} );
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -233,7 +230,7 @@ namespace lluviaBackEnd.Controllers
                     retiros.idUsuario = usuario.idUsuario;
                 }
 
-                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros);
+                Notificacion<List<Retiros>> p = new VentasDAO().ConsultaRetirosEfectivo(retiros); 
                 return PartialView(p);
             }
             catch (Exception ex)
@@ -276,7 +273,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-
+               
                 Retiros retiros = new Retiros();
                 retiros.fechaAlta = DateTime.Now;
                 if ((usuario.idRol != 1) && (usuario.idRol != 2))
@@ -301,7 +298,7 @@ namespace lluviaBackEnd.Controllers
         public ActionResult _ObtenerRetirosAutorizacion(Retiros retiros)
         {
             try
-            {
+            {                
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.idRol = usuario.idRol;
 
@@ -331,7 +328,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<string> notificacion = new Notificacion<string>();
-                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;                
                 retiros.idUsuario = usuario.idUsuario;
                 notificacion = new VentasDAO().ActualizaEstatusRetiro(retiros);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
@@ -390,7 +387,7 @@ namespace lluviaBackEnd.Controllers
         //  Impresion de Ticket
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public ActionResult ImprimeTicket(Ventas venta)
+        public ActionResult ImprimeTicket(Ventas venta )
         {
             Notificacion<Ventas> notificacion;
             try
@@ -404,7 +401,7 @@ namespace lluviaBackEnd.Controllers
 
                 PrintDocument pd = new PrintDocument();
 
-                if (venta.ticketVistaPrevia)
+                if ( venta.ticketVistaPrevia )
                 {
                     notificacion.Mensaje = "Abriendo Ticket.";
                     string nombreImpresora = string.Empty;
@@ -450,10 +447,9 @@ namespace lluviaBackEnd.Controllers
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
             }
-            catch (InvalidPrinterException ex)
-            {
+            catch (InvalidPrinterException ex) {
                 notificacion = new Notificacion<Ventas>();
-                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora "+ex.Message;
                 notificacion.Estatus = -1;
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
@@ -467,112 +463,72 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        const int PHYSICALWIDTH = 110;  // Physical Width in device units           
-        const int PHYSICALHEIGHT = 111; // Physical Height in device units          
 
-        // This function returns the device capability value specified
-        // by the requested index value.
-        [DllImport("GDI32.DLL", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern Int32 GetDeviceCaps(IntPtr hdc, int nIndex);
-
-        protected void SaveViaBitmap( PrintPageEventArgs e)
-        {
-            int width = e.PageBounds.Width;
-            int height = e.PageBounds.Height;
-            var bitmap = new Bitmap(width, height);
-
-            using (var g = Graphics.FromImage(bitmap))
-            {
-                // Draw all the graphics using into g (into the bitmap)
-                g.DrawLine(Pens.Black, 0, 0, 100, 100);
-            }
-            e.Graphics.DrawImage(bitmap, 0, 0);
-            bitmap.Save("ticket", ImageFormat.Png);
-        }
         void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                SaveViaBitmap(e);
-                // Retrieve the physical bitmap boundaries from the PrintPage Graphics Device Context
-                IntPtr hdc = e.Graphics.GetHdc();
-                Int32 PhysicalWidth = GetDeviceCaps(hdc, (Int32)PHYSICALWIDTH);
-                Int32 PhysicalHeight = GetDeviceCaps(hdc, (Int32)PHYSICALHEIGHT);
-                e.Graphics.ReleaseHdc(hdc);
-
-                // Create a bitmap with PrintPage Graphic's size and resolution
-                Bitmap myBitmap = new Bitmap(PhysicalWidth, PhysicalHeight, e.Graphics);
-                // Get the new work Graphics to use to draw the bitmap
-                Graphics myGraphics = Graphics.FromImage(myBitmap);
-
-                // Draw everything on myGraphics to build the bitmap
-
-                // Transfer the bitmap to the PrintPage Graphics
-                e.Graphics.DrawImage(myBitmap, 0, 0);
-                myBitmap.Save("tick", ImageFormat.Png);
-                // Cleanup 
-                myBitmap.Dispose();
                 notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
-                    //Logos
-                    Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
 
-                    int ancho = 258;
-                    int espaciado = 14;
+                int ancho = 258;
+                int espaciado = 14;
 
-                    //Configuración Global
-                    GraphicsUnit units = GraphicsUnit.Pixel;
-                    e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
-                    e.Graphics.InterpolationMode = InterpolationMode.High;
-                    e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+                //Configuración Global
+                GraphicsUnit units = GraphicsUnit.Pixel;
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
 
-                    //Configuración Texto
-                    StringFormat centrado = new StringFormat();
-                    centrado.Alignment = StringAlignment.Center;//Cetrado
-                    StringFormat izquierda = new StringFormat();
-                    izquierda.Alignment = StringAlignment.Near; //Izquierda
-                    StringFormat derecha = new StringFormat();
-                    derecha.Alignment = StringAlignment.Far; //Izquierda
+                //Configuración Texto
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;//Cetrado
+                StringFormat izquierda = new StringFormat();
+                izquierda.Alignment = StringAlignment.Near; //Izquierda
+                StringFormat derecha = new StringFormat();
+                derecha.Alignment = StringAlignment.Far; //Izquierda
 
-                    //Tipo y tamaño de letra
-                    Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
-                    Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
-                    Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
+                //Tipo y tamaño de letra
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
 
-                    //Color de texto
-                    SolidBrush drawBrush = new SolidBrush(Color.Black);
+                //Color de texto
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
 
-                    //Se pinta logo 
-                    Rectangle logo = new Rectangle(80, 15, 280, 81);
-                    e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+                //Se pinta logo 
+                Rectangle logo = new Rectangle(80, 15, 280, 81);
+                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
-                    Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                    e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
-                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                    e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                    e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
+                e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+                e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
-                    Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
-                    Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
-                    Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
+                Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
+                Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
+                Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
 
-                    Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
+                Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
-                    e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                    datosEnca.Y += 14;
+                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
 
-                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                    datosEnca.Y += 14;
-                    e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                    datosEnca.Y += 8;
-                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                    //datosEnca.Y += 14;
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+                e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 8;
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                //datosEnca.Y += 14;
 
-                    float monto = 0;
-                    float montoIVA = 0;
-                    float montoAhorro = 0;
+                float monto = 0;
+                float montoIVA = 0;
+                float montoAhorro = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
@@ -598,64 +554,52 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                    }
-
-
-                    // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
+                    if (notificacion.Modelo[i].ahorro > 0 )
                     {
                         e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        e.Graphics.DrawString("-"+(notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
                         datosPrecio.Y += espaciado;
-
                     }
+
                 }
 
-                    Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
-                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado;
+
+                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                if (montoIVA > 0)
+                {
+                    e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
+                }
 
-                    e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                if ( montoAhorro > 0 )
+                {
+                    Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
+                    e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
                     datosfooter1.Y += espaciado;
+                }
 
-                    if (montoIVA > 0)
-                    {
-                        e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                        e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                        datosfooter1.Y += espaciado;
-                    }
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
 
-                    e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                    datosfooter1.Y += espaciado;
-
-                    if (montoAhorro > 0)
-                    {
-                        Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
-                        e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
-                        datosfooter1.Y += espaciado;
-                    }
-
-                    Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
-                    datosfooter1.Y += espaciado;
-                    datosfooter2.Y += espaciado;
-
-                    // para mas espaciado al final del ticket
-                    e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                    datosfooter1.Y += espaciado;
-                    datosfooter2.Y += espaciado;
-
+                // para mas espaciado al final del ticket
+                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
             }
             catch (InvalidPrinterException ex)
             {
@@ -673,8 +617,11 @@ namespace lluviaBackEnd.Controllers
             }
 
 
-
+            
         }
+
+
+
 
 
 
@@ -749,13 +696,11 @@ namespace lluviaBackEnd.Controllers
                 }
 
 
-                if (this.retiro.tipoRetiro == EnumTipoRetiro.RetirosExcesoEfectivo)
-                {
+                if ( this.retiro.tipoRetiro == EnumTipoRetiro.RetirosExcesoEfectivo ) {
                     notificacion = new VentasDAO().ConsultaRetirosEfectivo(this.retiro);
                     titulo = "\nCOMPROBANTE DE RETIRO" + "\n" + "POR EXCESO DE EFECTIVO";
                 }
-                else
-                {
+                else {
                     notificacion = new VentasDAO().ConsultaRetiros(this.retiro);
                     titulo = "\nCOMPROBANTE DE RETIRO" + "\n" + "POR CIERRE DE CAJA DEL DIA";
                 }
@@ -874,7 +819,7 @@ namespace lluviaBackEnd.Controllers
 
 
                 e.Graphics.DrawString("Monto: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString("" + notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, datosTikcet, izquierda);
+                e.Graphics.DrawString(""+notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, datosTikcet, izquierda);
 
                 if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
                 {
@@ -890,7 +835,7 @@ namespace lluviaBackEnd.Controllers
 
                 Rectangle datosfooter1 = new Rectangle(5, datosDescripcion.Y, 280, 82);
                 e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
-                datosfooter1.Y += espaciado + 50;
+                datosfooter1.Y += espaciado+50;
 
 
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
@@ -903,7 +848,7 @@ namespace lluviaBackEnd.Controllers
                 datosfooter2.Y += espaciado;
 
                 // para mas espaciado al final del ticket
-                e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y + 30, centrado);
+                e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y+30, centrado);
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
             }
@@ -997,24 +942,25 @@ namespace lluviaBackEnd.Controllers
         //  Visualizacion de Ticket 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public ActionResult VerTicket(int idVenta)
+
+        [HttpPost]
+        public JsonResult VerTicket(int idVenta)
         {
-            Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                Notificacion<String> notificacion = new Notificacion<string>();                
+                notificacion.Modelo = Utils.GeneraTicketPDF(ticket.Modelo);
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));
-                ViewBag.pdfBase64 = pdfCodigos;
-                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
-                return View();
+                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+
 
 
     }
