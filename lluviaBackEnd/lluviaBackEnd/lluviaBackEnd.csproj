@@ -1090,7 +1090,11 @@
     </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
+
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />
     <None Include="Resources\keyProductivo.key" />

@@ -12,11 +12,8 @@ using System.Globalization;
 using System.Web.Configuration;
 using lluviaBackEnd.Filters;
 using System.Diagnostics;
-
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
-
-using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -574,51 +571,40 @@ namespace lluviaBackEnd.Controllers
                     float montoIVA = 0;
                     float montoAhorro = 0;
 
-                for (int i = 0; i < notificacion.Modelo.Count(); i++)
-                {
-                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-
-                    monto += notificacion.Modelo[i].monto;
-                    montoIVA += notificacion.Modelo[i].montoIVA;
-                    montoAhorro += notificacion.Modelo[i].ahorro;
-
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    for (int i = 0; i < notificacion.Modelo.Count(); i++)
                     {
-                        datosProducto.Y += espaciado + 10;
-                        datosCantidad.Y += espaciado + 10;
-                        datosPrecio.Y += espaciado + 10;
-                    }
-                    else
-                    {
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                    }
+                        e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                        e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-                    // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                    }
+                        monto += notificacion.Modelo[i].monto;
+                        montoIVA += notificacion.Modelo[i].montoIVA;
+                        montoAhorro += notificacion.Modelo[i].ahorro;
 
+                        if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                        {
+                            datosProducto.Y += espaciado + 10;
+                            datosCantidad.Y += espaciado + 10;
+                            datosPrecio.Y += espaciado + 10;
+                        }
+                        else
+                        {
+                            datosProducto.Y += espaciado;
+                            datosCantidad.Y += espaciado;
+                            datosPrecio.Y += espaciado;
+                        }
 
-                    // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecio.Y += espaciado;
+                        // si hay descuentos por mayoreo o rango de precios
+                        if (notificacion.Modelo[i].ahorro > 0)
+                        {
+                            e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                            e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                            datosProducto.Y += espaciado;
+                            datosCantidad.Y += espaciado;
+                            datosPrecio.Y += espaciado;
+                        }
 
                     }
-                }
 
                     Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
                     e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
@@ -656,6 +642,10 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
 
+
+               
+
+              
             }
             catch (InvalidPrinterException ex)
             {
@@ -993,28 +983,7 @@ namespace lluviaBackEnd.Controllers
         }
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  Visualizacion de Ticket 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        [HttpPost]
-        public JsonResult VerTicket(int idVenta)
-        {
-            try
-            {
-                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
-                Notificacion<String> notificacion = new Notificacion<string>();                
-                notificacion.Modelo = Utils.GeneraTicketPDF(ticket.Modelo);
-                notificacion.Estatus = 200;
-                notificacion.Mensaje = "Ticket generado correctamente.";
-                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
 
 
