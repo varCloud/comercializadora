@@ -1188,6 +1188,7 @@
     <Content Include="Views\Reportes\_DiasPromedioInventario.cshtml" />
     <Content Include="Views\Reportes\DropSize.cshtml" />
     <Content Include="Views\Reportes\_DropSize.cshtml" />
+    <Content Include="Views\Ventas\VerTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

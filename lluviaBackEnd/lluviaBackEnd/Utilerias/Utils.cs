@@ -527,9 +527,11 @@ namespace lluviaBackEnd.Utilerias
         }
 
 
-        public static string GeneraTicketPDF(List<Ticket> tickets)
+        public static byte[] GeneraTicketPDF(List<Ticket> tickets)
         {
-            string pathPdfTickets = ObtnerFolderTickets() + @"/";
+            byte[] content = null;
+
+            //string pathPdfTickets = ObtnerFolderTickets() + @"/";
             string rutaPDF = string.Empty;
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -702,6 +704,7 @@ namespace lluviaBackEnd.Utilerias
                    </tr>
                 </table>";
 
+
                 document.Open();
                 foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
                 {
@@ -710,24 +713,19 @@ namespace lluviaBackEnd.Utilerias
                 document.AddAuthor("LLUVIA");
                 document.AddTitle("Ticket: " + tickets[0].idVenta.ToString());
                 document.AddCreator("Victor Adrian Reyes");
-                document.AddSubject("Codigos de Productos");
+                document.AddSubject("Visualizacion de Ticket");
                 document.CloseDocument();
                 document.Close();
-
-                byte[] content = memStream.ToArray();
-                rutaPDF = Path.Combine(pathPdfTickets, "Ticket_" + tickets[0].idVenta.ToString() + "_preview.pdf");
-                using (FileStream fs = File.Create(rutaPDF))
-                {
-                    fs.Write(content, 0, (int)content.Length);
-                }
+                content = memStream.ToArray();
 
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return "\\Tickets\\" + "Ticket_" + tickets[0].idVenta.ToString() + "_preview.pdf";
+            return content;
         }
+
 
         public static bool mercanciaAcomodada(string idPasillo, string idRaq, string idPiso)
         {
