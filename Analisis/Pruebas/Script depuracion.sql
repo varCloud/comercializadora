@@ -118,7 +118,10 @@ DBCC CHECKIDENT ('[LineaProducto]',RESEED, 18)
 DELETE FROM CatTipoCliente where idTipoCliente >2
 DBCC CHECKIDENT ('[CatTipoCliente]',RESEED, 0)
 
---select * from CatTipoCliente
+select * from CatEstatusPedidoInterno
+
+update CatEstatusPedidoInterno set descripcion='Pedido Solicitado' where IdEstatusPedidoInterno = 1
+update CatEstatusPedidoInterno set descripcion='Pedido Aprobado' where IdEstatusPedidoInterno = 2
 
 
 
