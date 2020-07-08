@@ -60,6 +60,38 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+
+        [HttpPost]
+        public Notificacion<String> AceptarPedidoInterno(RequestActualizarEstatusPedidoInterno request)
+        {
+            try
+            {
+                return new BitacoraDAO().AceptarPedidoInterno(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+        [HttpPost]
+        public Notificacion<String> RechazarPedidoInterno(RequestActualizarEstatusPedidoInterno request)
+        {
+            try
+            {
+                return new BitacoraDAO().RechazarPedidoInterno(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+
         [HttpPost]
         public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerPedidosInternosUsuarioApp(RequestObtenerPedidosInternosUsuario request)
         {

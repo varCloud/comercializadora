@@ -7,6 +7,12 @@ DELETE FROM ComprasDetalle
 DBCC CHECKIDENT ('ComprasDetalle',RESEED, 0)
 
 
+DELETE FROM Estaciones
+DBCC CHECKIDENT ('Estaciones',RESEED, 0)
+
+
+
+
 DELETE FROM Compras
 DBCC CHECKIDENT ('Compras',RESEED, 0)
 

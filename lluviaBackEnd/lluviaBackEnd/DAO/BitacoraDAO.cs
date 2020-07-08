@@ -178,6 +178,58 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+
+        public Notificacion<String> AceptarPedidoInterno(RequestActualizarEstatusPedidoInterno request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);
+                    parameters.Add("@observacion", request.observacion);
+                    parameters.Add("@cantidadAceptada", request.cantidad);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACEPTA_PEDIDO_INTERNO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<String> RechazarPedidoInterno(RequestActualizarEstatusPedidoInterno request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);
+                    parameters.Add("@observacion", request.observacion);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_RECHAZA_PEDIDO_INTERNO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+
         public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerPedidosInternosApp(RequestObtenerPedidosInternos request)
         {
             Notificacion<List<ResponseObtenerPedidosInternos>> lst = new Notificacion<List<ResponseObtenerPedidosInternos>>();
