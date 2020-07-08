@@ -387,7 +387,8 @@ namespace lluviaBackEnd.Controllers
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  Impresion de Ticket
+        //  Impresion de 
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public ActionResult ImprimeTicket(Ventas venta)
@@ -494,25 +495,6 @@ namespace lluviaBackEnd.Controllers
             Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                SaveViaBitmap(e);
-                // Retrieve the physical bitmap boundaries from the PrintPage Graphics Device Context
-                IntPtr hdc = e.Graphics.GetHdc();
-                Int32 PhysicalWidth = GetDeviceCaps(hdc, (Int32)PHYSICALWIDTH);
-                Int32 PhysicalHeight = GetDeviceCaps(hdc, (Int32)PHYSICALHEIGHT);
-                e.Graphics.ReleaseHdc(hdc);
-
-                // Create a bitmap with PrintPage Graphic's size and resolution
-                Bitmap myBitmap = new Bitmap(PhysicalWidth, PhysicalHeight, e.Graphics);
-                // Get the new work Graphics to use to draw the bitmap
-                Graphics myGraphics = Graphics.FromImage(myBitmap);
-
-                // Draw everything on myGraphics to build the bitmap
-
-                // Transfer the bitmap to the PrintPage Graphics
-                e.Graphics.DrawImage(myBitmap, 0, 0);
-                myBitmap.Save("tick", ImageFormat.Png);
-                // Cleanup 
-                myBitmap.Dispose();
                 notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
                     //Logos
@@ -607,17 +589,17 @@ namespace lluviaBackEnd.Controllers
                         datosPrecio.Y += espaciado;
                     }
 
+       
+                    //// si hay descuentos por mayoreo o rango de precios
+                    //if (notificacion.Modelo[i].ahorro > 0)
+                    //{
+                    //    e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    //    e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    datosProducto.Y += espaciado;
+                    //    datosCantidad.Y += espaciado;
+                    //    datosPrecio.Y += espaciado;
 
-                    // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-
-                    }
+                    //}
                 }
 
                     Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
