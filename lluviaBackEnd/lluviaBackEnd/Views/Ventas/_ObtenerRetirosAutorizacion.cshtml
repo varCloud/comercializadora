@@ -35,6 +35,11 @@ else
                     {
                         <th>Acciones</th>
                     }
+                    else
+                    {
+                        <th>Monto Autorizado</th>
+                    }
+
                 </tr>
             </thead>
             <tbody>
@@ -106,6 +111,10 @@ else
                             }
 
                         </td>
+                    }
+                    else
+                    {
+                        <td>@c.montoAutorizado.ToString("C", new CultureInfo("en-US"))</td>
                     }
                 </tr>
                 }
