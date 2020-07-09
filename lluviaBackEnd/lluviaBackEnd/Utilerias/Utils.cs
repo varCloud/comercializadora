@@ -418,8 +418,9 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static string GenerarImprimibleCodigos(string path, string articulo, string producto)
+        public static byte[] GenerarImprimibleCodigos(string path, string articulo, string producto)
         {
+            byte[] content = null;
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
             string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
@@ -493,20 +494,38 @@ namespace lluviaBackEnd.Utilerias
                 document.CloseDocument();
                 document.Close();
 
-                byte[] content = memStream.ToArray();
-                using (FileStream fs = File.Create(Path.Combine(path, "Codigos_" + articulo + ".pdf")))
-                {
-                    fs.Write(content, 0, (int)content.Length);
-                }
+                content = memStream.ToArray();
+                DeleteFile(ObtnerFolderCodigos() + "QR_" + articulo + "_.jpg");
+                DeleteFile(ObtnerFolderCodigos() + "barras_" + articulo + "_.jpg");
+
+
+                /* using (FileStream fs = File.Create(Path.Combine(path, "Codigos_" + articulo + ".pdf")))
+                 {
+                     fs.Write(content, 0, (int)content.Length);
+                 }*/
 
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return "Codigos_" + articulo + ".pdf";
+            //return "Codigos_" + articulo + ".pdf";
+            return content;
         }
 
+        private static void DeleteFile(string nameFile)
+        {
+            try
+            {
+                if (File.Exists(nameFile))
+                    File.Delete(nameFile);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         public static string ObtnerFolderTickets()
         {

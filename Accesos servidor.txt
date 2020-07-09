@@ -16,3 +16,5 @@ Deploy-App
 IP del servidor	ftp.site4now.net
 Nombre de Usuario:crmlluvia-001
 Contraseña: T12345678t
+
+1B 70 30 14 14 para abrir cajon

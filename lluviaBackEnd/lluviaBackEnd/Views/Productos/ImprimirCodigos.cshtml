@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Codigos</title>
+    <link rel='shortcut icon' type='image/x-icon' href='~/assets/img/logo_64.png' />
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+        .h_iframe iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .h_iframe {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="h_iframe">
+        <iframe id="pdfBase64" src="data:application/pdf;base64,@ViewBag.pdfBase64"
+                frameborder="0" allowfullscreen></iframe>
+
+    </div>
+</body>
+</html>

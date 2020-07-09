@@ -228,17 +228,17 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult ImprimirCodigos(string articulo, string descProducto)
+        
+        public ActionResult ImprimirCodigos(string articulo, string descProducto)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
                 string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
-                notificacion.Modelo = Utils.GenerarImprimibleCodigos(pathPdfCodigos, articulo, descProducto);
+                ViewBag.pdfBase64 = Convert.ToBase64String(Utils.GenerarImprimibleCodigos(pathPdfCodigos, articulo, descProducto));
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Códigos generados correctamente.";
-                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
+                return View();
             }
             catch (Exception ex)
             {

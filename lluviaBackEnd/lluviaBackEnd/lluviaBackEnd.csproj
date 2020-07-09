@@ -1090,11 +1090,8 @@
     </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
-
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />
     <None Include="Resources\keyProductivo.key" />
@@ -1189,6 +1186,7 @@
     <Content Include="Views\Reportes\DropSize.cshtml" />
     <Content Include="Views\Reportes\_DropSize.cshtml" />
     <Content Include="Views\Ventas\VerTicket.cshtml" />
+    <Content Include="Views\Productos\ImprimirCodigos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
