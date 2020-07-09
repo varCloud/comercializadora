@@ -18,9 +18,18 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
         public DateTime fechaRechazado { get; set; }
 
         public DateTime fechaAutoriza { get; set; }
+
+        public DateTime fechaRechazaSolicita { get; set; }
+
+        
         public string observacion { get; set; }
 
-        public string usuarioSolicito{ get; set; }
+        public string observacionRechazaSolicita { get; set; }
+        public string observacionAtendio { get; set; }
+        public string observacionRechazaAtendio { get; set; }
+        public string observacionFinalizado { get; set; }
+
+        public string usuarioSolicito { get; set; }
         public string usuarioAtendio { get; set; }
         public string usuarioRechaza { get; set; }
         public string usuarioAutoriza { get; set; }
