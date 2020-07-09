@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using lluviaBackEnd.Filters;
+using System.Web;
 using System.Web.Mvc;
 
 namespace lluviaBackEnd
@@ -8,6 +9,7 @@ namespace lluviaBackEnd
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new LoggingFilterAttribute());
         }
     }
 }
