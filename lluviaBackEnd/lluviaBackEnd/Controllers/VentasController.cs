@@ -270,7 +270,6 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-
         public ActionResult Retiros()
         {
             try
@@ -341,8 +340,6 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
-
-
 
         [HttpPost]
         public ActionResult RetirarExcesoEfectivo(float montoRetiro)
@@ -468,28 +465,6 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        const int PHYSICALWIDTH = 110;  // Physical Width in device units           
-        const int PHYSICALHEIGHT = 111; // Physical Height in device units          
-
-        // This function returns the device capability value specified
-        // by the requested index value.
-        [DllImport("GDI32.DLL", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern Int32 GetDeviceCaps(IntPtr hdc, int nIndex);
-
-        protected void SaveViaBitmap( PrintPageEventArgs e)
-        {
-            int width = e.PageBounds.Width;
-            int height = e.PageBounds.Height;
-            var bitmap = new Bitmap(width, height);
-
-            using (var g = Graphics.FromImage(bitmap))
-            {
-                // Draw all the graphics using into g (into the bitmap)
-                g.DrawLine(Pens.Black, 0, 0, 100, 100);
-            }
-            e.Graphics.DrawImage(bitmap, 0, 0);
-            bitmap.Save("ticket", ImageFormat.Png);
-        }
         void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
