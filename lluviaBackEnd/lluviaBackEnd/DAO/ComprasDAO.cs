@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Dapper;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.WebServices.Modelos.Request;
 
 namespace lluviaBackEnd.DAO
 {
@@ -165,6 +166,43 @@ namespace lluviaBackEnd.DAO
                     var r1 = result.ReadFirst();
                     notificacion.Estatus = r1.status;
                     notificacion.Mensaje = r1.mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<List<CompraDetalle>> ObtenerDetalleCompra(RequestObtenerDetalleCompra request)
+        {
+            Notificacion<List<CompraDetalle>> notificacion = new Notificacion<List<CompraDetalle>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idCompra", request.idCompra);
+                    var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", null, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<CompraDetalle, Producto,Status, Usuario,  CompraDetalle>((c, producto, status, usuario) =>
+                        {
+                            c.producto = producto;
+                            c.status = status;
+                            c.usuario = usuario;
+                            return c;
+                        }, splitOn: "idProducto,idEstatusProductoCompra,idUsuario").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
                 }
             }
             catch (Exception ex)

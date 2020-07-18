@@ -23,6 +23,8 @@ namespace lluviaBackEnd.Models
         public int totalCantProductos { get; set; }
         public float montoTotal { get; set; }
 
+        public string observaciones { get; set; }
+
         public List<Producto> listProductos { get; set; }
         public Proveedor proveedor { get; set; }
 
