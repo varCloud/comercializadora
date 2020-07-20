@@ -31,8 +31,7 @@ BEGIN
 		,cantidadRecibida
 		,isnull(observaciones,'')
 		,P.idProducto , P.descripcion
-		,PC.idEstatusProductoCompra
-		,PC.descripcion
+		,PC.idEstatusProductoCompra,PC.descripcion
 		,U.idUsuario
 		,isnull(U.nombre,'')+' '+isnull(U.apellidoPaterno,'')+' '+isnull(U.apellidoMaterno,'') nombre
 		FROM [DB_A57E86_lluviadesarrollo].[dbo].[ComprasDetalle] CD 
