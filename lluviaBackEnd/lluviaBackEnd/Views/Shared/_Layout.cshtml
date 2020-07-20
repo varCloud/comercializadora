@@ -121,13 +121,18 @@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Compras && p.tienePermiso))
                         {
-                            <li class="dropdown">
+                            <li class="@(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")">
+                                <a href="@Url.Action("Compras", "Compras")">
+                                    <i data-feather="shopping-cart"></i><span>Compras</span>
+                                </a>
+                            </li>
+                            @*<li class="dropdown">
                                 <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
                                 <ul class="dropdown-menu">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
                                 </ul>
-                            </li>
+                            </li>*@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso))
                         {
@@ -187,7 +192,7 @@
                                 </ul>
                             </li>
                         }
-                        </ul>
+                    </ul>
                 </aside>
             </div>
 

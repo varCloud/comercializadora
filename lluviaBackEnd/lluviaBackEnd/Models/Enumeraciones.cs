@@ -112,4 +112,11 @@ namespace lluviaBackEnd.Models
         Almacenista,
         Usuario_de_Compras
     }
+
+    public enum EnumEstadoCompras
+    {
+        Ninguno=0,
+        Correcta=1,
+        Incorrecta=2
+    }
 }

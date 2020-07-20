@@ -71,16 +71,16 @@
 
         </div>
 
-        <div class="form-group col-lg-6">
+        @*<div class="form-group col-lg-6">
             <label>Estatus de la compra</label>
             @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
             @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
-        </div>
-
+        </div>*@
+        @Html.HiddenFor(model => model.statusCompra.idStatus)
     </div>
 
     <hr>
-    <div class="text-md-right">
+    @*<div class="text-md-right">
         @if (Model.idCompra == 0)
         {
             <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
@@ -88,5 +88,5 @@
         <button id="btnGuardarCompra" class="btn btn-primary btn-icon icon-left" type="submit">
             <i class="fas fa-credit-card"></i> @Html.Raw(Model.idCompra > 0 ? "Actualizar Compra" : "Realizar Compra")
         </button>
-    </div>
+    </div>*@
 }

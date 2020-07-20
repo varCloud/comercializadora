@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    actualizaTicket();
+    //actualizaTicket();
     $('.select-multiple').select2({
 
         language: {
@@ -38,21 +38,34 @@
             var idProducto = $('#idProducto').val();
             var cantidad = $('#cantidad').val();
             var precio = $('#precio').val();
+            var existeProducto = false;
 
-            // console.log($("#idProducto").find("option:selected").text());
-            var row_ = "<tr>" +
-                "  <td>1</td>" +
-                "  <td> " + $('#idProducto').val() + "</td>" +
-                "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
-                "  <td class=\"text-center\">$" + precio + "</td>" +
-                "  <td class=\"text-center\">" + cantidad + "</td>" +
-                "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
-                "  <td class=\"text-center\">" +
-                "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
-                "  </td>" +
-                "</tr >";
+            $("#tblComprasDetalle tbody tr").each(function (index) {
+                if ($(this).attr("id") == idProducto) {
+                    MuestraToast("error","El producto ya existe en su compra");
+                    existeProducto = true;
+                    return;
+                }
+            });
 
-            $("#tblComprasDetalle tbody").append(row_);
+            if (existeProducto == false) {
+                var row_ = "<tr id=" + idProducto + ">" +
+                    //"  <td>1</td>" +
+                    "  <td> " + $('#idProducto').val() + "</td>" +
+                    "  <td> " + $("#idProducto").find("option:selected").text() + "</td>" +
+                    "  <td><div class='badge badge-light badge-shadow'>Pendiente</div></td>" +
+                    "  <td></td>" +
+                    "  <td>0</td>" +
+                    "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>" +
+                    "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esPrecio(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + precio + "\" ></td>" +
+                    "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                    "  <td class=\"text-center\">" +
+                    "      <a href=\"javascript:eliminaFila(" + idProducto + ",0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                    "  </td>" +
+                    "</tr >";
+
+                $("#tblComprasDetalle tbody").append(row_);
+            }
             $('#cantidad').val('');
             $('#precio').val('');
             $('#idProducto').val('').trigger('change');
@@ -80,8 +93,8 @@
         $('#tblComprasDetalle tbody tr').each(function (index, fila) {
             var row_ = {
                 idProducto: fila.children[1].innerHTML,
-                cantidad: fila.children[4].innerHTML,
-                precio: fila.children[3].innerHTML.replace('$', '')
+                cantidad: fila.children[5].innerHTML,
+                precio: fila.children[6].innerHTML.replace('$', '')
             };
             productos.push(row_);
         });
@@ -170,12 +183,18 @@
 
 function actualizaTicket() {
 
-    var total = parseFloat(0);
+    var total = parseFloat(0);    
 
     $('#tblComprasDetalle tbody tr').each(function (index, fila) {
-        fila.children[0].innerHTML = index + 1;
-        fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        var Cantidad = parseFloat(0);
+        var Precio = parseFloat(0);
+
+        //fila.children[0].innerHTML = index + 1;
+        //fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        Precio = $(fila.children[6].children[0]).val();
+        Cantidad = $(fila.children[5].children[0]).val();
+        fila.children[7].innerHTML = "$" + (Precio * Cantidad)
+        total += parseFloat(fila.children[7].innerHTML.replace('$', ''));
     });
 
     //actualizar los totales
@@ -185,9 +204,17 @@ function actualizaTicket() {
     document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
 }
 
-function eliminaFila(index_) {
-    document.getElementById("tblComprasDetalle").deleteRow(index_);
-    actualizaTicket();
+function eliminaFila(idProducto, idEstatusProducto) {
+    if (idEstatusProducto != 0)
+    {
+        MuestraToast("error", "El producto no se puede eliminar de la compra ya que fue recibido");
+    }        
+    else {
+        $('#tblComprasDetalle tbody tr#' + idProducto).remove();
+        //document.getElementById("tblComprasDetalle").deleteRow(index_);
+        actualizaTicket();
+    }
+
 }
 
 //Proveedor

@@ -75,7 +75,7 @@ function InitTableCompras() {
     );
 
 
-    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="' + rootUrl("/Compras/Compra") + '" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a onclick="NuevaCompra(0)" class="btn btn-icon btn-success" name="" id="btnNuevaCompra" data-toggle="tooltip" title="Nueva compra"><i class="fas fa-plus"></i></a>');
 
 
 }
@@ -189,3 +189,31 @@ function actualizaTicket() {
     //document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";  
     document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
 }
+
+function NuevaCompra(idCompra) {
+
+    $.ajax({
+        url: rootUrl("/Compras/_Compra"),
+        data: { idCompra: idCompra},
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $("#NuevaCompra").html(data);
+            actualizaTicket();
+            $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al intentar mostrar el detalle de la compra, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
+
