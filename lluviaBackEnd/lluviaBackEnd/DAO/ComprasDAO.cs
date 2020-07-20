@@ -122,7 +122,7 @@ namespace lluviaBackEnd.DAO
                     {
                         compras.Estatus = rs1.status;
                         compras.Mensaje = rs1.mensaje;
-                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto").ToList();
+                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto,EstatusProducto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto,idEstatusProducto").ToList();
 
                     }
                     else
@@ -141,12 +141,13 @@ namespace lluviaBackEnd.DAO
             return compras;
         }
 
-        private Compras MapCompras(Compras compras, Proveedor proveedor, Status status, Usuario usuario, Producto producto)
+        private Compras MapCompras(Compras compras, Proveedor proveedor, Status status, Usuario usuario, Producto producto,EstatusProducto estatusProducto)
         {
             compras.proveedor = proveedor;
             compras.statusCompra = status;
             compras.usuario = usuario;
             compras.producto = producto;
+            compras.producto.estatusProducto = estatusProducto;
 
             return compras;
         }

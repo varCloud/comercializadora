@@ -244,6 +244,7 @@
     <Compile Include="Models\CompraDetalle.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
+    <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\MargenBruto.cs" />
@@ -1198,6 +1199,7 @@
     <Content Include="Views\Reportes\_DropSize.cshtml" />
     <Content Include="Views\Ventas\VerTicket.cshtml" />
     <Content Include="Views\Productos\ImprimirCodigos.cshtml" />
+    <Content Include="Views\Compras\_Compra.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
