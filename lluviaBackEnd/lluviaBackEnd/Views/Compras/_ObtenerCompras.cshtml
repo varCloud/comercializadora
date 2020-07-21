@@ -48,34 +48,28 @@ else
                     <td>@c.fechaAlta.ToShortDateString()</td>
                     <td>
                         @{
-                            switch (c.statusCompra.idStatus)
+                            switch (c.estadoCompra)
                             {
-                                case 1:
+                                case lluviaBackEnd.Models.EnumEstadoCompras.Ninguno:
                                     {
                                         <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
                                     }
                                     break;
 
-                                case 2:
-                                    {
-                                        <div class="badge badge-primary badge-shadow">@c.statusCompra.descripcion</div>
-                                    }
-                                    break;
-
-                                case 3:
+                                case lluviaBackEnd.Models.EnumEstadoCompras.Correcta:
                                     {
                                         <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
                                     }
                                     break;
 
-                                case 4:
+                                case lluviaBackEnd.Models.EnumEstadoCompras.Incorrecta:
                                     {
                                         <div class="badge badge-danger badge-shadow">@c.statusCompra.descripcion</div>
                                     }
-                                    break;
+                                    break;                               
                                 default:
                                     {
-                                        <div class="badge badge-dark badge-shadow">@c.statusCompra.descripcion</div>
+                                        <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
                                     }
                                     break;
                             }

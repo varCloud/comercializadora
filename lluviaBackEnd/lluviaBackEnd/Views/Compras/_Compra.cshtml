@@ -4,7 +4,7 @@
 @{
     List<lluviaBackEnd.Models.Producto> listProductos = ViewBag.listProductos;
     lluviaBackEnd.Models.Producto producto = new lluviaBackEnd.Models.Producto();
-    float totalCompra = 0;
+
 }
 
 
@@ -16,7 +16,7 @@
 
             <div class="form-group col-lg-4">
                 <label>Producto</label>
-                @Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                @Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
             </div>
             <div class="form-group col-lg-3">
                 <label>Costo</label>
@@ -53,11 +53,11 @@
                         <tbody>
                             @foreach (lluviaBackEnd.Models.Producto prod in Model.listProductos)
                             {
-                                totalCompra = prod.cantidad * prod.precio;
+                              
                                 <tr id="@prod.idProducto">
                                     <td>@prod.idProducto</td>
                                     <td>@prod.descripcion</td>
-                                    <td>                                       
+                                    <td>
                                         @{
                                             switch (prod.estatusProducto.idEstatusProducto)
                                             {
@@ -98,7 +98,7 @@
                                     <td>@prod.cantidadRecibida</td>
                                     @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
                                     <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio"></td>
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")"></td>
                                     <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
                                     <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
 
@@ -116,7 +116,7 @@
                         <hr class="mt-2 mb-2">
                         <div class="invoice-detail-item">
                             <div class="invoice-detail-name">Total</div>
-                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">@totalCompra.ToString("C", new CultureInfo("en-US"))</div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">@Model.montoTotal.ToString("C", new CultureInfo("en-US"))</div>
                         </div>
                     </div>
                 </div>
@@ -125,11 +125,12 @@
         </div>
 
         @Html.HiddenFor(model => model.statusCompra.idStatus)
+        @Html.HiddenFor(x => Model.idCompra)
         <div class="row">
             <div class="form-group col-lg-4">
                 <label>Proveedor</label>
                 <div class="input-group">
-                    @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", style = "width:80%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
+                    @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", style = "width:80%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
                     @Html.ValidationMessageFor(model => model.proveedor.idProveedor, null, new { @class = "text-danger was" })
                     <div class="input-group-append">
                         <button id="btnNuevoProveedor" class="btn btn-icon btn-info" type="button" data-toggle="tooltip" data-placement="bottom" title="Nuevo proveedor."> <i class="fas fa-shipping-fast"></i></button>
@@ -138,12 +139,12 @@
             </div>
             <div class="form-group col-lg-4">
                 <label>Estatus de la compra</label>
-                @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
+                @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
                 @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
             </div>
             <div class="form-group col-lg-4">
                 <label>Observaciones</label>
-                @Html.TextAreaFor(model => model.observaciones, new { @class = "form-control", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "false" })
+                @Html.TextAreaFor(model => model.observaciones, new { id = "ObservacionesCompra", @class = "form-control", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "false" })
                 @Html.ValidationMessageFor(model => model.observaciones, null, new { @class = "text-danger was" })
             </div>
         </div>

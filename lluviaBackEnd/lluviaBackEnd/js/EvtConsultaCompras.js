@@ -203,6 +203,11 @@ function NuevaCompra(idCompra) {
         },
         success: function (data) {
             OcultarLoader();
+            
+            if (idCompra>0)
+                $("#titleModalCompra").html("Editar Compra");
+            else
+                $("#titleModalCompra").html("Nueva Compra");
             $("#NuevaCompra").html(data);
             actualizaTicket();
             $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });

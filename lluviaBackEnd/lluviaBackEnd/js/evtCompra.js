@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     //actualizaTicket();
-    $('.select-multiple').select2({
-
+    $('.select-multipleCompra').select2({
+     
         language: {
             noResults: function () {
                 return "No hay resultado";
@@ -27,11 +27,11 @@
 
         if ($('#idProducto').val()<=0) {
             MuestraToast('warning', "Debe seleccionar un producto.");
-        }else if ($('#precio').val() == "") {
-            MuestraToast('warning', "Debe escribir el precio de productos que va a agregar.");
+        }else if (Number($('#precio').val()) ==0) {
+            MuestraToast('warning', "El costo del producto que desea agregar debe de ser mayor que 0.");
         }
-        else if ($('#cantidad').val() == "") {
-            MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
+        else if (Number($('#cantidad').val()) == 0) {
+            MuestraToast('warning', "La cantidad del producto que desea agregar debe de ser mayor que 0.");
         }
         else {
 
@@ -90,14 +90,32 @@
 
 
         var productos = [];
+        var error = 0;
         $('#tblComprasDetalle tbody tr').each(function (index, fila) {
+           
+            if (Number($(fila.children[5].children[0]).val()) == 0) 
+            {
+                MuestraToast('warning', "La cantidad solicitada del producto " + fila.children[1].innerHTML + " debe ser mayor a 0.");
+                error = error + 1;
+                return false;
+            } 
+            
+            if (Number($(fila.children[6].children[0]).val()) == 0) {
+                MuestraToast('warning', "El costo del producto " + fila.children[1].innerHTML + " debe ser mayor a 0.");
+                error = error + 1;
+                return false;
+            } 
+            
             var row_ = {
-                idProducto: fila.children[1].innerHTML,
-                cantidad: fila.children[5].innerHTML,
-                precio: fila.children[6].innerHTML.replace('$', '')
+                idProducto: fila.children[0].innerHTML,
+                cantidad: Number($(fila.children[5].children[0]).val()),
+                precio: Number($(fila.children[6].children[0]).val())               
             };
             productos.push(row_);
         });
+
+        if (error > 0)
+            return;
 
         if (productos.length === 0) {
             MuestraToast('warning', "Debe agregar productos a la compra.");
@@ -124,6 +142,7 @@
                     compra.proveedor = Proveedor;
                     compra.listProductos = productos;
                     compra.statusCompra = StatusCompra;
+                    compra.observaciones = $("#ObservacionesCompra").val();
 
                     dataToPost = JSON.stringify({ compra: compra });
 
@@ -142,10 +161,10 @@
 
                             if (data.Estatus == 200) {
                                 MuestraToast("success", data.Mensaje);
-                                if ($("#idCompra").val() > 0)
+                                //if ($("#idCompra").val() > 0)
                                     window.location = rootUrl("/Compras/Compras")
-                                else
-                                    $("#limpiar").click();
+                                //else
+                                //    $("#limpiar").click();
                             }
                             else
                                 MuestraToast("error", data.Mensaje);
@@ -183,24 +202,21 @@
 
 function actualizaTicket() {
 
-    var total = parseFloat(0);    
-
+    var total = parseFloat(0); 
+   
     $('#tblComprasDetalle tbody tr').each(function (index, fila) {
         var Cantidad = parseFloat(0);
         var Precio = parseFloat(0);
 
         //fila.children[0].innerHTML = index + 1;
         //fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        Precio = $(fila.children[6].children[0]).val();
-        Cantidad = $(fila.children[5].children[0]).val();
+        Precio = Number($(fila.children[6].children[0]).val().replace(',', '.'));
+        Cantidad = Number($(fila.children[5].children[0]).val());
         fila.children[7].innerHTML = "$" + (Precio * Cantidad)
         total += parseFloat(fila.children[7].innerHTML.replace('$', ''));
     });
 
-    //actualizar los totales
-    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
-    //document.getElementById("divIva").innerHTML = "<h4>$" + parseFloat(total * 0.16).toFixed(2) + "</h4>";
-    //document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total * 1.16).toFixed(2) + "</h4>";
+
     document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
 }
 
@@ -211,7 +227,6 @@ function eliminaFila(idProducto, idEstatusProducto) {
     }        
     else {
         $('#tblComprasDetalle tbody tr#' + idProducto).remove();
-        //document.getElementById("tblComprasDetalle").deleteRow(index_);
         actualizaTicket();
     }
 
