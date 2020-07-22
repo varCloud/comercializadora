@@ -208,6 +208,26 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //INDICADOR NIVEL DE SERVICIO PROVEEDOR
+        public ActionResult NivelServicioProveedor()
+        {
+            return View();
+        }
+
+        public ActionResult ObtenerNivelServicioProveedor(Proveedor proveedor)
+        {
+            try
+            {
+                List<Proveedor> proveedores = new ProveedorDAO().ObtenerProveedores(proveedor);
+                return PartialView("_NivelServicioProveedor", proveedores);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 
