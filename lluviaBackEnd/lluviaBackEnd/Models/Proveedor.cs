@@ -28,6 +28,9 @@ namespace lluviaBackEnd.Models
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public string direccion { get; set; }
 
+        public int totalPedidosIncompletos { get; set; }
+        public int totalPedidosTotales { get; set; }
+        public float PorcAtendido { get; set; }
 
         public Boolean activo { get; set; }
         public int contador { get; set; }

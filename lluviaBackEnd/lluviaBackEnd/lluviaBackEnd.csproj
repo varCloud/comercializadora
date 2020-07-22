@@ -1029,6 +1029,7 @@
     <Content Include="js\EvtFacturas.js" />
     <Content Include="js\evtReporteDiasPromedioInventario.js" />
     <Content Include="js\evtReporteMargenBruto.js" />
+    <Content Include="js\evtReporteNivelServicioProveedor.js" />
     <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
@@ -1201,6 +1202,8 @@
     <Content Include="Views\Ventas\VerTicket.cshtml" />
     <Content Include="Views\Productos\ImprimirCodigos.cshtml" />
     <Content Include="Views\Compras\_Compra.cshtml" />
+    <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
+    <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

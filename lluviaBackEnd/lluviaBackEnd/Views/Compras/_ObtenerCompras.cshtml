@@ -9,99 +9,117 @@
 
 @if (Model.Estatus != 200)
 {
-
-    <div class="empty-state">
-        <div class="empty-state-icon">
-            <i class="fas fa-info"></i>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h4></h4>
+            <div class="card-header-action">
+               
+                    <a class="btn btn-icon btn-success" data-toggle="tooltip" title="Nueva Compra" onclick="NuevaCompra(0)"><i class="fas fa-plus"></i></a>
+                  
+            </div>
         </div>
-        <h2>@Model.Mensaje</h2>
-    </div>
+        <div class="card-body">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-info"></i>
+                </div>
+                <h2>@Model.Mensaje</h2>
+            </div>
+        </div>
+    </div>  
 
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-striped" id="tblCompras">
-            <thead>
-                <tr>
-                    <th class="text-center">Id</th>
-                    <th>Proveedor</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Estatus</th>
-                    <th>Cantidad Productos Solicitados</th>
-                    <th>Total</th>
-                    <th>Cantidad Productos Recibido</th>
-                    <th>Total Recibido</th>
-                    <th>Observaciones</th>
-                    <th width="20%">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tblCompras">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Id</th>
+                                        <th>Proveedor</th>
+                                        <th>Usuario</th>
+                                        <th>Fecha</th>
+                                        <th>Estatus</th>
+                                        <th>Cantidad Productos Solicitados</th>
+                                        <th>Total</th>
+                                        <th>Cantidad Productos Recibido</th>
+                                        <th>Total Recibido</th>
+                                        <th>Observaciones</th>
+                                        <th width="20%">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                @foreach (lluviaBackEnd.Models.Compras c in compras)
-                {
-                <tr>
-                    <td>@c.idCompra</td>
-                    <td>@c.proveedor.nombre</td>
-                    <td>@c.usuario.nombreCompleto</td>
-                    <td>@c.fechaAlta.ToShortDateString()</td>
-                    <td>
-                        @{
-                            switch (c.statusCompra.idStatus)
-                            {
-                                case 1:
+                                    @foreach (lluviaBackEnd.Models.Compras c in compras)
                                     {
-                                        <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
-                                    }
-                                    break;
+                                        <tr>
+                                            <td>@c.idCompra</td>
+                                            <td>@c.proveedor.nombre</td>
+                                            <td>@c.usuario.nombreCompleto</td>
+                                            <td>@c.fechaAlta.ToShortDateString()</td>
+                                            <td>
+                                                @{
+                                                    switch (c.estadoCompra)
+                                                    {
+                                                        case lluviaBackEnd.Models.EnumEstadoCompras.Ninguno:
+                                                            {
+                                                                <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
+                                                            }
+                                                            break;
 
-                                case 2:
-                                    {
-                                        <div class="badge badge-primary badge-shadow">@c.statusCompra.descripcion</div>
-                                    }
-                                    break;
+                                                        case lluviaBackEnd.Models.EnumEstadoCompras.Correcta:
+                                                            {
+                                                                <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
+                                                            }
+                                                            break;
 
-                                case 3:
-                                    {
-                                        <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
-                                    }
-                                    break;
+                                                        case lluviaBackEnd.Models.EnumEstadoCompras.Incorrecta:
+                                                            {
+                                                                <div class="badge badge-danger badge-shadow">@c.statusCompra.descripcion</div>
+                                                            }
+                                                            break;
+                                                        default:
+                                                            {
+                                                                <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
+                                                            }
+                                                            break;
+                                                    }
+                                                }
 
-                                case 4:
-                                    {
-                                        <div class="badge badge-danger badge-shadow">@c.statusCompra.descripcion</div>
+                                            </td>
+                                            <td>@c.totalCantProductos</td>
+                                            <td>@c.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                            <td>@c.totalCantProductosRecibidos</td>
+                                            <td>@c.montoTotalRecibido.ToString("C", new CultureInfo("en-US"))</td>
+                                            <td>@c.observaciones</td>
+                                            <td>
+                                                <div class="buttons">
+                                                    @*<a href="javascript:VerDetalleCompra(@c.idCompra);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver Detalle"><i class="fas fa-eye"></i></a>*@
+                                                    <a href="javascript:NuevaCompra(@c.idCompra);" onclick="ShowLoader()" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                    <a href="javascript:EliminarCompra(@c.idCompra);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        contador = contador + 1;
                                     }
-                                    break;
-                                default:
-                                    {
-                                        <div class="badge badge-dark badge-shadow">@c.statusCompra.descripcion</div>
-                                    }
-                                    break;
-                            }
-                        }
-                        
-                    </td>
-                    <td>@c.totalCantProductos</td>
-                    <td>@c.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
-                    <td>@c.totalCantProductosRecibidos</td>
-                    <td>@c.montoTotalRecibido.ToString("C", new CultureInfo("en-US"))</td>
-                    <td>@c.observaciones</td>
-                    <td>
-                        <div class="buttons">
-                            @*<a href="javascript:VerDetalleCompra(@c.idCompra);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver Detalle"><i class="fas fa-eye"></i></a>*@
-                            <a href="javascript:NuevaCompra(@c.idCompra);" onclick="ShowLoader()" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
-                            <a href="javascript:EliminarCompra(@c.idCompra);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+
+                                </tbody>
+
+                            </table>
                         </div>
-                    </td>
-                </tr>
 
-                    contador = contador + 1;
-                }
-
-            </tbody>
-
-        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 }
