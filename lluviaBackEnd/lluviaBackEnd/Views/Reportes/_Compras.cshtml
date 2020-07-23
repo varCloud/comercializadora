@@ -27,7 +27,9 @@
                                     <th>Código de  Barras</th>
                                     <th>Línea</th>
                                     <th>Producto</th>
-                                    <th>Cantidad</th>
+                                    <th>Estatus</th>
+                                    <th>Cantidad Solicitada</th>
+                                    <th>Cantidad Recibida</th>
                                     <th>Precio/Costo Compra</th>
                                     <th>Total</th>
                                 </tr>
@@ -43,7 +45,46 @@
                                     <td>@item.producto.codigoBarras</td>
                                     <td>@item.producto.DescripcionLinea</td>
                                     <td>@item.producto.descripcion</td>
+                                    <td>
+                                        @{
+                                            switch (item.producto.estatusProducto.idEstatusProducto)
+                                            {
+                                                case 0:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">Pendiente</div>
+                                                    }
+                                                    break;
+
+                                                case 1:
+                                                    {
+                                                        <div class="badge badge-success badge-shadow">@item.producto.estatusProducto.estatusProducto</div>
+
+                                                    }
+                                                    break;
+
+                                                case 2:
+                                                    {
+                                                        <div class="badge badge-warning badge-shadow">@item.producto.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+
+                                                case 3:
+                                                    {
+                                                        <div class="badge badge-danger badge-shadow">@item.producto.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">@item.producto.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                            }
+                                        }
+
+                                    </td>
+
                                     <td>@item.producto.cantidad</td>
+                                    <td>@item.producto.cantidadRecibida</td>
                                     <td>@item.producto.precio.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@item.producto.total.ToString("C", new CultureInfo("en-US"))</td>
 

@@ -43,6 +43,9 @@ namespace lluviaBackEnd.DAO
                             p.direccion = db.DataReader["direccion"].ToString();
                             p.telefono = db.DataReader["telefono"].ToString();
                             p.activo = Convert.ToBoolean(db.DataReader["activo"]);
+                            p.totalPedidosTotales = Convert.ToInt32(db.DataReader["totalPedidosTotales"]);
+                            p.totalPedidosIncompletos = Convert.ToInt32(db.DataReader["totalPedidosIncompletos"]);
+                            p.PorcAtendido = Convert.ToSingle(db.DataReader["PorcAtendido"]);
                             lstProveedores.Add(p);
                         }
                     }
