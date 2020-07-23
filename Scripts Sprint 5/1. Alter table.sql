@@ -9,6 +9,7 @@ descripcion varchar(300)
 
 INSERT INTO CatEstatusProductoCompra
 values(1,'Cantidad Correcta'),(2,'Cantidad Mayor a la solicitada'),(3,'Cantidad Menor a la solicitada')
+,(4,'Devolucion paracial del producto'),(5,'Devolucion completa del producto')
 
 
 IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='idEstatusProductoCompra' and TABLE_NAME='ComprasDetalle')
@@ -26,9 +27,20 @@ ALTER TABLE ComprasDetalle add fechaRecibio datetime null
 IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='idUsuarioRecibio' and TABLE_NAME='ComprasDetalle')
 ALTER TABLE ComprasDetalle add idUsuarioRecibio int null
 
+IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='cantidadDevuelta' and TABLE_NAME='ComprasDetalle')
+ALTER TABLE ComprasDetalle add cantidadDevuelta int null
+
 IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='observaciones' and TABLE_NAME='Compras')
 ALTER TABLE Compras add observaciones VARCHAR(500) null
 
 select * from Compras
 select * from ComprasDetalle
+
+if not exists (Select 1 from CatStatusCompra where idStatusCompra = 5)
+	insert into CatStatusCompra ( idStatusCompra, descripcion) values (5,'Devolución')
+
+-- delete from CatStatusCompra where idStatusCompra is  null
+-- select * from CatStatusCompra
+-- select * from CatEstatusProductoCompra
+
 
