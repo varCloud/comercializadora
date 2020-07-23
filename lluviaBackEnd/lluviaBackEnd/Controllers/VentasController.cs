@@ -113,6 +113,10 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstVentas = notificacion.Modelo;
             ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
+            ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
+
             Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
             formasPago = new VentasDAO().ObtenerFormasPago();
             ViewBag.lstFormasPago = formasPago.Modelo;

@@ -208,8 +208,15 @@ $('#btnAgregarProducto').click(function (e) {
     // aki falta validar que se tengan existencias para vender
 
     var cantidad = $('#cantidad').val();
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     var precio = parseFloat(0).toFixed(2); 
     var descuento = parseFloat(0).toFixed(2); 
+
+    //if (esAgregarProductos == 'true') {
+    //    btnEliminaFila = "";
+    //}
+           
 
     // si todo bien    
     var row_ =  "<tr>" +
@@ -221,7 +228,7 @@ $('#btnAgregarProducto').click(function (e) {
                 "  <td class=\"text-center\">$" + precio + "</td>" +
                 "  <td class=\"text-center\">$" + descuento + "</td>" +
                 "  <td class=\"text-center\">" +
-                "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                        btnEliminaFila +
                 "  </td>" +
                 "</tr >";
 
@@ -235,11 +242,20 @@ $('#btnAgregarProducto').click(function (e) {
 
 
 function actualizaTicketVenta() {
-    
+
     // acttualizamos el id y la funcion de eliminar fila
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
-        fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+
+        if (!fila.children[7].getAttribute("class").includes('agregarProductos'))
+        //{
+        //    fila.children[7].innerHTML = "      <a href=\"#\" class=\"btn disabled\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
+        //}
+        //else
+        {
+            fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
+        }
+
     });
 
     // contabilizamos todos los productos para consultar que precio le corresponde a cada uno
@@ -258,7 +274,7 @@ function actualizaTicketVenta() {
     }
 
     dataToPost = JSON.stringify({ precios: productos });
-
+    
     $.ajax({
         url: rootUrl("/Ventas/ObtenerPreciosDeProductos"),
         data: dataToPost,
@@ -273,7 +289,7 @@ function actualizaTicketVenta() {
             OcultarLoader();
 
             if (data.Estatus == 200) {
-                console.log(data);
+            //    console.log(data);
                 var j = 0;
                 for (j = 0; j < data.Modelo.length; j++) {
 
@@ -285,11 +301,17 @@ function actualizaTicketVenta() {
 
                             var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
 
-                            if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
-                                tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
-                                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
-                                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
+                            if (!tblVtas.rows[i].cells[7].getAttribute("class").includes('agregarProductos'))
+                            {
+                                //alert("actualizo");
+                                if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
+                                    tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
+                                    tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
+                                    tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
+                                }
+
                             }
+                            
                         }
                     }
                 }
@@ -305,6 +327,8 @@ function actualizaTicketVenta() {
 
     actualizarSubTotal();
 }
+
+
 
 
 function initInputsTabla() {
@@ -1224,7 +1248,7 @@ function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
 
 $(document).ready(function () {
     
-    //actualizaTicketVenta();
+    actualizaTicketVenta();
     InitSelect2Productos();
     InitSelect2(); // los demas select2
     //revisarExistenciasCombo();

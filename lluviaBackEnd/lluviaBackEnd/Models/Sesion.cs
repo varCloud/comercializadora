@@ -36,6 +36,8 @@ namespace lluviaBackEnd.Models
         public int idEstacion { get; set; }
         public string macAdress { get; set; }
 
+        public int devolucionesPermitidas { get; set; }
+        public int agregarProductosPermitidos { get; set; }
         public List<Permiso> permisosModulo { get; set; }
 
         public static bool TienePermiso(EnumRolesPermisos valor)

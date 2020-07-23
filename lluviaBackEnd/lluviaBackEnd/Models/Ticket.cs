@@ -8,6 +8,7 @@ namespace lluviaBackEnd.Models
 {
     public class Ticket
     {
+        public int contador { get; set; }
         public int idVenta { get; set; }
         public int idProducto { get; set; }
         public string descProducto { get; set; }
@@ -23,6 +24,6 @@ namespace lluviaBackEnd.Models
         public DateTime fechaAlta { get; set; }
         public float montoIVA { get; set; }
         public float ahorro { get; set; }
-
+        public float precioVenta { get; set; }
     }
 }
