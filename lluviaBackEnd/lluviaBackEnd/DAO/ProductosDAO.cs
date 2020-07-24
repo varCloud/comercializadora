@@ -21,6 +21,7 @@ namespace lluviaBackEnd.DAO
     public class ProductosDAO
     {
         private IDbConnection db = null;
+        private DBManager db1 = null;
 
         public Notificacion<List<Producto>> ObtenerProductos(Producto producto)
         {
@@ -69,7 +70,7 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
-            
+
         }
 
         public Notificacion<List<Producto>> ObtenerProductosPorUsuario(Producto producto)
@@ -142,7 +143,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@codigoBarras", producto.codigoBarras);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                        parameters.Add("@claveProdServ", producto.idClaveProdServ);
+                    parameters.Add("@claveProdServ", producto.idClaveProdServ);
                     //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
@@ -183,7 +184,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = producto; 
+                        notificacion.Modelo = producto;
                     }
                     else
                     {
@@ -205,7 +206,7 @@ namespace lluviaBackEnd.DAO
         /// </summary>
         /// <param name="codigo"></param>
         /// <returns></returns>
-        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request )
+        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request)
         {
             Notificacion<Producto> notificacion = new Notificacion<Producto>();
 
@@ -407,6 +408,43 @@ namespace lluviaBackEnd.DAO
             return notificacion;
 
         }
+
+        public List<SelectListItem> ObtenerEstatusProductoCompra()
+        {
+            List<SelectListItem> lstEstatus = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ESTATUS_PRODUCTO_COMPRA]");
+                    while (db1.DataReader.Read())
+                    {
+                        
+                            lstEstatus.Add(
+                                        new SelectListItem
+                                        {
+                                            Text = db1.DataReader["descripcion"].ToString(),
+                                            Value = db1.DataReader["idEstatusProductoCompra"].ToString()
+                                        });
+                        
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (lstEstatus.Count > 0)
+                lstEstatus.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+
+            return lstEstatus;
+        }
+
+    
+
 
 
 

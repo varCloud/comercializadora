@@ -30,6 +30,7 @@
                                     <th>Estatus</th>
                                     <th>Cantidad Solicitada</th>
                                     <th>Cantidad Recibida</th>
+                                    <th>Cantidad Devuelta</th>
                                     <th>Precio/Costo Compra</th>
                                     <th>Total</th>
                                 </tr>
@@ -69,6 +70,8 @@
                                                     break;
 
                                                 case 3:
+                                                case 4:
+                                                case 5:
                                                     {
                                                         <div class="badge badge-danger badge-shadow">@item.producto.estatusProducto.estatusProducto</div>
                                                     }
@@ -85,6 +88,7 @@
 
                                     <td>@item.producto.cantidad</td>
                                     <td>@item.producto.cantidadRecibida</td>
+                                    <td>@item.producto.cantidadDevuelta</td>
                                     <td>@item.producto.precio.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@item.producto.total.ToString("C", new CultureInfo("en-US"))</td>
 

@@ -85,6 +85,8 @@ namespace lluviaBackEnd.Models
         public string usuarioRecibio { get; set; }
         public EstatusProducto estatusProducto { get; set; }
         public int cantidadRecibida { get; set; }
+        public int cantidadDevuelta { get; set; }
+
 
 
         public Producto()

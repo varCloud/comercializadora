@@ -12,26 +12,30 @@
 
     <div class="section-body">
 
-        <div class="row">
+        @if (Model.statusCompra.idStatus <= 2)
+        {
+            <div class="row">
 
-            <div class="form-group col-lg-4">
-                <label>Producto</label>
-                @Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Costo</label>
-                <input id="precio" type="text" class="form-control" onkeypress="return esPrecio(event)">
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Cantidad</label>
-                <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
-            </div>
-            <div class="form-group col-lg-3">
-                <div class="text-left" style="margin-top:30px;">
-                    <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar Producto &nbsp;</button>
+                <div class="form-group col-lg-4">
+                    <label>Producto</label>
+                    @Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                </div>
+                <div class="form-group col-lg-3">
+                    <label>Costo</label>
+                    <input id="precio" type="text" class="form-control" onkeypress="return esPrecio(event)">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Cantidad</label>
+                    <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
+                </div>
+                <div class="form-group col-lg-3">
+                    <div class="text-left" style="margin-top:30px;">
+                        <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar Producto &nbsp;</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+
         <div class="row">
             @*@Html.Action("_DetalleCompra", "Compras", new { idCompra = Model.idCompra })*@
             <div class="col-md-12">
@@ -53,7 +57,7 @@
                         <tbody>
                             @foreach (lluviaBackEnd.Models.Producto prod in Model.listProductos)
                             {
-                              
+
                                 <tr id="@prod.idProducto">
                                     <td>@prod.idProducto</td>
                                     <td>@prod.descripcion</td>
@@ -81,6 +85,8 @@
                                                     break;
 
                                                 case 3:
+                                                case 4:
+                                                case 5:
                                                     {
                                                         <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
                                                     }
