@@ -54,9 +54,44 @@ else
                                             <td>@item.cantidad</td>
                                             <td>@item.nombreUsuario</td>
                                             <td>
-                                                <div class="buttons">
-                                                    @*<a href="javascript:VerDetalleVenta(@item.idProducto);" class="btn btn-icon btn-success" data-toggle="tooltip" title="Ver Detalle de la Venta"><i class="fas fa-file-alt"></i></a>*@
-                                                    @*window.location.href = '@Url.Action("MyMethod", "SomeControllerName", new { area = "MyArea", id = Model.MyId })';*@
+                                                
+                                                
+                                                    <div class="dropdown d-inline">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesVentas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Acciones
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                          
+                                                            @if (item.idEstatusFactura == (int)lluviaBackEnd.Models.EnumEstatusFactura.Facturada)
+                                                            {
+                                                                <a class="dropdown-item has-icon" href="@item.rutaFactura" target="_blank"><i class="fas fa-eye"></i>Ver Factura</a>
+                                                                <a class="dropdown-item has-icon" href="javascript:CancelarFactura(@item.idVenta);"><i class="fas fa-ban"></i>Cancelar Factura</a>
+                                                            }
+
+                                                            @if (item.idEstatusFactura == 0 || item.idEstatusFactura == (int)lluviaBackEnd.Models.EnumEstatusFactura.Cancelada)
+                                                            {
+                                                                <a class="dropdown-item has-icon" href="javascript:modalFacturar(@item.idVenta);"><i class="fas fa-file-invoice-dollar"></i>Generar Factura</a>
+                                                                <a class="dropdown-item has-icon" href="javascript:CancelaVenta(@item.idVenta);"><i class="fas fa-times"></i>Cancelar Venta</a>
+                                                            }
+
+                                                            <a class="dropdown-item has-icon" href="javascript:ImprimeTicket(@item.idVenta);"><i class="fas fa-print"></i>Imprimir Ticket</a>
+                                                            <a class="dropdown-item has-icon" href="@Url.Action("VerTicket", "Ventas", new {idVenta=item.idVenta})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>
+
+                                                            @if (item.productosDevueltos < ViewBag.devolucionesPermitidas)
+                                                            {
+                                                                <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })" ><i class="far fa-minus-square"></i>Devolver Productos</a>
+                                                            }
+
+                                                            @if (item.productosAgregados < ViewBag.agregarProductosPermitidos)
+                                                            {
+                                                                <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esAgregarProductos = "true", esDevolucion = "false" })" ><i class="far fa-plus-square"></i>Agregar Productos</a>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                
+                                                
+                                                @*<div class="buttons">
 
                                                     @if (item.idEstatusFactura == (int)lluviaBackEnd.Models.EnumEstatusFactura.Facturada)
                                                     {
@@ -67,7 +102,6 @@ else
                                                     @if (item.idEstatusFactura == 0 || item.idEstatusFactura == (int)lluviaBackEnd.Models.EnumEstatusFactura.Cancelada)
                                                     {
                                                         <a href="javascript:modalFacturar(@item.idVenta);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Generar Factura"><i class="fas fa-file-invoice-dollar"></i></a>
-                                                        @*<a href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta })" class="btn btn-icon btn-info" data-toggle="tooltip" title="Editar Venta"><i class="far fa-edit"></i></a>*@
                                                         <a href="javascript:CancelaVenta(@item.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Venta"><i class="fas fa-times"></i></a>
                                                     }
 
@@ -84,7 +118,7 @@ else
                                                         <a href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esAgregarProductos = "true", esDevolucion = "false" })" class="btn btn-icon btn-success" data-toggle="tooltip" title="Agregar Productos"><i class="far fa-plus-square"></i></a>
                                                     }
                                                 
-                                                </div>
+                                                </div>*@
                                             </td>
                                         </tr>
                                     }
