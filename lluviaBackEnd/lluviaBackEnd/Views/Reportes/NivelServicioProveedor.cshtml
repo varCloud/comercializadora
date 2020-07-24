@@ -12,14 +12,14 @@
 }
 
 
-<h2>Nivel Servicio Proveedor</h2>
-
-
 <div class="row">
     <div class="col-12 col-sm-12 col-lg-12">
         <div class="card">
+            <div class="card-header">
+                <h4>Nivel de Servicio Proveedores</h4>
+            </div>
             <div class="card-body">
-                @*@using (Ajax.BeginForm("ObtenerNivelServicioProveedor", "Reportes",
+                @using (Ajax.BeginForm("ObtenerNivelServicioProveedor", "Reportes",
                   new AjaxOptions
                   {
                       HttpMethod = "Post",
@@ -29,18 +29,10 @@
                   },
                   new { id = "frmBuscarNivelServicioProveedor" }))
                 {
-                    @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                    @Html.HiddenFor(x => x.fechaInicio, new { @id = "fechaIni" })
                     @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
 
-                    <div class="row">
-                        <div class="form-group col-lg-4">
-                            <label>Tipo de DropSize</label>
-                            <select class="form-control valid" data-val="false" id="idTipoDropSize" name="tipoMargenBruto" aria-invalid="false">
-                                <option selected="selected" value="1">Global</option>
-                                <option value="2">Linea</option>
-                                <option value="3">Producto</option>
-                            </select>
-                        </div>
+                    <div class="row">                      
 
                         <div class="form-group col-lg-4">
                             <label>Rango de fechas:</label>
@@ -50,20 +42,20 @@
                                         <i class="fas fa-calendar"></i>
                                     </div>
                                 </div>
-                                <input type="text" id="rangeDropSize" class="form-control daterange-cus" autocomplete="off" data_val_required="Seleccione un producto" , data_val="true">
+                                <input type="text" id="rangeNivelServicioProveedor" class="form-control daterange-cus" autocomplete="off">
                             </div>
                         </div>
 
 
                         <div class="text-left col-lg-4" style="margin-top:30px;">
-                            <button type="submit" id="btnBuscarDropSize" class="btn btn-success">Buscar</button>
+                            <button type="submit" id="btnNivelServicioProveedor" class="btn btn-success">Buscar</button>
                         </div>
 
                     </div>
-                }*@
+                }
                 <hr style="margin-top:0" />
                 <div id="ViewNivelServicioProveedor">
-                    @Html.Action("ObtenerNivelServicioProveedor","Reportes");
+                    @*@Html.Action("ObtenerNivelServicioProveedor","Reportes");*@
                 </div>
             </div>
         </div>
