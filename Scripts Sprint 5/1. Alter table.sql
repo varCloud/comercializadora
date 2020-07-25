@@ -1,4 +1,16 @@
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusProductoVenta')
+	DROP TABLE CatEstatusProductoVenta
+
+CREATE TABLE CatEstatusProductoVenta(
+idEstatusProductoVenta int primary key identity(1,1),
+descripcion varchar(300)
+)
+
+INSERT INTO CatEstatusProductoVenta (descripcion) 
+values('devuelto'),('complemento / agregado')
+
+
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusProductoCompra')
 	DROP TABLE CatEstatusProductoCompra
 
@@ -6,6 +18,8 @@ CREATE TABLE CatEstatusProductoCompra(
 idEstatusProductoCompra int,
 descripcion varchar(300)
 )
+
+
 
 INSERT INTO CatEstatusProductoCompra
 values(1,'Cantidad Correcta'),(2,'Cantidad Mayor a la solicitada'),(3,'Cantidad Menor a la solicitada')
@@ -32,6 +46,13 @@ ALTER TABLE ComprasDetalle add cantidadDevuelta int null
 
 IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='observaciones' and TABLE_NAME='Compras')
 ALTER TABLE Compras add observaciones VARCHAR(500) null
+
+
+IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='idEstatusProductoVenta' and TABLE_NAME='VentasDetalle')
+ALTER TABLE VentasDetalle add idEstatusProductoVenta int  null
+
+IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='observaciones' and TABLE_NAME='Ventas')
+ALTER TABLE Ventas add observaciones varchar(500)
 
 select * from Compras
 select * from ComprasDetalle
