@@ -48,9 +48,9 @@ else
                                         <th>Fecha</th>
                                         <th>Estatus</th>
                                         <th>Cantidad Productos Solicitados</th>
-                                        <th>Total</th>
                                         <th>Cantidad Productos Recibido</th>
-                                        <th>Total Recibido</th>
+                                        <th>Cantidad Productos Devuelta</th>
+                                        <th>Total</th>
                                         <th>Observaciones</th>
                                         <th width="20%">Acciones</th>
                                     </tr>
@@ -95,9 +95,9 @@ else
 
                                             </td>
                                             <td>@c.totalCantProductos</td>
-                                            <td>@c.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@c.totalCantProductosRecibidos</td>
-                                            <td>@c.montoTotalRecibido.ToString("C", new CultureInfo("en-US"))</td>
+                                            <td>@c.totalCantProductosDevueltos</td>
+                                            <td>@c.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@c.observaciones</td>
                                             <td>
                                                 <div class="buttons">

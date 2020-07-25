@@ -248,10 +248,6 @@ function actualizaTicketVenta() {
         fila.children[0].innerHTML = index + 1;
 
         if (!fila.children[7].getAttribute("class").includes('agregarProductos'))
-        //{
-        //    fila.children[7].innerHTML = "      <a href=\"#\" class=\"btn disabled\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
-        //}
-        //else
         {
             fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
         }

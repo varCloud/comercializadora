@@ -116,6 +116,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@descripcionProducto", string.IsNullOrEmpty(compra.producto.descripcion) ? (object)null : compra.producto.descripcion);
                     parameters.Add("@idLineaProducto", idLineaProducto == 0 ? (object)null : idLineaProducto);
                     parameters.Add("@detalleCompra", detalleCompra);
+                    parameters.Add("@idEstatusProducto", compra.producto.estatusProducto.idEstatusProducto==0 ? (object)null  : compra.producto.estatusProducto.idEstatusProducto);
 
                     var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();

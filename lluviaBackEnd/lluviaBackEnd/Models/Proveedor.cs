@@ -35,5 +35,7 @@ namespace lluviaBackEnd.Models
         public Boolean activo { get; set; }
         public int contador { get; set; }
 
+        public DateTime fechaInicio { get; set; }
+        public DateTime fechaFin { get; set; }
     }
 }
