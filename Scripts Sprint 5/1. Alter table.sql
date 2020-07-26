@@ -1,4 +1,4 @@
-
+	
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusProductoVenta')
 	DROP TABLE CatEstatusProductoVenta
 
@@ -54,11 +54,19 @@ ALTER TABLE VentasDetalle add idEstatusProductoVenta int  null
 IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='observaciones' and TABLE_NAME='Ventas')
 ALTER TABLE Ventas add observaciones varchar(500)
 
+IF NOT EXISTS(SELECT 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME='idCompra' and TABLE_NAME='InventarioDetallelOG')
+ALTER TABLE InventarioDetallelOG add idCompra int null
+
+
+
 select * from Compras
 select * from ComprasDetalle
 
 if not exists (Select 1 from CatStatusCompra where idStatusCompra = 5)
 	insert into CatStatusCompra ( idStatusCompra, descripcion) values (5,'Devolución')
+
+if not exists (Select 1 from CatTipoMovimientoInventario where idTipoMovInventario = 12)
+	insert into CatTipoMovimientoInventario ( descripcion , operacion) values ('Carga de producto a inventario por compra recibida' , 1)
 
 -- delete from CatStatusCompra where idStatusCompra is  null
 -- select * from CatStatusCompra
