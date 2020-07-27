@@ -192,10 +192,10 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idCompra", request.idCompra);
                     var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
-                    if (r1.status == 200)
+                    if (r1.Estatus == 200)
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                         notificacion.Modelo = result.Read<CompraDetalle, Producto,Status, Usuario,  CompraDetalle>((c, producto, status, usuario) =>
                         {
                             c.producto = producto;
@@ -206,8 +206,8 @@ namespace lluviaBackEnd.DAO
                     }
                     else
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                     }
                 }
             }
