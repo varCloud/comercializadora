@@ -219,7 +219,7 @@ namespace lluviaBackEnd.DAO
         {
             var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
             var stringBuilder = new StringBuilder();
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 , OmitXmlDeclaration= true }))
             {
                 xmlSerializer.Serialize(xmlWriter, precios);
             }
