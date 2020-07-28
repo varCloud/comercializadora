@@ -29,15 +29,15 @@ BEGIN
 		,cantidad
 		,precio
 		,cantidadRecibida
-		,isnull(observaciones,'')
-		,P.idProducto , P.descripcion
-		,PC.idEstatusProductoCompra,PC.descripcion
-		,U.idUsuario
+		,isnull(observaciones,'') observaciones
+		,isnull(P.idProducto,0)idProducto , P.descripcion
+		,isnull(PC.idEstatusProductoCompra,0)idEstatusProductoCompra,PC.descripcion
+		,isnull(U.idUsuario,0)idUsuario
 		,isnull(U.nombre,'')+' '+isnull(U.apellidoPaterno,'')+' '+isnull(U.apellidoMaterno,'') nombre
 		FROM [DB_A57E86_lluviadesarrollo].[dbo].[ComprasDetalle] CD 
-		JOIN Productos P on CD.idProducto = P.idProducto
-		JOIN CatEstatusProductoCompra PC on Pc.idEstatusProductoCompra = CD.idEstatusProductoCompra
-		JOIN Usuarios U on U.idUsuario = CD.idUsuarioRecibio
+		LEFT JOIN Productos P on CD.idProducto = P.idProducto
+		LEFT JOIN CatEstatusProductoCompra PC on Pc.idEstatusProductoCompra = CD.idEstatusProductoCompra
+		LEFT JOIN Usuarios U on U.idUsuario = CD.idUsuarioRecibio
 		where Cd.idCompra = coalesce(@idCompra , CD.idCompra)
 		
 		-- Select * from CatEstatusProductoCompra
