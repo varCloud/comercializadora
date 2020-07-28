@@ -45,6 +45,18 @@ namespace lluviaBackEnd.WebServices
             }
         }
 
+        public Notificacion<String> ActualizarEstatusProductoCompra(RequestActualizaEstatusProductoCompra request)
+        {
+            try
+            {
+                return new ComprasDAO().ActualizarEstatusProductoCompra(request);
+            }
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+        }
+
 
     }
 }

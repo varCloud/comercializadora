@@ -148,6 +148,21 @@ function limpiaModalPrevio() {
 
 $('#previoVenta').click(function (e) {
 
+    var esDevolucion = $('#esDevolucion').val();
+
+    if (esDevolucion == "true" )
+    {
+
+        $('#ModalDevolucion').modal({ backdrop: 'static', keyboard: false, show: true });
+    }
+    else
+    {
+        abrirModalPrevioVenta();
+    }
+});
+
+function abrirModalPrevioVenta() {
+
     limpiaModalPrevio();
 
     var total = parseFloat(0);
@@ -159,7 +174,7 @@ $('#previoVenta').click(function (e) {
     });
 
     if (total > 0) {
-        document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total+descuento).toFixed(2) + "</h4>";
+        document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total + descuento).toFixed(2) + "</h4>";
         document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
         document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
         document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
@@ -169,8 +184,19 @@ $('#previoVenta').click(function (e) {
         MuestraToast('warning', "Debe tener productos agregados para continuar con la venta.");
     }
 
-});
+}
 
+
+
+$('#btnAceptarDevolucion').click(function (e) {
+
+
+    if ( ($('#motivoDevolucion').val() == "") ) {
+        MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
+        return;
+    }
+
+}
 
 $('#btnAgregarProducto').click(function (e) {
     
@@ -247,12 +273,9 @@ function actualizaTicketVenta() {
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
 
-        if (!fila.children[7].getAttribute("class").includes('agregarProductos'))
-        //{
-        //    fila.children[7].innerHTML = "      <a href=\"#\" class=\"btn disabled\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
-        //}
-        //else
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion')) )
         {
+            
             fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
         }
 

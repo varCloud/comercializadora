@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
+using AccesoDatos;
 using Dapper;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.WebServices.Modelos.Request;
@@ -178,6 +179,8 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+        #region Funciones para la app
         public Notificacion<List<CompraDetalle>> ObtenerDetalleCompra(RequestObtenerDetalleCompra request)
         {
             Notificacion<List<CompraDetalle>> notificacion = new Notificacion<List<CompraDetalle>>();
@@ -187,12 +190,12 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@idCompra", request.idCompra);
-                    var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", null, commandType: CommandType.StoredProcedure);
+                    var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
-                    if (r1.status == 200)
+                    if (r1.Estatus == 200)
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                         notificacion.Modelo = result.Read<CompraDetalle, Producto,Status, Usuario,  CompraDetalle>((c, producto, status, usuario) =>
                         {
                             c.producto = producto;
@@ -203,8 +206,8 @@ namespace lluviaBackEnd.DAO
                     }
                     else
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                     }
                 }
             }
@@ -213,6 +216,48 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
+        }
+        #endregion
+
+        public Notificacion<String> ActualizarEstatusProductoCompra(RequestActualizaEstatusProductoCompra request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+           
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@productos", SerializeProductos(request.Productos));
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idCompra", request.idCompra);
+                    //notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
+                    var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = r.ReadFirst();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+       
+
+ 
+
+        public string SerializeProductos(List<CompraDetalle> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<CompraDetalle>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+            return stringBuilder.ToString();
+
         }
 
     }
