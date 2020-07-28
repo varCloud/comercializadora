@@ -228,6 +228,7 @@
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
+    <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -291,6 +292,8 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\WsInventarioFisicoController.cs" />
+    <Compile Include="WebServices\Modelos\Request\RegistraProductoInventarioFisico.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizaEstatusProductoCompra.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarEstatusPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
