@@ -30,6 +30,9 @@ namespace lluviaBackEnd.Models
 
         public int totalPedidosIncompletos { get; set; }
         public int totalPedidosTotales { get; set; }
+
+        public int totalPedidosCompletos { get; set; }
+        public int totalPedidosMayorSolicitado { get; set; }
         public float PorcAtendido { get; set; }
 
         public Boolean activo { get; set; }

@@ -21,9 +21,11 @@ else
                 <tr>
                     <th>Id</th>
                     <th>Nombre Proveedor</th>
+                    <th>Total Pedidos Correctos</th>
                     <th>Total Pedidos Incompletos</th>
+                    @*<th>Total Pedidos Cantidad Mayor</th>*@
                     <th>Total Pedidos Totales</th>
-                    <th>Porcentaje Atendido</th>                    
+                    <th>Porcentaje Atendido</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,9 +35,11 @@ else
                 <tr>
                     <td>@c.idProveedor</td>
                     <td>@c.nombre</td>
+                    <td>@c.totalPedidosCompletos</td>
                     <td>@c.totalPedidosIncompletos</td>
+                    @*<td>@c.totalPedidosMayorSolicitado</td>*@
                     <td>@c.totalPedidosTotales</td>
-                    <td>@c.PorcAtendido %</td>              
+                    <td>@c.PorcAtendido %</td>
                 </tr>
                 }
             </tbody>
