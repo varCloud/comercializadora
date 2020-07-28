@@ -210,6 +210,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
+    <Compile Include="Models\InventarioFisico.cs" />
     <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\Sucursal.cs" />
@@ -1026,6 +1028,7 @@
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
+    <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
@@ -1180,11 +1183,9 @@
     <Content Include="Views\Estaciones\_ObtenerEstaciones.cshtml" />
     <Content Include="Views\Estaciones\_SinResultados.cshtml" />
     <Content Include="Views\Login\EstacionesDisponibles.cshtml" />
-    <Content Include="Views\Compras\Compra.cshtml" />
     <Content Include="Views\Proveedores\_NuevoProveedor.cshtml" />
     <Content Include="Views\Compras\Compras.cshtml" />
     <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
-    <Content Include="Views\Compras\_DetalleCompra.cshtml" />
     <Content Include="Views\Factura\_ObtenerFacturas.cshtml" />
     <Content Include="Views\Bitacora\Bitacoras.cshtml" />
     <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
@@ -1208,6 +1209,7 @@
     <Content Include="Views\Compras\_Compra.cshtml" />
     <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
     <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
+    <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

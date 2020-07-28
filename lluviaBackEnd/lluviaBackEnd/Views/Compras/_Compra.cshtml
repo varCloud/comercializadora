@@ -47,8 +47,9 @@
                                 <th>Producto</th>
                                 <th>Estatus</th>
                                 <th>Observaciones</th>
-                                <th>Cantidad Recibida</th>
-                                <th class="text-center">Cantidad Solicitada</th>
+                                <th>Cant. Recibida</th>
+                                <th>Cant. Devuelta</th>
+                                <th class="text-center">Cant. Solicitada</th>
                                 <th class="text-center">Costo</th>
                                 <th class="text-center">Total</th>
                                 <th class="text-center">Acciones</th>
@@ -58,57 +59,58 @@
                             @foreach (lluviaBackEnd.Models.Producto prod in Model.listProductos)
                             {
 
-                                <tr id="@prod.idProducto">
-                                    <td>@prod.idProducto</td>
-                                    <td>@prod.descripcion</td>
-                                    <td>
-                                        @{
-                                            switch (prod.estatusProducto.idEstatusProducto)
-                                            {
-                                                case 0:
-                                                    {
-                                                        <div class="badge badge-light badge-shadow">Pendiente</div>
-                                                    }
-                                                    break;
+                            <tr id="@prod.idProducto">
+                                <td>@prod.idProducto</td>
+                                <td>@prod.descripcion</td>
+                                <td>
+                                    @{
+                                        switch (prod.estatusProducto.idEstatusProducto)
+                                        {
+                                            case 0:
+                                                {
+                                                    <div class="badge badge-light badge-shadow">Pendiente</div>
+                                                }
+                                                break;
 
-                                                case 1:
-                                                    {
-                                                        <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                            case 1:
+                                                {
+                                                    <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
 
-                                                    }
-                                                    break;
+                                                }
+                                                break;
 
-                                                case 2:
-                                                    {
-                                                        <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                    }
-                                                    break;
+                                            case 2:
+                                                {
+                                                    <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                }
+                                                break;
 
-                                                case 3:
-                                                case 4:
-                                                case 5:
-                                                    {
-                                                        <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                    }
-                                                    break;
-                                                default:
-                                                    {
-                                                        <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                    }
-                                                    break;
-                                            }
+                                            case 3:
+                                            case 4:
+                                            case 5:
+                                                {
+                                                    <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                }
+                                                break;
+                                            default:
+                                                {
+                                                    <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                }
+                                                break;
                                         }
+                                    }
 
-                                    </td>
-                                    <th>@prod.observaciones</th>
-                                    <td>@prod.cantidadRecibida</td>
-                                    @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")"></td>
-                                    <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
-                                    <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                                </td>
+                                <th>@prod.observaciones</th>
+                                <td>@prod.cantidadRecibida</td>
+                                <td>@prod.cantidadDevuelta</td>
+                                @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
+                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")"></td>
+                                <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
+                                <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
 
-                                </tr>
+                            </tr>
                             }
                         </tbody>
                     </table>

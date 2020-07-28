@@ -56,6 +56,7 @@
                     "  <td><div class='badge badge-light badge-shadow'>Pendiente</div></td>" +
                     "  <td></td>" +
                     "  <td>0</td>" +
+                    "  <td>0</td>" +
                     "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>" +
                     "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esPrecio(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + precio + "\" ></td>" +
                     "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
@@ -93,14 +94,14 @@
         var error = 0;
         $('#tblComprasDetalle tbody tr').each(function (index, fila) {
            
-            if (Number($(fila.children[5].children[0]).val()) == 0) 
+            if (Number($(fila.children[6].children[0]).val()) == 0) 
             {
                 MuestraToast('warning', "La cantidad solicitada del producto " + fila.children[1].innerHTML + " debe ser mayor a 0.");
                 error = error + 1;
                 return false;
             } 
             
-            if (Number($(fila.children[6].children[0]).val()) == 0) {
+            if (Number($(fila.children[7].children[0]).val()) == 0) {
                 MuestraToast('warning', "El costo del producto " + fila.children[1].innerHTML + " debe ser mayor a 0.");
                 error = error + 1;
                 return false;
@@ -108,8 +109,8 @@
             
             var row_ = {
                 idProducto: fila.children[0].innerHTML,
-                cantidad: Number($(fila.children[5].children[0]).val()),
-                precio: Number($(fila.children[6].children[0]).val())               
+                cantidad: Number($(fila.children[6].children[0]).val()),
+                precio: Number($(fila.children[7].children[0]).val())               
             };
             productos.push(row_);
         });
@@ -210,10 +211,10 @@ function actualizaTicket() {
 
         //fila.children[0].innerHTML = index + 1;
         //fila.children[6].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        Precio = Number($(fila.children[6].children[0]).val().replace(',', '.'));
-        Cantidad = Number($(fila.children[5].children[0]).val());
-        fila.children[7].innerHTML = "$" + (Precio * Cantidad)
-        total += parseFloat(fila.children[7].innerHTML.replace('$', ''));
+        Precio = Number($(fila.children[7].children[0]).val().replace(',', '.'));
+        Cantidad = Number($(fila.children[6].children[0]).val());
+        fila.children[8].innerHTML = "$" + (Precio * Cantidad)
+        total += parseFloat(fila.children[8].innerHTML.replace('$', ''));
     });
 
 
