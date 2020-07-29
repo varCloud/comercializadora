@@ -1,4 +1,37 @@
 	
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='InventarioFisico')
+	DROP TABLE InventarioFisico
+
+CREATE TABLE InventarioFisico(
+idInventarioFisico int primary key identity(1,1),
+nombre varchar(300),
+idUsuario int,
+idSucursal int,
+fechaInicio datetime,
+FechaFin datetime,
+observaciones varchar(500),
+activo bit
+)
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='AjusteInventarioFisico')
+	DROP TABLE AjusteInventarioFisico
+
+CREATE TABLE AjusteInventarioFisico(
+idAjusteInventarioFisico int primary key identity(1,1),
+idInventarioFisico int ,
+idProducto int,
+idUbicacion int,
+idUsuario int,
+cantidadActual int,
+cantidadEnFisico int,
+cantidadAAjustar int,
+fechaAlta datetime
+)
+
+
+
+
+	
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusProductoVenta')
 	DROP TABLE CatEstatusProductoVenta
 
@@ -68,8 +101,18 @@ if not exists (Select 1 from CatStatusCompra where idStatusCompra = 5)
 if not exists (Select 1 from CatTipoMovimientoInventario where idTipoMovInventario = 12)
 	insert into CatTipoMovimientoInventario ( descripcion , operacion) values ('Carga de producto a inventario por compra recibida' , 1)
 
+if not exists (Select 1 from CatTipoMovimientoInventario where idTipoMovInventario = 13)
+	insert into CatTipoMovimientoInventario ( descripcion , operacion) values ('Ajuste de Inventario por inventario fisico (incremento)' , 1)
+
+--update CatTipoMovimientoInventario set descripcion = 'Ajuste de Inventario por inventario fisico (incremento)' , operacion =1 where idTipoMovInventario = 13
+
+if not exists (Select 1 from CatTipoMovimientoInventario where idTipoMovInventario = 14)
+	insert into CatTipoMovimientoInventario ( descripcion , operacion) values ('Ajuste de Inventario por inventario fisico (decremento)' , -1)
+
+
 -- delete from CatStatusCompra where idStatusCompra is  null
 -- select * from CatStatusCompra
 -- select * from CatEstatusProductoCompra
+-- select * from CatTipoMovimientoInventario
 
 

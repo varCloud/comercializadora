@@ -32,7 +32,7 @@ namespace lluviaBackEnd.WebServices
             }
         }
 
-
+        [HttpPost]
         public Notificacion<List<CompraDetalle>> ObtenerDetalleCompra(RequestObtenerDetalleCompra request)
         {
             try
@@ -44,7 +44,7 @@ namespace lluviaBackEnd.WebServices
                 return WsUtils<List<CompraDetalle>>.RegresaExcepcion(ex, null);
             }
         }
-
+        [HttpPost]
         public Notificacion<String> ActualizarEstatusProductoCompra(RequestActualizaEstatusProductoCompra request)
         {
             try
