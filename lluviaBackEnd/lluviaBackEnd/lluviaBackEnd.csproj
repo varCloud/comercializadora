@@ -229,6 +229,7 @@
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
+    <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -1207,6 +1208,7 @@
     <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
     <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
     <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
+    <Content Include="Views\InventarioFisico\_ObtenerInventarioFisico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
