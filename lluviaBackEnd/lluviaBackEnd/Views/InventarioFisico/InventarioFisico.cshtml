@@ -37,7 +37,7 @@
 
                        <div class="form-group col-lg-4">
                            <label>Nombre</label>
-                           @Html.TextBoxFor(x => x.Nombre, null, new { @class = "form-control",data_val_required = "El nombre no puede ir vacio", data_val = "true" })
+                           @Html.TextBoxFor(x => x.Nombre, null, new {id="nombreInventarioFisico", @class = "form-control",data_val_required = "El nombre no puede ir vacio", data_val = "true" })
                            @Html.ValidationMessageFor(x => x.Nombre, null, new { @class = "text-danger was" })
                        </div>
 
@@ -49,47 +49,8 @@
                     </div>
                 }
                 <hr style="margin-top:0" />
-                <div>
-                    @if (listInventarioFisico.Count == 0)
-                    {
-
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
-                                <i class="fas fa-info"></i>
-                            </div>
-                            <h2>No se encontraron resultados</h2>
-                        </div>
-
-                    }
-                    else
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped" id="tblInventarioFisico">
-                                <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Nombre</th>
-                                        <th>Fecha Inicio</th>
-                                        <th>Fecha Fin</th>
-                                        <th>Sucursal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach (lluviaBackEnd.Models.InventarioFisico c in listInventarioFisico)
-                                    {
-                                        <tr>
-                                            <td>@c.idInventarioFisico</td>
-                                            <td>@c.Nombre</td>
-                                            <td>@c.FechaInicio</td>
-                                            <td>@c.FechaFin</td>
-                                            <td>@c.Sucursal.descripcion %</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
+                <div id="ViewInventarioFisico">
+                    @Html.Action("_ObtenerInventarioFisico", "InventarioFisico");
                     </div>
             </div>
         </div>

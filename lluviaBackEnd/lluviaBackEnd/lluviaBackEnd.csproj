@@ -1210,6 +1210,7 @@
     <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
     <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
     <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
+    <Content Include="Views\InventarioFisico\_ObtenerInventarioFisico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
