@@ -33,16 +33,19 @@ namespace lluviaBackEnd.Filters
             IDictionary<string, object> actionParameters = filterContext.ActionParameters;
 
 
-            foreach (object values in actionParameters.Values)
-            {
-                tmpMsg += "[" + values.GetType().ToString() + "] ";
-                string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
-                foreach (var prop in propertyNames)
-                {
-                    var propValue = values.GetType().GetProperty(prop).GetValue(values);
-                    tmpMsg += "[" + prop + ": " + propValue + "] ";
-                }
-            }
+            //foreach (object values in actionParameters.Values)
+            //{
+            //    if (values != null)
+            //    {
+            //        tmpMsg += "[" + values.GetType().ToString() + "] ";
+            //        string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
+            //        foreach (var prop in propertyNames)
+            //        {
+            //            var propValue = values.GetType().GetProperty(prop).GetValue(values);
+            //            tmpMsg += "[" + prop + ": " + propValue + "] ";
+            //        }
+            //    }
+            //}
                 
 
             log.Debug("Controller: " + filterContext.Controller);
