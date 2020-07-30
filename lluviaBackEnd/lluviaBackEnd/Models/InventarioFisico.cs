@@ -15,6 +15,8 @@ namespace lluviaBackEnd.Models
         public DateTime FechaFin { get; set; }
         public Sucursal Sucursal { get; set; }
         public Usuario Usuario { get; set; }
+        public DateTime FechaAlta { get; set; }
+
 
         public InventarioFisico()
         {
