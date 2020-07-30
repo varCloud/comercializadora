@@ -232,9 +232,9 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idAlmacen", request.idAlmacen);
                     parameters.Add("@idUsuario", request.idUsuario);
                     parameters.Add("@idCompra", request.idCompra);
-                    //notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
-                    var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
-                    var r1 = r.ReadFirst();
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
+                    //var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    //var r1 = r.ReadFirst();
                 }
             }
             catch (Exception ex)
@@ -248,9 +248,9 @@ namespace lluviaBackEnd.DAO
 
  
 
-        public string SerializeProductos(List<CompraDetalle> precios)
+        public string SerializeProductos(List<ProductosCompra> precios)
         {
-            var xmlSerializer = new XmlSerializer(typeof(List<CompraDetalle>));
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosCompra>));
             var stringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {

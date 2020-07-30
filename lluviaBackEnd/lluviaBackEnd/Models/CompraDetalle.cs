@@ -9,16 +9,11 @@ namespace lluviaBackEnd.Models
     {
 
         public int idCompraDetalle { get; set; }
-        public int idCompra { get; set; }
-        public int cantidad { get; set; }
-        public int precio { get; set; }
-        public int cantidadRecibida { get; set; }
-        public int cantidadDevuelta { get; set; }
-        public string observaciones { get; set; }
-        
-         public Producto producto { get; set; }
-         public Usuario usuario { get; set; }
-         public Status status { get; set; }
-        
+        public Producto producto { get; set; }
+        public Usuario usuario { get; set; }
+        public Status status { get; set; }
+
+     
+
     }
 }

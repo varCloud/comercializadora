@@ -26,19 +26,20 @@ else
                 <tr>
                     <th>Tipo Retiro</th>
                     <th>Monto</th>
+                    
                     <th>Usuario</th>
-                    <th>Usuario Autorizo</th>
                     <th>Estación</th>
                     <th>Estatus</th>
                     <th>Fecha</th>
                     @if (idRol == 1 || idRol == 2)
                     {
+                        if (retiros.Exists(p => p.tipoRetiro == EnumTipoRetiro.RetirosCierreDia))
+                        {
+                        <th>Usuario Autorizo</th>
+                        }
                         <th>Acciones</th>
                     }
-                    else
-                    {
-                        <th>Monto Autorizado</th>
-                    }
+
 
                 </tr>
             </thead>
@@ -51,7 +52,6 @@ else
                     <td><div class="badge @Html.Raw(c.tipoRetiro==lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "badge-success" : "badge-primary") badge-shadow">@Html.Raw(c.tipoRetiro == lluviaBackEnd.Models.EnumTipoRetiro.RetirosCierreDia ? "Retiros al cierre del dìa" : "Retiros por exceso de efectivo")</div></td>
                     <td>@c.montoRetiro.ToString("C", new CultureInfo("en-US"))</td>
                     <td>@c.nombreUsuario</td>
-                    <td>@c.nombreUsuarioAut</td>
                     <td>@c.nombreEstacion</td>
 
                     <td>
@@ -91,6 +91,10 @@ else
 
                     @if (idRol == 1 || idRol == 2)
                     {
+                        if (retiros.Exists(p => p.tipoRetiro == EnumTipoRetiro.RetirosCierreDia))
+                        {
+                            <td>@c.nombreUsuarioAut</td>
+                        }
                         <td>
                             @if (c.fechaAlta.ToShortDateString() == DateTime.Now.ToShortDateString() && c.estatusRetiro.idStatus == 1)
                             {
@@ -112,10 +116,10 @@ else
 
                         </td>
                     }
-                    else
-                    {
-                        <td>@c.montoAutorizado.ToString("C", new CultureInfo("en-US"))</td>
-                    }
+                    @*else
+        {
+            <td>@c.montoAutorizado.ToString("C", new CultureInfo("en-US"))</td>
+        }*@
                 </tr>
                 }
             </tbody>

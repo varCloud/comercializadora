@@ -188,15 +188,15 @@ function abrirModalPrevioVenta() {
 
 
 
-$('#btnAceptarDevolucion').click(function (e) {
+//$('#btnAceptarDevolucion').click(function (e) {
 
 
-    if ( ($('#motivoDevolucion').val() == "") ) {
-        MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
-        return;
-    }
+//    if ( ($('#motivoDevolucion').val() == "") ) {
+//        MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
+//        return;
+//    }
 
-}
+//}
 
 $('#btnAgregarProducto').click(function (e) {
     
