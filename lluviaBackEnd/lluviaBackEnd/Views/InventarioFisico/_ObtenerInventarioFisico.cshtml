@@ -33,12 +33,20 @@ else
                 {
                     <tr>
                         <td>@c.idInventarioFisico</td>
-                        <td>@c.Nombre</td>
+                        <td><input type="text" name="txtNombre_@c.idInventarioFisico" id="txtNombre_@c.idInventarioFisico" onblur="actualizarInventarioFisico(1,@c.idInventarioFisico,'@c.Nombre',this.value)" style="border: none; border-color: transparent;  background: transparent;" value="@c.Nombre"></td>
                         <td>@Html.Raw(c.FechaInicio == DateTime.MinValue ? "" : c.FechaInicio.ToLongDateString())</td>
                         <td>@Html.Raw(c.FechaFin == DateTime.MinValue ? "" : c.FechaFin.ToLongDateString())</td>
                         <td>@c.Sucursal.descripcion</td>
                         <th>@Html.Raw(c.Activo == true ? "SI" : "NO")</th>
-                        <td></td>
+                        <td>
+                            <div class="form-group">                       
+                                <label class="custom-switch mt-2">
+                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" @Html.Raw(c.Activo == true ? "checked" : "") id="chkActivo_@c.idInventarioFisico" onchange="actualizarInventarioFisico(2,@c.idInventarioFisico,'@c.Activo',this.checked)">
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">@Html.Raw(c.Activo == true ? "Desactivar" : "Activar")</span>
+                                </label>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>
