@@ -96,7 +96,12 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region Reportes
-        Puede_visualizar_Reportes
+        Puede_visualizar_Reportes,
+        #endregion
+
+        #region InventarioFisico
+        Puede_visualizar_InventarioFisico
+
         #endregion
 
     }

@@ -205,6 +205,7 @@ function abrirModalPrevioVenta() {
 
 $('#btnAceptarDevolucion').click(function (e) {
 
+
     if ( ($('#motivoDevolucion').val() == "") ) {
         MuestraToast('warning', "Debe seleccionar el motivo de la devolución");
         return;
@@ -214,6 +215,8 @@ $('#btnAceptarDevolucion').click(function (e) {
     abrirModalPrevioVenta();
     
 });
+
+
 
 $('#btnAgregarProducto').click(function (e) {
     

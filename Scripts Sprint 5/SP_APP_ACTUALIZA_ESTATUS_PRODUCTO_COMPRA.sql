@@ -43,14 +43,28 @@ as
 			insert into  #ProductosRecibidos
 			SELECT  
 					P.value('idCompraDetalle[1]', 'INT') AS idCompraDetalle,
-					P.value('producto[1]/idProducto[1]', 'INT') AS idProducto,
-					P.value('status[1]/idStatus[1]', 'INT') AS idEstatusProductoCompra,
+					P.value('idProducto[1]', 'INT') AS idProducto,
+					P.value('idEstatusProductoCompra[1]', 'INT') AS idEstatusProductoCompra,
 					P.value('cantidadRecibida[1]', 'INT') AS cantidadRecibida,
 					P.value('cantidadDevuelta[1]', 'INT') AS cantidadDevuelta,
 					P.value('observaciones[1]', 'VARCHAR(500)') AS observaciones
-			FROM  @productos.nodes('//ArrayOfCompraDetalle/CompraDetalle') AS x(P)
+			FROM  @productos.nodes('//ArrayOfProductosCompra/ProductosCompra') AS x(P)
 
-			
+			begin -- validaciones
+
+				if exists (select 1 from #ProductosRecibidos PR left join ComprasDetalle C on PR.idCompraDetalle = C.idCompraDetalle
+					where C.idCompraDetalle is null and C.idCompra is null)
+				begin
+					select -1 Estatus , 'La compra contiene un producto que no le pertenece' Mensaje
+				end
+
+				if exists (select 1 from Compras where idStatusCompra !=2)
+				begin
+					select -1 Estatus , 'Esta compra ya ha sido procesada' Mensaje
+				end
+			end
+
+
 			
 			declare  	@tran_name varchar(32) = 'PRODUCTO_COMPRA',
 						@tran_count int = @@trancount,
@@ -207,6 +221,11 @@ as
 				FROM 
 				ComprasDetalle CD  
 				JOIN #ProductosRecibidos PR ON CD.idCompra = @idCompra AND  CD.idProducto = PR.idProducto  and CD.idCompraDetalle = PR.idCompraDetalle
+
+				--
+				--SELECT * FROM CatStatusCompra
+				--ACTUALIZAMOS EL ESTATUS GENERAL DE LA COMPRA AL ESTATUS DE FINALIZADA
+				UPDATE Compras SET idStatusCompra= 3 WHERE idCompra = @idCompra
 
 			--VALIDAMOS SI LA TRANSACCION SE GENERO AQUI , AQUIMISMO SE HACE EL COMMIT	
 		    if @tran_count = 0	

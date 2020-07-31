@@ -41,6 +41,15 @@ namespace lluviaBackEnd.Filters
             //    {
             //        var propValue = values.GetType().GetProperty(prop).GetValue(values);
             //        tmpMsg += "[" + prop + ": " + propValue + "] ";
+            //    if (values != null)
+            //    {
+            //        tmpMsg += "[" + values.GetType().ToString() + "] ";
+            //        string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
+            //        foreach (var prop in propertyNames)
+            //        {
+            //            var propValue = values.GetType().GetProperty(prop).GetValue(values);
+            //            tmpMsg += "[" + prop + ": " + propValue + "] ";
+            //        }
             //    }
             //}
                 

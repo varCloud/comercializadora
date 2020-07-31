@@ -192,10 +192,10 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idCompra", request.idCompra);
                     var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
-                    if (r1.status == 200)
+                    if (r1.Estatus == 200)
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                         notificacion.Modelo = result.Read<CompraDetalle, Producto,Status, Usuario,  CompraDetalle>((c, producto, status, usuario) =>
                         {
                             c.producto = producto;
@@ -206,14 +206,14 @@ namespace lluviaBackEnd.DAO
                     }
                     else
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message ,ex );
             }
             return notificacion;
         }
@@ -232,9 +232,9 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idAlmacen", request.idAlmacen);
                     parameters.Add("@idUsuario", request.idUsuario);
                     parameters.Add("@idCompra", request.idCompra);
-                    //notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
-                    var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
-                    var r1 = r.ReadFirst();
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
+                    //var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    //var r1 = r.ReadFirst();
                 }
             }
             catch (Exception ex)
@@ -248,9 +248,9 @@ namespace lluviaBackEnd.DAO
 
  
 
-        public string SerializeProductos(List<CompraDetalle> precios)
+        public string SerializeProductos(List<ProductosCompra> precios)
         {
-            var xmlSerializer = new XmlSerializer(typeof(List<CompraDetalle>));
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosCompra>));
             var stringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {
