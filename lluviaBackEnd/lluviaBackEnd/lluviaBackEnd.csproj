@@ -1205,6 +1205,7 @@
     <Content Include="Views\Compras\_Compra.cshtml" />
     <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
     <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
+    <Content Include="Views\Ventas\VerTicketDevolucion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

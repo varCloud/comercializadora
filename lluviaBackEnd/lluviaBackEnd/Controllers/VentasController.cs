@@ -84,13 +84,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos)
+        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion)
         {
             try
             {
                 Notificacion<Ventas> result = new Notificacion<Ventas>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos);
+                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos, tipoVenta, motivoDevolucion);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -964,6 +964,25 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ActionResult VerTicketDevolucion(int idVenta)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, tipoVenta = EnumTipoVenta.Devolucion }); 
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
                 string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));

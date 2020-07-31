@@ -152,7 +152,22 @@ $('#previoVenta').click(function (e) {
 
     if (esDevolucion == "true" )
     {
+        // validamos que al menos exista devolucion de un item
+        var tblVtas = document.getElementById('tablaRepVentas');
+        var rCount = tblVtas.rows.length;
+        var productosDevueltos = parseInt(0);
+        
+        if (rCount >= 2) {
+            for (var i = 1; i < rCount; i++) {
+                productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
+            }
+        }
 
+        if ( productosDevueltos <= 0 ) {
+            MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
+            return;
+        }
+        $('#motivoDevolucion').val('');
         $('#ModalDevolucion').modal({ backdrop: 'static', keyboard: false, show: true });
     }
     else
@@ -190,13 +205,15 @@ function abrirModalPrevioVenta() {
 
 $('#btnAceptarDevolucion').click(function (e) {
 
-
     if ( ($('#motivoDevolucion').val() == "") ) {
-        MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
+        MuestraToast('warning', "Debe seleccionar el motivo de la devolución");
         return;
     }
 
-}
+    $('#ModalDevolucion').modal('hide');
+    abrirModalPrevioVenta();
+    
+});
 
 $('#btnAgregarProducto').click(function (e) {
     
@@ -275,7 +292,6 @@ function actualizaTicketVenta() {
 
         if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion')) )
         {
-            
             fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>"; 
         }
 
@@ -312,7 +328,7 @@ function actualizaTicketVenta() {
             OcultarLoader();
 
             if (data.Estatus == 200) {
-            //    console.log(data);
+            
                 var j = 0;
                 for (j = 0; j < data.Modelo.length; j++) {
 
@@ -324,17 +340,16 @@ function actualizaTicketVenta() {
 
                             var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
 
-                            if (!tblVtas.rows[i].cells[7].getAttribute("class").includes('agregarProductos'))
+                            if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos')))
                             {
-                                //alert("actualizo");
+                                //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
+                                
                                 if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
                                     tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
                                     tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
                                     tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
                                 }
-
-                            }
-                            
+                            }                            
                         }
                     }
                 }
@@ -359,28 +374,42 @@ function initInputsTabla() {
     $('#tablaRepVentas input').on('change', function () {
 
         var thisInput = $(this);
+        var mensaje = "Debe escribir la cantidad de productos.";
+
+        if (thisInput.hasClass("esDevolucion")) {
+            mensaje = "Debe escribir la cantidad de productos que va a devolver.";
+        }
 
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
-            MuestraToast('warning', "Debe escribir la cantidad de productos.");
+            MuestraToast('warning', mensaje);
             document.execCommand('undo');
+        }
+
+        if (thisInput.hasClass("esDevolucion")) {
+
+            var cell = $(this).closest('td');
+            var row = cell.closest('tr');
+            var rowIndex = row[0].rowIndex;
+            var tblVtas = document.getElementById('tablaRepVentas');
+
+            if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value)))
+            {
+                MuestraToast('warning', "No puede regresar mas de lo que compro.");
+                document.execCommand('undo');
+                return;
+            }
+
+                      
+
+
         }
         else {
             actualizaTicketVenta();
         }
+        
     });
+
 }
-
-//function agregarDescuentos() {
-
-//    $("#vaConDescuento").val("1");
-//    actualizaPreciosTabla('tablaRepVentas');
-//}
-
-
-//function quitarDescuentos() {
-//    $("#vaConDescuento").val("0");
-//    actualizaPreciosTabla('tablaRepVentas');
-//}
 
 
 function actualizaPreciosTabla(tabla) {
@@ -482,7 +511,15 @@ $('#btnGuardarVenta').click(function (e) {
     var numClientesAtendidos = parseInt(0);
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+    var esDevolucion = $('#esDevolucion').val();
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    var esVentaNormal = "true";
+    var motivoDevolucion = $('#motivoDevolucion').val();
+    var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
 
+    if ((esDevolucion == "true") || (esAgregarProductos == "true")) {
+        esVentaNormal = "false"
+    }
 
     // validaciones
     if ($('#efectivo').val() == "") {
@@ -515,17 +552,50 @@ $('#btnGuardarVenta').click(function (e) {
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
-    if (rCount >= 2) {
-        for (var i = 1; i < rCount; i++) {
-            var row_ = {
-                idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
-            };
-            productos.push(row_);
+    if ((esVentaNormal == "true")) {
+        if (rCount >= 2) {
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                };
+                productos.push(row_);
+            }
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos });
+    if ((esDevolucion == "true")) {
+        if (rCount >= 2) {
+            tipoVenta = parseInt(2);
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    productosDevueltos: parseInt(tblVtas.rows[i].cells[7].children[0].value),
+                    idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
+                };
+                productos.push(row_);
+            }
+        }
+    }
+
+    if ((esAgregarProductos == "true")) {
+        //if (rCount >= 2) {
+        //    tipoVenta = parseInt(3);
+        //    for (var i = 1; i < rCount; i++) {
+        //        var row_ = {
+        //            idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+        //            cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+        //            idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
+        //            productosDevueltos
+        //        };
+        //        productos.push(row_);
+        //    }
+        //}
+    }
+
+    //alert(idVenta);
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -540,16 +610,30 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            //console.log(data);
+            
             if (data.Estatus == 200) {
+                console.log(esVentaNormal);
 
-                ImprimeTicket(data.Modelo.idVenta);
+                if (esVentaNormal == "true") {
+                    ImprimeTicket(data.Modelo.idVenta);
 
-                if ($("#chkFacturar").is(":checked")) {
-                    //console.log(" is checked!- facturar\n");
-                    facturaVenta(data.Modelo.idVenta);
+                    if ($("#chkFacturar").is(":checked")) {
+                        facturaVenta(data.Modelo.idVenta);
+                    }
                 }
-                
+
+                if (esDevolucion == "true") {
+
+                    //ImprimeTicketDevolucion(data.Modelo.idVenta);
+                    ImprimeTicket(data.Modelo.idVenta);
+
+                }
+
+                if (esAgregarProductos == "true") {
+
+
+                }
+
                 InitSelect2Productos();
                 limpiarTicket();
             }
@@ -570,6 +654,13 @@ $('#btnGuardarVenta').click(function (e) {
 $('#chkFacturar').click(function () {
 
     var idCliente = $('#idCliente').val();
+    var esDevolucion = $('#esDevolucion').val();
+
+    if (esDevolucion == "true") {
+        MuestraToast('warning', "No es posible facturar una Devolución.");
+        document.getElementById("chkFacturar").checked = false;
+        return
+    }
 
     if (idCliente == 1) {
         MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());

@@ -87,8 +87,7 @@ namespace lluviaBackEnd.Models
         public Boolean esAgregarProductos { get; set; }
         public int productosDevueltos { get; set; }
         public int productosAgregados { get; set; }
-        //public int devolucionesPermitidas { get; set; }
-        //public int agregarProductosPermitidos { get; set; }
+        public int idVentaDetalle { get; set; }
 
 
     }

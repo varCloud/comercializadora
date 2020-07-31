@@ -119,4 +119,11 @@ namespace lluviaBackEnd.Models
         Correcta=1,
         Incorrecta=2
     }
+
+    public enum EnumTipoVenta
+    {
+        Normal = 1,
+        Devolucion = 2,
+        AgregarProductosVenta = 3
+    }
 }

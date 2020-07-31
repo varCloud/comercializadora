@@ -142,7 +142,8 @@
                                             <th class="text-center">Cantidad</th>
                                             <th class="text-center">Total</th>
                                             <th class="text-center">Descuento</th>
-                                            <th class="text-center"> @(esAgregarProductos == true ? "Acciones" : "Devolver Artículos") </th>
+                                            <th class="text-center"> @(esDevolucion == true ? "Devolver Artículos" : "Acciones") </th>
+                                            <th class="text-center" style="display: none;">idVentaDetalle</th>
                                         </tr>
                                     </thead>
                                     @if (notificacion.Modelo != null)
@@ -171,10 +172,11 @@
                                                         }
                                                         else
                                                         {
-                                                            <td class="text-center esDevolucion"><input type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
 
                                                         }
 
+                                                        <td style="display: none;">@item.idVentaDetalle</td>
 
                                                     </tr>
 
@@ -218,7 +220,7 @@
                         @if (esDevolucion)
                         {
                         <div class="text-md-right">
-                            <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger" data-toggle="tooltip" title="Devolver Productos"><i class="fas fa-times"></i>Cancelar</a>
+                            <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger" ><i class="fas fa-times"></i> Cancelar</a>
                             <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
                                 <i class="fas fa-credit-card"></i> Realizar Devolucion
                             </button>

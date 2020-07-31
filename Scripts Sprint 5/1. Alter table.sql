@@ -8,7 +8,7 @@ descripcion varchar(300)
 )
 
 INSERT INTO CatEstatusProductoVenta (descripcion) 
-values('devuelto'),('complemento / agregado')
+values('Devuelto'),('Complemento / Agregado')
 
 
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusProductoCompra')
