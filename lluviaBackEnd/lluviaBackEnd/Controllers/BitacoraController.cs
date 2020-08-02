@@ -10,8 +10,10 @@ using System.Web.Mvc;
 namespace lluviaBackEnd.Controllers
 {
     [SessionTimeout]
+    
     public class BitacoraController : Controller
     {
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Bitacoras)]
         // GET: Bitacora
         public ActionResult Bitacoras()
         {

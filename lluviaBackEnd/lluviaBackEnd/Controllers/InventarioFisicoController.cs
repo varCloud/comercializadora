@@ -13,6 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class InventarioFisicoController : Controller
     {
         // GET: InventarioFisico
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_InventarioFisico)]
         public ActionResult InventarioFisico()
         {
             try

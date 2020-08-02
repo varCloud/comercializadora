@@ -16,7 +16,10 @@ namespace lluviaBackEnd.Filters
         {
             base.OnActionExecuting(filterContext);
 
-            if (!Models.Sesion.ExisteInventarioFisicoActivo())
+            HttpContext context = HttpContext.Current;
+            Sesion sesion = (Sesion)context.Session["UsuarioActual"];
+
+            if (Models.Sesion.ExisteInventarioFisicoActivo() && this.Permiso!=EnumRolesPermisos.Puede_visualizar_InventarioFisico)
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new
                 {

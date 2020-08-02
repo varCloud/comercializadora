@@ -14,7 +14,7 @@ namespace lluviaBackEnd.Controllers
     public class ProductosController : Controller
     {
         // GET: Productos
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Productos)]
         public ActionResult Productos()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();

@@ -54,7 +54,7 @@ namespace lluviaBackEnd.Models
             HttpContext context = HttpContext.Current;
             Sesion sesion = (Sesion)context.Session["UsuarioActual"];
 
-            return sesion.idRol==1 ? true : (new InventarioFisicoDAO().ValidaExisteInventarioFisicoActivo(sesion.idUsuario).Estatus==200 ? true : false);
+            return new InventarioFisicoDAO().ValidaExisteInventarioFisicoActivo(sesion.idUsuario).Estatus==200 ? true : false;
         }
 
     }
