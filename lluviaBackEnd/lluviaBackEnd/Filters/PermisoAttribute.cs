@@ -15,14 +15,24 @@ namespace lluviaBackEnd.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            if (!Models.Sesion.TienePermiso(this.Permiso))
+
+            if (!Models.Sesion.ExisteInventarioFisicoActivo())
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new
                 {
                     controller = "Login",
-                    action = "SinPermisos"
+                    action = "InventarioFisicoActivo"
                 }));
             }
+
+            //if (!Models.Sesion.TienePermiso(this.Permiso))
+            //{
+            //    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new
+            //    {
+            //        controller = "Login",
+            //        action = "SinPermisos"
+            //    }));
+            //}
         }
     }
 }

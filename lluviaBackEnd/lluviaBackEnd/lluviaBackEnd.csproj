@@ -1212,6 +1212,7 @@
     <Content Include="Views\Ventas\VerTicketDevolucion.cshtml" />
     <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
     <Content Include="Views\InventarioFisico\_ObtenerInventarioFisico.cshtml" />
+    <Content Include="Views\Login\InventarioFisicoActivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

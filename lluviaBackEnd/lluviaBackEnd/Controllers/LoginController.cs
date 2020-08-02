@@ -162,5 +162,18 @@ namespace lluviaBackEnd.Controllers
             }
 
         }
+
+        public ActionResult InventarioFisicoActivo()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
     }
 }

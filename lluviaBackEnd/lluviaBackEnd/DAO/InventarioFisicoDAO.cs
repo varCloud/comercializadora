@@ -86,14 +86,17 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public List<InventarioFisico> ObtenerInventarioFisico()
+        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal)
         {
             List<InventarioFisico> inventarioFisicos = new List<InventarioFisico>();
             try
             {
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
-                    var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_FISICO", null, commandType: CommandType.StoredProcedure);
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@idSucursal", idSucursal==0 ? (object)DBNull.Value : idSucursal);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = result.ReadFirst();
                     if (rs1.status == 200)
                     {                        
@@ -114,6 +117,32 @@ namespace lluviaBackEnd.DAO
             i.Sucursal = s;
             i.Usuario = u;
             return i;
-        } 
+        }
+
+        public Notificacion<String> ValidaExisteInventarioFisicoActivo(int idUsuario)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", idUsuario == 0 ? (object)DBNull.Value : idUsuario);
+                    var rs = db.QueryMultiple("SP_VALIDA_EXISTE_INVENTARIO_FISICO_ACTIVO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = rs.ReadFirst();
+                    notificacion.Mensaje = r1.Mensaje;
+                    notificacion.Estatus = r1.Estatus;
+                    notificacion.Modelo = r1.idInventarioFisico;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
     }
 }
