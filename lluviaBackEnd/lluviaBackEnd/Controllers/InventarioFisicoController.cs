@@ -47,12 +47,60 @@ namespace lluviaBackEnd.Controllers
            
         }
 
-        public ActionResult _ObtenerInventarioFisico(InventarioFisico inventarioFisico)
+        [HttpPost]
+        public ActionResult ActualizaEstatusInventarioFisico(InventarioFisico inventarioFisico)
         {
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal));
+                inventarioFisico.Usuario.idUsuario = usuarioSesion.idUsuario;
+                Notificacion<string> result = new InventarioFisicoDAO().ActualizaEstatusInventarioFisico(inventarioFisico);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult _ObtenerInventarioFisico()
+        {
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal,0));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult _InventarioFisico(InventarioFisico inventarioFisico)
+        {
+            try
+            {
+                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico).First();
+                return PartialView(inventarioFisico);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+
+        public ActionResult _ObtenerAjusteInventario(AjusteInventarioFisico ajusteInventario,Int64 idInventarioFisico)
+        {
+            try
+            {
+                return PartialView(new InventarioFisicoDAO().ObtenerAjusteInventario(ajusteInventario, idInventarioFisico));
             }
             catch (Exception ex)
             {

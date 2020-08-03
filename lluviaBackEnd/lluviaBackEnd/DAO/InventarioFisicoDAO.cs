@@ -74,8 +74,7 @@ namespace lluviaBackEnd.DAO
 
                     parameters.Add("@idInventarioFisico", inventarioFisico.idInventarioFisico);
                     parameters.Add("@nombre", inventarioFisico.Nombre);
-                    parameters.Add("@idUsuario", inventarioFisico.Usuario.idUsuario);
-                    parameters.Add("@activo", inventarioFisico.Activo);
+                    parameters.Add("@idUsuario", inventarioFisico.Usuario.idUsuario);                    
                     notificacion = db.QuerySingle<Notificacion<string>>("SP_INSERTA_ACTUALIZA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                 }
             }
@@ -86,7 +85,31 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal)
+        public Notificacion<string> ActualizaEstatusInventarioFisico(InventarioFisico inventarioFisico)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idInventarioFisico", inventarioFisico.idInventarioFisico);
+                    parameters.Add("@idEstatusInventarioFisico", inventarioFisico.EstatusInventarioFisico.idStatus);
+                    parameters.Add("@idUsuario", inventarioFisico.Usuario.idUsuario);
+                    parameters.Add("@observaciones", inventarioFisico.Observaciones);
+                    notificacion = db.QuerySingle<Notificacion<string>>("SP_ACTUALIZA_ESTATUS_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal,int idInventarioFisico)
         {
             List<InventarioFisico> inventarioFisicos = new List<InventarioFisico>();
             try
@@ -94,13 +117,14 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@idSucursal", idSucursal==0 ? (object)DBNull.Value : idSucursal);
+                    parameters.Add("@idSucursal", idSucursal==0 ? (object)null : idSucursal);
+                    parameters.Add("@idInventarioFisico", idInventarioFisico == 0 ? (object)null : idInventarioFisico);
 
                     var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = result.ReadFirst();
                     if (rs1.status == 200)
                     {                        
-                        inventarioFisicos = result.Read<InventarioFisico, Sucursal, Usuario,InventarioFisico>(MapInventarioFisico, splitOn: "idSucursal,idUsuario").ToList();
+                        inventarioFisicos = result.Read<InventarioFisico, Sucursal, Usuario,Status,InventarioFisico>(MapInventarioFisico, splitOn: "idSucursal,idUsuario,idStatus").ToList();
                     }
                    
                 }
@@ -112,10 +136,11 @@ namespace lluviaBackEnd.DAO
             return inventarioFisicos;
         }
 
-        public InventarioFisico MapInventarioFisico(InventarioFisico i,Sucursal s,Usuario u)
+        public InventarioFisico MapInventarioFisico(InventarioFisico i,Sucursal s,Usuario u, Status status)
         {
             i.Sucursal = s;
             i.Usuario = u;
+            i.EstatusInventarioFisico = status;
             return i;
         }
 
@@ -143,6 +168,45 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
+
+        public List<AjusteInventarioFisico> ObtenerAjusteInventario(AjusteInventarioFisico a,Int64 idInventarioFisico)
+        {
+            List<AjusteInventarioFisico> ajusteInventarios = new List<AjusteInventarioFisico>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@idInventarioFisico", idInventarioFisico == 0 ? (object)null : idInventarioFisico);
+                    parameters.Add("@idProducto", a.producto.idProducto == 0 ? (object)null : a.producto.idProducto);
+                    parameters.Add("@idLineaProducto", string.IsNullOrEmpty(a.producto.idLineaProducto)? (object)null : a.producto.idLineaProducto);
+                    parameters.Add("@idAlmacen", a.producto.idAlmacen == 0 ? (object)null : a.producto.idAlmacen);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_AJUSTE_INVENTARIO", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = result.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        ajusteInventarios = result.Read<AjusteInventarioFisico, Producto, Usuario, AjusteInventarioFisico>(MapAjusteInventarioFisico, splitOn: "idProducto,idUsuario").ToList();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ajusteInventarios;
+        }
+
+        public AjusteInventarioFisico MapAjusteInventarioFisico(AjusteInventarioFisico i, Producto p, Usuario u)
+        {           
+            i.producto = p;
+            i.usuario = u;
+          
+            return i;
+        }
+
+
 
     }
 }

@@ -24,7 +24,8 @@ else
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Sucursal</th>
-                    <th>Activo</th>
+                    <th>Estatus</th>
+                    <th>Observaciones</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -34,19 +35,58 @@ else
                 {
                     <tr>
                         <td>@c.idInventarioFisico</td>
-                        <td><input type="text" name="txtNombre_@c.idInventarioFisico" id="txtNombre_@c.idInventarioFisico" onblur="actualizarInventarioFisico(1,@c.idInventarioFisico,'@c.Nombre',this.value)" style="border: none; border-color: transparent;  background: transparent;" value="@c.Nombre"></td>
+                        <td><input type="text" name="txtNombre_@c.idInventarioFisico" id="txtNombre_@c.idInventarioFisico" onblur="actualizarInventarioFisico(@c.idInventarioFisico,'@c.Nombre',this.value)" style="border: none; border-color: transparent;  background: transparent;" value="@c.Nombre"></td>
                         <td>@c.FechaAlta</td>
                         <td>@Html.Raw(c.FechaInicio == DateTime.MinValue ? "" : c.FechaInicio.ToString())</td>
                         <td>@Html.Raw(c.FechaFin == DateTime.MinValue ? "" : c.FechaFin.ToString())</td>
                         <td>@c.Sucursal.descripcion</td>
-                        <th>@Html.Raw(c.Activo == true ? "SI" : "NO")</th>
                         <td>
-                            <div class="form-group">                       
-                                <label class="custom-switch mt-2">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" @Html.Raw(c.Activo == true ? "checked" : "") id="chkActivo_@c.idInventarioFisico" onchange="actualizarInventarioFisico(2,@c.idInventarioFisico,'@c.Activo',this.checked)">
-                                    <span class="custom-switch-indicator"></span>
-                                    <span class="custom-switch-description">@Html.Raw(c.Activo == true ? "Desactivar" : "Activar")</span>
-                                </label>
+                            @{
+                                switch (c.EstatusInventarioFisico.idStatus)
+                                {
+                                    case 1:
+                                        {
+                                            <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                        }
+                                        break;
+
+                                    case 2:
+                                        {
+                                            <div class="badge badge-success badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+
+                                        }
+                                        break;
+
+                                    case 3:
+                                        {
+                                            <div class="badge badge-warning badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                        }
+                                        break;
+
+                                    case 4:
+                                        {
+                                            <div class="badge badge-danger badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                        }
+                                        break;
+                                }
+                            }
+                        </td>
+                        <td>@c.Observaciones</td>
+                        <td>
+                            <div class="buttons">
+                                @if (c.EstatusInventarioFisico.idStatus == 1)
+                                {
+                                    <a href="javascript:ActualizarEstatusInventarioFisico(@c.idInventarioFisico,2,'','iniciar');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Iniciar"><i class="far fa-play-circle"></i></a>
+                                }
+                                @if (c.EstatusInventarioFisico.idStatus == 2)
+                                {
+                                    <a href="javascript:VerDetalleInventarioFisico(@c.idInventarioFisico);" onclick="ShowLoader()" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Ver"><i class="far fa-eye"></i></a>
+                                }
                             </div>
                         </td>
                     </tr>
