@@ -28,7 +28,7 @@ else
                     <th>Raq</th>
                     <th>Cantidad Actual</th>
                     <th>Cantidad Fisico</th>
-                    <th>Merma</th>
+                    <th>Cantidad Ajustar</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +44,22 @@ else
                     <td>@c.producto.Pasillo</td>
                     <td>@c.producto.Raq</td>
                     <td>@c.cantidadActual</td>
-                    <td>@c.cantidadEnFisico</td>
+                    <td>
+                        @if (c.cantidadActual == c.cantidadEnFisico)
+                        {
+                            <div class="badge badge-success badge-shadow">@c.cantidadEnFisico</div>
+                        }
+                        else if (c.cantidadEnFisico < c.cantidadActual)
+                        {
+                            <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico</div>
+                        }
+                        else if (c.cantidadEnFisico > c.cantidadActual)
+                        {
+                            <div class="badge badge-warning badge-shadow">@c.cantidadEnFisico</div>
+                        }
+
+
+                    </td>
                     <td>@c.cantidadAAjustar</td>                   
                 </tr>
                 }

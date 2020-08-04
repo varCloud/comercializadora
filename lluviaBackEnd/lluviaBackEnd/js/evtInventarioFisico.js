@@ -96,10 +96,10 @@ function InitDataTableInventarioFisico() {
     );
 }
 
-function InitDataTableAjusteInventarioFisico() {
+function InitDataTableAjusteInventarioFisico(NameFile) {
     var NombreTabla = "tblAjusteInventarioFisico";
     tblAjusteInventarioFisico = initDataTable(NombreTabla);
-
+    
     new $.fn.dataTable.Buttons(tblAjusteInventarioFisico, {
         buttons: [
             {
@@ -107,19 +107,19 @@ function InitDataTableAjusteInventarioFisico() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Ajuste de Inventario Fisico",
+                title: NameFile,
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '15%', '15%', '15%', '15%', '10%'];
+                    //doc.content[1].table.widths = ['10%', '20%', '15%', '15%', '15%', '15%', '10%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
-                    doc['header'] = SetHeaderPDF("Ajuste de Inventario Fisico");
+                    doc['header'] = SetHeaderPDF(NameFile);
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
                 },
             },
             {
@@ -128,7 +128,7 @@ function InitDataTableAjusteInventarioFisico() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
                 },
             },
         ],
@@ -208,7 +208,7 @@ function actualizarInventarioFisico(idInventarioFisico, ValorAnt, ValorNew) {
 
 }
 
-function VerDetalleInventarioFisico(idInventarioFisico) {
+function VerDetalleInventarioFisico(idInventarioFisico,nameInventarioFisico) {
 
     $.ajax({
         url: rootUrl("/InventarioFisico/_InventarioFisico"),
@@ -225,7 +225,7 @@ function VerDetalleInventarioFisico(idInventarioFisico) {
                 tblAjusteInventarioFisico.destroy(); 
             $("#_ViewInventarioFisico").html(data);
             if ($("#tblAjusteInventarioFisico").length > 0)
-                InitDataTableAjusteInventarioFisico();
+                InitDataTableAjusteInventarioFisico('Ajuste de Inventario Fisico "' + nameInventarioFisico + '"');
                
             $('#modalAjusteInventarioFisico').modal({ backdrop: 'static', keyboard: false, show: true });
 
@@ -240,10 +240,10 @@ function VerDetalleInventarioFisico(idInventarioFisico) {
 }
 
 function ActualizarEstatusInventarioFisico(idInventarioFisico,idStatusInventarioFisico,Observaciones,descEstatus) {
-
+    
     swal({
         title: '',
-        text: 'Estas seguro que deseas ' + descEstatus+' el inventario fisico?',
+        text: 'Estas seguro que deseas ' + descEstatus+' el ajuste de inventario fisico?',
         icon: '',
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
@@ -274,6 +274,7 @@ function ActualizarEstatusInventarioFisico(idInventarioFisico,idStatusInventario
                     success: function (data) {
                         if (data.Estatus == 200) {
                             MuestraToast('success', data.Mensaje);
+                            $('#modalAjusteInventarioFisico').modal('hide');
 
                         } else {
                             MuestraToast("error", data.Mensaje);

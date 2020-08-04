@@ -36,16 +36,15 @@
     <div class="row">
         <div class="form-group col-lg-6">
             <label>Observaciones</label>
-            @Html.TextAreaFor(model => model.Observaciones, new { id = "Observaciones", @class = "form-control", placeholder = "", data_val_required = "Especifique la observacion", data_val = "true" })
-            @Html.ValidationMessageFor(model => model.Observaciones, null, new { @class = "text-danger was" })
+            <textarea id="Observaciones" class='form-control @Html.Raw(Model.EstatusInventarioFisico.idStatus!=2 ? "readonly" : "")' @Html.Raw(Model.EstatusInventarioFisico.idStatus!= 2 ? "readonly" : "")>@Model.Observaciones</textarea>
         </div>
         @if (Model.EstatusInventarioFisico.idStatus == 2)
         {
 
             <div class="col-lg-6">
                 <div class="text-right" style="margin-top:57px;">
-                    <button id="btnCancelar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar Ajuste Inventario</button>
-                    <button id="btnFinalizar" class="btn btn-primary btn-icon icon-left">
+                    <button onclick="javascript: ActualizarEstatusInventarioFisico(@Model.idInventarioFisico, 4, $('#Observaciones').val(), 'cancelar');" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar Ajuste Inventario</button>
+                    <button onclick="javascript:ActualizarEstatusInventarioFisico(@Model.idInventarioFisico,3,$('#Observaciones').val(),'finalizar y afectar');" class="btn btn-primary btn-icon icon-left">
                         <i class="fas fa-credit-card"></i>Finalizar Ajuste de Inventario
                     </button>
 
