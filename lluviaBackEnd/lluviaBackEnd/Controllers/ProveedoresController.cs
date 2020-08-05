@@ -13,7 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class ProveedoresController : Controller
     {
         // GET: Proveedores
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Proveedores)]
         public ActionResult Proveedores()
         {
             ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(new Models.Proveedor() { idProveedor = 0 });

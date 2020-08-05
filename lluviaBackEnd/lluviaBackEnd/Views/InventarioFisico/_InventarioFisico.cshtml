@@ -1,0 +1,62 @@
+﻿@model lluviaBackEnd.Models.InventarioFisico
+
+
+<section class="section">
+
+    <div class="section-body">
+        <div class="row">
+                @*<div class="form-group col-lg-4">
+                    <label>Producto</label>
+                    @Html.DropDownListFor(model => model., new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                </div>*@
+                @*<div class="form-group col-lg-3">
+                    <label>Costo</label>
+                    <input id="precio" type="text" class="form-control" onkeypress="return esPrecio(event)">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Cantidad</label>
+                    <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
+                </div>
+                <div class="form-group col-lg-3">
+                    <div class="text-left" style="margin-top:30px;">
+                        <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar Producto &nbsp;</button>
+                    </div>
+                </div>*@
+         </div>
+
+
+        <div class="row">
+            @Html.Action("_ObtenerAjusteInventario", "InventarioFisico", new { idInventarioFisico = Model.idInventarioFisico })
+
+            <hr>
+        </div>
+
+        @Html.HiddenFor(model => Model.idInventarioFisico)
+        @Html.HiddenFor(x => Model.EstatusInventarioFisico.idStatus)
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label>Observaciones</label>
+            <textarea id="Observaciones" class='form-control @Html.Raw(Model.EstatusInventarioFisico.idStatus!=2 ? "readonly" : "")' @Html.Raw(Model.EstatusInventarioFisico.idStatus!= 2 ? "readonly" : "")>@Model.Observaciones</textarea>
+        </div>
+        @if (Model.EstatusInventarioFisico.idStatus == 2)
+        {
+
+            <div class="col-lg-6">
+                <div class="text-right" style="margin-top:57px;">
+                    <button onclick="javascript: ActualizarEstatusInventarioFisico(@Model.idInventarioFisico, 4, $('#Observaciones').val(), 'cancelar');" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar Ajuste Inventario</button>
+                    <button onclick="javascript:ActualizarEstatusInventarioFisico(@Model.idInventarioFisico,3,$('#Observaciones').val(),'finalizar y afectar');" class="btn btn-primary btn-icon icon-left">
+                        <i class="fas fa-credit-card"></i>Finalizar Ajuste de Inventario
+                    </button>
+
+                </div>
+            </div>
+
+        }
+    </div>
+
+
+
+    </div>
+</section>
+
+

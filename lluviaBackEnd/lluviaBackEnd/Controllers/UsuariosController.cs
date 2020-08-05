@@ -13,6 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class UsuariosController : Controller
     {
         // GET: Usuarios
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Usuarios)]
         public ActionResult Usuarios()
         {
             //return View();

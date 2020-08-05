@@ -14,7 +14,7 @@ namespace lluviaBackEnd.Controllers
     public class EstacionesController : Controller
     {
 
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Estaciones)]
         public ActionResult Estaciones()
         {
             Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();

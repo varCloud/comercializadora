@@ -243,6 +243,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
@@ -1212,6 +1213,9 @@
     <Content Include="Views\Ventas\VerTicketDevolucion.cshtml" />
     <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
     <Content Include="Views\InventarioFisico\_ObtenerInventarioFisico.cshtml" />
+    <Content Include="Views\Login\InventarioFisicoActivo.cshtml" />
+    <Content Include="Views\InventarioFisico\_ObtenerAjusteInventario.cshtml" />
+    <Content Include="Views\InventarioFisico\_InventarioFisico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -13,7 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class ReportesController : Controller
     {
         //REPORTE INVENTARIO
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Reportes)]
         public ActionResult Inventario()
         {
             //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();

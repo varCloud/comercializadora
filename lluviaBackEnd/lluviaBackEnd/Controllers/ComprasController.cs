@@ -15,6 +15,7 @@ namespace lluviaBackEnd.Controllers
     [SessionTimeout]
     public class ComprasController : Controller
     {
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Compras)]
         public ActionResult _Compra(Compras compras)
         {
             try

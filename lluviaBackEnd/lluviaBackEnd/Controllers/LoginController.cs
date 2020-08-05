@@ -53,20 +53,29 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
                 if (n.Modelo.usuarioValido)
                 {
-                    if (n.Modelo.idRol == (int)EnumRoles.Administrador)
-                    {
-                        controladorAccion = "Dashboard/Index/";
-                    }
-                    else if (n.Modelo.idRol == (int)EnumRoles.Cajero)
-                    {
-                        controladorAccion = "Ventas/Ventas/";
-                    }
-                    else if (n.Modelo.idRol == (int)EnumRoles.Encargado_de_almacen)
-                    {
-                        controladorAccion = "Bitacora/Bitacoras/";
-                    }
                     Session["UsuarioActual"] = n.Modelo;
                     n.Modelo.configurado = WebConfigurationManager.AppSettings["configurado"].ToString();
+
+                    if (Sesion.ExisteInventarioFisicoActivo() && n.Modelo.idRol != (int)EnumRoles.Administrador)
+                    {
+                        controladorAccion = "Login/InventarioFisicoActivo/";
+                    }
+                    else
+                    {
+                        if (n.Modelo.idRol == (int)EnumRoles.Administrador)
+                        {
+                            controladorAccion = "Dashboard/Index/";
+                        }
+                        else if (n.Modelo.idRol == (int)EnumRoles.Cajero)
+                        {
+                            controladorAccion = "Ventas/Ventas/";
+                        }
+                        else if (n.Modelo.idRol == (int)EnumRoles.Encargado_de_almacen)
+                        {
+                            controladorAccion = "Bitacora/Bitacoras/";
+                        }
+                        
+                    }                  
 
                 }
                 return Json(new { notificacion = n, controladorAccion = controladorAccion }, JsonRequestBehavior.AllowGet);
@@ -151,6 +160,19 @@ namespace lluviaBackEnd.Controllers
         }
 
         public ActionResult SinPermisos()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ActionResult InventarioFisicoActivo()
         {
             try
             {

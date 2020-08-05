@@ -13,7 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class LineaProductoController : Controller
     {
         // GET: LineaProducto
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Productos)]
         public ActionResult LineaProducto()
         {
             ViewBag.lstLineaProducto = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = 0 });

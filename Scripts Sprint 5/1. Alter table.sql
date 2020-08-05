@@ -1,3 +1,15 @@
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='CatEstatusInventarioFisico')
+	DROP TABLE CatEstatusInventarioFisico
+
+CREATE TABLE CatEstatusInventarioFisico(
+idEstatusInventarioFisico int primary key identity(1,1),
+descripcion varchar(100)
+)
+
+INSERT INTO CatEstatusInventarioFisico (descripcion) 
+values('Pendiente'),('Iniciado'),('Finalizado'),('Cancelado')
+
 	
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='InventarioFisico')
 	DROP TABLE InventarioFisico
@@ -11,7 +23,7 @@ fechaAlta datetime default getdate(),
 fechaInicio datetime,
 FechaFin datetime,
 observaciones varchar(500),
-activo bit
+idEstatusInventarioFisico int
 )
 
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='AjusteInventarioFisico')
