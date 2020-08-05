@@ -162,7 +162,7 @@ $('#previoVenta').click(function (e) {
                 productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
             }
         }
-
+        
         if ( productosDevueltos <= 0 ) {
             MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
             return;
@@ -275,6 +275,7 @@ $('#btnAgregarProducto').click(function (e) {
                 "  <td class=\"text-center\">$" + descuento + "</td>" +
                 "  <td class=\"text-center\">" +
                         btnEliminaFila +
+                "  <td style=\"display: none;\">0</td>" +
                 "  </td>" +
                 "</tr >";
 
@@ -583,18 +584,17 @@ $('#btnGuardarVenta').click(function (e) {
     }
 
     if ((esAgregarProductos == "true")) {
-        //if (rCount >= 2) {
-        //    tipoVenta = parseInt(3);
-        //    for (var i = 1; i < rCount; i++) {
-        //        var row_ = {
-        //            idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-        //            cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
-        //            idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
-        //            productosDevueltos
-        //        };
-        //        productos.push(row_);
-        //    }
-        //}
+        if (rCount >= 2) {
+            tipoVenta = parseInt(3);
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
+                };
+                productos.push(row_);
+            }
+        }
     }
 
     //alert(idVenta);
@@ -615,7 +615,7 @@ $('#btnGuardarVenta').click(function (e) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             
             if (data.Estatus == 200) {
-                console.log(esVentaNormal);
+                //console.log(esVentaNormal);
 
                 if (esVentaNormal == "true") {
                     ImprimeTicket(data.Modelo.idVenta);
@@ -627,13 +627,16 @@ $('#btnGuardarVenta').click(function (e) {
 
                 if (esDevolucion == "true") {
 
-                    //ImprimeTicketDevolucion(data.Modelo.idVenta);
+                    ImprimeTicketDevolucion(data.Modelo.idVenta);
                     ImprimeTicket(data.Modelo.idVenta);
+                    window.open("http://" + window.location.host + "Ventas/Ventas");
 
                 }
 
                 if (esAgregarProductos == "true") {
 
+                    ImprimeTicket(data.Modelo.idVenta);
+                    window.open("http://" + window.location.host + "Ventas/Ventas");
 
                 }
 
@@ -704,6 +707,31 @@ function ImprimeTicket(idVenta) {
         },
         error: function (xhr, status) {
             OcultarLoader();           
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+function ImprimeTicketDevolucion(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketDevolucion"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);

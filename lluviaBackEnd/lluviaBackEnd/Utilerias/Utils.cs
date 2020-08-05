@@ -734,6 +734,7 @@ namespace lluviaBackEnd.Utilerias
                 document.AddCreator("Victor Adrian Reyes");
                 document.AddSubject("Visualizacion de Ticket");
                 document.CloseDocument();
+
                 document.Close();
                 content = memStream.ToArray();
 
@@ -779,15 +780,9 @@ namespace lluviaBackEnd.Utilerias
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
                                 </tr>                                
                                 
-                                <tr><td style='color:black; text-align:center;'>RFC:COVO781128LJ1, </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Calle Macarena #82 </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Inguambo </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Uruapan, Michoacán </td></tr>
-                                <tr><td style='color:black; text-align:center;'>C.p. 58000 </td></tr>
-                                <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                <tr><td style='color:black; text-align:center;'>****************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
                                 <tr><td style='color:black; text-align:center;'>*************** TICKET DE DEVOLUCIÓN ***************</td></tr>
-                                <tr><td style='color:black; text-align:center;'>****************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 
                                 <tr>
@@ -841,21 +836,35 @@ namespace lluviaBackEnd.Utilerias
 
                 }
 
-                html += @" <tr>
-                                    <td style='color:black; '> 
-                                        <table>
-                                          <tr>
-                                            <td width='65%'>TOTAL DEVUELTO:</td>
-                                            <td width='25%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
-                                            <td width='10%' style='color:black; text-align:left;'></td>
-                                          </tr>
-                                        </table>
-                                    </td>
-                                </tr>";
+                html += @"   <tr>
+                                                    <td style='color:black; '> 
+                                                        <table>
+                                                          <tr><td style='color:black;'>____________________________________________________</td></tr>
+                                                          <tr>
+                                                            <td width='60%'>TOTAL DEVUELTO:</td>
+                                                            <td width='15%'> </td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                                          </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
 
-               
+                //html += @" <tr>
+                //                    <td style='color:black; '> 
+                //                        <table>
+                //                          <tr><td style='color:black;'>____________________________________________________</td></tr>
+                //                          <tr>
+                //                            <td width='55%'>TOTAL DEVUELTO:</td>
+                //                            <td width='25%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                //                            <td width='00%' style='color:black; text-align:left;'> </td>
+                //                          </tr>
+                //                        </table>
+                //                    </td>
+                //                </tr>";
+
+
                 html += @"
-                                <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
