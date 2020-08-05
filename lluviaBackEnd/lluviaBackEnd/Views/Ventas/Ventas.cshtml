@@ -32,6 +32,12 @@
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+
+    <style>
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
 }
 
 
@@ -200,18 +206,18 @@
                                 <div class="col-lg-6 text-right">
 
                                     @*<div class="invoice-detail-item">
-                        <div class="invoice-detail-name">I.V.A.</div>
-                        <div class="invoice-detail-value" id="divIva">$15</div>
-                    </div>*@
+                                            <div class="invoice-detail-name">I.V.A.</div>
+                                            <div class="invoice-detail-value" id="divIva">$15</div>
+                                        </div>*@
                                     <hr class="mt-2 mb-2">
                                     <div class="invoice-detail-item">
                                         <div class="invoice-detail-name">Subtotal</div>
                                         <div class="invoice-detail-value" id="divSubTotal">$0.0</div>
                                     </div>
                                     @*<div class="invoice-detail-item">
-                        <div class="invoice-detail-name">Total</div>
-                        <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
-                    </div>*@
+                                            <div class="invoice-detail-name">Total</div>
+                                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
+                                        </div>*@
                                 </div>
                             </div>
                         </div>
@@ -219,21 +225,33 @@
 
                         @if (esDevolucion)
                         {
-                        <div class="text-md-right">
-                            <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger" ><i class="fas fa-times"></i> Cancelar</a>
-                            <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
-                                <i class="fas fa-hand-holding-usd"></i> Realizar Devolucion
-                            </button>
-                        </div>
+                            <div class="text-md-right">
+                                <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger"><i class="fas fa-times"></i> Cancelar</a>
+                                <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                    <i class="fas fa-hand-holding-usd"></i> Realizar Devolucion
+                                </button>
+                            </div>
                         }
                         else
                         {
-                            <div class="text-md-right">
-                                <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
-                                <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
-                                    <i class="fas fa-credit-card"></i> Realizar Venta
-                                </button>
-                            </div>
+                            if (esAgregarProductos)
+                            {
+                                <div class="text-md-right">
+                                    <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger"><i class="fas fa-times"></i> Cancelar</a>
+                                    <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                        <i class="far fa-plus-square"></i> Agregar Productos
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-md-right">
+                                    <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                                    <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                        <i class="fas fa-credit-card"></i> Realizar Venta
+                                    </button>
+                                </div>
+                            }
                         }
 
 
@@ -683,22 +701,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="form-group">
-                                <label>Escriba el Motivo de la Devolución:</label>
-                                    <input id="motivoDevolucion" type="text" class="form-control">
-                            </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="form-group">
+                            <label>Escriba el Motivo de la Devolución:</label>
+                            <input id="motivoDevolucion" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="text-right" style="margin-top:15px;">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
-                                <button class="btn btn-success" id="btnAceptarDevolucion" type="button">Aceptar</button>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" id="btnAceptarDevolucion" type="button">Aceptar</button>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

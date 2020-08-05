@@ -626,18 +626,16 @@ $('#btnGuardarVenta').click(function (e) {
                 }
 
                 if (esDevolucion == "true") {
-
                     ImprimeTicketDevolucion(data.Modelo.idVenta);
                     ImprimeTicket(data.Modelo.idVenta);
-                    window.open("http://" + window.location.host + "Ventas/Ventas");
-
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
                 if (esAgregarProductos == "true") {
-
                     ImprimeTicket(data.Modelo.idVenta);
-                    window.open("http://" + window.location.host + "Ventas/Ventas");
-
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
                 InitSelect2Productos();
