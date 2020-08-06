@@ -196,13 +196,15 @@
                                 <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="bar-chart-2"></i><span>Reportes</span></a>
                                 <ul class="dropdown-menu">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Inventario" ? "dropdown active" : "")" href="@Url.Action("Inventario", "Reportes")">Inventario</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "InventarioFisico" ? "dropdown active" : "")" href="@Url.Action("InventarioFisico", "Reportes")">InventarioFisico</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Reportes")">Compras</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Reportes")">Ventas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Margen Bruto" ? "dropdown active" : "")" href="@Url.Action("MargenBruto", "Reportes")">Margen Bruto</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Dias Promedio Inventario" ? "dropdown active" : "")" href="@Url.Action("DiasPromedioInventario", "Reportes")">Dias Promedio Inventario</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Merma" ? "dropdown active" : "")" href="@Url.Action("Merma", "Reportes")">Merma</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "DropSize" ? "dropdown active" : "")" href="@Url.Action("DropSize", "Reportes")">DropSize</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "NivelServicioProveedor" ? "dropdown active" : "")" href="@Url.Action("NivelServicioProveedor", "Reportes")">Nivel Servicio Proveedor</a></li>
-
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "DevolucionesProveedor" ? "dropdown active" : "")" href="@Url.Action("DevolucionesProveedor", "Reportes")">Devoluciones Proveedor</a></li>
                                 </ul>
                             </li>
                         }

@@ -245,6 +245,7 @@
     </Compile>
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
     <Compile Include="Models\EstatusProducto.cs" />
@@ -1030,6 +1031,7 @@
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\evtInventarioFisico.js" />
+    <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
@@ -1216,6 +1218,8 @@
     <Content Include="Views\Login\InventarioFisicoActivo.cshtml" />
     <Content Include="Views\InventarioFisico\_ObtenerAjusteInventario.cshtml" />
     <Content Include="Views\InventarioFisico\_InventarioFisico.cshtml" />
+    <Content Include="Views\Reportes\DevolucionesProveedor.cshtml" />
+    <Content Include="Views\Reportes\_DevolucionesProveedor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
