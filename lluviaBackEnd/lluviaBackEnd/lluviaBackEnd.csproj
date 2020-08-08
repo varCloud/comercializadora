@@ -1043,6 +1043,7 @@
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
     <Content Include="js\EvtConsultaVentas.js" />
+    <Content Include="js\EvtUbicaciones.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
@@ -1216,6 +1217,8 @@
     <Content Include="Views\Login\InventarioFisicoActivo.cshtml" />
     <Content Include="Views\InventarioFisico\_ObtenerAjusteInventario.cshtml" />
     <Content Include="Views\InventarioFisico\_InventarioFisico.cshtml" />
+    <Content Include="Views\Productos\Ubicaciones.cshtml" />
+    <Content Include="Views\Productos\GenerarUbicaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

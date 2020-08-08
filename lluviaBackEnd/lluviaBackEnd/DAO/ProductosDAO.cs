@@ -443,7 +443,44 @@ namespace lluviaBackEnd.DAO
             return lstEstatus;
         }
 
-    
+        public Notificacion<List<Ubicacion>> ObtenerUbicacion(Ubicacion ubicacion)
+        {
+            Notificacion<List<Ubicacion>> notificacion = new Notificacion<List<Ubicacion>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idSucursal", ubicacion.idSucursal);
+                    parameters.Add("@idAlmacen", ubicacion.idAlmacen);
+                    parameters.Add("@idPasillo", ubicacion.idPasillo);
+                    parameters.Add("@idRaq", ubicacion.idRaq);
+                    parameters.Add("@idPiso", ubicacion.idPiso);
+                    var result = db.QueryMultiple("SP_CONSULTA_UBICACION", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ubicacion>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
 
 
 

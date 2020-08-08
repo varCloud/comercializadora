@@ -13,10 +13,12 @@ namespace lluviaBackEnd.Models
 
         public int idUbicacion { get; set; }
 
+        public int idSucursal { get; set; }
         public int idAlmacen { get; set; }
         public int idPasillo { get; set; }
 
         public int idRaq { get; set; }
+        public int idPiso { get; set; }
 
         public int idPisoRaq { get; set; }
 
