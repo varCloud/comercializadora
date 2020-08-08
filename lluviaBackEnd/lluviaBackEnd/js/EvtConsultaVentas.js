@@ -375,8 +375,10 @@ function GenerarFactura(idVenta) {
     //ShowLoader();
     
     $.ajax({
-        url: rootUrl("/Factura/GenerarFactura"),
-        data: { idVenta: idVenta },
+        //url: rootUrl("/Factura/GenerarFactura"),
+        //data: { idVenta: idVenta },
+        url: pathDominio+"api/WsFactura/GenerarFactura",
+        data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
         method: 'post',
         dataType: 'json',
         async: true,
