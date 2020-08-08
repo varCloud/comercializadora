@@ -28,11 +28,11 @@ namespace lluviaBackEnd.WebServices
         }
 
         [HttpPost]
-        public Notificacion<String> ValidaInventarioFisico()
+        public Notificacion<String> ValidaInventarioFisico(RequesValidaInventarioFisico request)
         {
             try
             {
-                return new InventarioFisicoDAO().ValidaInventarioFisico();
+                return new InventarioFisicoDAO().ValidaInventarioFisico(request);
             }
             catch (Exception ex)
             {

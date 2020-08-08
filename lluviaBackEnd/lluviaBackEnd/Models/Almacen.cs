@@ -10,8 +10,9 @@ namespace lluviaBackEnd.Models
     {
 
         public int idAlmacen { get; set; }
+        public int idSucursal { get; set; }
         public string  descripcion { get; set; }
         public Boolean activo { get; set; }
-
+        public int idTipoAlmacen { get; set; }
     }
 }

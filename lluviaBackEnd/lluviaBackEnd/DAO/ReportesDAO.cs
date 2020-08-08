@@ -94,6 +94,9 @@ namespace lluviaBackEnd.DAO
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
                         notificacion.Modelo = result.Read<Ventas>().ToList();
+                        notificacion.Modelo.ForEach(p => p.rutaFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + "/" + p.rutaFactura);
+
+                    
                     }
                     else
                     {

@@ -1,9 +1,9 @@
 ﻿@using lluviaBackEnd.Models;
-@{ Sesion sesion = Session["UsuarioActual"] as Sesion;
-
+@{ 
+    Sesion sesion = Session["UsuarioActual"] as Sesion;
     Boolean ExisteInventarioFisicoActivo = Sesion.ExisteInventarioFisicoActivo();
 
-    }
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +25,8 @@
     <link href="~/assets/css/styleLluvia.css" rel="stylesheet" />
     @RenderSection("Styles", false)
     <script>
+        var idUsuarioGlobal = @sesion.idUsuario
+        var pathDominio ='@sesion.pathDominio/' ;
         var pathServer = '@Url.Content("~/assets/img/logo_lluvia.png")';
         function rootUrl(url) {
             var _rootUrl = '@Url.Content("~")';
@@ -171,6 +173,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Ubicaciones" ? "dropdown active" : "")" href="@Url.Action("Ubicaciones", "Productos")">Imprimir Ubicaciones</a></li>
                                 </ul>
                             </li>
                         }

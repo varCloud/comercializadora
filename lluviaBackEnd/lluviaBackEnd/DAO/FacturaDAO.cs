@@ -167,7 +167,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)null : f.UUID);
                 parameters.Add("@idEstatusFactura", f.estatusFactura);
                 parameters.Add("@msjError", f.mensajeError);
-                parameters.Add("@pathArchivo", f.pathFactura);
+                parameters.Add("@pathArchivo", f.pathArchivoFactura);
                 n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA", parameters, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
@@ -219,6 +219,7 @@ namespace lluviaBackEnd.DAO
                         facturas.Estatus = rs1.status;
                         facturas.Mensaje = rs1.mensaje;
                         facturas.Modelo = rs.Read<Factura>().ToList();
+                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura+ "/Factura_" + p.idVenta+".pdf");
 
                     }
                     else
