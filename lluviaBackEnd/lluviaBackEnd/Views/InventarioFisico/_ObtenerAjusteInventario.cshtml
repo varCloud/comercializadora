@@ -23,9 +23,7 @@ else
                     <th>Producto</th>
                     <th>Linea Producto</th>
                     <th>Almacen</th>
-                    <th>Piso</th>
-                    <th>Pasillo</th>
-                    <th>Raq</th>
+                    <th>Ubicacion</th>
                     <th>Cantidad Actual</th>
                     <th>Cantidad Fisico</th>
                     <th>Cantidad Ajustar</th>
@@ -35,33 +33,43 @@ else
 
                 @foreach (lluviaBackEnd.Models.AjusteInventarioFisico c in Model)
                 {
-                <tr>
-                    <td>@c.idAjusteInventarioFisico</td>
-                    <td>@c.producto.descripcion</td>
-                    <td>@c.producto.DescripcionLinea</td>
-                    <td>@c.producto.Almacen</td>
-                    <td>@c.producto.Piso</td>
-                    <td>@c.producto.Pasillo</td>
-                    <td>@c.producto.Raq</td>
-                    <td>@c.cantidadActual</td>
-                    <td>
-                        @if (c.cantidadActual == c.cantidadEnFisico)
+                    <tr>
+                        <td>@c.idAjusteInventarioFisico</td>
+                        <td>
+                            <p style="margin:0">@c.producto.descripcion</p>
+                            <span class="badge @Html.Raw(c.ajustado?"badge-success" : "badge-warning")">@Html.Raw(c.ajustado?"Ajustado" : "Sin Ajustar")</span>
+                        </td>
+                        <td>@c.producto.DescripcionLinea</td>
+                        <td>@c.producto.Almacen</td>
+                        @if (lluviaBackEnd.Utilerias.Utils.mercanciaAcomodada(c.producto.idPasillo.ToString(), c.producto.idRaq.ToString(), c.producto.idPiso.ToString()))
                         {
-                            <div class="badge badge-success badge-shadow">@c.cantidadEnFisico</div>
+                            <td>Sin Acomodar</td>
                         }
-                        else if (c.cantidadEnFisico < c.cantidadActual)
+                        else
                         {
-                            <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico</div>
-                        }
-                        else if (c.cantidadEnFisico > c.cantidadActual)
-                        {
-                            <div class="badge badge-warning badge-shadow">@c.cantidadEnFisico</div>
+                            <td>(@c.producto.Piso) (Pasillo:@c.producto.Pasillo) (@c.producto.Raq)</td>
+
                         }
 
+                        <td>@c.cantidadActual</td>
+                        <td>
+                            @if (c.cantidadActual == c.cantidadEnFisico)
+                            {
+                                <div class="badge badge-success badge-shadow">@c.cantidadEnFisico</div>
+                            }
+                            else if (c.cantidadEnFisico < c.cantidadActual)
+                            {
+                                <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico</div>
+                            }
+                            else if (c.cantidadEnFisico > c.cantidadActual)
+                            {
+                                <div class="badge badge-warning badge-shadow">@c.cantidadEnFisico</div>
+                            }
 
-                    </td>
-                    <td>@c.cantidadAAjustar</td>                   
-                </tr>
+
+                        </td>
+                        <td>@c.cantidadAAjustar</td>
+                    </tr>
                 }
             </tbody>
         </table>

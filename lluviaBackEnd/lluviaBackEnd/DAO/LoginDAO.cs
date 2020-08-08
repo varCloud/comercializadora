@@ -42,6 +42,7 @@ namespace lluviaBackEnd.DAO
                         n.Mensaje = "OK";
                         n.Modelo = result.ReadSingle<Sesion>();
                         n.Modelo.permisosModulo = result.Read<Permiso>().ToList();
+                        n.Modelo.pathDominio = ConfigurationManager.AppSettings["urlDominio"].ToString();
                     }
                     else {
                         n.Estatus = -1;

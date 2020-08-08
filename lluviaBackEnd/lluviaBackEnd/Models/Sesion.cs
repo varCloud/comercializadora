@@ -41,6 +41,8 @@ namespace lluviaBackEnd.Models
         public int agregarProductosPermitidos { get; set; }
         public List<Permiso> permisosModulo { get; set; }
 
+        public string pathDominio { get; set; }
+        
         public static bool TienePermiso(EnumRolesPermisos valor)
         {
             HttpContext context = HttpContext.Current;

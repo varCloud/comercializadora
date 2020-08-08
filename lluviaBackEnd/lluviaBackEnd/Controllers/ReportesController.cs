@@ -229,6 +229,29 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //REPORTE DEVOLUCIONES PROVEEDOR
+
+        public ActionResult DevolucionesProveedor()
+        {
+            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+            ViewBag.listProveedores = listProveedores;
+            return View();
+        }
+
+        public ActionResult ObtenerDevolucionesProveedor(Proveedor proveedor)
+        {
+            try
+            {
+              
+                return PartialView("_DevolucionesProveedor", new ReportesDAO().ObtenerDevolucionesProveedor(proveedor));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 

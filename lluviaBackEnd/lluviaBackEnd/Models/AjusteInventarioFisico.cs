@@ -14,6 +14,7 @@ namespace lluviaBackEnd.Models
         public Producto producto { get; set; }
         public Usuario usuario { get; set; }
         public DateTime fechaAlta { get; set; }
+        public Boolean ajustado { get; set; }
         public AjusteInventarioFisico()
         {
             producto = new Producto();

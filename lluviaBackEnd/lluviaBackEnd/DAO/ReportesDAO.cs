@@ -94,6 +94,9 @@ namespace lluviaBackEnd.DAO
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
                         notificacion.Modelo = result.Read<Ventas>().ToList();
+                        notificacion.Modelo.ForEach(p => p.rutaFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + "/" + p.rutaFactura);
+
+                    
                     }
                     else
                     {
@@ -213,6 +216,46 @@ namespace lluviaBackEnd.DAO
             return notificacion;
 
         }
+
+        public List<DevolucionProveedor> ObtenerDevolucionesProveedor(Proveedor proveedor)
+        {
+            List<DevolucionProveedor> devoluciones = new List<DevolucionProveedor>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProveedor", proveedor.idProveedor==0 ? (object) null : proveedor.idProveedor);
+                    parameters.Add("@fechaIni", proveedor.fechaInicio == DateTime.MinValue ? (object)null : proveedor.fechaFin);
+                    parameters.Add("@fechaFin", proveedor.fechaFin == DateTime.MinValue ? (object)null : proveedor.fechaFin);
+                    var result = db.QueryMultiple("SP_CONSULTA_DEVOLUCIONES_PROVEEDOR", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        devoluciones = result.Read<DevolucionProveedor,Producto,Usuario,Proveedor,DevolucionProveedor>(MapDevolucionProveedor,splitOn:"idProducto,idUsuario,idProveedor").ToList();
+                    }
+                   
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return devoluciones;
+
+        }
+
+        public DevolucionProveedor MapDevolucionProveedor(DevolucionProveedor d,Producto p,Usuario u,Proveedor pr)
+        {
+            d.producto = p;
+            d.usuario = u;
+            d.proveedor = pr;
+            return d;
+        }
+
 
 
     }

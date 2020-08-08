@@ -5,6 +5,13 @@
     List<lluviaBackEnd.Models.Producto> listProductos = ViewBag.listProductos;
     lluviaBackEnd.Models.Producto producto = new lluviaBackEnd.Models.Producto();
 
+    Boolean puedeEditar = true;
+
+    if (Model.statusCompra.idStatus > 2)
+    {
+        puedeEditar=false;
+    }
+
 }
 
 
@@ -12,7 +19,7 @@
 
     <div class="section-body">
 
-        @if (Model.statusCompra.idStatus <= 2)
+        @if (puedeEditar)
         {
             <div class="row">
 
@@ -52,65 +59,71 @@
                                 <th class="text-center">Cant. Solicitada</th>
                                 <th class="text-center">Costo</th>
                                 <th class="text-center">Total</th>
-                                <th class="text-center">Acciones</th>
+                                @if (puedeEditar)
+                                {
+                                    <th class="text-center">Acciones</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (lluviaBackEnd.Models.Producto prod in Model.listProductos)
                             {
 
-                            <tr id="@prod.idProducto">
-                                <td>@prod.idProducto</td>
-                                <td>@prod.descripcion</td>
-                                <td>
-                                    @{
-                                        switch (prod.estatusProducto.idEstatusProducto)
-                                        {
-                                            case 0:
-                                                {
-                                                    <div class="badge badge-light badge-shadow">Pendiente</div>
-                                                }
-                                                break;
+                                <tr id="@prod.idProducto">
+                                    <td>@prod.idProducto</td>
+                                    <td>@prod.descripcion</td>
+                                    <td>
+                                        @{
+                                            switch (prod.estatusProducto.idEstatusProducto)
+                                            {
+                                                case 0:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">Pendiente</div>
+                                                    }
+                                                    break;
 
-                                            case 1:
-                                                {
-                                                    <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                case 1:
+                                                    {
+                                                        <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
 
-                                                }
-                                                break;
+                                                    }
+                                                    break;
 
-                                            case 2:
-                                                {
-                                                    <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
+                                                case 2:
+                                                    {
+                                                        <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
 
-                                            case 3:
-                                            case 4:
-                                            case 5:
-                                                {
-                                                    <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
-                                            default:
-                                                {
-                                                    <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
+                                                case 3:
+                                                case 4:
+                                                case 5:
+                                                    {
+                                                        <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                            }
                                         }
+
+                                    </td>
+                                    <th>@prod.observaciones</th>
+                                    <td>@prod.cantidadRecibida</td>
+                                    <td>@prod.cantidadDevuelta</td>
+                                    @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
+                                    <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
+                                    @if (puedeEditar)
+                                    {
+                                        <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
                                     }
 
-                                </td>
-                                <th>@prod.observaciones</th>
-                                <td>@prod.cantidadRecibida</td>
-                                <td>@prod.cantidadDevuelta</td>
-                                @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
-                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")"></td>
-                                <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
-                                <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-
-                            </tr>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -138,21 +151,26 @@
             <div class="form-group col-lg-4">
                 <label>Proveedor</label>
                 <div class="input-group">
-                    @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", style = "width:80%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
+                    @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", style = "width:80%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
                     @Html.ValidationMessageFor(model => model.proveedor.idProveedor, null, new { @class = "text-danger was" })
-                    <div class="input-group-append">
-                        <button id="btnNuevoProveedor" class="btn btn-icon btn-info" type="button" data-toggle="tooltip" data-placement="bottom" title="Nuevo proveedor."> <i class="fas fa-shipping-fast"></i></button>
-                    </div>
+
+                    @if (puedeEditar)
+                    {
+                        <div class="input-group-append">
+                            <button id="btnNuevoProveedor" class="btn btn-icon btn-info" type="button" data-toggle="tooltip" data-placement="bottom" title="Nuevo proveedor."> <i class="fas fa-shipping-fast"></i></button>
+                        </div>
+                    }
+
                 </div>
             </div>
             <div class="form-group col-lg-4">
                 <label>Estatus de la compra</label>
-                @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
+                @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
                 @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
             </div>
             <div class="form-group col-lg-4">
                 <label>Observaciones</label>
-                @Html.TextAreaFor(model => model.observaciones, new { id = "ObservacionesCompra", @class = "form-control", placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "false" })
+                @Html.TextAreaFor(model => model.observaciones, new { id = "ObservacionesCompra", @class = Html.Raw(puedeEditar ? "form-control" : "form-control"), placeholder = "", data_val = "false" })
                 @Html.ValidationMessageFor(model => model.observaciones, null, new { @class = "text-danger was" })
             </div>
         </div>
@@ -163,9 +181,13 @@
                     {
                         <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
                     }
-                    <button id="btnGuardarCompra" class="btn btn-primary btn-icon icon-left" type="submit">
-                        <i class="fas fa-credit-card"></i> @Html.Raw(Model.idCompra > 0 ? "Actualizar Compra" : "Realizar Compra")
-                    </button>
+                    @if (Model.statusCompra.idStatus <= 2)
+                    {
+                        <button id="btnGuardarCompra" class="btn btn-primary btn-icon icon-left" type="submit">
+                            <i class="fas fa-credit-card"></i> @Html.Raw(Model.idCompra > 0 ? "Actualizar Compra" : "Realizar Compra")
+                        </button>
+                    }
+
 
                 </div>
             </div>

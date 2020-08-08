@@ -39,7 +39,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<String> ValidaInventarioFisico()
+        public Notificacion<String> ValidaInventarioFisico(RequesValidaInventarioFisico request)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
             try
@@ -47,11 +47,12 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", request.idUsuario);
                     var rs = db.QueryMultiple("SP_APP_VALIDA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = rs.ReadFirst();
                     notificacion.Mensaje = r1.Mensaje;
                     notificacion.Estatus = r1.Estatus;
-                    notificacion.Modelo = r1.idInventarioFisico;
+                    notificacion.Modelo = r1.idInventarioFisico+"";
                                              
                 }
             }

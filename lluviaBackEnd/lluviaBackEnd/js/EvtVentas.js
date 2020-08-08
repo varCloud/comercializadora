@@ -39,7 +39,7 @@ function preguntaAltaPrecios() {
         });
 }
 
-function facturaVenta(idVenta) {
+function _facturaVenta(idVenta) {
     console.log("facturaVenta_" + idVenta);
     $.ajax({
         url: rootUrl("/Factura/GenerarFactura"),
@@ -62,6 +62,30 @@ function facturaVenta(idVenta) {
         }
     });
 }
+function facturaVenta(idVenta) {
+    console.log("facturaVenta_" + idVenta);
+    $.ajax({
+        url: pathDominio+"api/WsFactura/GenerarFactura",
+        data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+POST 
 
 function InitSelect2() {
     $('.select-multiple').select2({
@@ -626,18 +650,16 @@ $('#btnGuardarVenta').click(function (e) {
                 }
 
                 if (esDevolucion == "true") {
-
                     ImprimeTicketDevolucion(data.Modelo.idVenta);
                     ImprimeTicket(data.Modelo.idVenta);
-                    window.open("http://" + window.location.host + "Ventas/Ventas");
-
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
                 if (esAgregarProductos == "true") {
-
                     ImprimeTicket(data.Modelo.idVenta);
-                    window.open("http://" + window.location.host + "Ventas/Ventas");
-
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
                 InitSelect2Productos();

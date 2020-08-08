@@ -1018,7 +1018,7 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
 
                 PrintDocument pd = new PrintDocument();
-                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
 
                 PaperSize ps = new PaperSize("", 285, 540);
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDevoluciones);

@@ -245,6 +245,7 @@
     </Compile>
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
     <Compile Include="Models\EstatusProducto.cs" />
@@ -295,6 +296,8 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\WsFacturaController.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
     <Compile Include="WebServices\WsInventarioFisicoController.cs" />
     <Compile Include="WebServices\Modelos\Request\RegistraProductoInventarioFisico.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizaEstatusProductoCompra.cs" />
@@ -1030,6 +1033,7 @@
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\evtInventarioFisico.js" />
+    <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
@@ -1112,8 +1116,8 @@
     </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
-    <None Include="Properties\PublishProfiles\DeployPruebas.pubxml" />
+    <None Include="Properties\PublishProfiles\DeployDesarrolloAdmin.pubxml" />
+    <None Include="Properties\PublishProfiles\DeployLocal.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />
@@ -1219,6 +1223,8 @@
     <Content Include="Views\InventarioFisico\_InventarioFisico.cshtml" />
     <Content Include="Views\Productos\Ubicaciones.cshtml" />
     <Content Include="Views\Productos\GenerarUbicaciones.cshtml" />
+    <Content Include="Views\Reportes\DevolucionesProveedor.cshtml" />
+    <Content Include="Views\Reportes\_DevolucionesProveedor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
