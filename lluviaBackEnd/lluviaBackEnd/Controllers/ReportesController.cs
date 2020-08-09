@@ -253,6 +253,20 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        // DEOLUCIONES DE VENTAS
+
+        public ActionResult Devoluciones()
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
+            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+            ViewBag.lstVentas = notificacion.Modelo;
+            return View();
+        }
+
+
     }
 
 

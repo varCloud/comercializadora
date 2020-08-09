@@ -195,6 +195,39 @@ namespace lluviaBackEnd.DAO
             return lstAlmacenes;
         }
 
+
+        public Notificacion<List<Almacen>> ObtenerAlmacenes(Almacen almacen)
+        {
+            Notificacion<List<Almacen>> lstAlmacenes = new Notificacion<List<Almacen>>();
+            lstAlmacenes.Modelo = new List<Almacen>();
+            lstAlmacenes.Mensaje = "Ok";
+            lstAlmacenes.Estatus = 200;
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(2);
+                    db.AddParameters(0, "@idSucursal", almacen.idSucursal == 0 ? (object)null : almacen.idSucursal);
+                    db.AddParameters(1, "@idTipoAlmacen", almacen.idTipoAlmacen == 0 ? (object)null : almacen.idTipoAlmacen);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ALMACENES]");
+                    while (db.DataReader.Read())
+                    {
+                        if (Convert.ToInt16(db.DataReader["status"]) == 200)
+                            lstAlmacenes.Modelo.Add(new Almacen { idAlmacen = Convert.ToInt32(db.DataReader["idAlmacen"].ToString()), descripcion = db.DataReader["descripcion"].ToString() });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lstAlmacenes.Mensaje = "Error - " + ex.Message;
+                lstAlmacenes.Estatus = -1;
+                throw ex;
+            }
+            return lstAlmacenes;
+        }
+
+
         public List<SelectListItem> ObtenerSucursales()
         {
             List<SelectListItem> lstSucursales = new List<SelectListItem>();

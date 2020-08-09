@@ -50,6 +50,21 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
+        public static byte[] GenerarQR(string cadena, string nombreArchivo)
+        {
+            System.Drawing.Image img = null;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new BarcodeWriter() { Format = BarcodeFormat.QR_CODE };
+                writer.Options.Height = 200;
+                writer.Options.Width = 200;
+                img = writer.Write(cadena);
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(ObtnerFolderCodigos() + "QR_" + nombreArchivo + "_.jpg");
+                return ms.ToArray();
+            }
+        }
+
         public static void GenerarQRSAT(Comprobante c, string path)
         {
             var data = "&id=" + c.Complemento.TimbreFiscalDigital.UUID;
@@ -513,7 +528,7 @@ namespace lluviaBackEnd.Utilerias
             return content;
         }
 
-        private static void DeleteFile(string nameFile)
+        public static void DeleteFile(string nameFile)
         {
             try
             {
@@ -904,6 +919,91 @@ namespace lluviaBackEnd.Utilerias
         }
 
 
+
+
+
+        public static byte[] GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
+        {
+            byte[] content = null;
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            Document document = new Document(PageSize.A4, 30, 30, 15, 15);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            PDFWriter.CloseStream = false;
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Ubicaciones: ";
+            string ubica = string.Empty;
+            string nombreArchivo = string.Empty;
+            int renglonesQR = 5;
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "<br/>";
+
+
+                for (int i = 0; i < ubicaciones.Count(); i++)
+                {
+                    ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\"}";
+                    nombreArchivo = "A"+ ubicaciones[i].idAlmacen.ToString() + "P"+ ubicaciones[i].idPiso.ToString() + "P"+ ubicaciones[i].idPasillo.ToString() + "R"+ ubicaciones[i].idRaq.ToString() + "";
+                    Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
+
+                    // codigos QR
+                    html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >
+                        <tr " + cabeceraTablas + @">
+                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @" </td>    
+                        </tr>";
+
+                    for (int j = 0; j < renglonesQR; j++)
+                    {
+                        html += @"<tr>";
+                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
+                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
+                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
+                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
+                        html += @"</tr>";
+
+                    }
+
+                    html += "</table> <br> ";
+
+                }
+
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Ubicaciones: ");
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Ubicaciones de Productos");
+                document.CloseDocument();
+                document.Close();
+                content = memStream.ToArray();
+                
+                for (int l = 0; l < ubicaciones.Count(); l++)
+                {
+                    DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].idPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
+                }
+
+                memStream.Write(content, 0, content.Length);
+                memStream.Position = 0;
+                using (FileStream fs = File.Create(Path.Combine(path, "Ubicaciones.pdf")))
+                 {
+                     fs.Write(content, 0, (int)content.Length);
+                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return content;
+        }
 
         public static bool mercanciaAcomodada(string idPasillo, string idRaq, string idPiso)
         {
