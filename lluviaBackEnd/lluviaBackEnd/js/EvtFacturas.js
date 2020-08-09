@@ -94,3 +94,45 @@ function onSuccessResultObtenerFacturas(data) {
 function onFailureResultObtenerFacturas() {
     OcultarLoader();
 }
+
+
+function CancelarFactura(idVenta) {
+
+    swal({
+        title: 'Mensaje',
+        text: 'Estas seguro que deseas cancelar la factura de Venta?',
+        icon: '',
+        buttons: ["Cancelar", "Aceptar"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    //url: rootUrl("/Factura/CancelarFactura"),
+                    url: pathDominio + "api/WsFactura/CancelarFactura",
+                    data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
+                    method: 'post',
+                    dataType: 'json',
+                    async: false,
+                    beforeSend: function (xhr) {
+                        console.log("Antes ")
+                    },
+                    success: function (data) {
+                        MuestraToast('success', data.Mensaje);
+                        PintarTabla();
+                    },
+                    error: function (xhr, status) {
+                        console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+                        console.log(xhr);
+                        console.log(status);
+                    }
+                });
+
+            } else {
+                console.log("cancelar");
+            }
+        });
+}
+
+
+

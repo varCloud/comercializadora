@@ -58,15 +58,18 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult CancelarFactura(Factura factura)
+        public JsonResult CancelarFactura(Factura factura)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
             Cancelacion c = null;
+            Sesion UsuarioActual = null;
             try
             {
-               
-                Sesion UsuarioActual =(Sesion) Session["UsuarioActual"];
-                factura.idUsuario = UsuarioActual.idUsuario;
+                if (Session != null)
+                {
+                    UsuarioActual = (Sesion)Session["UsuarioActual"];
+                    factura.idUsuario = UsuarioActual.idUsuario;
+                }
                 c = new FacturaDAO().ObtenerCancelacionFactura(factura);
                 if (c != null)
                 {

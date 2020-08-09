@@ -75,7 +75,13 @@ else
                             }
 
                         </td>
-                        <td><a href="@f.pathArchivoFactura" target="_blank" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a></td>
+                        <td>
+                            @if (f.estatusFactura == EnumEstatusFactura.Facturada)
+                            {
+                                <a href="@f.pathArchivoFactura" target="_blank" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a> &nbsp; &nbsp;
+                                <a href="javascript:CancelarFactura(@f.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Factura"><i class="fas fa-ban"></i></a>
+                            }
+                        </td>
 
                     </tr>
 
