@@ -1,11 +1,12 @@
 ﻿@model List<lluviaBackEnd.Models.Ventas>
 @{
-                /**/
+    /**/
 
-                List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
-                //List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
-                //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
-                //List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
+    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    DateTime hoy = DateTime.Now;
+    //List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
+    //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    //List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
 }
 
 
@@ -84,7 +85,7 @@ else
                                                             }
 
 
-                                                            @if ( (item.productosDevueltos < ViewBag.devolucionesPermitidas) )
+                                                            @if ( (item.productosDevueltos < ViewBag.devolucionesPermitidas) && ( item.fechaAlta.Date == hoy.Date ) )
                                                             {
                                                                 <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })" ><i class="far fa-minus-square"></i>Devolver Productos</a>
                                                             }

@@ -18,8 +18,11 @@ status			200 = ok
 
 create proc SP_CONSULTA_DEVOLUCIONES
 
-	@idVenta		int = null
-	
+	@idVenta		int = null,
+	@idAlmacen		int = null,
+	@idUsuario		int = null,
+	@fechaIni		datetime = null,
+	@fechaFin		datetime = null
 as
 
 	begin -- principal
@@ -40,16 +43,55 @@ as
 			begin -- principal
 				
 				
-				select	*
+				select	v.idVenta, v.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
+						v.idCliente, c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoMaterno as nombreCliente,
+						u.idSucursal, u.idAlmacen, vd.idProducto, p.descripcion as descripcionProducto ,vd.cantidad, vd.monto,
+						vd.precioIndividual, vd.precioMenudeo, vd.precioRango, vd.precioVenta, vd.montoIva, 
+						vd.productosDevueltos, v.fechaAlta, a.Descripcion as descAlmacen
 				into	#VentasDetalle
-				from	VentasDetalle 
-				where	idVenta = case
-										when @idVenta is null then idVenta
-										when @idVenta = 0 then idVenta
+				from	VentasDetalle vd
+							inner join Ventas v 
+								on v.idVenta = vd.idVenta
+							inner join Usuarios u
+								on u.idUsuario = v.idUsuario
+							inner join Almacenes a 
+								on a.idAlmacen = u.idAlmacen
+							inner join Clientes c
+								on c.idCliente = v.idCliente
+							inner join Productos p
+								on p.idProducto = vd.idProducto
+				where	vd.idVenta = case
+										when @idVenta is null then vd.idVenta
+										when @idVenta = 0 then vd.idVenta
 										else @idVenta
 								  end
-					and	productosDevueltos > 0
-				order by idVenta
+					and	u.idAlmacen = case
+										when @idAlmacen is null then u.idAlmacen
+										when @idAlmacen = 0 then u.idAlmacen
+										else @idAlmacen
+								  end
+					and	v.idUsuario = case
+										when @idUsuario is null then v.idUsuario
+										when @idUsuario = 0 then v.idUsuario
+										else @idUsuario
+								  end
+
+					and cast(v.fechaAlta as date) >=	case
+															when @fechaIni is null then cast(v.fechaAlta as date)
+															when @fechaIni = 0 then cast(v.fechaAlta as date)
+															when @fechaIni = '19000101' then cast(v.fechaAlta as date)
+															else cast(@fechaIni as date)
+														end
+
+					and cast(v.fechaAlta as date) <=	case
+															when @fechaFin is null then cast(v.fechaAlta as date)
+															when @fechaFin = 0 then cast(v.fechaAlta as date)
+															when @fechaFin = '19000101' then cast(v.fechaAlta as date)
+															else cast(@fechaFin as date)
+														end
+
+					and	vd.productosDevueltos > 0
+				order by vd.idVenta
 
 
 				if not exists (	select 1 from #VentasDetalle )
@@ -85,21 +127,7 @@ as
 		-- si todo ok
 			if exists ( select 1 from #VentasDetalle )
 			begin
-				select	idVentaDetalle
-						idVenta,
-						idProducto,
-						cantidad,
-						contadorProductosPorPrecio,
-						monto,
-						cantidadActualInvGeneral,
-						cantidadAnteriorInvGeneral,
-						precioIndividual,
-						precioMenudeo,
-						precioRango,
-						precioVenta,
-						montoIva,
-						idEstatusProductoVenta,
-						productosDevueltos
+				select	*
 				from	#VentasDetalle
 			end
 

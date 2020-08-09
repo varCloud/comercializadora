@@ -1226,6 +1226,8 @@
     <Content Include="Views\Productos\GenerarUbicaciones.cshtml" />
     <Content Include="Views\Reportes\DevolucionesProveedor.cshtml" />
     <Content Include="Views\Reportes\_DevolucionesProveedor.cshtml" />
+    <Content Include="Views\Reportes\Devoluciones.cshtml" />
+    <Content Include="Views\Reportes\_Devoluciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

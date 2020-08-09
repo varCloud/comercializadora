@@ -258,14 +258,42 @@ namespace lluviaBackEnd.Controllers
         public ActionResult Devoluciones()
         {
             Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
             ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+            List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
+            lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+            lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            ViewBag.lstAlmacenes = lstAlmacenes;
             ViewBag.lstVentas = notificacion.Modelo;
             return View();
         }
 
+
+        public ActionResult BuscarDevoluciones(Ventas ventas)
+        {
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerDevoluciones(ventas);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstVentas = notificacion.Modelo;
+                    return PartialView("_Devoluciones");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 
