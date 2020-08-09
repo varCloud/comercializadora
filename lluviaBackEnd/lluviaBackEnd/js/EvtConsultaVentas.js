@@ -263,8 +263,9 @@ function CancelarFactura(idVenta) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: rootUrl("/Factura/CancelarFactura"),
-                    data: { idVenta: idVenta },
+                    //url: rootUrl("/Factura/CancelarFactura"),
+                    url: pathDominio + "api/WsFactura/CancelarFactura",
+                    data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
                     method: 'post',
                     dataType: 'json',
                     async: false,
