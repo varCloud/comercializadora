@@ -37,7 +37,7 @@ else
                         <td>@c.idAjusteInventarioFisico</td>
                         <td>
                             <p style="margin:0">@c.producto.descripcion</p>
-                            <span class="badge @Html.Raw(c.ajustado?"badge-success" : "badge-warning")">@Html.Raw(c.ajustado?"Ajustado" : "Sin Ajustar")</span>
+                            @*<span class="badge @Html.Raw(c.ajustado?"badge-success" : "badge-warning")">@Html.Raw(c.ajustado?"Ajustado" : "Sin Ajustar")</span>*@
                         </td>
                         <td>@c.producto.DescripcionLinea</td>
                         <td>@c.producto.Almacen</td>
@@ -53,7 +53,11 @@ else
 
                         <td>@c.cantidadActual</td>
                         <td>
-                            @if (c.cantidadActual == c.cantidadEnFisico)
+                            @if (!c.ajustado)
+                            {
+                            <div class="badge badge-warning badge-shadow">Sin Ajustar</div>
+                            }
+                            else if (c.cantidadActual == c.cantidadEnFisico)
                             {
                                 <div class="badge badge-success badge-shadow">@c.cantidadEnFisico</div>
                             }
@@ -63,7 +67,7 @@ else
                             }
                             else if (c.cantidadEnFisico > c.cantidadActual)
                             {
-                                <div class="badge badge-warning badge-shadow">@c.cantidadEnFisico</div>
+                                <div class="badge badge-info badge-shadow">@c.cantidadEnFisico</div>
                             }
 
 

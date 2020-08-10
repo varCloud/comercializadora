@@ -1,0 +1,77 @@
+﻿@using lluviaBackEnd.Models
+@{
+    ViewBag.Title = "Merma";
+}
+
+@model AjusteInventarioFisico
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Merma</h4>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("ObtenerMerma", "Reportes",
+                  new AjaxOptions
+                  {
+                      HttpMethod = "Post",
+                      OnBegin = "onBeginSubmitMerma",
+                      OnFailure = "onFailureResultMerma",
+                      OnSuccess = "onSuccessResultMerma",
+                  },
+                  new { id = "frmBuscarMerma" }))
+                {
+                   
+                <div class="row">
+
+                    <div class="form-group col-lg-4">
+                        <label>Inventario Fisico</label>
+                        @Html.DropDownListFor(x => x.idInventarioFisico, (List<SelectListItem>)ViewBag.listInventarioFisico, "--TODOS--", new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                        <label>Almacen</label>
+                        @Html.DropDownListFor(x => x.producto.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacen, "--TODOS--", new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                        <label>Lìnea Producto</label>
+                        @Html.DropDownListFor(x => x.producto.idLineaProducto, (List<SelectListItem>)ViewBag.lstLineasDeProductos, "--TODOS--", new { @class = "form-control" })
+                    </div>
+
+                    <div class="text-left col-lg-2" style="margin-top:30px;">
+                        <button type="submit" class="btn btn-success">Buscar</button>
+                    </div>
+
+                </div>
+                }
+                <hr style="margin-top:0" />
+                <div id="ViewMerma">
+                    @Html.Action("ObtenerMerma", "Reportes")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/js/evtReporteMerma.js"></script>
+}
+

@@ -110,7 +110,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal,int idInventarioFisico)
+        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal,int idInventarioFisico,int idEstatus)
         {
             List<InventarioFisico> inventarioFisicos = new List<InventarioFisico>();
             try
@@ -120,7 +120,7 @@ namespace lluviaBackEnd.DAO
                     DynamicParameters parameters = new DynamicParameters();
                     parameters.Add("@idSucursal", idSucursal==0 ? (object)null : idSucursal);
                     parameters.Add("@idInventarioFisico", idInventarioFisico == 0 ? (object)null : idInventarioFisico);
-
+                    parameters.Add("@idEstatus", idEstatus == 0 ? (object)null : idEstatus);
                     var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = result.ReadFirst();
                     if (rs1.status == 200)

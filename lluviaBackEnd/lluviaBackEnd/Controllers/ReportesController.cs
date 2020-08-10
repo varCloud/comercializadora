@@ -252,6 +252,33 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //INDICADOR MERMA
+
+        public ActionResult Merma()
+        {
+            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();         
+            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+            ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
+            
+            return View(new AjusteInventarioFisico());
+        }
+
+        public ActionResult ObtenerMerma(AjusteInventarioFisico ajusteInventario)
+        {
+            try
+            {
+
+                return PartialView("_Merma", new ReportesDAO().ObtenerMerma(ajusteInventario));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
         // DEOLUCIONES DE VENTAS
 

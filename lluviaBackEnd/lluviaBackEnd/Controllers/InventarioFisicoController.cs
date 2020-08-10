@@ -70,7 +70,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal,0));
+                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal,0,0));
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico).First();
+                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico,0).First();
                 return PartialView(inventarioFisico);
             }
             catch (Exception ex)

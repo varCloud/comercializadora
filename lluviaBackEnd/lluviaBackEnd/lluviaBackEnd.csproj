@@ -1041,6 +1041,7 @@
     <Content Include="js\EvtFacturas.js" />
     <Content Include="js\evtReporteDiasPromedioInventario.js" />
     <Content Include="js\evtReporteMargenBruto.js" />
+    <Content Include="js\evtReporteMerma.js" />
     <Content Include="js\evtReporteNivelServicioProveedor.js" />
     <Content Include="js\EvtReporteDevoluciones.js" />
     <Content Include="js\EvtRetiros.js" />
@@ -1228,6 +1229,8 @@
     <Content Include="Views\Reportes\_DevolucionesProveedor.cshtml" />
     <Content Include="Views\Reportes\Devoluciones.cshtml" />
     <Content Include="Views\Reportes\_Devoluciones.cshtml" />
+    <Content Include="Views\Reportes\Merma.cshtml" />
+    <Content Include="Views\Reportes\_Merma.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

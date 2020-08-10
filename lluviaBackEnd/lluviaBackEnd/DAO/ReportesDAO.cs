@@ -306,6 +306,46 @@ namespace lluviaBackEnd.DAO
             return d;
         }
 
+        public Notificacion<List<AjusteInventarioFisico>> ObtenerMerma(AjusteInventarioFisico ajusteInventarioFisico)
+        {
+            Notificacion<List<AjusteInventarioFisico>> notificacion = new Notificacion<List<AjusteInventarioFisico>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@idInventarioFisico", ajusteInventarioFisico.idInventarioFisico == 0 ? (object)null : ajusteInventarioFisico.idInventarioFisico);
+                    parameters.Add("@idLinea", string.IsNullOrEmpty(ajusteInventarioFisico.producto.idLineaProducto) ? (object)null : ajusteInventarioFisico.producto.idLineaProducto);
+                    parameters.Add("@idAlmacen", ajusteInventarioFisico.producto.idAlmacen == 0 ? (object)null : ajusteInventarioFisico.producto.idAlmacen);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_MERMA", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = result.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        notificacion.Estatus = rs1.status;
+                        notificacion.Mensaje = rs1.mensaje;
+                        notificacion.Modelo=result.Read<AjusteInventarioFisico, Producto, AjusteInventarioFisico>(MapAjusteInventarioFisico, splitOn: "idProducto").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = rs1.status;
+                        notificacion.Mensaje = rs1.mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public AjusteInventarioFisico MapAjusteInventarioFisico(AjusteInventarioFisico i, Producto p)
+        {
+            i.producto = p;
+            return i;
+        }
 
 
     }
