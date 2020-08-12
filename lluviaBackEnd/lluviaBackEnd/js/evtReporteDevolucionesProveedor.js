@@ -48,7 +48,7 @@ function InitDataTabletblDropSize() {
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Nivel de Servicio Proveedor",
+                title: "Devoluciones Proveedor",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
@@ -56,11 +56,11 @@ function InitDataTabletblDropSize() {
                     // doc.content[1].table.widths = ['10%', '25%', '15%', '15%', '20%', '15%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
-                    doc['header'] = SetHeaderPDF("Nivel de Servicio Proveedor");
+                    doc['header'] = SetHeaderPDF("Devoluciones Proveedor");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9,10,11]
                 },
             },
             {
@@ -69,7 +69,7 @@ function InitDataTabletblDropSize() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9,10,11]
                 },
             },
         ],
