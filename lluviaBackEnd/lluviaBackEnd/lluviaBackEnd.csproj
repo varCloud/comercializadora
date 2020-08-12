@@ -296,6 +296,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
     <Compile Include="WebServices\WsInventarioFisicoController.cs" />

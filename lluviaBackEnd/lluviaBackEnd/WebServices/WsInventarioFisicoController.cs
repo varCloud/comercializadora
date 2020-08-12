@@ -40,5 +40,19 @@ namespace lluviaBackEnd.WebServices
                 return WsUtils<String>.RegresaExcepcion(ex, null);
             }
         }
+
+        [HttpPost]
+        public Notificacion<List<Ubicacion>> ObtenerProductosAjutadoPorInventarioFisico(RequestObtenerProductosAjustados request)
+        {
+            try
+            {
+                return new InventarioFisicoDAO().ObtenerProductosAjutadoPorInventarioFisico(request);
+            }
+            catch (Exception ex)
+            {
+
+                return WsUtils<List<Ubicacion>>.RegresaExcepcion(ex, null);
+            }
+        }
     }
 }

@@ -108,8 +108,7 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
-
-
+        
         public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal,int idInventarioFisico,int idEstatus)
         {
             List<InventarioFisico> inventarioFisicos = new List<InventarioFisico>();
@@ -207,7 +206,39 @@ namespace lluviaBackEnd.DAO
             return i;
         }
 
+        public Notificacion<List<Ubicacion>> ObtenerProductosAjutadoPorInventarioFisico(RequestObtenerProductosAjustados request)
+        {
+            Notificacion<List<Ubicacion>> notificacion = new Notificacion<List<Ubicacion>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idAlmacen", (request.idAlmacen == 0 ? (object)null : request.idAlmacen));
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@idInventarioFisico", request.idInventarioFisico);
+                    var result = this.db.QueryMultiple("SP_APP_OBTENER_PRODUCTO_AJUSTADO_POR_INVENTARIO_FISICO", param: parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.Estatus == 200)
+                    {
+                        notificacion.Modelo = result.Read<Ubicacion>().ToList();
+                        notificacion.Estatus = 200;
+                        notificacion.Mensaje = "OK";
+                    }
+                    else
+                    {
+                        notificacion.Estatus = -1;
+                        notificacion.Mensaje = "Espere un momento y vuelva a ejecutarlo";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
+            return notificacion;
+        }
 
     }
 }

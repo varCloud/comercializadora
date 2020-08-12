@@ -85,7 +85,7 @@ function facturaVenta(idVenta) {
         }
     });
 }
-POST 
+
 
 function InitSelect2() {
     $('.select-multiple').select2({
