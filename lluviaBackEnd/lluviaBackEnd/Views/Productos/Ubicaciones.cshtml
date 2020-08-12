@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "Ubicaciones";
     List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
+    List<SelectListItem> lstPisos = (List<SelectListItem>)ViewBag.lstPisos;
+    List<SelectListItem> lstPasillos = (List<SelectListItem>)ViewBag.lstPasillos;
+    List<SelectListItem> lstRacks = (List<SelectListItem>)ViewBag.lstRacks;
 
 }
 
@@ -47,21 +50,24 @@
                             <div class="col-12 col-sm-12 col-lg-1">
                                 <div class="form-group">
                                     <label>Piso</label>
-                                    <select id="idPiso"></select>
+                                    @Html.DropDownListFor(x => x.idPiso, lstPisos, "--SELECCIONA--", new { id = "idPiso", @class = "form-control", data_val = "true"})
+                                    @*<select id="idPiso"></select>*@
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-lg-1">
                                 <div class="form-group">
                                     <label>Pasillo</label>
-                                    <select id="idPasillo"></select>
+                                    @Html.DropDownListFor(x => x.idPasillo, lstPasillos, "--SELECCIONA--", new { id = "idPasillo", @class = "form-control", data_val = "true"})
+                                    @*<select id="idPasillo"></select>*@
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-12 col-lg-1">
                                 <div class="form-group">
                                     <label>Raq</label>
-                                    <select id="idRaq"></select>
+                                    @Html.DropDownListFor(x => x.idRaq, lstRacks, "--SELECCIONA--", new { id = "idRaq", @class = "form-control", data_val = "true" })
+                                    @*<select id="idRaq"></select>*@
                                 </div>
                             </div>
 

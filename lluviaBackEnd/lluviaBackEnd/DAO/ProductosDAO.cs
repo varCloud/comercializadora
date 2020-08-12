@@ -482,7 +482,107 @@ namespace lluviaBackEnd.DAO
 
 
 
+        public List<SelectListItem> ObtenerPisos()
+        {
+            List<SelectListItem> lstPisos = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 1);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
 
+                        lstPisos.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstPisos;
+        }
+
+        public List<SelectListItem> ObtenerPasillos()
+        {
+            List<SelectListItem> lstPasillos = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 2);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
+
+                        lstPasillos.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstPasillos;
+        }
+
+        public List<SelectListItem> ObtenerRacks()
+        {
+            List<SelectListItem> lstRacks = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 3);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
+
+                        lstRacks.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstRacks;
+        }
 
 
 
