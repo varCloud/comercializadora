@@ -855,6 +855,8 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr><td style='color:black;'>____________________________________________________</td></tr>
+                                                        </table>
+                                                        <table>
                                                           <tr>
                                                             <td width='60%'>TOTAL DEVUELTO:</td>
                                                             <td width='15%'> </td>
@@ -883,7 +885,7 @@ namespace lluviaBackEnd.Utilerias
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                <tr><td style='color:black; text-align:center;'>____________________________________________________</td></tr>
+                                <tr><td style='color:black; text-align:center;'>_________________________________________________</td></tr>
                                 <tr><td style='color:black; text-align:center;'>FIRMA DEL CLIENTE </td></tr>";
                
 
@@ -937,7 +939,7 @@ namespace lluviaBackEnd.Utilerias
             eventos.TituloCabecera = "Ubicaciones: ";
             string ubica = string.Empty;
             string nombreArchivo = string.Empty;
-            int renglonesQR = 5;
+            int renglonesQR = 4;
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -967,10 +969,22 @@ namespace lluviaBackEnd.Utilerias
                         html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
                         html += @"</tr>";
 
+                        html += @"<tr>";
+                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
+                        html += @"</tr>";
+
                     }
 
-                    html += "</table> <br> ";
-
+                    if (i == ubicaciones.Count()-1) {
+                        html += "</table> <br><br><br><br><br> ";
+                    }
+                    else
+                    {
+                        html += "</table> <br><br><br><br><br><br> ";
+                    }
                 }
 
                 document.Open();

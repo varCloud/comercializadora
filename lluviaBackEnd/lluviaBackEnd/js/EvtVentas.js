@@ -85,7 +85,7 @@ function facturaVenta(idVenta) {
         }
     });
 }
-POST 
+//POST 
 
 function InitSelect2() {
     $('.select-multiple').select2({
@@ -141,6 +141,7 @@ function limpiarTicket() {
 }
 
 function limpiaModalPrevio() {
+    var esAgregarProductos = $('#esAgregarProductos').val();
 
     var row_ = "<address>" +
         "    <strong></strong><br>" +
@@ -162,10 +163,12 @@ function limpiaModalPrevio() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#idCliente').val("1").trigger('change');
     $('#formaPago').val("1").trigger('change'); 
     $('#usoCFDI').val("3").trigger('change'); 
 
+    if (esAgregarProductos == "false") {
+        $('#idCliente').val("1").trigger('change');
+    }
 }
 
 
@@ -179,11 +182,13 @@ $('#previoVenta').click(function (e) {
         // validamos que al menos exista devolucion de un item
         var tblVtas = document.getElementById('tablaRepVentas');
         var rCount = tblVtas.rows.length;
+        var productosOriginales = parseInt(0);
         var productosDevueltos = parseInt(0);
         
         if (rCount >= 2) {
             for (var i = 1; i < rCount; i++) {
                 productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
+                productosOriginales += parseInt(tblVtas.rows[i].cells[4].children[0].value);
             }
         }
         
@@ -191,6 +196,13 @@ $('#previoVenta').click(function (e) {
             MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
             return;
         }
+
+        if (productosDevueltos >= productosOriginales) {
+            MuestraToast('warning', "Para devolver todos los productos cancele la venta desde el menu de Editar Ventas");
+            return;
+        }
+
+
         $('#motivoDevolucion').val('');
         $('#ModalDevolucion').modal({ backdrop: 'static', keyboard: false, show: true });
     }
@@ -208,8 +220,12 @@ function abrirModalPrevioVenta() {
     var descuento = parseFloat(0);
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
-        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
+            total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+            descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+        }
+
     });
 
     if (total > 0) {
@@ -236,8 +252,9 @@ $('#btnAceptarDevolucion').click(function (e) {
     }
 
     $('#ModalDevolucion').modal('hide');
-    abrirModalPrevioVenta();
-    
+    //abrirModalPrevioVenta();
+    document.getElementById("btnGuardarVenta").click();
+
 });
 
 
@@ -427,16 +444,12 @@ function initInputsTabla() {
                 return;
             }
 
-                      
-
-
+            actualizarSubTotalDevoluciones();
         }
         else {
             actualizaTicketVenta();
-        }
-        
+        }        
     });
-
 }
 
 
@@ -465,17 +478,53 @@ function actualizaPreciosTabla(tabla) {
     }
 }
 
+
+function cuentaSubTotal() {
+    //var result = parseFloat(0);
+    var subTotal = parseFloat(0);
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
+
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion')))
+        {
+            subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        }
+
+    });
+    return subTotal;
+}
+
 function actualizarSubTotal() {
 
     var subTotal = parseFloat(0);
-    var descuento = parseFloat(0);
+    //var descuento = parseFloat(0);
+    var esDevolucion = $('#esDevolucion').val();
+    subTotal = cuentaSubTotal();
+    //$('#tablaRepVentas tbody tr').each(function (index, fila) {
+    //    subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+    //    descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+    //});
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
-        subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
-    });
+    if (esDevolucion == "true") {
+        subTotal = 0;
+    }
 
     document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
+}
+
+function actualizarSubTotalDevoluciones() {
+
+    var tblVtas = document.getElementById('tablaRepVentas');
+    var rCount = tblVtas.rows.length;
+    var cantidadDevelta = parseInt(0);
+
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            cantidadDevelta += parseFloat(tblVtas.rows[i].cells[7].children[0].value) * parseFloat(tblVtas.rows[i].cells[5].innerHTML.replace('$', '')); //parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        }
+    }
+
+    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
+    document.getElementById("divTotalDevolver").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
 }
 
 
@@ -549,29 +598,32 @@ $('#btnGuardarVenta').click(function (e) {
         esVentaNormal = "false"
     }
 
-    // validaciones
-    if ($('#efectivo').val() == "") {
-        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-        return
-    }
-    
-    if (parseFloat(efectivo_) < parseFloat(total_)) {
-        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
-        return;
-    }
+    if (esDevolucion == "false")
+    {
+        // validaciones
+        if ($('#efectivo').val() == "") {
+            MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+            return
+        }
 
-    if ($("#chkFacturar").is(":checked")) {
-        aplicaIVA = parseInt(1);
-    }
-
-    if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
-
-        if ($('#numClientesAtendidos').val() == "") {
-            MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+        if (parseFloat(efectivo_) < parseFloat(total_)) {
+            MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
             return;
         }
-        else {
-            numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
+
+        if ($("#chkFacturar").is(":checked")) {
+            aplicaIVA = parseInt(1);
+        }
+
+        if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
+
+            if ($('#numClientesAtendidos').val() == "") {
+                MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+                return;
+            }
+            else {
+                numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
+            }
         }
     }
 
@@ -621,7 +673,6 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    //alert(idVenta);
     dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion });
 
     $.ajax({
@@ -1422,5 +1473,8 @@ $(document).ready(function () {
     initInputsTabla();
     document.getElementById("divUsoCFDI").style.display = 'none';
     $('#idSucursalExistencia').val('1').change().prop('disabled', false);
-  
+
+    //var idCliente_ = $('#idClienteDevolucion').val();
+    $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+
 });

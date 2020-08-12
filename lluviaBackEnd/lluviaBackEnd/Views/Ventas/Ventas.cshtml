@@ -10,6 +10,7 @@
     List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
     lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
     int idVenta = ViewBag.venta.idVenta;
+    int idClienteDevolucion = 0;
     Boolean esDevolucion = ViewBag.venta.esDevolucion;
     Boolean esAgregarProductos = ViewBag.venta.esAgregarProductos;
 
@@ -19,8 +20,7 @@
     if (idVenta > 0)
     {
         notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta });
-        //List<lluviaBackEnd.Models.Ticket> lstTicket = notificacion.Modelo;
-
+        idClienteDevolucion = notificacion.Modelo[0].idCliente;
     }
 
 
@@ -78,6 +78,7 @@
                                     @Html.HiddenFor(x => idVenta)
                                     @Html.HiddenFor(x => esDevolucion)
                                     @Html.HiddenFor(x => esAgregarProductos)
+                                    @Html.HiddenFor(x => idClienteDevolucion)
 
                                     <input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">
                                     <select id="idProducto"></select>
@@ -211,9 +212,21 @@
                                         </div>*@
                                     <hr class="mt-2 mb-2">
                                     <div class="invoice-detail-item">
-                                        <div class="invoice-detail-name">Subtotal</div>
+
+                                        @if (esDevolucion)
+                                        {
+                                            <div class="invoice-detail-name">Total a Devolver</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="invoice-detail-name">Subtotal</div>
+                                        }
                                         <div class="invoice-detail-value" id="divSubTotal">$0.0</div>
                                     </div>
+
+
+
+
                                     @*<div class="invoice-detail-item">
                                             <div class="invoice-detail-name">Total</div>
                                             <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
@@ -709,6 +722,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-lg-6"></div>
+                    <div class="col-lg-6 text-right">
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                           <div class="invoice-detail-name">Total a Devolver</div>
+                            <div class="invoice-detail-value" id="divTotalDevolver"><h4>$0.0</h4></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">

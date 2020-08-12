@@ -5,11 +5,11 @@ function eliminaFila(index_) {
 }
 
 $('#limpiar').click(function (e) {
-    limpiatTabla();
+    limpiarTabla();
 });
 
 
-function limpiatTabla() {
+function limpiarTabla() {
 
     var max_id = parseFloat(0);
 
@@ -43,21 +43,20 @@ $('#btnAgregarUbicacion').click(function (e) {
         return;
     }
 
-    if ($('#idPiso').val() == null) {
+    if (($('#idPiso').val() == null) || ($('#idPiso').val() == "")){
         MuestraToast('warning', "Debe seleccionar el piso que desea agregar.");
         return;
     }
 
-    if ($('#idPasillo').val() == null) {
+    if (($('#idPasillo').val() == null) || ($('#idPasillo').val() == "")) {
         MuestraToast('warning', "Debe seleccionar el pasillo que desea agregar.");
         return;
     }
 
-    if ($('#idRaq').val() == null) {
+    if (($('#idRaq').val() == null) || ($('#idRaq').val() == "")) {
         MuestraToast('warning', "Debe seleccionar el raq que desea agregar.");
         return;
     }
-
 
     var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
 
@@ -226,106 +225,106 @@ function cargaSelect2Almacenes(idSucursal) {
 
 
 
-$("#idAlmacen").on("change", function () {
+//$("#idAlmacen").on("change", function () {
 
-    $("#idPiso").html('').select2();
-    $("#idPasillo").html('').select2();
-    $("#idRaq").html('').select2();
-    cargaCombosUbicaciones("idAlmacen");
-}); 
+//    $("#idPiso").html('').select2();
+//    $("#idPasillo").html('').select2();
+//    $("#idRaq").html('').select2();
+//    cargaCombosUbicaciones("idAlmacen");
+//}); 
 
-$("#idPiso").on("change", function () {
-    $("#idPasillo").val("0").trigger('change');
-    $("#idRaq").val("0").trigger('change');
-    cargaCombosUbicaciones("idPiso");
-}); 
-$("#idPasillo").on("change", function () {
-    cargaCombosUbicaciones("idPasillo");
-}); 
-
-
-function cargaCombosUbicaciones(combo) {
-
-    var idSucursal = $('#idSucursal').val();
-    var idAlmacen = $('#idAlmacen').val();
-
-    var idPiso = $('#idPiso').val();
-    var idPasillo = $('#idPasillo').val();
-    var idRaq = $('#idRaq').val();
-
-    //console.log(idSucursal + " " + idAlmacen + " " + idPiso + " " + idPasillo + " " + idRaq );
-
-    var result = '';
-    $.ajax({
-        url: rootUrl("/Productos/ObtenerUbicacion"),
-        data: { idSucursal: idSucursal, idAlmacen: idAlmacen, idPasillo: idPasillo, idRaq: idRaq, idPiso: idPiso },
-        method: 'post',
-        dataType: 'json',
-        async: false,
-        beforeSend: function (xhr) {
-        },
-        success: function (data) {
-            result = data;
-        },
-        error: function (xhr, status) {
-            console.log('hubo un problema pongase en contacto con el administrador del sistema');
-            console.log(xhr);
-            console.log(status);
-        }
-    });
-
-    if (combo == 'idAlmacen') {
-
-        if (idAlmacen == null) {
-            llenaCombo(result.Modelo.length = 0, "idPiso");
-        }
-        else {
-            llenaCombo(result.Modelo, "idPiso");
-        }
-
-        llenaCombo(result.Modelo.length=0, "idPasillo");
-        llenaCombo(result.Modelo.length=0, "idRaq");
-    }
+//$("#idPiso").on("change", function () {
+//    $("#idPasillo").val("0").trigger('change');
+//    $("#idRaq").val("0").trigger('change');
+//    cargaCombosUbicaciones("idPiso");
+//}); 
+//$("#idPasillo").on("change", function () {
+//    cargaCombosUbicaciones("idPasillo");
+//}); 
 
 
-    if (combo == 'idPiso') {
-        llenaCombo(result.Modelo, "idPasillo");
-    }
+//function cargaCombosUbicaciones(combo) {
+
+//    var idSucursal = $('#idSucursal').val();
+//    var idAlmacen = $('#idAlmacen').val();
+
+//    var idPiso = $('#idPiso').val();
+//    var idPasillo = $('#idPasillo').val();
+//    var idRaq = $('#idRaq').val();
+
+//    //console.log(idSucursal + " " + idAlmacen + " " + idPiso + " " + idPasillo + " " + idRaq );
+
+//    var result = '';
+//    $.ajax({
+//        url: rootUrl("/Productos/ObtenerUbicacion"),
+//        data: { idSucursal: idSucursal, idAlmacen: idAlmacen, idPasillo: idPasillo, idRaq: idRaq, idPiso: idPiso },
+//        method: 'post',
+//        dataType: 'json',
+//        async: false,
+//        beforeSend: function (xhr) {
+//        },
+//        success: function (data) {
+//            result = data;
+//        },
+//        error: function (xhr, status) {
+//            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+//            console.log(xhr);
+//            console.log(status);
+//        }
+//    });
+
+//    if (combo == 'idAlmacen') {
+
+//        if (idAlmacen == null) {
+//            llenaCombo(result.Modelo.length = 0, "idPiso");
+//        }
+//        else {
+//            llenaCombo(result.Modelo, "idPiso");
+//        }
+
+//        llenaCombo(result.Modelo.length=0, "idPasillo");
+//        llenaCombo(result.Modelo.length=0, "idRaq");
+//    }
 
 
-    if (combo == 'idPasillo') {
-        llenaCombo(result.Modelo, "idRaq");
-    }
-
-}
+//    if (combo == 'idPiso') {
+//        llenaCombo(result.Modelo, "idPasillo");
+//    }
 
 
+//    if (combo == 'idPasillo') {
+//        llenaCombo(result.Modelo, "idRaq");
+//    }
 
-function llenaCombo(dataCombo, combo) {
+//}
 
-    var k;
-    for (k = 0; k < dataCombo.length; k++) {
-        dataCombo[k].id = dataCombo[k][combo];
-        dataCombo[k].text = dataCombo[k][combo];
-    }
 
-    $('#' + combo).html('').select2();
-    $('#' + combo).select2({
-        width: "100%",
-        placeholder: "",
-        data: dataCombo,
-        language: {
-            noResults: function () {
-                return "No hay resultado";
-            },
-            searching: function () {
-                return "Buscando...";
-            }
-        }
-    });
-    $('#' + combo).val("0").trigger('change');
 
-}
+//function llenaCombo(dataCombo, combo) {
+
+//    var k;
+//    for (k = 0; k < dataCombo.length; k++) {
+//        dataCombo[k].id = dataCombo[k][combo];
+//        dataCombo[k].text = dataCombo[k][combo];
+//    }
+
+//    $('#' + combo).html('').select2();
+//    $('#' + combo).select2({
+//        width: "100%",
+//        placeholder: "",
+//        data: dataCombo,
+//        language: {
+//            noResults: function () {
+//                return "No hay resultado";
+//            },
+//            searching: function () {
+//                return "Buscando...";
+//            }
+//        }
+//    });
+//    $('#' + combo).val("0").trigger('change');
+
+//}
 
 
 
