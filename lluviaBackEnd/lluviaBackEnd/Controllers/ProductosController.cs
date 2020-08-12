@@ -255,6 +255,9 @@ namespace lluviaBackEnd.Controllers
             Sesion usuario = Session["UsuarioActual"] as Sesion;
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
             ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+            ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
+            ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
+            ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
             return View();
         }
 

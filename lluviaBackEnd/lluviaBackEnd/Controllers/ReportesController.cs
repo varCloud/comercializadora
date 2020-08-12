@@ -257,7 +257,7 @@ namespace lluviaBackEnd.Controllers
         public ActionResult Merma()
         {
             Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();         
+            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();  
             ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
             ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
             

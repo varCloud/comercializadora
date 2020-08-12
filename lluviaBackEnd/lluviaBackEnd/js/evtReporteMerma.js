@@ -1,7 +1,17 @@
 ﻿var tblMerma;
 $(document).ready(function () {   
-    //$("#frmBuscarMerma").submit();
-    InitDataTableMerma();
+    $('.select-multiple').select2({
+        width: "100%",
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        },
+
+    });
 });
 
 //busqueda

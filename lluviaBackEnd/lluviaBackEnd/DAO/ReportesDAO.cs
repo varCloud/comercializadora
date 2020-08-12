@@ -227,7 +227,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     parameters.Add("@idProveedor", proveedor.idProveedor==0 ? (object) null : proveedor.idProveedor);
-                    parameters.Add("@fechaIni", proveedor.fechaInicio == DateTime.MinValue ? (object)null : proveedor.fechaFin);
+                    parameters.Add("@fechaIni", proveedor.fechaInicio == DateTime.MinValue ? (object)null : proveedor.fechaInicio);
                     parameters.Add("@fechaFin", proveedor.fechaFin == DateTime.MinValue ? (object)null : proveedor.fechaFin);
                     var result = db.QueryMultiple("SP_CONSULTA_DEVOLUCIONES_PROVEEDOR", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
