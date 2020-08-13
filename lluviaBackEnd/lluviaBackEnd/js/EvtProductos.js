@@ -272,6 +272,7 @@ function ObtenerIndividualMenudeo(idProducto) {
         success: function (data) {
             $('#precioIndividual').val(data.precioIndividual);
             $('#precioMenudeo').val(data.precioMenudeo);
+            $('#ultimoCostoCompra').val(data.costo)
             result = data;
         },
         error: function (xhr, status) {
