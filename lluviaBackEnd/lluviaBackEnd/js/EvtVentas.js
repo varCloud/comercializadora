@@ -389,9 +389,9 @@ function actualizaTicketVenta() {
                                 //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
                                 
                                 if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
-                                    tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
-                                    tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
-                                    tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
+                                    tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo).toFixed(2);   //precio
+                                    tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(data.Modelo[j].costo) * cantidad).toFixed(2);   //total
+                                    tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(data.Modelo[j].descuento) * cantidad).toFixed(2);  //descuento
                                 }
                             }                            
                         }
@@ -518,7 +518,7 @@ function actualizarSubTotalDevoluciones() {
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            cantidadDevelta += parseFloat(tblVtas.rows[i].cells[7].children[0].value) * parseFloat(tblVtas.rows[i].cells[5].innerHTML.replace('$', '')); //parseFloat(fila.children[5].innerHTML.replace('$', ''));
+            cantidadDevelta += parseFloat(tblVtas.rows[i].cells[7].children[0].value) * parseFloat(tblVtas.rows[i].cells[3].innerHTML.replace('$', '')); //parseFloat(fila.children[5].innerHTML.replace('$', ''));
         }
     }
 
