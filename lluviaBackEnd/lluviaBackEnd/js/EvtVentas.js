@@ -85,11 +85,6 @@ function facturaVenta(idVenta) {
         }
     });
 }
-<<<<<<< HEAD
-
-=======
-//POST 
->>>>>>> 87bed6fa23b79451d8fd0276e9946d453a023a30
 
 function InitSelect2() {
     $('.select-multiple').select2({
