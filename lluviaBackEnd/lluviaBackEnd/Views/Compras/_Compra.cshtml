@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group col-lg-3">
                     <label>Costo</label>
-                    <input id="precio" type="text" class="form-control" onkeypress="return esPrecio(event)">
+                    <input id="precio" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                 </div>
                 <div class="form-group col-lg-2">
                     <label>Cantidad</label>
@@ -116,7 +116,7 @@
                                     <td>@prod.cantidadDevuelta</td>
                                     @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
                                     <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esPrecio(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
                                     <td class="text-center">$@Convert.ToSingle(prod.cantidad * prod.precio)</td>
                                     @if (puedeEditar)
                                     {
