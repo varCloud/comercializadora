@@ -27,34 +27,41 @@ namespace lluviaBackEnd.Filters
             base.OnActionExecuting(filterContext);
 
             // Almacenamos el nombre del método
-            //log.Debug(System.Reflection.MethodBase.GetCurrentMethod().ToString());
+            //log.Debug("Metodo:" + System.Reflection.MethodBase.GetCurrentMethod().ToString());
 
             // Recorremos los parámetros de la acción y los mostramos
             IDictionary<string, object> actionParameters = filterContext.ActionParameters;
 
 
-            //foreach (object values in actionParameters.Values)
-            //{
-            //    tmpMsg += "[" + values.GetType().ToString() + "] ";
-            //    string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
-            //    foreach (var prop in propertyNames)
-            //    {
-            //        var propValue = values.GetType().GetProperty(prop).GetValue(values);
-            //        tmpMsg += "[" + prop + ": " + propValue + "] ";
-            //    if (values != null)
-            //    {
-            //        tmpMsg += "[" + values.GetType().ToString() + "] ";
-            //        string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
-            //        foreach (var prop in propertyNames)
-            //        {
-            //            var propValue = values.GetType().GetProperty(prop).GetValue(values);
-            //            tmpMsg += "[" + prop + ": " + propValue + "] ";
-            //        }
-            //    }
-            //}
-                
+            foreach (object values in actionParameters.Values)
+            {
+                if(values!=null)
+                {
+                    tmpMsg += "[" + values.GetType().ToString() + "] ";
+                    string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
 
-            log.Debug("Controller: " + filterContext.Controller);
+                    if(propertyNames.Length>0)
+                    {
+                        foreach (var prop in propertyNames)
+                        {
+                            var propValue = values.GetType().GetProperty(prop).GetValue(values);
+                            tmpMsg += "[" + prop + ": " + propValue + "] ";
+                        }
+                    }
+                    else
+                    {
+                        var myKey = actionParameters.FirstOrDefault(x => x.Value.ToString() == values.ToString()).Key;
+                        tmpMsg += "[" + myKey + ": " + values.ToString() + "] ";
+                    }
+                    
+
+
+                }
+               
+            }
+
+
+            log.Debug("Controller: " + filterContext.Controller);            
             log.Debug("ActionParameters: " + tmpMsg);
             log.Debug(" --------------------------------------- ");
         }
