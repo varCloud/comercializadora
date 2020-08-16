@@ -31,5 +31,7 @@ namespace lluviaBackEnd.Models
         /// solo se usa para cuando existe un inventario fisico
         /// </summary>
         public int ajustado { get; set; }
+
+        public int cantidadEnFisico { get; set; }
     }
 }
