@@ -165,9 +165,13 @@ function limpiaModalPrevio() {
     $('#formaPago').val("1").trigger('change'); 
     $('#usoCFDI').val("3").trigger('change'); 
 
-    if (esAgregarProductos == "false") {
+    if ((esAgregarProductos == "True") || (esAgregarProductos == "true")) {
+        $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    }
+    else {
         $('#idCliente').val("1").trigger('change');
     }
+
 }
 
 
@@ -176,7 +180,7 @@ $('#previoVenta').click(function (e) {
 
     var esDevolucion = $('#esDevolucion').val();
 
-    if (esDevolucion == "true" )
+    if ((esDevolucion == "true") || (esDevolucion == "True"))
     {
         // validamos que al menos exista devolucion de un item
         var tblVtas = document.getElementById('tablaRepVentas');
@@ -452,30 +456,30 @@ function initInputsTabla() {
 }
 
 
-function actualizaPreciosTabla(tabla) {
+//function actualizaPreciosTabla(tabla) {
 
-    var tblVtas = document.getElementById(tabla);
-    var rCount = tblVtas.rows.length;
+//    var tblVtas = document.getElementById(tabla);
+//    var rCount = tblVtas.rows.length;
 
-    if (rCount >= 2) {
-        for (var i = 1; i < rCount; i++) {
+//    if (rCount >= 2) {
+//        for (var i = 1; i < rCount; i++) {
 
-            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
-            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
-            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-            var precio = parseFloat(data.Modelo[0].costo);
+//            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
+//            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+//            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
+//            var precio = parseFloat(data.Modelo[0].costo);
 
-            if (precio == 0) {
-                console.log("error_precio_" + precio);
-            }
-            else {
-                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
-                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
-                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
-            }
-        }
-    }
-}
+//            if (precio == 0) {
+//                console.log("error_precio_" + precio);
+//            }
+//            else {
+//                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
+//                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
+//                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+//            }
+//        }
+//    }
+//}
 
 
 function cuentaSubTotal() {
@@ -503,7 +507,7 @@ function actualizarSubTotal() {
     //    descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
     //});
 
-    if (esDevolucion == "true") {
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
         subTotal = 0;
     }
 
@@ -593,11 +597,11 @@ $('#btnGuardarVenta').click(function (e) {
     var motivoDevolucion = $('#motivoDevolucion').val();
     var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
 
-    if ((esDevolucion == "true") || (esAgregarProductos == "true")) {
+    if (((esDevolucion == "true") || (esDevolucion == "True")) || ((esAgregarProductos == "true") || (esAgregarProductos == "True"))) {
         esVentaNormal = "false"
     }
 
-    if (esDevolucion == "false")
+    if ((esDevolucion == "false") || (esDevolucion == "False"))
     {
         // validaciones
         if ($('#efectivo').val() == "") {
@@ -631,7 +635,7 @@ $('#btnGuardarVenta').click(function (e) {
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
-    if ((esVentaNormal == "true")) {
+    if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
         if (rCount >= 2) {
             for (var i = 1; i < rCount; i++) {
                 var row_ = {
@@ -643,7 +647,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    if ((esDevolucion == "true")) {
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
         if (rCount >= 2) {
             tipoVenta = parseInt(2);
             for (var i = 1; i < rCount; i++) {
@@ -658,7 +662,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    if ((esAgregarProductos == "true")) {
+    if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
         if (rCount >= 2) {
             tipoVenta = parseInt(3);
             for (var i = 1; i < rCount; i++) {
@@ -691,7 +695,7 @@ $('#btnGuardarVenta').click(function (e) {
             if (data.Estatus == 200) {
                 //console.log(esVentaNormal);
 
-                if (esVentaNormal == "true") {
+                if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
 
                     if ($("#chkFacturar").is(":checked")) {
@@ -699,14 +703,14 @@ $('#btnGuardarVenta').click(function (e) {
                     }
                 }
 
-                if (esDevolucion == "true") {
+                if ((esDevolucion == "true") || (esDevolucion == "True")) {
                     ImprimeTicketDevolucion(data.Modelo.idVenta);
                     ImprimeTicket(data.Modelo.idVenta);
                     //window.open("http://" + window.location.host + "/Ventas/Ventas");
                     window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
-                if (esAgregarProductos == "true") {
+                if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
                     //window.open("http://" + window.location.host + "/Ventas/Ventas");
                     window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
@@ -734,7 +738,7 @@ $('#chkFacturar').click(function () {
     var idCliente = $('#idCliente').val();
     var esDevolucion = $('#esDevolucion').val();
 
-    if (esDevolucion == "true") {
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
         MuestraToast('warning', "No es posible facturar una Devolución.");
         document.getElementById("chkFacturar").checked = false;
         return
@@ -1473,7 +1477,9 @@ $(document).ready(function () {
     document.getElementById("divUsoCFDI").style.display = 'none';
     $('#idSucursalExistencia').val('1').change().prop('disabled', false);
 
-    //var idCliente_ = $('#idClienteDevolucion').val();
-    $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    if ((esAgregarProductos == "True") ||(esAgregarProductos == "true")) {
+        $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    }
 
 });
