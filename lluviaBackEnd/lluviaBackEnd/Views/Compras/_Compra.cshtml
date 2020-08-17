@@ -4,8 +4,19 @@
 @{
     List<lluviaBackEnd.Models.Producto> listProductos = ViewBag.listProductos;
     lluviaBackEnd.Models.Producto producto = new lluviaBackEnd.Models.Producto();
+    List<SelectListItem> estatusCompra = (List<SelectListItem>)ViewBag.listStatusCompra;
 
     Boolean puedeEditar = true;
+
+    if (Model.statusCompra.idStatus == 1 || Model.idCompra == 0)
+    {
+        estatusCompra = estatusCompra.Where(x => x.Value == "4" || x.Value == "1").ToList();
+    }
+
+    if (Model.statusCompra.idStatus==2)
+    {
+        estatusCompra = estatusCompra.Where(x => x.Value != "4" && x.Value != "1").ToList();
+    }
 
     if (Model.statusCompra.idStatus > 2)
     {
@@ -19,7 +30,7 @@
 
     <div class="section-body">
 
-        @if (puedeEditar)
+        @if (Model.statusCompra.idStatus <=1)
         {
             <div class="row">
 
@@ -165,7 +176,7 @@
             </div>
             <div class="form-group col-lg-4">
                 <label>Estatus de la compra</label>
-                @Html.DropDownListFor(model => model.statusCompra.idStatus, (List<SelectListItem>)ViewBag.listStatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
+                @Html.DropDownListFor(model => model.statusCompra.idStatus, estatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
                 @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
             </div>
             <div class="form-group col-lg-4">
@@ -197,5 +208,4 @@
 
 @Html.Action("_NuevoProveedor", "Proveedores")
 
-<script src="~/js/evtCompra.js"></script>
 

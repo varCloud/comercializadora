@@ -274,13 +274,14 @@ function ActualizarEstatusInventarioFisico(idInventarioFisico,idStatusInventario
                     success: function (data) {
                         if (data.Estatus == 200) {
                             MuestraToast('success', data.Mensaje);
-                            $('#modalAjusteInventarioFisico').modal('hide');
+                            window.location = rootUrl("/InventarioFisico/InventarioFisico")
+                            //$('#modalAjusteInventarioFisico').modal('hide');
 
                         } else {
                             MuestraToast("error", data.Mensaje);
                         }
 
-                        PintarTabla();
+                        //PintarTabla();
 
                         OcultarLoader();
 
