@@ -1028,7 +1028,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="js\evtCompra.js" />
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
