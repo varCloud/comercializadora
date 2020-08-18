@@ -32,11 +32,13 @@ namespace lluviaBackEnd.Filters
             // Recorremos los parámetros de la acción y los mostramos
             IDictionary<string, object> actionParameters = filterContext.ActionParameters;
 
-
-            foreach (object values in actionParameters.Values)
+            /*
+            foreach (KeyValuePair<string, object>  item  in actionParameters)
             {
-                if(values!=null)
+                object values = item.Value;
+                if(values!=null && !string.IsNullOrEmpty(values.ToString()))
                 {
+                    //if(values. )
                     tmpMsg += "[" + values.GetType().ToString() + "] ";
                     string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
 
@@ -59,6 +61,7 @@ namespace lluviaBackEnd.Filters
                 }
                
             }
+            */
 
 
             log.Debug("Controller: " + filterContext.Controller);            
