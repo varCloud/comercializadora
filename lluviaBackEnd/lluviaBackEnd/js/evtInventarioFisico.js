@@ -208,7 +208,7 @@ function actualizarInventarioFisico(idInventarioFisico, ValorAnt, ValorNew) {
 
 }
 
-function VerDetalleInventarioFisico(idInventarioFisico,nameInventarioFisico) {
+function VerDetalleInventarioFisico(idInventarioFisico, nameInventarioFisico) {
 
     $.ajax({
         url: rootUrl("/InventarioFisico/_InventarioFisico"),
@@ -221,13 +221,31 @@ function VerDetalleInventarioFisico(idInventarioFisico,nameInventarioFisico) {
         },
         success: function (data) {
             OcultarLoader();
-            if (tblAjusteInventarioFisico != null)
-                tblAjusteInventarioFisico.destroy(); 
+            //if (tblAjusteInventarioFisico != null)
+            //    tblAjusteInventarioFisico.destroy();             
             $("#_ViewInventarioFisico").html(data);
-            if ($("#tblAjusteInventarioFisico").length > 0)
-                InitDataTableAjusteInventarioFisico('Ajuste de Inventario Fisico "' + nameInventarioFisico + '"');
+
+            //if ($("#tblAjusteInventarioFisico").length > 0)
+            //    InitDataTableAjusteInventarioFisico('Ajuste de Inventario Fisico "' + nameInventarioFisico + '"');
+
+            $('.select-multiple').select2({
+                width: "100%",
+                language: {
+                    noResults: function () {
+                        return "No hay resultado";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                },
+
+            });
+
+            $("#frmBuscarAjusteInventarioFisico").submit();
                
             $('#modalAjusteInventarioFisico').modal({ backdrop: 'static', keyboard: false, show: true });
+
+           
 
         },
         error: function (xhr, status) {
@@ -299,3 +317,22 @@ function ActualizarEstatusInventarioFisico(idInventarioFisico,idStatusInventario
             }
         });
 }
+
+////////// MODAL AJUSTE DE INVENTARIO ////////////////////
+
+function onBeginSubmitAjusteInventario() {
+    ShowLoader("Buscando...");
+}
+function onSuccessResultAjusteInventario(data) {
+    if (tblAjusteInventarioFisico != null)
+        tblAjusteInventarioFisico.destroy();
+    $("#ViewAjusteInventario").html(data);
+
+    if ($("#tblAjusteInventarioFisico").length > 0)
+        InitDataTableAjusteInventarioFisico('Ajuste de Inventario Fisico "' + $("#idInventarioFisico option:selected").text() + '"');
+    OcultarLoader();
+}
+function onFailureResultAjusteInventario() {
+    OcultarLoader();
+}
+

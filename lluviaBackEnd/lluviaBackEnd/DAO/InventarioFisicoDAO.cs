@@ -169,7 +169,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public List<AjusteInventarioFisico> ObtenerAjusteInventario(AjusteInventarioFisico a,Int64 idInventarioFisico)
+        public List<AjusteInventarioFisico> ObtenerAjusteInventario(AjusteInventarioFisico a)
         {
             List<AjusteInventarioFisico> ajusteInventarios = new List<AjusteInventarioFisico>();
             try
@@ -177,7 +177,7 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@idInventarioFisico", idInventarioFisico == 0 ? (object)null : idInventarioFisico);
+                    parameters.Add("@idInventarioFisico", a.idInventarioFisico == 0 ? (object)null : a.idInventarioFisico);
                     parameters.Add("@idProducto", a.producto.idProducto == 0 ? (object)null : a.producto.idProducto);
                     parameters.Add("@idLineaProducto", string.IsNullOrEmpty(a.producto.idLineaProducto)? (object)null : a.producto.idLineaProducto);
                     parameters.Add("@idAlmacen", a.producto.idAlmacen == 0 ? (object)null : a.producto.idAlmacen);
