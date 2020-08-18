@@ -18,7 +18,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                
+
                 return View();
             }
             catch (Exception ex)
@@ -26,7 +26,7 @@ namespace lluviaBackEnd.Controllers
 
                 throw ex;
             }
-            
+
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace lluviaBackEnd.Controllers
 
                 throw ex;
             }
-           
+
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal,0,0));
+                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 0));
             }
             catch (Exception ex)
             {
@@ -84,7 +84,12 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico,0).First();
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
+                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, inventarioFisico.idInventarioFisico, 0), "idInventarioFisico", "Nombre").ToList();
+
+                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico, 0).First();
                 return PartialView(inventarioFisico);
             }
             catch (Exception ex)
@@ -96,11 +101,11 @@ namespace lluviaBackEnd.Controllers
         }
 
 
-        public ActionResult _ObtenerAjusteInventario(AjusteInventarioFisico ajusteInventario,Int64 idInventarioFisico)
+        public ActionResult _ObtenerAjusteInventario(AjusteInventarioFisico ajusteInventario)
         {
             try
             {
-                return PartialView(new InventarioFisicoDAO().ObtenerAjusteInventario(ajusteInventario, idInventarioFisico));
+                return PartialView(new InventarioFisicoDAO().ObtenerAjusteInventario(ajusteInventario));
             }
             catch (Exception ex)
             {
