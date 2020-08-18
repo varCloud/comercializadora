@@ -55,19 +55,22 @@ else
                         <td>
                             @if (!c.ajustado)
                             {
-                            <div class="badge badge-warning badge-shadow">Sin Ajustar</div>
+                                <div class="badge badge-warning badge-shadow">Sin Ajustar</div>
                             }
                             else if (c.cantidadActual == c.cantidadEnFisico)
                             {
-                                <div class="badge badge-success badge-shadow">@c.cantidadEnFisico</div>
+                                <div class="badge badge-success badge-shadow">@c.cantidadEnFisico Ajustado</div>
+
                             }
                             else if (c.cantidadEnFisico < c.cantidadActual)
                             {
-                                <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico</div>
+                        <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico Ajustado</div>
+                              
                             }
                             else if (c.cantidadEnFisico > c.cantidadActual)
                             {
-                                <div class="badge badge-info badge-shadow">@c.cantidadEnFisico</div>
+                        <div class="badge badge-info badge-shadow">@c.cantidadEnFisico Ajustado</div>
+                              
                             }
 
 
