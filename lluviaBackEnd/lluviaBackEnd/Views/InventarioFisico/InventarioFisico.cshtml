@@ -1,0 +1,92 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "InventarioFisico";
+}
+
+@model lluviaBackEnd.Models.InventarioFisico
+
+@{
+    List<InventarioFisico> listInventarioFisico = ViewBag.ListInventarioFisico;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Inventario Fisico</h4>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("GuardarInventarioFisico", "InventarioFisico",
+                  new AjaxOptions
+                  {
+                      HttpMethod = "Post",
+                      OnBegin = "onBeginSubmitInventarioFisico",
+                      OnFailure = "onFailureResultInventarioFisico",
+                      OnSuccess = "onSuccessResultInventarioFisico",
+                  },
+                  new { id = "frmNuevoInventarioFisico" }))
+                {
+                    <div class="row">
+
+                        <div class="form-group col-lg-4">
+                            <label>Nombre</label>
+                            @Html.TextBoxFor(x => x.Nombre, null, new { id = "nombreInventarioFisico", @class = "form-control", data_val_required = "El nombre no puede ir vacio", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.Nombre, null, new { @class = "text-danger was" })
+                        </div>
+
+
+                        <div class="text-left col-lg-4" style="margin-top:30px;">
+                            <button type="submit" class="btn btn-success">Crear Inventario Fisico</button>
+                        </div>
+
+                    </div>
+                }
+                <hr style="margin-top:0" />
+                <div id="ViewInventarioFisico">
+                    @Html.Action("_ObtenerInventarioFisico", "InventarioFisico");
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-xl" id="modalAjusteInventarioFisico" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalAjusteInventario">Ajuste Inventario Fisico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="_ViewInventarioFisico">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/evtInventarioFisico.js"></script>
+}
+
+

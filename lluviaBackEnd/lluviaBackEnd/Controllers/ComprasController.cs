@@ -15,34 +15,18 @@ namespace lluviaBackEnd.Controllers
     [SessionTimeout]
     public class ComprasController : Controller
     {
-        // GET: Compras
-        
-        public ActionResult Compra(Compras compras)
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Compras)]
+        public ActionResult _Compra(Compras compras)
         {
             try
             {
                 Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
-                listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });               
+                listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
                 ViewBag.listProductos = listProductos.Modelo;
-                return View(compras);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            
-        }
-
-        public ActionResult _DetalleCompra(Compras compras,Boolean enableEdit=true)
-        {
-            try
-            {
                 List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
-                List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
                 ViewBag.listProveedores = listProveedores;
+                List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
                 ViewBag.listStatusCompra = listEstatus;
-                ViewBag.enableEdit = enableEdit;
 
                 if (compras.idCompra > 0)
                 {
@@ -55,8 +39,6 @@ namespace lluviaBackEnd.Controllers
                             compras.listProductos.Add(c.producto);
                         compras.producto = new Producto();
                     }
-
-
                 }
                 return PartialView(compras);
             }
@@ -65,7 +47,9 @@ namespace lluviaBackEnd.Controllers
 
                 throw ex;
             }
+
         }
+
 
         [HttpPost]
         public ActionResult GuardarCompra(Compras compra)

@@ -13,7 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class ReportesController : Controller
     {
         //REPORTE INVENTARIO
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Reportes)]
         public ActionResult Inventario()
         {
             //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
@@ -63,6 +63,7 @@ namespace lluviaBackEnd.Controllers
             ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
             ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
             ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
+            ViewBag.lstEstatusProducto = new ProductosDAO().ObtenerEstatusProductoCompra(); // todos los estatus en formato select list
             ViewBag.lstCompras = notificacion.Estatus==200 ?  notificacion.Modelo : new List<Compras>();
             return View();
         }
@@ -208,6 +209,118 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        //INDICADOR NIVEL DE SERVICIO PROVEEDOR
+        public ActionResult NivelServicioProveedor()
+        {
+            return View();
+        }
+
+        public ActionResult ObtenerNivelServicioProveedor(Proveedor proveedor)
+        {
+            try
+            {
+                List<Proveedor> proveedores = new ProveedorDAO().ObtenerProveedores(proveedor);
+                return PartialView("_NivelServicioProveedor", proveedores);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //REPORTE DEVOLUCIONES PROVEEDOR
+
+        public ActionResult DevolucionesProveedor()
+        {
+            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+            ViewBag.listProveedores = listProveedores;
+            return View();
+        }
+
+        public ActionResult ObtenerDevolucionesProveedor(Proveedor proveedor)
+        {
+            try
+            {
+              
+                return PartialView("_DevolucionesProveedor", new ReportesDAO().ObtenerDevolucionesProveedor(proveedor));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //INDICADOR MERMA
+
+        public ActionResult Merma()
+        {
+            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();  
+            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+            ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
+            
+            return View(new AjusteInventarioFisico());
+        }
+
+        public ActionResult ObtenerMerma(AjusteInventarioFisico ajusteInventario)
+        {
+            try
+            {
+
+                return PartialView("_Merma", new ReportesDAO().ObtenerMerma(ajusteInventario));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        // DEOLUCIONES DE VENTAS
+
+        public ActionResult Devoluciones()
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+            notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
+            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+            List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
+            lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+            lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+            ViewBag.lstAlmacenes = lstAlmacenes;
+            ViewBag.lstVentas = notificacion.Modelo;
+            return View();
+        }
+
+
+        public ActionResult BuscarDevoluciones(Ventas ventas)
+        {
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerDevoluciones(ventas);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstVentas = notificacion.Modelo;
+                    return PartialView("_Devoluciones");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 

@@ -1,0 +1,147 @@
+﻿@model lluviaBackEnd.Models.Ubicacion
+@{
+    ViewBag.Title = "Ubicaciones";
+    List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
+    List<SelectListItem> lstPisos = (List<SelectListItem>)ViewBag.lstPisos;
+    List<SelectListItem> lstPasillos = (List<SelectListItem>)ViewBag.lstPasillos;
+    List<SelectListItem> lstRacks = (List<SelectListItem>)ViewBag.lstRacks;
+
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<section class="section">
+
+
+    <div class="section-body">
+
+        <div class="row mt-sm-4">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>Ubicaciones de Productos</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-3">
+                                <label>Sucursal</label>
+                                @Html.DropDownListFor(x => x.idSucursal, lstSucursales, "--SELECCIONA--", new { id = "idSucursal", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Almacen</label>
+                                    <select id="idAlmacen"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-1">
+                                <div class="form-group">
+                                    <label>Piso</label>
+                                    @Html.DropDownListFor(x => x.idPiso, lstPisos, "--SELECCIONA--", new { id = "idPiso", @class = "form-control", data_val = "true"})
+                                    @*<select id="idPiso"></select>*@
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-1">
+                                <div class="form-group">
+                                    <label>Pasillo</label>
+                                    @Html.DropDownListFor(x => x.idPasillo, lstPasillos, "--SELECCIONA--", new { id = "idPasillo", @class = "form-control", data_val = "true"})
+                                    @*<select id="idPasillo"></select>*@
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-1">
+                                <div class="form-group">
+                                    <label>Raq</label>
+                                    @Html.DropDownListFor(x => x.idRaq, lstRacks, "--SELECCIONA--", new { id = "idRaq", @class = "form-control", data_val = "true" })
+                                    @*<select id="idRaq"></select>*@
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label></label>
+                                    <br>
+                                    <button id="btnAgregarUbicacion" class="btn btn-success btn-icon icon-left">
+                                        <i class="fas fa-plus"></i> Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-sm-12">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="padding-20">
+                        <div class="col-md-12">
+                            <div class="section-title">Ubicaciones a Generar: </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="tablaUbicaciones">
+                                    <thead>
+                                        <tr>
+                                            <th data-width="40" style="width: 40px;">#</th>
+                                            <th class="text-center">Sucursal</th>
+                                            <th class="text-center">Almacen</th>
+                                            <th class="text-center">Piso</th>
+                                            <th class="text-center">Pasillo</th>
+                                            <th class="text-center">Raq</th>
+                                            <th class="text-center">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="text-md-right">
+                            <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                            <button id="btnGenerarUbicaciones" class="btn btn-primary btn-icon icon-left">
+                                <i class="fas fa-credit-card"></i> Generar Ubicaciones
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtUbicaciones.js"></script>
+
+}
+
+

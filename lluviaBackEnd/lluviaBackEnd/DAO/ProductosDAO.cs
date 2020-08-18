@@ -21,6 +21,7 @@ namespace lluviaBackEnd.DAO
     public class ProductosDAO
     {
         private IDbConnection db = null;
+        private DBManager db1 = null;
 
         public Notificacion<List<Producto>> ObtenerProductos(Producto producto)
         {
@@ -69,7 +70,7 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
-            
+
         }
 
         public Notificacion<List<Producto>> ObtenerProductosPorUsuario(Producto producto)
@@ -142,7 +143,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@codigoBarras", producto.codigoBarras);
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
-                        parameters.Add("@claveProdServ", producto.idClaveProdServ);
+                    parameters.Add("@claveProdServ", producto.idClaveProdServ);
                     //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
@@ -183,7 +184,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = producto; 
+                        notificacion.Modelo = producto;
                     }
                     else
                     {
@@ -205,7 +206,7 @@ namespace lluviaBackEnd.DAO
         /// </summary>
         /// <param name="codigo"></param>
         /// <returns></returns>
-        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request )
+        public Notificacion<Producto> ObtenerProductoXCodigo(RequestObtenerProductoXCodigo request)
         {
             Notificacion<Producto> notificacion = new Notificacion<Producto>();
 
@@ -408,6 +409,180 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public List<SelectListItem> ObtenerEstatusProductoCompra()
+        {
+            List<SelectListItem> lstEstatus = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_ESTATUS_PRODUCTO_COMPRA]");
+                    while (db1.DataReader.Read())
+                    {
+                        
+                            lstEstatus.Add(
+                                        new SelectListItem
+                                        {
+                                            Text = db1.DataReader["descripcion"].ToString(),
+                                            Value = db1.DataReader["idEstatusProductoCompra"].ToString()
+                                        });
+                        
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (lstEstatus.Count > 0)
+                lstEstatus.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+
+            return lstEstatus;
+        }
+
+        public Notificacion<List<Ubicacion>> ObtenerUbicacion(Ubicacion ubicacion)
+        {
+            Notificacion<List<Ubicacion>> notificacion = new Notificacion<List<Ubicacion>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idSucursal", ubicacion.idSucursal);
+                    parameters.Add("@idAlmacen", ubicacion.idAlmacen);
+                    parameters.Add("@idPasillo", ubicacion.idPasillo);
+                    parameters.Add("@idRaq", ubicacion.idRaq);
+                    parameters.Add("@idPiso", ubicacion.idPiso);
+                    var result = db.QueryMultiple("SP_CONSULTA_UBICACION", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ubicacion>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+
+        public List<SelectListItem> ObtenerPisos()
+        {
+            List<SelectListItem> lstPisos = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 1);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
+
+                        lstPisos.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstPisos;
+        }
+
+        public List<SelectListItem> ObtenerPasillos()
+        {
+            List<SelectListItem> lstPasillos = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 2);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
+
+                        lstPasillos.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstPasillos;
+        }
+
+        public List<SelectListItem> ObtenerRacks()
+        {
+            List<SelectListItem> lstRacks = new List<SelectListItem>();
+            try
+            {
+                using (db1 = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db1.Open();
+                    db1.CreateParameters(1);
+                    db1.AddParameters(0, "@caso", 3);
+                    db1.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PASILLO_PISO_RAQ]");
+                    db1.DataReader.NextResult();
+                    while (db1.DataReader.Read())
+                    {
+
+                        lstRacks.Add(
+                                    new SelectListItem
+                                    {
+                                        Text = db1.DataReader["descripcion"].ToString(),
+                                        Value = db1.DataReader["id"].ToString()
+                                    });
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstRacks;
+        }
 
 
 

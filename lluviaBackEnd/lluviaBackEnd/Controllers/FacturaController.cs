@@ -58,15 +58,18 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult CancelarFactura(Factura factura)
+        public JsonResult CancelarFactura(Factura factura)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
             Cancelacion c = null;
+            Sesion UsuarioActual = null;
             try
             {
-               
-                Sesion UsuarioActual =(Sesion) Session["UsuarioActual"];
-                factura.idUsuario = UsuarioActual.idUsuario;
+                if (Session != null)
+                {
+                    UsuarioActual = (Sesion)Session["UsuarioActual"];
+                    factura.idUsuario = UsuarioActual.idUsuario;
+                }
                 c = new FacturaDAO().ObtenerCancelacionFactura(factura);
                 if (c != null)
                 {
@@ -135,9 +138,11 @@ namespace lluviaBackEnd.Controllers
                 string pathServer = Utils.ObtnerFolder() + @"/";
                 
                 FacturaDAO facturacionDAO = new FacturaDAO();
-                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Sesion UsuarioActual = null;
+                if (Session != null)
+                    UsuarioActual = (Sesion)Session["UsuarioActual"];
                 //factura.idVenta = "64";
-                factura.idUsuario = UsuarioActual.idUsuario;
+                factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = factura.idVenta;
                 /*
@@ -181,7 +186,7 @@ namespace lluviaBackEnd.Controllers
                     Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta);
                     System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
 
-                    factura.pathFactura = pathFactura;
+                    factura.pathArchivoFactura = pathFactura;
                     factura.estatusFactura = EnumEstatusFactura.Facturada;
                     factura.mensajeError = "OK";
                     factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
@@ -192,8 +197,8 @@ namespace lluviaBackEnd.Controllers
                 {
                     factura.estatusFactura = EnumEstatusFactura.Error;
                     factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
-                    System.IO.File.WriteAllText(pathFactura + ("Comprobante_" + factura.idVenta+".xml"), xmlSerealizado);
-                    Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathFactura + ("respuesta_" + factura.idVenta));
+                    System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta+".xml"), xmlSerealizado);
+                    Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
                 }
                 notificacion = new FacturaDAO().GuardarFactura(factura);
                 return Json(notificacion, JsonRequestBehavior.AllowGet); ;

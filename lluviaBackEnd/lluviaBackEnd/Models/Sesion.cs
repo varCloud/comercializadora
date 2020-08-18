@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lluviaBackEnd.DAO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -36,14 +37,26 @@ namespace lluviaBackEnd.Models
         public int idEstacion { get; set; }
         public string macAdress { get; set; }
 
+        public int devolucionesPermitidas { get; set; }
+        public int agregarProductosPermitidos { get; set; }
         public List<Permiso> permisosModulo { get; set; }
 
+        public string pathDominio { get; set; }
+        
         public static bool TienePermiso(EnumRolesPermisos valor)
         {
             HttpContext context = HttpContext.Current;
             Sesion sesion = (Sesion)context.Session["UsuarioActual"];
 
             return sesion.permisosModulo.Where(x => (EnumRolesPermisos)x.idPermiso == valor).Any();
+        }
+
+        public static bool ExisteInventarioFisicoActivo()
+        {
+            HttpContext context = HttpContext.Current;
+            Sesion sesion = (Sesion)context.Session["UsuarioActual"];
+
+            return new InventarioFisicoDAO().ValidaExisteInventarioFisicoActivo(sesion.idUsuario).Estatus==200 ? true : false;
         }
 
     }

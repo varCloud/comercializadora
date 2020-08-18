@@ -60,6 +60,31 @@ function ImprimeTicket(idVenta) {
 }
 
 
+function ImprimeTicketDevolucion(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketDevolucion"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 
 
 //function VerTicket(idVenta) {
@@ -238,8 +263,9 @@ function CancelarFactura(idVenta) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: rootUrl("/Factura/CancelarFactura"),
-                    data: { idVenta: idVenta },
+                    //url: rootUrl("/Factura/CancelarFactura"),
+                    url: pathDominio + "api/WsFactura/CancelarFactura",
+                    data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
                     method: 'post',
                     dataType: 'json',
                     async: false,
@@ -350,8 +376,10 @@ function GenerarFactura(idVenta) {
     //ShowLoader();
     
     $.ajax({
-        url: rootUrl("/Factura/GenerarFactura"),
-        data: { idVenta: idVenta },
+        //url: rootUrl("/Factura/GenerarFactura"),
+        //data: { idVenta: idVenta },
+        url: pathDominio+"api/WsFactura/GenerarFactura",
+        data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
         method: 'post',
         dataType: 'json',
         async: true,

@@ -1,6 +1,8 @@
 ﻿var table;
 var iframe;
 var tablaVentas; 
+var arrayPreciosRangos = [];
+var arrayProductos = [];
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -39,11 +41,34 @@ function preguntaAltaPrecios() {
         });
 }
 
-function facturaVenta(idVenta) {
+function _facturaVenta(idVenta) {
     console.log("facturaVenta_" + idVenta);
     $.ajax({
         url: rootUrl("/Factura/GenerarFactura"),
         data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+function facturaVenta(idVenta) {
+    console.log("facturaVenta_" + idVenta);
+    $.ajax({
+        url: pathDominio+"api/WsFactura/GenerarFactura",
+        data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
         method: 'post',
         dataType: 'json',
         async: true,
@@ -117,6 +142,7 @@ function limpiarTicket() {
 }
 
 function limpiaModalPrevio() {
+    var esAgregarProductos = $('#esAgregarProductos').val();
 
     var row_ = "<address>" +
         "    <strong></strong><br>" +
@@ -138,9 +164,15 @@ function limpiaModalPrevio() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#idCliente').val("1").trigger('change');
     $('#formaPago').val("1").trigger('change'); 
     $('#usoCFDI').val("3").trigger('change'); 
+
+    if ((esAgregarProductos == "True") || (esAgregarProductos == "true")) {
+        $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    }
+    else {
+        $('#idCliente').val("1").trigger('change');
+    }
 
 }
 
@@ -148,18 +180,61 @@ function limpiaModalPrevio() {
 
 $('#previoVenta').click(function (e) {
 
+    var esDevolucion = $('#esDevolucion').val();
+
+    if ((esDevolucion == "true") || (esDevolucion == "True"))
+    {
+        // validamos que al menos exista devolucion de un item
+        var tblVtas = document.getElementById('tablaRepVentas');
+        var rCount = tblVtas.rows.length;
+        var productosOriginales = parseInt(0);
+        var productosDevueltos = parseInt(0);
+        
+        if (rCount >= 2) {
+            for (var i = 1; i < rCount; i++) {
+                productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
+                productosOriginales += parseInt(tblVtas.rows[i].cells[4].children[0].value);
+            }
+        }
+        
+        if ( productosDevueltos <= 0 ) {
+            MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
+            return;
+        }
+
+        if (productosDevueltos >= productosOriginales) {
+            MuestraToast('warning', "Para devolver todos los productos cancele la venta desde el menu de Editar Ventas");
+            return;
+        }
+
+
+        $('#motivoDevolucion').val('');
+        $('#ModalDevolucion').modal({ backdrop: 'static', keyboard: false, show: true });
+    }
+    else
+    {
+        abrirModalPrevioVenta();
+    }
+});
+
+function abrirModalPrevioVenta() {
+
     limpiaModalPrevio();
 
     var total = parseFloat(0);
     var descuento = parseFloat(0);
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
-        total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
+            total += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+            descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+        }
+
     });
 
     if (total > 0) {
-        document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total+descuento).toFixed(2) + "</h4>";
+        document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total + descuento).toFixed(2) + "</h4>";
         document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
         document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
         document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
@@ -169,7 +244,24 @@ $('#previoVenta').click(function (e) {
         MuestraToast('warning', "Debe tener productos agregados para continuar con la venta.");
     }
 
+}
+
+
+
+$('#btnAceptarDevolucion').click(function (e) {
+
+
+    if ( ($('#motivoDevolucion').val() == "") ) {
+        MuestraToast('warning', "Debe seleccionar el motivo de la devolución");
+        return;
+    }
+
+    $('#ModalDevolucion').modal('hide');
+    //abrirModalPrevioVenta();
+    document.getElementById("btnGuardarVenta").click();
+
 });
+
 
 
 $('#btnAgregarProducto').click(function (e) {
@@ -208,8 +300,15 @@ $('#btnAgregarProducto').click(function (e) {
     // aki falta validar que se tengan existencias para vender
 
     var cantidad = $('#cantidad').val();
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     var precio = parseFloat(0).toFixed(2); 
     var descuento = parseFloat(0).toFixed(2); 
+
+    //if (esAgregarProductos == 'true') {
+    //    btnEliminaFila = "";
+    //}
+           
 
     // si todo bien    
     var row_ =  "<tr>" +
@@ -221,7 +320,8 @@ $('#btnAgregarProducto').click(function (e) {
                 "  <td class=\"text-center\">$" + precio + "</td>" +
                 "  <td class=\"text-center\">$" + descuento + "</td>" +
                 "  <td class=\"text-center\">" +
-                "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
+                        btnEliminaFila +
+                "  <td style=\"display: none;\">0</td>" +
                 "  </td>" +
                 "</tr >";
 
@@ -235,11 +335,15 @@ $('#btnAgregarProducto').click(function (e) {
 
 
 function actualizaTicketVenta() {
-    
+
     // acttualizamos el id y la funcion de eliminar fila
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
-        fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
+            fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        }
+
     });
 
     // contabilizamos todos los productos para consultar que precio le corresponde a cada uno
@@ -252,58 +356,269 @@ function actualizaTicketVenta() {
             var row_ = {
                 idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
                 cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                min: 1,
+                max: 11,
+                maxCantidad: 0,
+                precioIndividual: 0,
+                precioVenta: 0,
+                descuento: 0,
+                totalPorIdProductos: 0
             };
             productos.push(row_);
         }
     }
 
-    dataToPost = JSON.stringify({ precios: productos });
+    var cantidadTotalPorProducto = [];
+    var cantidadDeProductos = parseInt(0);
+    console.log(arrayPreciosRangos);
 
-    $.ajax({
-        url: rootUrl("/Ventas/ObtenerPreciosDeProductos"),
-        data: dataToPost,
-        method: 'POST',
-        dataType: 'JSON',
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        beforeSend: function (xhr) {
-            ShowLoader("Cargando...");
-        },
-        success: function (data) {
-            OcultarLoader();
+    // actualizamos el contador del max_cantidad para el caso de infinito
+    for (var m = 0; m < productos.length; m++) {
+        var max_precio = parseInt(0);
 
-            if (data.Estatus == 200) {
-                console.log(data);
-                var j = 0;
-                for (j = 0; j < data.Modelo.length; j++) {
+        /////////////////////////////////////////////// cantidadTotalPorProducto
+        if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
+            // the array is defined and has at least one element
+            if (cantidadTotalPorProducto.some(e => e.idProducto === productos[m].idProducto)) {
+                //cantidadTotalPorProducto
+                //var antes_ = productos[m].cantidad;//cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad;
+                //alert(antes_);
+                cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;//arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
+            }
+            else {
+                var row_ = {
+                    idProducto: parseInt(productos[m].idProducto),
+                    cantidad: parseInt(productos[m].cantidad),
+                    precioRango : parseFloat(0)
+                };
+                cantidadTotalPorProducto.push(row_);
+            }
+        }
+        else {
+            var row_ = {
+                idProducto: parseInt(productos[m].idProducto),
+                cantidad: parseInt(productos[m].cantidad),
+                precioRango : parseFloat(0)
+            };
+            cantidadTotalPorProducto.push(row_);
+        }
+        ////////////////////////////////////////////////
 
-                    var tblVtas = document.getElementById('tablaRepVentas');
-                    var rCount = tblVtas.rows.length;
+        cantidadDeProductos += parseInt(productos[m].cantidad);
 
-                    if (rCount >= 2) {
-                        for (var i = 1; i < rCount; i++) {
+        for (var n = 0; n < arrayPreciosRangos.length; n++) {
+            var max_actual = parseInt(arrayPreciosRangos[n]['max']);
+            if (arrayPreciosRangos[n]['idProducto'] == productos[m].idProducto) {
+                if (max_actual > max_precio) {
+                    max_precio = max_actual;
+                }
+            }
+        }
+        productos[m].max = max_precio
+    }
 
-                            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
 
-                            if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
-                                tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo);   //precio
-                                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[j].costo) * cantidad;   //total
-                                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[j].descuento) * cantidad;  //descuento
-                            }
-                        }
+    //  si se ejecuta precio de mayoreo cuando el ticket tiene 12 o + articulos
+    for (var o = 0; o < productos.length; o++) {
+        if (cantidadDeProductos >= 12) {
+            productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
+        }
+        else {
+            productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioIndividual;
+        }
+        productos[o].precioIndividual = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioIndividual;
+    }
+
+
+    // actualizamos los que caigan en un rango
+    for (var q = 0; q < cantidadTotalPorProducto.length; q++) {
+        //var maxCant = productos.find(x => x.idProducto === cantidadTotalPorProducto[o].idProducto).max;
+        //var a = Math.max.apply(Math, arrayPreciosRangos.map(function (n) { return n.max; }))
+        //var b = assert(Math.max(...arrayPreciosRangos.map(x => x.idProducto)) === cantidadTotalPorProducto[q].idProducto);
+        for (var r = 0; r < arrayPreciosRangos.length; r++) {
+
+            if (cantidadTotalPorProducto[q].idProducto === arrayPreciosRangos[r].idProducto) {
+
+                if (
+                    (cantidadTotalPorProducto[q].cantidad >= arrayPreciosRangos[r].min) &&
+                    (cantidadTotalPorProducto[q].cantidad <= arrayPreciosRangos[r].max) 
+                   )
+                {
+                    cantidadTotalPorProducto[q].precioRango = arrayPreciosRangos[r].costo;
+                }
+
+            }
+
+        }
+
+        // si hay algun percio
+        var algunPrecio = parseFloat(0);
+        if (arrayPreciosRangos.some(x => x.idProducto === cantidadTotalPorProducto[q].idProducto) ) {
+            algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
+        }
+
+        //console.log(algunPrecio);
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 11 )) {
+            //cantidadTotalPorProducto[q].precioRango = ;
+            //alert();
+            var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
+            var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
+            console.log(costo);
+            cantidadTotalPorProducto[q].precioRango = costo;
+
+        }
+
+    }
+
+    // se asigna el precio de venta en caso q cayo en un rango
+    for (var p = 0; p < cantidadTotalPorProducto.length; p++) {
+        if (cantidadTotalPorProducto[p].precioRango > 0) {
+            for (var s = 0; s < productos.length; s++) {
+                if (cantidadTotalPorProducto[p].idProducto = productos[s].idProducto) {
+                    productos[s].precioVenta = cantidadTotalPorProducto[p].precioRango;
+                }
+            }
+        }
+    }
+
+
+    //console.log(productos);
+    //alert(Math.max.apply(Math, arrayPreciosRangos.map(function (o) { return o.max; })));
+    //var max_id = parseFloat(0);
+
+    //$('#tablaRepVentas tbody tr').each(function (index, fila) {
+    //    var maximo_actual = parseFloat(fila.children[0].innerHTML);
+    //    if (maximo_actual > max_id) {
+    //        max_id = maximo_actual;
+    //    }
+    //});
+
+
+
+
+
+    // validar que todos los productos tengan precio
+    //console.log(cantidadTotalPorProducto);
+
+    //console.log(productos);
+    //console.log(arrayProductos);
+
+    // actualizamos el ticket 
+
+    for (var j = 0; j < productos.length; j++) {
+
+        var tblVtas = document.getElementById('tablaRepVentas');
+        var rCount = tblVtas.rows.length;
+
+        if (rCount >= 2) {
+            for (var i = 1; i < rCount; i++) {
+
+                var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+
+                if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
+                    //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
+
+                    if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(productos[j].idProducto))) {
+                        tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(productos[j].precioVenta).toFixed(2);   //precio
+                        tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioVenta) * cantidad).toFixed(2);   //total
+                        tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(productos[j].precioIndividual - productos[j].precioVenta) * cantidad).toFixed(2);  //descuento
                     }
                 }
             }
+        }
+    }
+
+
+
+    actualizarSubTotal();
+
+    return;
+
+    //dataToPost = JSON.stringify({ precios: productos });
+
+    //$.ajax({
+    //    url: rootUrl("/Ventas/ObtenerPreciosDeProductos"),
+    //    data: dataToPost,
+    //    method: 'POST',
+    //    dataType: 'JSON',
+    //    contentType: "application/json; charset=utf-8",
+    //    async: false,
+    //    beforeSend: function (xhr) {
+    //        ShowLoader("Cargando...");
+    //    },
+    //    success: function (data) {
+    //        OcultarLoader();
+
+    //        if (data.Estatus == 200) {
+
+    //            var j = 0;
+    //            for (j = 0; j < data.Modelo.length; j++) {
+
+    //                var tblVtas = document.getElementById('tablaRepVentas');
+    //                var rCount = tblVtas.rows.length;
+
+    //                if (rCount >= 2) {
+    //                    for (var i = 1; i < rCount; i++) {
+
+    //                        var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+
+    //                        if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
+    //                            //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
+
+    //                            if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
+    //                                tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo).toFixed(2);   //precio
+    //                                tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(data.Modelo[j].costo) * cantidad).toFixed(2);   //total
+    //                                tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(data.Modelo[j].descuento) * cantidad).toFixed(2);  //descuento
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    },
+    //    error: function (xhr, status) {
+    //        OcultarLoader();
+    //        console.log('Hubo un problema al consultar los precios de los productos, contactese con el administrador del sistema');
+    //        console.log(xhr);
+    //        console.log(status);
+    //    }
+    //});
+
+    //actualizarSubTotal();
+}
+
+
+
+function maxed(a,b) {
+    return a > b ;
+}
+
+
+
+function ObtenerPrecios_(idProducto) {
+
+    var result = [];
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerPrecios"),
+        data: { idProducto: idProducto },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            //pintarPrecios(data.Modelo);
+            result = data.Modelo;
         },
         error: function (xhr, status) {
-            OcultarLoader();
-            console.log('Hubo un problema al consultar los precios de los productos, contactese con el administrador del sistema');
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }
     });
 
-    actualizarSubTotal();
+    return result;
 }
 
 
@@ -312,66 +627,112 @@ function initInputsTabla() {
     $('#tablaRepVentas input').on('change', function () {
 
         var thisInput = $(this);
+        var mensaje = "Debe escribir la cantidad de productos.";
+
+        if (thisInput.hasClass("esDevolucion")) {
+            mensaje = "Debe escribir la cantidad de productos que va a devolver.";
+        }
 
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
-            MuestraToast('warning', "Debe escribir la cantidad de productos.");
+            MuestraToast('warning', mensaje);
             document.execCommand('undo');
+        }
+
+        if (thisInput.hasClass("esDevolucion")) {
+
+            var cell = $(this).closest('td');
+            var row = cell.closest('tr');
+            var rowIndex = row[0].rowIndex;
+            var tblVtas = document.getElementById('tablaRepVentas');
+
+            if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value)))
+            {
+                MuestraToast('warning', "No puede regresar mas de lo que compro.");
+                document.execCommand('undo');
+                return;
+            }
+
+            actualizarSubTotalDevoluciones();
         }
         else {
             actualizaTicketVenta();
-        }
+        }        
     });
 }
 
-//function agregarDescuentos() {
 
-//    $("#vaConDescuento").val("1");
-//    actualizaPreciosTabla('tablaRepVentas');
+//function actualizaPreciosTabla(tabla) {
+
+//    var tblVtas = document.getElementById(tabla);
+//    var rCount = tblVtas.rows.length;
+
+//    if (rCount >= 2) {
+//        for (var i = 1; i < rCount; i++) {
+
+//            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
+//            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
+//            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
+//            var precio = parseFloat(data.Modelo[0].costo);
+
+//            if (precio == 0) {
+//                console.log("error_precio_" + precio);
+//            }
+//            else {
+//                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
+//                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
+//                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
+//            }
+//        }
+//    }
 //}
 
 
-//function quitarDescuentos() {
-//    $("#vaConDescuento").val("0");
-//    actualizaPreciosTabla('tablaRepVentas');
-//}
+function cuentaSubTotal() {
+    //var result = parseFloat(0);
+    var subTotal = parseFloat(0);
+    $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
-
-function actualizaPreciosTabla(tabla) {
-
-    var tblVtas = document.getElementById(tabla);
-    var rCount = tblVtas.rows.length;
-
-    if (rCount >= 2) {
-        for (var i = 1; i < rCount; i++) {
-
-            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
-            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
-            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-            var precio = parseFloat(data.Modelo[0].costo);
-
-            if (precio == 0) {
-                console.log("error_precio_" + precio);
-            }
-            else {
-                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
-                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
-                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
-            }
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion')))
+        {
+            subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
         }
-    }
+
+    });
+    return subTotal;
 }
 
 function actualizarSubTotal() {
 
     var subTotal = parseFloat(0);
-    var descuento = parseFloat(0);
+    //var descuento = parseFloat(0);
+    var esDevolucion = $('#esDevolucion').val();
+    subTotal = cuentaSubTotal();
+    //$('#tablaRepVentas tbody tr').each(function (index, fila) {
+    //    subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
+    //    descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
+    //});
 
-    $('#tablaRepVentas tbody tr').each(function (index, fila) {
-        subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        descuento += parseFloat(fila.children[6].innerHTML.replace('$', ''));
-    });
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
+        subTotal = 0;
+    }
 
     document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
+}
+
+function actualizarSubTotalDevoluciones() {
+
+    var tblVtas = document.getElementById('tablaRepVentas');
+    var rCount = tblVtas.rows.length;
+    var cantidadDevelta = parseInt(0);
+
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            cantidadDevelta += parseFloat(tblVtas.rows[i].cells[7].children[0].value) * parseFloat(tblVtas.rows[i].cells[3].innerHTML.replace('$', '')); //parseFloat(fila.children[5].innerHTML.replace('$', ''));
+        }
+    }
+
+    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
+    document.getElementById("divTotalDevolver").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
 }
 
 
@@ -435,31 +796,42 @@ $('#btnGuardarVenta').click(function (e) {
     var numClientesAtendidos = parseInt(0);
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+    var esDevolucion = $('#esDevolucion').val();
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    var esVentaNormal = "true";
+    var motivoDevolucion = $('#motivoDevolucion').val();
+    var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
 
-
-    // validaciones
-    if ($('#efectivo').val() == "") {
-        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-        return
-    }
-    
-    if (parseFloat(efectivo_) < parseFloat(total_)) {
-        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
-        return;
+    if (((esDevolucion == "true") || (esDevolucion == "True")) || ((esAgregarProductos == "true") || (esAgregarProductos == "True"))) {
+        esVentaNormal = "false"
     }
 
-    if ($("#chkFacturar").is(":checked")) {
-        aplicaIVA = parseInt(1);
-    }
+    if ((esDevolucion == "false") || (esDevolucion == "False"))
+    {
+        // validaciones
+        if ($('#efectivo').val() == "") {
+            MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+            return
+        }
 
-    if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
-
-        if ($('#numClientesAtendidos').val() == "") {
-            MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+        if (parseFloat(efectivo_) < parseFloat(total_)) {
+            MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
             return;
         }
-        else {
-            numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
+
+        if ($("#chkFacturar").is(":checked")) {
+            aplicaIVA = parseInt(1);
+        }
+
+        if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
+
+            if ($('#numClientesAtendidos').val() == "") {
+                MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+                return;
+            }
+            else {
+                numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
+            }
         }
     }
 
@@ -468,17 +840,48 @@ $('#btnGuardarVenta').click(function (e) {
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
-    if (rCount >= 2) {
-        for (var i = 1; i < rCount; i++) {
-            var row_ = {
-                idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
-            };
-            productos.push(row_);
+    if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
+        if (rCount >= 2) {
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                };
+                productos.push(row_);
+            }
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos });
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
+        if (rCount >= 2) {
+            tipoVenta = parseInt(2);
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    productosDevueltos: parseInt(tblVtas.rows[i].cells[7].children[0].value),
+                    idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
+                };
+                productos.push(row_);
+            }
+        }
+    }
+
+    if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
+        if (rCount >= 2) {
+            tipoVenta = parseInt(3);
+            for (var i = 1; i < rCount; i++) {
+                var row_ = {
+                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
+                };
+                productos.push(row_);
+            }
+        }
+    }
+
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -493,16 +896,31 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            //console.log(data);
+            
             if (data.Estatus == 200) {
+                //console.log(esVentaNormal);
 
-                ImprimeTicket(data.Modelo.idVenta);
+                if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
+                    ImprimeTicket(data.Modelo.idVenta);
 
-                if ($("#chkFacturar").is(":checked")) {
-                    //console.log(" is checked!- facturar\n");
-                    facturaVenta(data.Modelo.idVenta);
+                    if ($("#chkFacturar").is(":checked")) {
+                        facturaVenta(data.Modelo.idVenta);
+                    }
                 }
-                
+
+                if ((esDevolucion == "true") || (esDevolucion == "True")) {
+                    ImprimeTicketDevolucion(data.Modelo.idVenta);
+                    ImprimeTicket(data.Modelo.idVenta);
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
+                }
+
+                if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
+                    ImprimeTicket(data.Modelo.idVenta);
+                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
+                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
+                }
+
                 InitSelect2Productos();
                 limpiarTicket();
             }
@@ -523,6 +941,13 @@ $('#btnGuardarVenta').click(function (e) {
 $('#chkFacturar').click(function () {
 
     var idCliente = $('#idCliente').val();
+    var esDevolucion = $('#esDevolucion').val();
+
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
+        MuestraToast('warning', "No es posible facturar una Devolución.");
+        document.getElementById("chkFacturar").checked = false;
+        return
+    }
 
     if (idCliente == 1) {
         MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
@@ -563,6 +988,31 @@ function ImprimeTicket(idVenta) {
         },
         error: function (xhr, status) {
             OcultarLoader();           
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+function ImprimeTicketDevolucion(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketDevolucion"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);
@@ -1161,6 +1611,9 @@ function InitSelect2Productos() {
         }
     });
 
+    arrayProductos = [];
+    arrayProductos = result.Modelo;
+
     var i;
     for (i = 0; i < result.Modelo.length; i++) {
         result.Modelo[i].id = result.Modelo[i]['idProducto'];
@@ -1223,13 +1676,19 @@ function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
 
 
 $(document).ready(function () {
-    
-    //actualizaTicketVenta();
+
+    arrayPreciosRangos = ObtenerPrecios_(0);
     InitSelect2Productos();
     InitSelect2(); // los demas select2
-    //revisarExistenciasCombo();
+    actualizaTicketVenta();
     initInputsTabla();
+
     document.getElementById("divUsoCFDI").style.display = 'none';
     $('#idSucursalExistencia').val('1').change().prop('disabled', false);
-  
+
+    var esAgregarProductos = $('#esAgregarProductos').val();
+    if ((esAgregarProductos == "True") ||(esAgregarProductos == "true")) {
+        $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    }
+
 });

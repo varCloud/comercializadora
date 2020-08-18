@@ -9,8 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
+using AccesoDatos;
 using Dapper;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.WebServices.Modelos.Request;
 
 namespace lluviaBackEnd.DAO
 {
@@ -39,6 +41,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario ", compra.usuario.idUsuario);
                     parameters.Add("@idStatusCompra", compra.statusCompra.idStatus);
                     parameters.Add("@productos", stringBuilder.ToString());
+                    parameters.Add("@observaciones", compra.observaciones);
 
                     var result = db.QueryMultiple("SP_REGISTRA_COMPRA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -114,6 +117,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@descripcionProducto", string.IsNullOrEmpty(compra.producto.descripcion) ? (object)null : compra.producto.descripcion);
                     parameters.Add("@idLineaProducto", idLineaProducto == 0 ? (object)null : idLineaProducto);
                     parameters.Add("@detalleCompra", detalleCompra);
+                    parameters.Add("@idEstatusProducto", compra.producto.estatusProducto.idEstatusProducto==0 ? (object)null  : compra.producto.estatusProducto.idEstatusProducto);
 
                     var rs = db.QueryMultiple("SP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
@@ -121,7 +125,7 @@ namespace lluviaBackEnd.DAO
                     {
                         compras.Estatus = rs1.status;
                         compras.Mensaje = rs1.mensaje;
-                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto").ToList();
+                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto,EstatusProducto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto,idEstatusProducto").ToList();
 
                     }
                     else
@@ -140,12 +144,13 @@ namespace lluviaBackEnd.DAO
             return compras;
         }
 
-        private Compras MapCompras(Compras compras, Proveedor proveedor, Status status, Usuario usuario, Producto producto)
+        private Compras MapCompras(Compras compras, Proveedor proveedor, Status status, Usuario usuario, Producto producto,EstatusProducto estatusProducto)
         {
             compras.proveedor = proveedor;
             compras.statusCompra = status;
             compras.usuario = usuario;
             compras.producto = producto;
+            compras.producto.estatusProducto = estatusProducto;
 
             return compras;
         }
@@ -172,6 +177,87 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
+        }
+
+
+        #region Funciones para la app
+        public Notificacion<List<CompraDetalle>> ObtenerDetalleCompra(RequestObtenerDetalleCompra request)
+        {
+            Notificacion<List<CompraDetalle>> notificacion = new Notificacion<List<CompraDetalle>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idCompra", request.idCompra);
+                    var result = db.QueryMultiple("SP_OBTENER_DETALLE_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.Estatus == 200)
+                    {
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
+                        notificacion.Modelo = result.Read<CompraDetalle, Producto,Status, Usuario,  CompraDetalle>((c, producto, status, usuario) =>
+                        {
+                            c.producto = producto;
+                            c.status = status;
+                            c.usuario = usuario;
+                            return c;
+                        }, splitOn: "idProducto,idEstatusProductoCompra,idUsuario").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message ,ex );
+            }
+            return notificacion;
+        }
+        #endregion
+
+        public Notificacion<String> ActualizarEstatusProductoCompra(RequestActualizaEstatusProductoCompra request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+           
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@productos", SerializeProductos(request.Productos));
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idCompra", request.idCompra);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);                
+                    //var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    //var r1 = r.ReadFirst();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+       
+
+ 
+
+        public string SerializeProductos(List<ProductosCompra> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosCompra>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+            return stringBuilder.ToString();
+
         }
 
     }

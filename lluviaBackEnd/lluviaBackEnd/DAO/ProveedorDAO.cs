@@ -27,8 +27,10 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.CreateParameters(1);
+                    db.CreateParameters(3);
                     db.AddParameters(0, "@idProveedor", proveedor.idProveedor);
+                    db.AddParameters(1, "@fechaIni", proveedor.fechaInicio==DateTime.MinValue ? (object) DBNull.Value : proveedor.fechaInicio);
+                    db.AddParameters(2, "@fechaaFin", proveedor.fechaFin==DateTime.MinValue ? (object) DBNull.Value : proveedor.fechaFin);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_PROVEEDORES]");
 
                     while (db.DataReader.Read())
@@ -43,6 +45,11 @@ namespace lluviaBackEnd.DAO
                             p.direccion = db.DataReader["direccion"].ToString();
                             p.telefono = db.DataReader["telefono"].ToString();
                             p.activo = Convert.ToBoolean(db.DataReader["activo"]);
+                            p.totalPedidosTotales = Convert.ToInt32(db.DataReader["totalPedidosTotales"]);
+                            p.totalPedidosIncompletos = Convert.ToInt32(db.DataReader["totalPedidosIncompletos"]);
+                            p.totalPedidosCompletos = Convert.ToInt32(db.DataReader["totalPedidosCompletos"]);
+                            //p.totalPedidosMayorSolicitado = Convert.ToInt32(db.DataReader["totalPedidosMayorSolicitado"]);
+                            p.PorcAtendido = Convert.ToSingle(db.DataReader["PorcAtendido"]);
                             lstProveedores.Add(p);
                         }
                     }

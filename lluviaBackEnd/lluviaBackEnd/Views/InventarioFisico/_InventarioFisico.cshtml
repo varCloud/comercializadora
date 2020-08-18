@@ -1,0 +1,81 @@
+﻿@model lluviaBackEnd.Models.InventarioFisico
+
+@{ 
+    lluviaBackEnd.Models.AjusteInventarioFisico ajusteInventario = new lluviaBackEnd.Models.AjusteInventarioFisico();
+    ajusteInventario.idInventarioFisico = Model.idInventarioFisico;
+}
+
+
+<section class="section">
+
+    <div class="section-body">
+        @using (Ajax.BeginForm("_ObtenerAjusteInventario", "InventarioFisico",
+               new AjaxOptions
+               {
+                   HttpMethod = "Post",
+                   OnBegin = "onBeginSubmitAjusteInventario",
+                   OnFailure = "onFailureResultAjusteInventario",
+                   OnSuccess = "onSuccessResultAjusteInventario",
+               },
+               new { id = "frmBuscarAjusteInventarioFisico" }))
+        {
+
+        <div class="row">
+            @*<div class="form-group col-lg-4">
+            <label>Inventario Fisico</label>
+            @Html.DropDownListFor(m => ajusteInventario.idInventarioFisico, (List<SelectListItem>)ViewBag.listInventarioFisico, "--TODOS--", new { @class = "form-control readonly", data_val = "false", @readonly = "readonly" })
+        </div>*@
+            @Html.HiddenFor(m => ajusteInventario.idInventarioFisico)
+
+            <div class="form-group col-lg-3">
+                <label>Almacen</label>
+                @Html.DropDownListFor(m => ajusteInventario.producto.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacen, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+            </div>
+
+            <div class="form-group col-lg-3">
+                <label>Lìnea Producto</label>
+                @Html.DropDownListFor(m => ajusteInventario.producto.idLineaProducto, (List<SelectListItem>)ViewBag.lstLineasDeProductos, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+            </div>
+
+            <div class="text-left col-lg-2" style="margin-top:30px;">
+                <button type="submit" class="btn btn-success">Buscar</button>
+            </div>
+
+        </div>
+        }
+
+
+        <div id="ViewAjusteInventario">
+           
+            <hr>
+        </div>
+
+        @Html.HiddenFor(model => Model.idInventarioFisico)
+        @Html.HiddenFor(x => Model.EstatusInventarioFisico.idStatus)
+        <div class="row">
+            <div class="form-group col-lg-6">
+                <label>Observaciones</label>
+                <textarea id="Observaciones" class='form-control @Html.Raw(Model.EstatusInventarioFisico.idStatus!=2 ? "readonly" : "")' @Html.Raw(Model.EstatusInventarioFisico.idStatus != 2 ? "readonly" : "")>@Model.Observaciones</textarea>
+            </div>
+            @if (Model.EstatusInventarioFisico.idStatus == 2)
+            {
+
+                <div class="col-lg-6">
+                    <div class="text-right" style="margin-top:57px;">
+                        <button onclick="javascript: ActualizarEstatusInventarioFisico(@Model.idInventarioFisico, 4, $('#Observaciones').val(), 'cancelar');" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar Ajuste Inventario</button>
+                        <button onclick="javascript:ActualizarEstatusInventarioFisico(@Model.idInventarioFisico,3,$('#Observaciones').val(),'finalizar y afectar');" class="btn btn-primary btn-icon icon-left">
+                            <i class="fas fa-credit-card"></i>Finalizar Ajuste de Inventario
+                        </button>
+
+                    </div>
+                </div>
+
+            }
+        </div>
+
+
+
+    </div>
+</section>
+
+

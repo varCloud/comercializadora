@@ -1,0 +1,63 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
+
+@model Notificacion<List<AjusteInventarioFisico>>
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblMerma">
+            <thead>
+                <tr>
+                    <th>Folio Inv. Fisico</th>
+                    <th>Fecha</th>
+                    <th>Codigo de Barras</th>
+                    <th>Producto</th>
+                    <th>Lìnea</th>
+                    <th>Compras</th>
+                    <th>Ventas</th>
+                    <th>Inv. Sistema</th>
+                    <th>Inv. Fisico</th>
+                    <th>Merma</th>
+                    <th>Costo Compra</th>
+                    <th>% Merma</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.AjusteInventarioFisico c in Model.Modelo)
+                {
+                    <tr>
+                        <td>@c.idInventarioFisico</td>
+                        <td>@c.fechaAlta.ToShortDateString()</td>
+                        <td>@c.producto.codigoBarras</td>
+                        <td>@c.producto.descripcion</td>
+                        <td>@c.producto.DescripcionLinea</td>
+                        <td>@c.totalCompras.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.totalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.cantidadActual</td>
+                        <td>@c.cantidadEnFisico</td>
+                        <td>@c.cantidadAAjustar</td>
+                        <td>@c.producto.costo.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.porcMerma</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+
+

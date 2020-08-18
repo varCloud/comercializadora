@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,7 +15,7 @@ namespace lluviaBackEnd.Controllers
     public class ProductosController : Controller
     {
         // GET: Productos
-
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Productos)]
         public ActionResult Productos()
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
@@ -245,6 +246,85 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
 
+        }
+
+
+
+        public ActionResult Ubicaciones(Producto producto)
+        {
+            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+            ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+            ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
+            ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
+            ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
+            return View();
+        }
+
+
+        public ActionResult ObtenerUbicacion(Ubicacion ubicacion)
+        {
+            Notificacion<List<Ubicacion>> notificacion = new Notificacion<List<Ubicacion>>();
+
+            try
+            {
+                notificacion = new ProductosDAO().ObtenerUbicacion(ubicacion);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                notificacion.Mensaje = ex.Message;
+                throw ex;
+            }
+        }
+
+
+        public ActionResult ObtenerAlmacenes(Almacen almacen)
+        {
+            Notificacion<List<Almacen>> notificacion = new Notificacion<List<Almacen>>();
+            try
+            {
+                notificacion = new UsuarioDAO().ObtenerAlmacenes(almacen);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion.Mensaje = ex.Message;
+                throw;
+            }
+        }
+
+
+
+        public ActionResult GenerarUbicaciones(List<Ubicacion> ubicaciones)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ubicaciones generadas correctamente.";
+                notificacion.Modelo = "ok";
+                string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
+                string pdf = Convert.ToBase64String(Utilerias.Utils.GenerarUbicaciones(ubicaciones, pathPdfCodigos));
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EliminaArchivo(string rutaArchivo) 
+        {
+            try
+            {
+                Utilerias.Utils.DeleteFile(Utilerias.Utils.ObtnerFolderCodigos() + "Ubicaciones.pdf");
+            }
+            catch (Exception ex )
+            {
+                throw ex ;
+            }
         }
 
 

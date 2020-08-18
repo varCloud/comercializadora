@@ -23,6 +23,8 @@ namespace lluviaBackEnd.Models
         public int totalCantProductos { get; set; }
         public float montoTotal { get; set; }
 
+        public string observaciones { get; set; }
+
         public List<Producto> listProductos { get; set; }
         public Proveedor proveedor { get; set; }
 
@@ -31,6 +33,13 @@ namespace lluviaBackEnd.Models
         public Usuario usuario { get; set; }
 
         public Producto producto { get; set; }
+
+        public int totalCantProductosRecibidos { get; set; }
+        public float montoTotalRecibido { get; set; }
+        public int totalCantProductosDevueltos { get; set; }
+
+
+        public EnumEstadoCompras estadoCompra { get; set; }
 
         public Compras()
         {

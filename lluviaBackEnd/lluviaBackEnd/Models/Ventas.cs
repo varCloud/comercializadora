@@ -83,6 +83,14 @@ namespace lluviaBackEnd.Models
         public string tipoCliente { get; set; }
         public string codigoBarras { get; set; }
         public string descripcionLineaProducto { get; set; }
+        public Boolean esDevolucion { get; set; }
+        public Boolean esAgregarProductos { get; set; }
+        public int productosDevueltos { get; set; }
+        public int productosAgregados { get; set; }
+        public int idVentaDetalle { get; set; }
+        public int idAlmacen { get; set; }
+        public string descAlmacen { get; set; }
+        public float precioVenta { get; set; }
 
     }
 }

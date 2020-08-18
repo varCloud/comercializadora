@@ -5,7 +5,7 @@
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
     List<SelectListItem> lstProveedores = (List<SelectListItem>)ViewBag.lstProveedores;
     List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
-
+    List<SelectListItem> lstEstatusProducto = (List<SelectListItem>)ViewBag.lstEstatusProducto;
 }
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
@@ -64,27 +64,33 @@
                         </div>
                     </div>
 
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-4">
-
-                                <div class="form-group">
-                                    <label>Rango de Fechas</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" id="rangeCompras" class="form-control daterange-cus" autocomplete="off">
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Estatus</label>
+                                @Html.DropDownListFor(x => x.producto.estatusProducto.idEstatusProducto, lstEstatusProducto, new { @class = "form-control", id = "lstEstatusProducto", data_val = "false" })
                             </div>
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="form-group">
-
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Rango de Fechas</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="rangeCompras" class="form-control daterange-cus" autocomplete="off">
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>
 
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>

@@ -24,32 +24,33 @@
                     @Html.HiddenFor(x => x.activo, new { @id = "activo" })
 
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <div class="form-group">
-                                <label>Nombre</label>
-                                @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
-                                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
-                            </div>
-                            <div class="form-group">
-                                <label>Descripcion</label>
-                                @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
-                                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
-                            </div>
 
+                        <div class="form-group col-lg-6">
+                            <label>Nombre</label>
+                            @Html.TextBoxFor(x => x.nombre, null, new { @class = "form-control", @id = "nombre" })
+                            @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "text-danger was" })
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <div class="form-group">
-                                <label>Telefono</label>
-                                @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono", onkeypress = "return esNumero(event)" })
-                                @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
-                            </div>
 
-                            <div class="form-group">
-                                <label>Direccion</label>
-                                @Html.TextBoxFor(x => x.direccion, null, new { @class = "form-control", @id = "direccion" })
-                                @Html.ValidationMessageFor(x => x.direccion, null, new { @class = "text-danger was" })
-                            </div>
+                        <div class="form-group col-lg-6">
+                            <label>Telefono</label>
+                            @Html.TextBoxFor(x => x.telefono, null, new { @class = "form-control", @id = "telefono", onkeypress = "return esNumero(event)" })
+                            @Html.ValidationMessageFor(x => x.telefono, null, new { @class = "text-danger was" })
                         </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Descripcion</label>
+                            @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                            @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Direccion</label>
+                            @Html.TextBoxFor(x => x.direccion, null, new { @class = "form-control", @id = "direccion" })
+                            @Html.ValidationMessageFor(x => x.direccion, null, new { @class = "text-danger was" })
+                        </div>
+
+
+
                     </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">
@@ -67,5 +68,5 @@
 
 
 @*<script src="~/Scripts/jquery.validate.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@

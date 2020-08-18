@@ -13,6 +13,7 @@ namespace lluviaBackEnd.Controllers
     public class ClientesController : Controller
     {
         // GET: Clientes
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Clientes)]
         public ActionResult Clientes()
         {
 

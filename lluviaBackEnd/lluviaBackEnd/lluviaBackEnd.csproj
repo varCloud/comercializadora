@@ -50,6 +50,9 @@
     <Reference Include="AccesoDatos">
       <HintPath>DLL\AccesoDatos.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.10.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
     </Reference>
@@ -207,6 +210,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
@@ -225,6 +229,7 @@
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
+    <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -238,10 +243,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AjusteInventarioFisico.cs" />
+    <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
+    <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
+    <Compile Include="Models\InventarioFisico.cs" />
     <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\Sucursal.cs" />
@@ -286,10 +296,18 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\WsFacturaController.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
+    <Compile Include="WebServices\WsInventarioFisicoController.cs" />
+    <Compile Include="WebServices\Modelos\Request\RegistraProductoInventarioFisico.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestActualizaEstatusProductoCompra.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarEstatusPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestGenerarPedidoInterno.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerCompras.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerDetalleCompra.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternosAlamcen.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosInternosUsuario.cs" />
@@ -297,6 +315,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerUbicacionProductoInventario.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPisoPasilloRaq.cs" />
+    <Compile Include="WebServices\WsComprasController.cs" />
     <Compile Include="WebServices\WsPedidoInternoController.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
@@ -1009,11 +1028,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="js\evtCompra.js" />
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
+    <Content Include="js\evtInventarioFisico.js" />
+    <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtEstaciones.js" />
@@ -1021,11 +1041,15 @@
     <Content Include="js\EvtFacturas.js" />
     <Content Include="js\evtReporteDiasPromedioInventario.js" />
     <Content Include="js\evtReporteMargenBruto.js" />
+    <Content Include="js\evtReporteMerma.js" />
+    <Content Include="js\evtReporteNivelServicioProveedor.js" />
+    <Content Include="js\EvtReporteDevoluciones.js" />
     <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
     <Content Include="js\EvtConsultaVentas.js" />
+    <Content Include="js\EvtUbicaciones.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
@@ -1094,7 +1118,8 @@
     </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\DeployDesarrolloAdmin.pubxml" />
+    <None Include="Properties\PublishProfiles\DeployLocal.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Resources\archivopfx.pfx" />
     <None Include="Resources\CerProductivo.cer" />
@@ -1166,11 +1191,9 @@
     <Content Include="Views\Estaciones\_ObtenerEstaciones.cshtml" />
     <Content Include="Views\Estaciones\_SinResultados.cshtml" />
     <Content Include="Views\Login\EstacionesDisponibles.cshtml" />
-    <Content Include="Views\Compras\Compra.cshtml" />
     <Content Include="Views\Proveedores\_NuevoProveedor.cshtml" />
     <Content Include="Views\Compras\Compras.cshtml" />
     <Content Include="Views\Compras\_ObtenerCompras.cshtml" />
-    <Content Include="Views\Compras\_DetalleCompra.cshtml" />
     <Content Include="Views\Factura\_ObtenerFacturas.cshtml" />
     <Content Include="Views\Bitacora\Bitacoras.cshtml" />
     <Content Include="Views\Bitacora\_ObtenerBitacoras.cshtml" />
@@ -1191,6 +1214,23 @@
     <Content Include="Views\Reportes\_DropSize.cshtml" />
     <Content Include="Views\Ventas\VerTicket.cshtml" />
     <Content Include="Views\Productos\ImprimirCodigos.cshtml" />
+    <Content Include="Views\Compras\_Compra.cshtml" />
+    <Content Include="Views\Reportes\NivelServicioProveedor.cshtml" />
+    <Content Include="Views\Reportes\_NivelServicioProveedor.cshtml" />
+    <Content Include="Views\Ventas\VerTicketDevolucion.cshtml" />
+    <Content Include="Views\InventarioFisico\InventarioFisico.cshtml" />
+    <Content Include="Views\InventarioFisico\_ObtenerInventarioFisico.cshtml" />
+    <Content Include="Views\Login\InventarioFisicoActivo.cshtml" />
+    <Content Include="Views\InventarioFisico\_ObtenerAjusteInventario.cshtml" />
+    <Content Include="Views\InventarioFisico\_InventarioFisico.cshtml" />
+    <Content Include="Views\Productos\Ubicaciones.cshtml" />
+    <Content Include="Views\Productos\GenerarUbicaciones.cshtml" />
+    <Content Include="Views\Reportes\DevolucionesProveedor.cshtml" />
+    <Content Include="Views\Reportes\_DevolucionesProveedor.cshtml" />
+    <Content Include="Views\Reportes\Devoluciones.cshtml" />
+    <Content Include="Views\Reportes\_Devoluciones.cshtml" />
+    <Content Include="Views\Reportes\Merma.cshtml" />
+    <Content Include="Views\Reportes\_Merma.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

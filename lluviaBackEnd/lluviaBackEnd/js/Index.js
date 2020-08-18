@@ -202,11 +202,17 @@ function esNumero(evt) {
     return true;
 }
 
-function esPrecio(evt) {
-    evt = (evt) ? evt : window.event;
+function esDecimal(txt, evt) {
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    //console.log(charCode);
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 46) ) {
+    if (charCode == 46) {
+        if (txt.value.indexOf('.') === -1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (charCode > 31 &&
+            (charCode < 48 || charCode > 57))
             return false;
     }
     return true;

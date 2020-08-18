@@ -96,7 +96,12 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region Reportes
-        Puede_visualizar_Reportes
+        Puede_visualizar_Reportes,
+        #endregion
+
+        #region InventarioFisico
+        Puede_visualizar_InventarioFisico
+
         #endregion
 
     }
@@ -111,5 +116,19 @@ namespace lluviaBackEnd.Models
         Picker,
         Almacenista,
         Usuario_de_Compras
+    }
+
+    public enum EnumEstadoCompras
+    {
+        Ninguno=0,
+        Correcta=1,
+        Incorrecta=2
+    }
+
+    public enum EnumTipoVenta
+    {
+        Normal = 1,
+        Devolucion = 2,
+        AgregarProductosVenta = 3
     }
 }

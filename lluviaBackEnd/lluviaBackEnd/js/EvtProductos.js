@@ -272,6 +272,7 @@ function ObtenerIndividualMenudeo(idProducto) {
         success: function (data) {
             $('#precioIndividual').val(data.precioIndividual);
             $('#precioMenudeo').val(data.precioMenudeo);
+            $('#ultimoCostoCompra').val(data.costo)
             result = data;
         },
         error: function (xhr, status) {
@@ -293,7 +294,7 @@ function pintarPrecios(data) {
     else {
         var i = 0;
         for (i = 0; i < data.Modelo.length; i++) {
-            console.log(data.Modelo[i].contador);
+            //console.log(data.Modelo[i].contador);
 
             var row_ =
                 "<tr>" +
@@ -333,7 +334,7 @@ function EditarProducto(idProducto) {
     $('#descripcion').val(data.descripcion).prop('disabled', false);
     $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', false);
     $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
-    console.log("idClaveProdServ", data.idClaveProdServ)
+    //console.log("idClaveProdServ", data.idClaveProdServ)
     $('#cbClaveProdServ').val(data.idClaveProdServ).prop('disabled', false);
     $('#claveUnidad').val(data.claveUnidad).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
@@ -407,7 +408,7 @@ function EliminarProducto(idProducto) {
 }
 
 function obtenerCodigos() {
-    console.log($('#articulo').val());
+    //console.log($('#articulo').val());
     if ($('#articulo').val() !== '') {
         $.ajax({
             url: rootUrl("/Productos/ObtenerCodigos"),
@@ -465,7 +466,7 @@ $('#btnAgregarPrecio').click(function (e) {
                     var precioMinimo = parseFloat(0);
 
                     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
-                        console.log(fila.children[1].innerHTML + ", " + fila.children[2].innerHTML);
+                        //console.log(fila.children[1].innerHTML + ", " + fila.children[2].innerHTML);
                         var maximo_actual = parseFloat(fila.children[2].innerHTML);
                         var PrecioActual = parseFloat(fila.children[3].innerHTML);
                         if (maximo_actual > maximo) {
@@ -510,7 +511,7 @@ $('#btnAgregarPrecio').click(function (e) {
                         $('#min_').val('');
                         $('#precio').val('');
 
-                        validaBtnGuardarPrecios();
+                        //validaBtnGuardarPrecios();
                     }
                 }
             }
@@ -623,9 +624,9 @@ function ImprimirCodigos(articulo, descProducto) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-            console.log(data);
+            //console.log(data);
             window.open("http://" + window.location.host + "/Codigos/" + data.Modelo, "_blank");
-            console.log("http://" + window.location.host + "/Codigos/" + data.Modelo);
+            //console.log("http://" + window.location.host + "/Codigos/" + data.Modelo);
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
