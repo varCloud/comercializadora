@@ -1,6 +1,6 @@
 ﻿var table;
 var iframe;
-var tablaVentas; 
+var tablaVentas;
 var arrayPreciosRangos = [];
 var arrayProductos = [];
 
@@ -12,7 +12,7 @@ function onCompleteSubmitVentas() {
     console.log("onCompleteSubmit___");
 }
 function onSuccessResultVentas(data) {
-    console.log("onSuccessResultVentas", JSON.stringify(data) );    
+    console.log("onSuccessResultVentas", JSON.stringify(data));
     tablaVentas.destroy();
     $('#rowVentas').html(data);
     InitDataTableVentas();
@@ -67,7 +67,7 @@ function _facturaVenta(idVenta) {
 function facturaVenta(idVenta) {
     console.log("facturaVenta_" + idVenta);
     $.ajax({
-        url: pathDominio+"api/WsFactura/GenerarFactura",
+        url: pathDominio + "api/WsFactura/GenerarFactura",
         data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
         method: 'post',
         dataType: 'json',
@@ -108,7 +108,7 @@ function eliminaFila(index_) {
 }
 
 $('#limpiar').click(function (e) {
-    limpiarTicket();    
+    limpiarTicket();
 });
 
 
@@ -153,7 +153,7 @@ function limpiaModalPrevio() {
         "    <br>" +
         "</address>";
 
-    document.getElementById("nombreCliente").innerHTML = row_; 
+    document.getElementById("nombreCliente").innerHTML = row_;
 
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
@@ -164,8 +164,8 @@ function limpiaModalPrevio() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#formaPago').val("1").trigger('change'); 
-    $('#usoCFDI').val("3").trigger('change'); 
+    $('#formaPago').val("1").trigger('change');
+    $('#usoCFDI').val("3").trigger('change');
 
     if ((esAgregarProductos == "True") || (esAgregarProductos == "true")) {
         $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
@@ -182,22 +182,21 @@ $('#previoVenta').click(function (e) {
 
     var esDevolucion = $('#esDevolucion').val();
 
-    if ((esDevolucion == "true") || (esDevolucion == "True"))
-    {
+    if ((esDevolucion == "true") || (esDevolucion == "True")) {
         // validamos que al menos exista devolucion de un item
         var tblVtas = document.getElementById('tablaRepVentas');
         var rCount = tblVtas.rows.length;
         var productosOriginales = parseInt(0);
         var productosDevueltos = parseInt(0);
-        
+
         if (rCount >= 2) {
             for (var i = 1; i < rCount; i++) {
                 productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
                 productosOriginales += parseInt(tblVtas.rows[i].cells[4].children[0].value);
             }
         }
-        
-        if ( productosDevueltos <= 0 ) {
+
+        if (productosDevueltos <= 0) {
             MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
             return;
         }
@@ -211,8 +210,7 @@ $('#previoVenta').click(function (e) {
         $('#motivoDevolucion').val('');
         $('#ModalDevolucion').modal({ backdrop: 'static', keyboard: false, show: true });
     }
-    else
-    {
+    else {
         abrirModalPrevioVenta();
     }
 });
@@ -251,7 +249,7 @@ function abrirModalPrevioVenta() {
 $('#btnAceptarDevolucion').click(function (e) {
 
 
-    if ( ($('#motivoDevolucion').val() == "") ) {
+    if (($('#motivoDevolucion').val() == "")) {
         MuestraToast('warning', "Debe seleccionar el motivo de la devolución");
         return;
     }
@@ -265,8 +263,8 @@ $('#btnAceptarDevolucion').click(function (e) {
 
 
 $('#btnAgregarProducto').click(function (e) {
-    
-    if ( ($('#idProducto').val() == "") || ($('#idProducto').val() == null ) ) {
+
+    if (($('#idProducto').val() == "") || ($('#idProducto').val() == null)) {
         MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
         return;
     }
@@ -302,35 +300,35 @@ $('#btnAgregarProducto').click(function (e) {
     var cantidad = $('#cantidad').val();
     var esAgregarProductos = $('#esAgregarProductos').val();
     var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-    var precio = parseFloat(0).toFixed(2); 
-    var descuento = parseFloat(0).toFixed(2); 
+    var precio = parseFloat(0).toFixed(2);
+    var descuento = parseFloat(0).toFixed(2);
 
     //if (esAgregarProductos == 'true') {
     //    btnEliminaFila = "";
     //}
-           
+
 
     // si todo bien    
-    var row_ =  "<tr>" +
-                "  <td>1</td>" +
-                "  <td> " + $('#idProducto').val() + "</td>" +
-                "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
-                "  <td class=\"text-center\">$" + precio + "</td>" +
-                "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad +"\"></td>" +
-                "  <td class=\"text-center\">$" + precio + "</td>" +
-                "  <td class=\"text-center\">$" + descuento + "</td>" +
-                "  <td class=\"text-center\">" +
-                        btnEliminaFila +
-                "  <td style=\"display: none;\">0</td>" +
-                "  </td>" +
-                "</tr >";
+    var row_ = "<tr>" +
+        "  <td>1</td>" +
+        "  <td> " + $('#idProducto').val() + "</td>" +
+        "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
+        "  <td class=\"text-center\">$" + precio + "</td>" +
+        "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+        "  <td class=\"text-center\">$" + precio + "</td>" +
+        "  <td class=\"text-center\">$" + descuento + "</td>" +
+        "  <td class=\"text-center\">" +
+        btnEliminaFila +
+        "  <td style=\"display: none;\">0</td>" +
+        "  </td>" +
+        "</tr >";
 
     $("table tbody").append(row_);
     $('#cantidad').val('');
 
     actualizaTicketVenta();
     initInputsTabla();
-            
+
 });
 
 
@@ -370,7 +368,7 @@ function actualizaTicketVenta() {
 
     var cantidadTotalPorProducto = [];
     var cantidadDeProductos = parseInt(0);
-    console.log(arrayPreciosRangos);
+    //console.log(arrayPreciosRangos);
 
     // actualizamos el contador del max_cantidad para el caso de infinito
     for (var m = 0; m < productos.length; m++) {
@@ -378,18 +376,15 @@ function actualizaTicketVenta() {
 
         /////////////////////////////////////////////// cantidadTotalPorProducto
         if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
-            // the array is defined and has at least one element
+
             if (cantidadTotalPorProducto.some(e => e.idProducto === productos[m].idProducto)) {
-                //cantidadTotalPorProducto
-                //var antes_ = productos[m].cantidad;//cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad;
-                //alert(antes_);
-                cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;//arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
+                cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;
             }
             else {
                 var row_ = {
                     idProducto: parseInt(productos[m].idProducto),
                     cantidad: parseInt(productos[m].cantidad),
-                    precioRango : parseFloat(0)
+                    precioRango: parseFloat(0)
                 };
                 cantidadTotalPorProducto.push(row_);
             }
@@ -398,7 +393,7 @@ function actualizaTicketVenta() {
             var row_ = {
                 idProducto: parseInt(productos[m].idProducto),
                 cantidad: parseInt(productos[m].cantidad),
-                precioRango : parseFloat(0)
+                precioRango: parseFloat(0)
             };
             cantidadTotalPorProducto.push(row_);
         }
@@ -432,18 +427,14 @@ function actualizaTicketVenta() {
 
     // actualizamos los que caigan en un rango
     for (var q = 0; q < cantidadTotalPorProducto.length; q++) {
-        //var maxCant = productos.find(x => x.idProducto === cantidadTotalPorProducto[o].idProducto).max;
-        //var a = Math.max.apply(Math, arrayPreciosRangos.map(function (n) { return n.max; }))
-        //var b = assert(Math.max(...arrayPreciosRangos.map(x => x.idProducto)) === cantidadTotalPorProducto[q].idProducto);
         for (var r = 0; r < arrayPreciosRangos.length; r++) {
 
             if (cantidadTotalPorProducto[q].idProducto === arrayPreciosRangos[r].idProducto) {
 
                 if (
                     (cantidadTotalPorProducto[q].cantidad >= arrayPreciosRangos[r].min) &&
-                    (cantidadTotalPorProducto[q].cantidad <= arrayPreciosRangos[r].max) 
-                   )
-                {
+                    (cantidadTotalPorProducto[q].cantidad <= arrayPreciosRangos[r].max)
+                ) {
                     cantidadTotalPorProducto[q].precioRango = arrayPreciosRangos[r].costo;
                 }
 
@@ -451,30 +442,24 @@ function actualizaTicketVenta() {
 
         }
 
-        // si hay algun percio
+        // si hay algun percio (caso infinito)
         var algunPrecio = parseFloat(0);
-        if (arrayPreciosRangos.some(x => x.idProducto === cantidadTotalPorProducto[q].idProducto) ) {
+        if (arrayPreciosRangos.some(x => x.idProducto === cantidadTotalPorProducto[q].idProducto)) {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
         }
 
-        //console.log(algunPrecio);
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 11 )) {
-            //cantidadTotalPorProducto[q].precioRango = ;
-            //alert();
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12)) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
-            console.log(costo);
             cantidadTotalPorProducto[q].precioRango = costo;
-
         }
-
     }
 
     // se asigna el precio de venta en caso q cayo en un rango
     for (var p = 0; p < cantidadTotalPorProducto.length; p++) {
         if (cantidadTotalPorProducto[p].precioRango > 0) {
             for (var s = 0; s < productos.length; s++) {
-                if (cantidadTotalPorProducto[p].idProducto = productos[s].idProducto) {
+                if (cantidadTotalPorProducto[p].idProducto === productos[s].idProducto) {
                     productos[s].precioVenta = cantidadTotalPorProducto[p].precioRango;
                 }
             }
@@ -482,29 +467,11 @@ function actualizaTicketVenta() {
     }
 
 
-    //console.log(productos);
-    //alert(Math.max.apply(Math, arrayPreciosRangos.map(function (o) { return o.max; })));
-    //var max_id = parseFloat(0);
-
-    //$('#tablaRepVentas tbody tr').each(function (index, fila) {
-    //    var maximo_actual = parseFloat(fila.children[0].innerHTML);
-    //    if (maximo_actual > max_id) {
-    //        max_id = maximo_actual;
-    //    }
-    //});
-
-
-
-
-
-    // validar que todos los productos tengan precio
     //console.log(cantidadTotalPorProducto);
-
     //console.log(productos);
     //console.log(arrayProductos);
 
-    // actualizamos el ticket 
-
+    // actualizamos el ticket
     for (var j = 0; j < productos.length; j++) {
 
         var tblVtas = document.getElementById('tablaRepVentas');
@@ -518,7 +485,7 @@ function actualizaTicketVenta() {
                 if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
                     //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
 
-                    if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(productos[j].idProducto))) {
+                    if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) === (parseInt(productos[j].idProducto))) {
                         tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(productos[j].precioVenta).toFixed(2);   //precio
                         tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioVenta) * cantidad).toFixed(2);   //total
                         tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(productos[j].precioIndividual - productos[j].precioVenta) * cantidad).toFixed(2);  //descuento
@@ -528,11 +495,9 @@ function actualizaTicketVenta() {
         }
     }
 
-
-
     actualizarSubTotal();
 
-    return;
+    //return;
 
     //dataToPost = JSON.stringify({ precios: productos });
 
@@ -589,8 +554,8 @@ function actualizaTicketVenta() {
 
 
 
-function maxed(a,b) {
-    return a > b ;
+function maxed(a, b) {
+    return a > b;
 }
 
 
@@ -645,8 +610,7 @@ function initInputsTabla() {
             var rowIndex = row[0].rowIndex;
             var tblVtas = document.getElementById('tablaRepVentas');
 
-            if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value)))
-            {
+            if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value))) {
                 MuestraToast('warning', "No puede regresar mas de lo que compro.");
                 document.execCommand('undo');
                 return;
@@ -656,7 +620,7 @@ function initInputsTabla() {
         }
         else {
             actualizaTicketVenta();
-        }        
+        }
     });
 }
 
@@ -692,8 +656,7 @@ function cuentaSubTotal() {
     var subTotal = parseFloat(0);
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
-        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion')))
-        {
+        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
             subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
         }
 
@@ -737,11 +700,11 @@ function actualizarSubTotalDevoluciones() {
 
 
 function ObtenerProductoPorPrecio(idProducto, cantidad, vaConDescuento) {
-    
+
     var result = '';
     $.ajax({
         url: rootUrl("/Ventas/ObtenerProductoPorPrecio"),
-        data: { idProducto: idProducto, cantidad: cantidad, costo: 0, vaConDescuento: vaConDescuento},
+        data: { idProducto: idProducto, cantidad: cantidad, costo: 0, vaConDescuento: vaConDescuento },
         method: 'post',
         dataType: 'json',
         async: false,
@@ -806,8 +769,7 @@ $('#btnGuardarVenta').click(function (e) {
         esVentaNormal = "false"
     }
 
-    if ((esDevolucion == "false") || (esDevolucion == "False"))
-    {
+    if ((esDevolucion == "false") || (esDevolucion == "False")) {
         // validaciones
         if ($('#efectivo').val() == "") {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
@@ -888,7 +850,7 @@ $('#btnGuardarVenta').click(function (e) {
         data: dataToPost,
         method: 'post',
         dataType: 'json',
-        contentType: "application/json; charset=utf-8", 
+        contentType: "application/json; charset=utf-8",
         async: true,
         beforeSend: function (xhr) {
             ShowLoader("Guardando Venta.");
@@ -896,7 +858,7 @@ $('#btnGuardarVenta').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            
+
             if (data.Estatus == 200) {
                 //console.log(esVentaNormal);
 
@@ -925,7 +887,7 @@ $('#btnGuardarVenta').click(function (e) {
                 limpiarTicket();
             }
             $('#ModalPrevioVenta').modal('hide');
-            
+
         },
         error: function (xhr, status) {
             OcultarLoader();
@@ -983,11 +945,11 @@ function ImprimeTicket(idVenta) {
         },
         success: function (data) {
             console.log(data);
-            OcultarLoader();           
+            OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
         },
         error: function (xhr, status) {
-            OcultarLoader();           
+            OcultarLoader();
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);
@@ -1067,7 +1029,7 @@ function numerico(evt) {
 
 function listenerDobleClick(element) {
     element.contentEditable = true;
-    
+
     $(element).keydown(function (evt) {
         el = evt.target;
 
@@ -1076,7 +1038,7 @@ function listenerDobleClick(element) {
             element.contentEditable = false;
         }
 
-        if  (
+        if (
             evt.keyCode != 8 || //backspace
             evt.keyCode != 9 || //tab
             evt.keyCode != 13 || //enter
@@ -1093,12 +1055,11 @@ function listenerDobleClick(element) {
             evt.keyCode != 55 || //7
             evt.keyCode != 56 || //8
             evt.keyCode != 57    //9
-            
-            )
-        {
+
+        ) {
             event.preventDefault();
             element.contentEditable = false;
-            
+
         }
 
         //if (
@@ -1208,14 +1169,14 @@ $("#idCliente").on("change", function () {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("chkFacturar").checked = false;
     document.getElementById("divUsoCFDI").style.display = 'none';
-    $('#usoCFDI').val("3").trigger('change'); 
-    $('#formaPago').val("1").trigger('change'); 
+    $('#usoCFDI').val("3").trigger('change');
+    $('#formaPago').val("1").trigger('change');
 
     var idCliente = parseFloat($('#idCliente').val());
     var data = ObtenerCliente(idCliente);
     var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
     var descuento = parseFloat(0.0);
-    
+
     if (idCliente != 1) {
         descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
     }
@@ -1228,7 +1189,7 @@ $("#idCliente").on("change", function () {
         cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
     }
 
-    var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);       
+    var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
     var iva = parseFloat(0).toFixed(2);
 
     // si lleva iva
@@ -1267,18 +1228,18 @@ $("#idCliente").on("change", function () {
     // para los tipo de clietne ruta
     if (data.Modelo.nombres.includes('RUTA')) {
         row_ = "<div id =\"divClientesAtendidos\">" +
-               "     <div class=\"section-title\"><strong>  </strong></div>" +
-               "     <div class=\"input-group mb-3\">" +
-               "         <div class=\"input-group-prepend\">" +
-               "             <span class=\"input-group-text\">Número de Clientes Atendidos por Ruta:</span>" +
-               "         </div>" +
-               "         <input id=\"numClientesAtendidos\" type=\"text\" class=\"form-control\" onkeypress=\"return esNumero(event)\">" +
-               "     </div>" +
-               "</div><br><br><br><br>";
+            "     <div class=\"section-title\"><strong>  </strong></div>" +
+            "     <div class=\"input-group mb-3\">" +
+            "         <div class=\"input-group-prepend\">" +
+            "             <span class=\"input-group-text\">Número de Clientes Atendidos por Ruta:</span>" +
+            "         </div>" +
+            "         <input id=\"numClientesAtendidos\" type=\"text\" class=\"form-control\" onkeypress=\"return esNumero(event)\">" +
+            "     </div>" +
+            "</div><br><br><br><br>";
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;
-}); 
+});
 
 
 function AbrirModalConsultaExistencias() {
@@ -1305,15 +1266,14 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
     var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
     var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2); 
-    
-    if ( $('#montoARetirar').val() == "") {
+    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
+
+    if ($('#montoARetirar').val() == "") {
         MuestraToast('warning', "Debe seleccionar un monto para retirar.");
         return
     }
 
-    if ( ( (cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0 )
-    {
+    if (((cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0) {
         var cantidadPorRetirar = parseFloat(0).toFixed(2);
         if ((parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2)) < 0)
             cantidadPorRetirar = parseFloat(0);
@@ -1334,7 +1294,7 @@ $('#btnCierreDia').click(function (e) {
     var totEfe = parseFloat($('#totalEfectivoCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
     var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
     var monto = totEfe - totRet;
-    
+
     if ((monto) <= 0.0) {
         MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
         return
@@ -1380,7 +1340,7 @@ $('#btnCierreDia').click(function (e) {
 });
 
 function retirarExcesoEfectivo(montoRetiro) {
-    
+
     $.ajax({
         url: rootUrl("/Ventas/RetirarExcesoEfectivo"),
         data: { montoRetiro: parseFloat(montoRetiro) },
@@ -1416,14 +1376,14 @@ function ConsultRetiros() {
             ShowLoader();
         },
         success: function (data) {
-            OcultarLoader();          
-            $('#tblRetiros_').html(data);            
+            OcultarLoader();
+            $('#tblRetiros_').html(data);
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
             console.log(xhr);
             console.log(status);
-            OcultarLoader();           
+            OcultarLoader();
         }
     });
 }
@@ -1567,8 +1527,8 @@ function ObtenerIndividualMenudeo(idProducto) {
             console.log("Antes")
         },
         success: function (data) {
-            $('#precioIndividual_').html("$"+data.precioIndividual);
-            $('#precioMenudeo_').html("$"+data.precioMenudeo);
+            $('#precioIndividual_').html("$" + data.precioIndividual);
+            $('#precioMenudeo_').html("$" + data.precioMenudeo);
             console.log(data);
             result = data;
         },
@@ -1595,7 +1555,7 @@ function InitSelect2Productos() {
     var result = '';
     $.ajax({
         url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
-        data: { idProducto: 0, idUsuario : 0, activo: true },
+        data: { idProducto: 0, idUsuario: 0, activo: true },
         method: 'post',
         dataType: 'json',
         async: false,
@@ -1687,7 +1647,7 @@ $(document).ready(function () {
     $('#idSucursalExistencia').val('1').change().prop('disabled', false);
 
     var esAgregarProductos = $('#esAgregarProductos').val();
-    if ((esAgregarProductos == "True") ||(esAgregarProductos == "true")) {
+    if ((esAgregarProductos == "True") || (esAgregarProductos == "true")) {
         $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
     }
 
