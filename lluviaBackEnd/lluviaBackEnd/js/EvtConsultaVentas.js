@@ -148,7 +148,7 @@ function VerTicket(idVenta) {
 
 function PintarTabla() {
     $.ajax({
-        url: "/Ventas/_ObtenerVentas",
+        url: rootUrl("/Ventas/_ObtenerVentas"),
         data: { idVenta: 0 },
         method: 'post',
         dataType: 'html',
