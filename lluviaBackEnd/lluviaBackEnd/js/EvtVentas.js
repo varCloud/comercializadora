@@ -370,7 +370,7 @@ function actualizaTicketVenta() {
 
     var cantidadTotalPorProducto = [];
     var cantidadDeProductos = parseInt(0);
-    console.log(arrayPreciosRangos);
+    //console.log(arrayPreciosRangos);
 
     // actualizamos el contador del max_cantidad para el caso de infinito
     for (var m = 0; m < productos.length; m++) {
@@ -378,12 +378,9 @@ function actualizaTicketVenta() {
 
         /////////////////////////////////////////////// cantidadTotalPorProducto
         if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
-            // the array is defined and has at least one element
+            
             if (cantidadTotalPorProducto.some(e => e.idProducto === productos[m].idProducto)) {
-                //cantidadTotalPorProducto
-                //var antes_ = productos[m].cantidad;//cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad;
-                //alert(antes_);
-                cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;//arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
+                cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;
             }
             else {
                 var row_ = {
@@ -432,9 +429,6 @@ function actualizaTicketVenta() {
 
     // actualizamos los que caigan en un rango
     for (var q = 0; q < cantidadTotalPorProducto.length; q++) {
-        //var maxCant = productos.find(x => x.idProducto === cantidadTotalPorProducto[o].idProducto).max;
-        //var a = Math.max.apply(Math, arrayPreciosRangos.map(function (n) { return n.max; }))
-        //var b = assert(Math.max(...arrayPreciosRangos.map(x => x.idProducto)) === cantidadTotalPorProducto[q].idProducto);
         for (var r = 0; r < arrayPreciosRangos.length; r++) {
 
             if (cantidadTotalPorProducto[q].idProducto === arrayPreciosRangos[r].idProducto) {
@@ -451,30 +445,24 @@ function actualizaTicketVenta() {
 
         }
 
-        // si hay algun percio
+        // si hay algun percio (caso infinito)
         var algunPrecio = parseFloat(0);
         if (arrayPreciosRangos.some(x => x.idProducto === cantidadTotalPorProducto[q].idProducto) ) {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
         }
 
-        //console.log(algunPrecio);
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 11 )) {
-            //cantidadTotalPorProducto[q].precioRango = ;
-            //alert();
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12 )) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
-            console.log(costo);
             cantidadTotalPorProducto[q].precioRango = costo;
-
         }
-
     }
 
     // se asigna el precio de venta en caso q cayo en un rango
     for (var p = 0; p < cantidadTotalPorProducto.length; p++) {
         if (cantidadTotalPorProducto[p].precioRango > 0) {
             for (var s = 0; s < productos.length; s++) {
-                if (cantidadTotalPorProducto[p].idProducto = productos[s].idProducto) {
+                if (cantidadTotalPorProducto[p].idProducto === productos[s].idProducto) {
                     productos[s].precioVenta = cantidadTotalPorProducto[p].precioRango;
                 }
             }
@@ -482,29 +470,11 @@ function actualizaTicketVenta() {
     }
 
 
-    //console.log(productos);
-    //alert(Math.max.apply(Math, arrayPreciosRangos.map(function (o) { return o.max; })));
-    //var max_id = parseFloat(0);
-
-    //$('#tablaRepVentas tbody tr').each(function (index, fila) {
-    //    var maximo_actual = parseFloat(fila.children[0].innerHTML);
-    //    if (maximo_actual > max_id) {
-    //        max_id = maximo_actual;
-    //    }
-    //});
-
-
-
-
-
-    // validar que todos los productos tengan precio
     //console.log(cantidadTotalPorProducto);
-
     //console.log(productos);
     //console.log(arrayProductos);
 
-    // actualizamos el ticket 
-
+    // actualizamos el ticket
     for (var j = 0; j < productos.length; j++) {
 
         var tblVtas = document.getElementById('tablaRepVentas');
@@ -518,7 +488,7 @@ function actualizaTicketVenta() {
                 if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
                     //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
 
-                    if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(productos[j].idProducto))) {
+                    if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) === (parseInt(productos[j].idProducto))) {
                         tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(productos[j].precioVenta).toFixed(2);   //precio
                         tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioVenta) * cantidad).toFixed(2);   //total
                         tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(productos[j].precioIndividual - productos[j].precioVenta) * cantidad).toFixed(2);  //descuento
@@ -528,11 +498,9 @@ function actualizaTicketVenta() {
         }
     }
 
-
-
     actualizarSubTotal();
 
-    return;
+    //return;
 
     //dataToPost = JSON.stringify({ precios: productos });
 
