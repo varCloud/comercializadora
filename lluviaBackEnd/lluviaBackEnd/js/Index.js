@@ -253,3 +253,7 @@ $(document).ready(function () {
         });
     });
 });
+
+function roundToTwo(valor) {
+    return +(Math.round(valor + "e+2") + "e-2");
+}

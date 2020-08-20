@@ -200,8 +200,8 @@
 
 
 @*Modal Rangos de Precios *@
-<div class="modal fade bd-example-modal-lg" id="RangosPreciosProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade bd-example-modal-xl" id="RangosPreciosProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="TituloModalRangosPrecios"></h5>
@@ -234,24 +234,37 @@
                             <div class="card-body">
 
                                 <div class="row">
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <label>Precio Individual</label>
                                             <input id="precioIndividual" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
+                                        <div class="form-group">
+                                            <label>% Utilidad Individual</label>
+                                            <input id="porcUtilidadIndividual" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <label>Precio Mayoreo</label>
                                             <input id="precioMenudeo" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
-                                            <label>Ultimo Costo de Compra</label>
-                                            <input id="ultimoCostoCompra" type="text" class="form-control" disabled="disabled" onkeypress="return esDecimal(this, event);">
+                                            <label>% Utilidad Mayoreo</label>
+                                            <input id="porcUtilidadMayoreo" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                                         </div>
                                     </div>
+                                    <div class="col-12 col-sm-12 col-lg-2">
+                                        <div class="form-group">
+                                            <label>Ultimo Costo de Compra</label>
+                                            <input id="ultimoCostoCompra" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                        </div>
+                                    </div>
+                                  
                                     <div class="col-12 col-sm-12 col-lg-3">
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-3">
@@ -259,25 +272,31 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <label>Mínimo</label>
                                             <input id="min_" type="text" class="form-control" onkeypress="return esNumero(event)">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <label>Máximo</label>
                                             <input id="max_" type="text" class="form-control" onkeypress="return esNumero(event)">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <label>Precio</label>
                                             <input id="precio" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-lg-3">
+                                    <div class="col-12 col-sm-12 col-lg-2">
+                                        <div class="form-group">
+                                            <label>% Utilidad</label>
+                                            <input id="porcUtilidad" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-2">
                                         <div class="form-group">
                                             <div class="text-right" style="margin-top:30px;">
                                                 <button type="button" id="btnAgregarPrecio" class="btn btn-success">Agregar Precio</button>
@@ -304,6 +323,7 @@
                                                 <th class="text-center">Cantidad Mínima</th>
                                                 <th class="text-center">Cantidad Máxima</th>
                                                 <th class="text-center">Precio</th>
+                                                <th class="text-center">% Utilidad</th>
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>

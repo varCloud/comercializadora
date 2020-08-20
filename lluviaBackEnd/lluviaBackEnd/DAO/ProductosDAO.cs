@@ -255,6 +255,9 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", producto.idProducto);
                     parameters.Add("@precioIndividual", producto.precioIndividual);
                     parameters.Add("@precioMenudeo", producto.precioMenudeo);
+                    parameters.Add("@ultimoCostoCompra", producto.costo);
+                    parameters.Add("@porcUtilidadIndividual", producto.porcUtilidadIndividual);
+                    parameters.Add("@porcUtilidadMayoreo", producto.porcUtilidadMayoreo);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_RANGOS_PRECIOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

@@ -215,14 +215,19 @@ function VerPrecios(idProducto) {
 
     $('#precioIndividual').val('');
     $('#precioMenudeo').val('');
+    $('#porcUtilidadMayoreo').val('');
+    $('#precioMenudeo').val('');
+    $('#ultimoCostoCompra').val('');
     $('#max_').val('');
     $('#min_').val('');
     $('#precio').val('');
+    $('#porcUtilidad').val('');
     $('#idProductoRango').val(idProducto);
     $("#tablaRangosPrecios").find("tr:gt(0)").remove();
     //document.getElementById("btnGuardarPrecios").disabled = true;
-    ObtenerPrecios(idProducto);
     ObtenerIndividualMenudeo(idProducto);
+    ObtenerPrecios(idProducto);
+   
 
     //para abrir el modal
     $('#RangosPreciosProductoModal').modal({ backdrop: 'static', keyboard: false, show: true });
@@ -271,7 +276,13 @@ function ObtenerIndividualMenudeo(idProducto) {
         },
         success: function (data) {
             $('#precioIndividual').val(data.precioIndividual);
+            if (data.porcUtilidadIndividual == 0 && data.costo > 0 && data.precioIndividual > 0)
+                data.porcUtilidadIndividual=CalcularPorcUtilidad(data.costo, data.precioIndividual);
+            $('#porcUtilidadIndividual').val(data.porcUtilidadIndividual);            
             $('#precioMenudeo').val(data.precioMenudeo);
+            if (data.porcUtilidadMayoreo == 0 && data.costo > 0 && data.precioMenudeo > 0)
+                data.porcUtilidadMayoreo=CalcularPorcUtilidad(data.costo, data.precioMenudeo);
+            $('#porcUtilidadMayoreo').val(data.porcUtilidadMayoreo);
             $('#ultimoCostoCompra').val(data.costo)
             result = data;
         },
@@ -296,12 +307,16 @@ function pintarPrecios(data) {
         for (i = 0; i < data.Modelo.length; i++) {
             //console.log(data.Modelo[i].contador);
 
+            if (data.Modelo[i].costo > 0 && data.Modelo[i].porcUtilidad == 0 && $("#ultimoCostoCompra").val() > 0)
+                data.Modelo[i].porcUtilidad = CalcularPorcUtilidad($("#ultimoCostoCompra").val(), data.Modelo[i].costo);
+ 
             var row_ =
                 "<tr>" +
                 "    <td>0</td>" +
                 "    <td class=\"text-center\">" + data.Modelo[i].min + "</td>" +
                 "    <td class=\"text-center\">" + data.Modelo[i].max + "</td>" +
-                "    <td class=\"text-center\">" + data.Modelo[i].costo + "</td>" +
+                "    <td class=\"text-center\">" + data.Modelo[i].costo + "</td>" +             
+                "    <td class=\"text-center\">" + data.Modelo[i].porcUtilidad + "</td>" +
                 "    <td class=\"text-center\">" +
                 "       <a href=\"javascript:eliminaFilaPrecios(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
                 "    </td>" +
@@ -313,6 +328,7 @@ function pintarPrecios(data) {
         $('#max_').val('');
         $('#min_').val('');
         $('#precio').val('');
+        $('#porcUtilidad').val('');
     }
 }
 
@@ -501,6 +517,7 @@ $('#btnAgregarPrecio').click(function (e) {
                             "    <td class=\"text-center\">" + $('#min_').val() + "</td>" +
                             "    <td class=\"text-center\">" + $('#max_').val() + "</td>" +
                             "    <td class=\"text-center\">" + $('#precio').val() + "</td>" +
+                            "    <td class=\"text-center\">" + $('#porcUtilidad').val() + "</td>" +
                             "    <td class=\"text-center\">" +
                             "       <a href=\"javascript:eliminaFilaPrecios(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
                             "    </td>" +
@@ -510,6 +527,7 @@ $('#btnAgregarPrecio').click(function (e) {
                         $('#max_').val('');
                         $('#min_').val('');
                         $('#precio').val('');
+                        $('#porcUtilidad').val('');
 
                         //validaBtnGuardarPrecios();
                     }
@@ -542,7 +560,8 @@ $('#btnGuardarPrecios').click(function (e) {
                 contador: fila.children[0].innerHTML,
                 min: fila.children[1].innerHTML,
                 max: fila.children[2].innerHTML,
-                costo: fila.children[3].innerHTML
+                costo: fila.children[3].innerHTML,
+                porcUtilidad: fila.children[4].innerHTML
                 //idProducto: $('#idProductoRango').val()
             };
 
@@ -559,7 +578,11 @@ $('#btnGuardarPrecios').click(function (e) {
             var producto = {
                 idProducto: idProducto,
                 precioIndividual: $('#precioIndividual').val(),
-                precioMenudeo: $('#precioMenudeo').val()
+                precioMenudeo: $('#precioMenudeo').val(),
+                costo: $('#ultimoCostoCompra').val(),
+                porcUtilidadIndividual: $('#porcUtilidadIndividual').val(),
+                porcUtilidadMayoreo: $('#porcUtilidadMayoreo').val()
+
             };
 
             dataToPost = JSON.stringify({ precios: rangos, producto: producto });
@@ -640,19 +663,24 @@ function ImprimirCodigos(articulo, descProducto) {
 function actualizaTablaPrecios() {
     $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
-        fila.children[4].innerHTML = "      <a href=\"javascript:eliminaFilaPrecios(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+        fila.children[5].innerHTML = "      <a href=\"javascript:eliminaFilaPrecios(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     });
 }
 
+function CalcularPorcUtilidad(Costo,Precio)
+{   
+    var PorcUtilidad = 0;
+    if (Costo > 0 && Precio>0)
+        PorcUtilidad = roundToTwo(((Precio * 100) / Costo) - 100);
+    return PorcUtilidad;
+}
 
-
-$("#precioIndividual").keyup(function () {
-    document.getElementById("btnGuardarPrecios").disabled = false;
-});
-
-$("#precioMenudeo").keyup(function () {
-    document.getElementById("btnGuardarPrecios").disabled = false;
-});
+function CalcularPecioPorUtilidad(Costo,Utilidad) {
+    var Precio = 0;   
+    if (Costo > 0 && Utilidad > 0)
+        Precio = roundToTwo(Costo * (1 + (Utilidad/100)));
+    return Precio;
+}
 
 $(document).ready(function () {
 
@@ -682,5 +710,44 @@ $(document).ready(function () {
         }
     });
 
+    ////Ajustamos precio y porcentaje de utilidad
+    $("#precioIndividual").keyup(function () {
+        document.getElementById("btnGuardarPrecios").disabled = false;
+        $("#porcUtilidadIndividual").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precioIndividual").val()));
+    });
 
+    $("#precioMenudeo").keyup(function () {
+        document.getElementById("btnGuardarPrecios").disabled = false;
+        $("#porcUtilidadMayoreo").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precioMenudeo").val()));
+    });
+
+    $("#porcUtilidadIndividual").keyup(function () {
+        document.getElementById("btnGuardarPrecios").disabled = false;
+        $("#precioIndividual").val(CalcularPecioPorUtilidad($("#ultimoCostoCompra").val(), $("#porcUtilidadIndividual").val()));
+    });
+
+    $("#porcUtilidadMayoreo").keyup(function () {
+        document.getElementById("btnGuardarPrecios").disabled = false;
+        $("#precioMenudeo").val(CalcularPecioPorUtilidad($("#ultimoCostoCompra").val(), $("#porcUtilidadMayoreo").val()));
+    });
+
+    $("#precio").keyup(function () {       
+        $("#porcUtilidad").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precio").val()));
+    });
+
+    $("#porcUtilidad").keyup(function () {       
+        $("#precio").val(CalcularPecioPorUtilidad($("#ultimoCostoCompra").val(), $("#porcUtilidad").val()));
+    });
+
+    $("#ultimoCostoCompra").keyup(function () {
+
+        $("#porcUtilidadIndividual").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precioIndividual").val()));
+        $("#porcUtilidadMayoreo").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precioMenudeo").val()));
+
+        $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
+            var Precio=fila.children[3].innerHTML;
+            fila.children[4].innerHTML = CalcularPorcUtilidad($("#ultimoCostoCompra").val(), Precio)
+        });
+
+    });
 });
