@@ -24,59 +24,61 @@ else
                     <th>Linea Producto</th>
                     <th>Almacen</th>
                     <th>Ubicacion</th>
-                    <th>Cantidad Actual</th>
-                    <th>Cantidad Fisico</th>
-                    <th>Cantidad Ajustar</th>
+                    <th>Cant. Actual</th>
+                    <th>Cant. Fisico</th>
+                    <th>Cant. Sobrante</th>
+                    <th>Cant. Faltante</th>
                 </tr>
             </thead>
             <tbody>
 
                 @foreach (lluviaBackEnd.Models.AjusteInventarioFisico c in Model)
                 {
-                    <tr>
-                        <td>@c.idAjusteInventarioFisico</td>
-                        <td>
-                            <p style="margin:0">@c.producto.descripcion</p>
-                            @*<span class="badge @Html.Raw(c.ajustado?"badge-success" : "badge-warning")">@Html.Raw(c.ajustado?"Ajustado" : "Sin Ajustar")</span>*@
-                        </td>
-                        <td>@c.producto.DescripcionLinea</td>
-                        <td>@c.producto.Almacen</td>
-                        @if (lluviaBackEnd.Utilerias.Utils.mercanciaAcomodada(c.producto.idPasillo.ToString(), c.producto.idRaq.ToString(), c.producto.idPiso.ToString()))
+                <tr>
+                    <td>@c.idAjusteInventarioFisico</td>
+                    <td>
+                        <p style="margin:0">@c.producto.descripcion</p>
+                        @*<span class="badge @Html.Raw(c.ajustado?"badge-success" : "badge-warning")">@Html.Raw(c.ajustado?"Ajustado" : "Sin Ajustar")</span>*@
+                    </td>
+                    <td>@c.producto.DescripcionLinea</td>
+                    <td>@c.producto.Almacen</td>
+                    @if (lluviaBackEnd.Utilerias.Utils.mercanciaAcomodada(c.producto.idPasillo.ToString(), c.producto.idRaq.ToString(), c.producto.idPiso.ToString()))
+                    {
+                        <td>Sin Acomodar</td>
+                    }
+                    else
+                    {
+                        <td>(@c.producto.Piso) (Pasillo:@c.producto.Pasillo) (@c.producto.Raq)</td>
+
+                    }
+
+                    <td>@c.cantidadActual</td>
+                    <td>
+                        @if (!c.ajustado)
                         {
-                            <td>Sin Acomodar</td>
+                            <div class="badge badge-warning badge-shadow">Sin Ajustar</div>
                         }
-                        else
+                        else if (c.cantidadActual == c.cantidadEnFisico)
                         {
-                            <td>(@c.producto.Piso) (Pasillo:@c.producto.Pasillo) (@c.producto.Raq)</td>
+                            <div class="badge badge-success badge-shadow">@c.cantidadEnFisico Ajustado</div>
+
+                        }
+                        else if (c.cantidadEnFisico < c.cantidadActual)
+                        {
+                            <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico Ajustado</div>
+
+                        }
+                        else if (c.cantidadEnFisico > c.cantidadActual)
+                        {
+                            <div class="badge badge-info badge-shadow">@c.cantidadEnFisico Ajustado</div>
 
                         }
 
-                        <td>@c.cantidadActual</td>
-                        <td>
-                            @if (!c.ajustado)
-                            {
-                                <div class="badge badge-warning badge-shadow">Sin Ajustar</div>
-                            }
-                            else if (c.cantidadActual == c.cantidadEnFisico)
-                            {
-                                <div class="badge badge-success badge-shadow">@c.cantidadEnFisico Ajustado</div>
 
-                            }
-                            else if (c.cantidadEnFisico < c.cantidadActual)
-                            {
-                        <div class="badge badge-danger badge-shadow">@c.cantidadEnFisico Ajustado</div>
-                              
-                            }
-                            else if (c.cantidadEnFisico > c.cantidadActual)
-                            {
-                        <div class="badge badge-info badge-shadow">@c.cantidadEnFisico Ajustado</div>
-                              
-                            }
-
-
-                        </td>
-                        <td>@c.cantidadAAjustar</td>
-                    </tr>
+                    </td>
+                    <td>@Html.Raw(c.cantidadEnFisico>c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                    <td>@Html.Raw(c.cantidadEnFisico < c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                </tr>
                 }
             </tbody>
         </table>
