@@ -87,7 +87,8 @@ namespace lluviaBackEnd.Models
         public int cantidadRecibida { get; set; }
         public int cantidadDevuelta { get; set; }
 
-
+        public float porcUtilidadIndividual { get; set; }
+        public float porcUtilidadMayoreo { get; set; }
 
         public Producto()
         {

@@ -376,7 +376,7 @@ function actualizaTicketVenta() {
 
         /////////////////////////////////////////////// cantidadTotalPorProducto
         if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
-
+            
             if (cantidadTotalPorProducto.some(e => e.idProducto === productos[m].idProducto)) {
                 cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;
             }
@@ -448,7 +448,7 @@ function actualizaTicketVenta() {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
         }
 
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12)) {
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12 )) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
