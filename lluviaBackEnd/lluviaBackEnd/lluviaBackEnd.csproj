@@ -230,6 +230,7 @@
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
     <Compile Include="DAO\InventarioFisicoDAO.cs" />
+    <Compile Include="DAO\LimiteInventarioDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\InventarioFisico.cs" />
+    <Compile Include="Models\LimiteInvetario.cs" />
     <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\Sucursal.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
@@ -316,6 +319,7 @@
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPisoPasilloRaq.cs" />
     <Compile Include="WebServices\WsComprasController.cs" />
+    <Compile Include="WebServices\WsLimitesInventarioController.cs" />
     <Compile Include="WebServices\WsPedidoInternoController.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
