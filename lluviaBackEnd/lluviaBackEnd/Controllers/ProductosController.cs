@@ -8,6 +8,7 @@ using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Utilerias;
+using lluviaBackEnd.WebServices.Modelos.Request;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -325,6 +326,46 @@ namespace lluviaBackEnd.Controllers
             {
                 throw ex ;
             }
+        }
+
+        //Límites Inventario
+        public ActionResult LimitesInventario()
+        {
+            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
+            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+            //List<SelectListItem> selectLists = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList();
+            ViewBag.listEstatusLimitesInventario = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList(); ;
+            return View(new LimiteInvetario());
+        }
+
+        public ActionResult ObtenerLimitesInventario(LimiteInvetario limiteInvetario)
+        {
+            try
+            {
+                return PartialView("_LimitesInventario", new LimiteInventarioDAO().ObtenerLimitesInventario(limiteInvetario));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ActualizaLimiteInventario(LimiteInvetario limiteInvetario)
+        {
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;              
+                Notificacion<string> result = new LimiteInventarioDAO().InsertaActualizaLimiteInventario(limiteInvetario,usuarioSesion.idUsuario);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
 

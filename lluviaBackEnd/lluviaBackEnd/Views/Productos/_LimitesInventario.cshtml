@@ -1,0 +1,85 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
+
+@model Notificacion<List<LimiteInvetario>>
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblLimitesInventario">
+            <thead>
+                <tr>
+                    <th width="15%">Almacen</th>
+                    <th width="20%">Línea de Producto</th>
+                    <th width="20%">Producto</th>
+                    <th width="10%">Mínimo</th>
+                    <th width="10%">Máximo</th>
+                    <th width="10%">Cant. Actual</th>
+                    <th width="20%">Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.LimiteInvetario c in Model.Modelo)
+                {
+                <tr>
+                    <td>@c.descripcionAlmacen</td>
+                    <td>@c.descripcionLineaProducto</td>
+                    <td>@c.descripcion</td>
+                    <td><input type="text" id="minimo_@c.idLimiteInventario" onkeypress="return esNumero(event)" onblur="actualizaLimiteInventario(@c.idLimiteInventario,@c.idAlmacen,@c.idProducto,@c.maximo,this.value,'minimo',@c.minimo)" style="border: none; border-color: transparent;  background: transparent; width:40px;" value="@c.minimo"></td>
+                    <td><input type="text" id="maximo_@c.idLimiteInventario" onkeypress="return esNumero(event)" onblur="actualizaLimiteInventario(@c.idLimiteInventario,@c.idAlmacen,@c.idProducto,this.value,@c.minimo,'maximo',@c.maximo)" style="border: none; border-color: transparent;  background: transparent; width:40px;" value="@c.maximo"></td>
+                    <td>@c.cantidadInventario</td>
+                    <td>
+                        @{
+                            switch (c.estatusInventario.idStatus)
+                            {
+                                case 1:
+                                    {
+                                        <div class="badge badge-success badge-shadow">@c.estatusInventario.descripcion</div>
+                                    }
+                                    break;
+
+                                case 2:
+                                    {
+                                        <div class="badge badge-warning badge-shadow">@c.estatusInventario.descripcion</div>
+
+                                    }
+                                    break;
+
+                                case 3:
+                                    {
+                                        <div class="badge badge-danger badge-shadow">@c.estatusInventario.descripcion</div>
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        <div class="badge badge-light badge-shadow">@c.estatusInventario.descripcion</div>
+                                    }
+                                    break;
+                            }
+                        }
+
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+
+
+
