@@ -17,7 +17,7 @@ namespace lluviaBackEnd.Models
         public string descripcion { get; set; }
         public string descripcionAlmacen { get; set; }
         public string descripcionLineaProducto { get; set; }
-
+        public string codigoBarras { get; set; }
         public int cantidadInventario { get; set; }
 
 

@@ -56,13 +56,13 @@ function InitDataTableLimitesInventario() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5, 6,7],
                     format: {
                         body: function (data, row, column, node) {
                             //si es la 3 o la cual obtenemos el .val 
                             //var isInput = $(data).is("input") ? true : false;                          
 
-                            return (column === 3 || column === 4) ?
+                            return (column === 4 || column === 5) ?
                                 $(data).val() :
                                 data;
                         }
@@ -75,19 +75,28 @@ function InitDataTableLimitesInventario() {
                 className: '',
                 titleAttr: 'Exportar a Excel',             
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5, 6,7],
                     format: {
                         body: function (data, row, column, node) {
                             //si es la 3 o la cual obtenemos el .val 
                             //var isInput = $(data).is("input") ? true : false;                          
 
-                            return (column === 3 || column===4) ?
+                            return (column === 4 || column===5) ?
                                 $(data).val():
                                 data;
                         }
                     }
                 },
             },
+            {
+                
+                text: '<i class="fas fa-file-import" style="font-size:20px;"></i>',
+                titleAttr: 'Importar Excel',
+                className: 'btn btn-icon btn-warning',
+                action: function (e, dt, node, config) {
+                    $('#FileExcel').trigger('click');
+                }
+            }
         ],
 
     });
@@ -171,4 +180,61 @@ function actualizaLimiteInventario(idLimiteInventario, idAlmacen, idProducto, ma
                 $("#" + campoActualizar + "_" + idLimiteInventario).val(valorAnterior);
             }
         });
+}
+
+function ValidarFile(File) {
+
+    var validExts = new Array(".xlsx", ".xls");
+    var fileExt = File.value;
+    if (fileExt !== "") {
+        fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+        if (validExts.indexOf(fileExt) < 0) {
+              MuestraToast("error", "Archivo inválido, los archivos validos son " + validExts.toString());
+        }
+        else {
+            var fileUpload = $("#FileExcel").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object  
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object  
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            $.ajax({
+                url: rootUrl("/Productos/ImportarExcel"),
+                type: "POST",
+                contentType: false, // Not to set any content header  
+                processData: false, // Not to process data  
+                data: fileData,
+                async: true,
+                beforeSend: function () {
+                    ShowLoader("Importando archivo...");
+                },
+                success: function (data) {
+                    OcultarLoader();
+                    $("#FileExcel").val("");
+                    if (data.Estatus == 200) {
+                        MuestraToast('success', "El archivo se ha importado de manera correcta");
+
+                    } else {
+                        MuestraToast("error", data.Mensaje);
+                    }
+
+                    $("#frmBuscarLimitesInventario").submit();
+
+                },
+                error: function (xhr, status, error) {
+                    OcultarLoader();
+                    MuestraToast("error", "Ocurrio un error al importar el archivo")
+                }
+            });
+
+
+        }
+    }
+    else
+        MuestraToast("error","Seleccione un archivo")
 }

@@ -8,8 +8,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.DAO
 {
@@ -135,6 +138,35 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
+
+
+        public Notificacion<string> InsertaActualizaLimiteInventarioMasivo(List<LimiteInvetario> limiteInvetarios, int idUsuario)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var xmlSerializer = new XmlSerializer(typeof(List<LimiteInvetario>));
+                var stringBuilder = new StringBuilder();
+                using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+                {
+                    xmlSerializer.Serialize(xmlWriter, limiteInvetarios);
+                }
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@xmlLimitesInventario", stringBuilder.ToString());    
+                    parameters.Add("@idUsuario", idUsuario);               
+                    notificacion = db.QuerySingle<Notificacion<string>>("SP_INSERTA_ACTUALIZA_LIMITES_INVENTARIO_MASIVO", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
 
 

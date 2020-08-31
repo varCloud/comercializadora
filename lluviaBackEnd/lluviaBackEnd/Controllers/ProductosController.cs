@@ -1,5 +1,7 @@
 ﻿using System;
+
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -8,7 +10,8 @@ using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Utilerias;
-using lluviaBackEnd.WebServices.Modelos.Request;
+
+
 
 namespace lluviaBackEnd.Controllers
 {
@@ -368,7 +371,84 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult ImportarExcel()
+        {
+            Notificacion<string> result = new Notificacion<string>();
+            string path = "", fileName = "", extension = "";
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                LimiteInventarioDAO limiteInventarioDAO = new LimiteInventarioDAO();
+                DataTable dt = new DataTable();
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase file = Request.Files[0];
+                    fileName = Path.GetFileName(file.FileName);
+                    extension = System.IO.Path.GetExtension(fileName).ToLower();
+                    string connString = "";
 
+                    string[] validFileTypes = { ".xls", ".xlsx" };
+                    path = string.Format("{0}/{1}", Server.MapPath("~/Content/Uploads"), fileName);
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(Server.MapPath("~/Content/Uploads"));
+                    }
+                    if (validFileTypes.Contains(extension))
+                    {
+                        if (System.IO.File.Exists(path))
+                        { System.IO.File.Delete(path); }
+                        file.SaveAs(path);
+                        //connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                        //dt = ConvertXSLXtoDataTable(connString, "Hoja1");
+                        Microsoft.Office.Interop.Excel.Application application = new Microsoft.Office.Interop.Excel.Application();
+                        Microsoft.Office.Interop.Excel.Workbook workbook = application.Workbooks.Open(path);
+                        Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.ActiveSheet;
+                        Microsoft.Office.Interop.Excel.Range range = worksheet.UsedRange;
+                        List<LimiteInvetario> listProducts = new List<LimiteInvetario>();
+                        try
+                        {
+                            for (int row = 2; row <= range.Rows.Count; row++)
+                            {
+                                LimiteInvetario i = new LimiteInvetario();
+                                i.codigoBarras = ((Microsoft.Office.Interop.Excel.Range)range.Cells[row, 1]).Text;
+                                i.descripcionAlmacen = ((Microsoft.Office.Interop.Excel.Range)range.Cells[row, 2]).Text;
+                                i.minimo = Convert.ToInt32(((Microsoft.Office.Interop.Excel.Range)range.Cells[row, 3]).Text);
+                                i.maximo = Convert.ToInt32(((Microsoft.Office.Interop.Excel.Range)range.Cells[row, 4]).Text);
+                                listProducts.Add(i);
+                            }
+                            result = limiteInventarioDAO.InsertaActualizaLimiteInventarioMasivo(listProducts, usuarioSesion.idUsuario);
+                        }
+                        catch (Exception ex)
+                        {                            
+                            result.Mensaje = "Ocurrio un error al importar el archivo: " + ex.Message;
+                        }
+                        workbook.Save();
+                        application.Workbooks.Close();
+                        application.Quit();
+                                             
+                        if (System.IO.File.Exists(path))
+                        { System.IO.File.Delete(path); }
+                       
+
+                    }
+                    else
+                    {
+                        result.Mensaje = "Por favor cargue los archivos con el formato correcto .xls, .xlsx";
+                    }
+                }
+                else
+                    result.Mensaje = "No se ha seleccionado ningun archivo";
+
+            }
+            catch (Exception ex)
+            {
+                result.Mensaje = "Ocurrio un error al importar el excel" + ex.Message;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 
 
