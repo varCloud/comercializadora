@@ -371,6 +371,23 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+
+        [HttpPost]
+        public ActionResult ImportarLimitesInventario(List<LimiteInvetario> limiteInvetarios)
+        {
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                Notificacion<string> result = new LimiteInventarioDAO().InsertaActualizaLimiteInventarioMasivo(limiteInvetarios, usuarioSesion.idUsuario);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         [HttpPost]
         public ActionResult ImportarExcel()
         {

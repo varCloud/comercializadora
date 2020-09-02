@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 }
 
-<input type="file" id="FileExcel" name="FileExcel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onchange="ValidarFile(this);" style="visibility:hidden" />
 <div class="row">
     <div class="col-12 col-sm-12 col-lg-12">
         <div class="card">
@@ -44,21 +43,53 @@
                             @Html.DropDownListFor(x => x.idLineaProducto, (List<SelectListItem>)ViewBag.lstLineasDeProductos, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
                         </div>
 
-                        <div class="form-group col-lg-4">
+                        <div class="form-group col-lg-3">
                             <label>Estatus</label>
                             @Html.DropDownListFor(x => x.estatusInventario.idStatus, (List<SelectListItem>)ViewBag.listEstatusLimitesInventario, "--TODOS--", new { @class = "form-control", data_val = "false" })
                         </div>
 
-                        <div class="text-left col-lg-2" style="margin-top:30px;">
+                        <div class="col-lg-1" style="margin-top:30px;">
                             <button type="submit" class="btn btn-success">Buscar</button>
+                        </div>
+
+                        <div class="col-lg-2" style="margin-top:30px;">
+                            <button class="btn btn-warning" type="button" id="btnImportarArchivo">Importar</button>
                         </div>
 
                     </div>
                 }
                 <hr style="margin-top:0" />
+
                 <div id="ViewLimitesInventario">
                     @*@Html.Action("ObtenerLimitesInventario", "Reportes")*@
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="modalFileExcel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Importar archivo excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="excelfile" name="excelfile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                    <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped dataTable" id="tblFileExcel">
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-primary" id="btnGuardarLimitesInventario">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
@@ -77,5 +108,9 @@
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/evtLimitesInventario.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+
+
 }
 
