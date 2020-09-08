@@ -289,6 +289,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@fechaInicio", request.fechaInicio == DateTime.MinValue ? (object)null : request.fechaInicio);
                     parameters.Add("@fechaFin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
                     parameters.Add("@idPedidoInterno", request.idPedidoInterno == 0 ? (object)null : request.idPedidoInterno);
+                    parameters.Add("@idTipoPedidoInterno", request.idTipoPedidoInterno == 0 ? 1 : request.idTipoPedidoInterno);
                     var rs = db.QueryMultiple("SP_APP_OBTENER_PEDIDOS_INTERNOS_X_USUARIO", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.Estatus == 200)
@@ -332,6 +333,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@fechaInicio", request.fechaInicio == DateTime.MinValue ? (object)null : request.fechaInicio);
                     parameters.Add("@fechaFin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
                     parameters.Add("@idPedidoInterno", request.idPedidoInterno == 0 ? (object)null : request.idPedidoInterno);
+                    parameters.Add("@idTipoPedidoInterno", request.idTipoPedidoInterno == 0 ? 1 : request.idTipoPedidoInterno);
+                    
                     var rs = db.QueryMultiple("SP_APP_OBTENER_PEDIDOS_INTERNOS_X_ALMACEN", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.Estatus == 200)

@@ -12,7 +12,9 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         public int idAlmacenDestino { get; set; }
         public DateTime fechaInicio { get; set; }
         public DateTime fechaFin { get; set; }
-        public int idPedidoInterno { get; set; } 
+        public int idPedidoInterno { get; set; }
+
+        public int idTipoPedidoInterno { get; set; }
 
     }
 }
