@@ -138,5 +138,23 @@ namespace lluviaBackEnd.WebServices
         }
 
 
+        [HttpPost]
+        public Notificacion<List<DetallePedidoInterno>> ObtenerDetallePedidoInterno(RequestObtenerDetallePedidoInterno request)
+        {
+            try
+            {
+                return new BitacoraDAO().ObtenerDetallePedidoInterno(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<List<DetallePedidoInterno>>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+
+
+
     }
 }

@@ -250,6 +250,7 @@
     </Compile>
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\DetallePedidoInterno.cs" />
     <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
@@ -302,6 +303,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />

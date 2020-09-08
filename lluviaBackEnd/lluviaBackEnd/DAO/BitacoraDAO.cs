@@ -178,8 +178,6 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-
-
         public Notificacion<String> AceptarPedidoInterno(RequestActualizarEstatusPedidoInterno request)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
@@ -364,6 +362,40 @@ namespace lluviaBackEnd.DAO
             }
             return lst;
         }
+
+        public Notificacion<List<DetallePedidoInterno>> ObtenerDetallePedidoInterno(RequestObtenerDetallePedidoInterno request)
+        {
+            Notificacion<List<DetallePedidoInterno>> lst = new Notificacion<List<DetallePedidoInterno>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno == 0 ? (object)null : request.idPedidoInterno);;
+
+                    var rs = db.QueryMultiple("SP_APP_OBTENER_DETALLE_PEDIDOS_INTERNOS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                        lst.Modelo = rs.Read<DetallePedidoInterno>().ToList();
+                    }
+                    else
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lst;
+        }
+
 
         #endregion
     }
