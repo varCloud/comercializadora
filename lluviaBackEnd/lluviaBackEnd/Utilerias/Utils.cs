@@ -957,7 +957,7 @@ namespace lluviaBackEnd.Utilerias
                     // codigos QR
                     html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >
                         <tr " + cabeceraTablas + @">
-                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
+                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
                         </tr>";
 
                     for (int j = 0; j < renglonesQR; j++)
@@ -970,10 +970,10 @@ namespace lluviaBackEnd.Utilerias
                         html += @"</tr>";
 
                         html += @"<tr>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
                         html += @"</tr>";
 
                     }
