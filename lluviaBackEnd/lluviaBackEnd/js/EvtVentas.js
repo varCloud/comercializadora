@@ -263,56 +263,72 @@ $('#btnAceptarDevolucion').click(function (e) {
 
 
 $('#btnAgregarProducto').click(function (e) {
+    if (AgregarProducto($('#idProducto').select2('data')[0], $('#cantidad').val())) {
+        $('#cantidad').val('');
 
-    if (($('#idProducto').val() == "") || ($('#idProducto').val() == null)) {
+        //Agregar envase
+        if (parseInt($('#idProducto').select2('data')[0].idLineaProducto) === 20) {
+            $('#ModalAgregarEnvase').modal({ backdrop: 'static', keyboard: false, show: true });
+        }
+
+        actualizaTicketVenta();
+        initInputsTabla();
+    }
+});
+
+$('#btnAgregarEnvase').click(function (e) {
+    if (AgregarProducto($('#idProductoEnvase').select2('data')[0], $('#cantidadEnvase').val())) {
+        $('#cantidadEnvase').val('');
+        $('#idProductoEnvase').val("0").trigger('change');
+        $('#ModalAgregarEnvase').modal('hide');
+        actualizaTicketVenta();
+        initInputsTabla();
+    }
+});
+
+function AgregarProducto(producto, cantidad) {
+
+    cantidad = parseInt(cantidad) || 0;
+
+    if (producto === null || producto === undefined) {
         MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
-        return;
+        return false;
     }
 
-    if ($('#cantidad').val() == "") {
+    if (parseInt(cantidad) === 0) {
         MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
-        return;
+        return false;
     }
 
-    if ($('#idProducto').select2('data')[0].precioIndividual <= 0 && $('#idProducto').select2('data')[0].precioMenudeo <= 0) {
+    if (producto.precioIndividual <= 0 && producto.precioMenudeo <= 0) {
         preguntaAltaPrecios();
-        return
+        return false;
     }
 
-    if ($('#idProducto').select2('data')[0].cantidad < parseInt($('#cantidad').val())) {
+    if (producto.cantidad < parseInt(cantidad)) {
         MuestraToast('warning', "no existe suficiente producto en inventario");
-        return;
+        return false;
     }
 
-    if ($('#idProducto').select2('data')[0].precioIndividual <= 0) {
+    if (producto.precioIndividual <= 0) {
         MuestraToast('warning', "Debe configurar el precio invidual del producto.");
-        return;
+        return false;
     }
 
-    if ($('#idProducto').select2('data')[0].precioMenudeo <= 0) {
+    if (producto.precioMenudeo <= 0) {
         MuestraToast('warning', "Debe configurar el precio Mayoreo del producto.");
-        return;
+        return false;
     }
 
-    //console.log("datos", $('#idProducto').select2('data'), 'item: ', $('#idProducto').select2('data')[0].descripcion, "costo del item: ", $('#idProducto').select2('data')[0].costo)
-    // aki falta validar que se tengan existencias para vender
-
-    var cantidad = $('#cantidad').val();
-    var esAgregarProductos = $('#esAgregarProductos').val();
     var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     var precio = parseFloat(0).toFixed(2);
     var descuento = parseFloat(0).toFixed(2);
 
-    //if (esAgregarProductos == 'true') {
-    //    btnEliminaFila = "";
-    //}
-
-
     // si todo bien    
     var row_ = "<tr>" +
         "  <td>1</td>" +
-        "  <td> " + $('#idProducto').val() + "</td>" +
-        "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
+        "  <td> " + producto.idProducto + "</td>" +
+        "  <td> " + producto.descripcion + "</td>" +
         "  <td class=\"text-center\">$" + precio + "</td>" +
         "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
         "  <td class=\"text-center\">$" + precio + "</td>" +
@@ -324,12 +340,8 @@ $('#btnAgregarProducto').click(function (e) {
         "</tr >";
 
     $("table tbody").append(row_);
-    $('#cantidad').val('');
-
-    actualizaTicketVenta();
-    initInputsTabla();
-
-});
+    return true;
+}
 
 
 function actualizaTicketVenta() {
@@ -376,7 +388,7 @@ function actualizaTicketVenta() {
 
         /////////////////////////////////////////////// cantidadTotalPorProducto
         if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
-            
+
             if (cantidadTotalPorProducto.some(e => e.idProducto === productos[m].idProducto)) {
                 cantidadTotalPorProducto.find(x => x.idProducto === productos[m].idProducto).cantidad += productos[m].cantidad;
             }
@@ -448,7 +460,7 @@ function actualizaTicketVenta() {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
         }
 
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12 )) {
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12)) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
@@ -864,6 +876,8 @@ $('#btnGuardarVenta').click(function (e) {
 
                 if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
+                    if (data.Modelo.cantProductosLiq > 0)
+                        ImprimeTicketDespachadores(data.Modelo.idVenta);
 
                     if ($("#chkFacturar").is(":checked")) {
                         facturaVenta(data.Modelo.idVenta);
@@ -936,6 +950,31 @@ $('#chkFacturar').click(function () {
 function ImprimeTicket(idVenta) {
     $.ajax({
         url: rootUrl("/Ventas/ImprimeTicket"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+function ImprimeTicketDespachadores(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketDespachadores"),
         data: { idVenta: idVenta },
         method: 'post',
         dataType: 'html',
@@ -1601,6 +1640,25 @@ function InitSelect2Productos() {
     });
 
     $('#idProducto').val("0").trigger('change');
+
+    //Producto Tipo Envase
+    $("#idProductoEnvase").html('').select2();
+    $('#idProductoEnvase').select2({
+        width: "100%",
+        placeholder: "--SELECCIONA--",
+        data: (result.Modelo).filter(x => x.idLineaProducto == "19"),
+
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        }
+    });
+
+    $('#idProductoEnvase').val("0").trigger('change');
 
 }
 

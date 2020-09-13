@@ -1242,6 +1242,7 @@
     <Content Include="Views\Reportes\_Merma.cshtml" />
     <Content Include="Views\Productos\LimitesInventario.cshtml" />
     <Content Include="Views\Productos\_LimitesInventario.cshtml" />
+    <Content Include="Views\Ventas\VerTicketDespachadores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
