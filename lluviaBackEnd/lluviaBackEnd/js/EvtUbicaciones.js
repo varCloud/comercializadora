@@ -67,10 +67,13 @@ $('#btnAgregarUbicacion').click(function (e) {
         "  <td class=\"text-center\"> " + $("#idSucursal").find("option:selected").text() + "</td>" +
         "  <td class=\"text-center\"> " + $("#idAlmacen").find("option:selected").text() + "</td>" +
         "  <td class=\"text-center\"> " + $('#idPiso').val() + "</td>" +
-        "  <td class=\"text-center\"> " + $('#idPasillo').val() + "</td>" +
+        "  <td class=\"text-center\"> " + $('#idPasillo').find("option:selected").text() + "</td>" +
         "  <td class=\"text-center\"> " + $('#idRaq').val() + "</td>" +
         "  <td class=\"text-center\">" + btnEliminaFila + "  </td>" +
         "  <td style=\"display: none;\">" + $('#idAlmacen').val() + "</td>" +
+        "  <td style=\"display: none;\">" + $('#idPiso').find("option:selected").text() + "</td>" +
+        "  <td style=\"display: none;\">" + $('#idPasillo').val() + "</td>" +
+        "  <td style=\"display: none;\">" + $('#idRaq').find("option:selected").text() + "</td>" +
         "</tr >";
 
     $("table tbody").append(row_);
@@ -103,8 +106,11 @@ $('#btnGenerarUbicaciones').click(function (e) {
             var row_ = {
                 idAlmacen: parseInt(tblVtas.rows[i].cells[7].innerHTML),
                 idPiso: parseInt(tblVtas.rows[i].cells[3].innerHTML),
-                idPasillo: parseInt(tblVtas.rows[i].cells[4].innerHTML),
+                descripcionPiso: tblVtas.rows[i].cells[8].innerHTML,
+                descripcionPasillo: tblVtas.rows[i].cells[4].innerHTML,
+                idPasillo: parseInt(tblVtas.rows[i].cells[9].innerHTML),
                 idRaq: parseInt(tblVtas.rows[i].cells[5].innerHTML),
+                descripcionRaq: tblVtas.rows[i].cells[10].innerHTML,
                 descripcionAlmacen: tblVtas.rows[i].cells[2].innerHTML
             };
             ubicaciones.push(row_);

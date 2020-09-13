@@ -1121,14 +1121,14 @@ namespace lluviaBackEnd.Utilerias
 
                 for (int i = 0; i < ubicaciones.Count(); i++)
                 {
-                    ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\"}";
-                    nombreArchivo = "A"+ ubicaciones[i].idAlmacen.ToString() + "P"+ ubicaciones[i].idPiso.ToString() + "P"+ ubicaciones[i].idPasillo.ToString() + "R"+ ubicaciones[i].idRaq.ToString() + "";
+                    ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() +  "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() +  "\"}";
+                    nombreArchivo = "A"+ ubicaciones[i].idAlmacen.ToString() + "P"+ ubicaciones[i].idPiso.ToString() + "P"+ ubicaciones[i].descripcionPasillo.ToString() + "R"+ ubicaciones[i].idRaq.ToString() + "";
                     Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
 
                     // codigos QR
                     html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >
                         <tr " + cabeceraTablas + @">
-                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @" </td>    
+                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
                         </tr>";
 
                     for (int j = 0; j < renglonesQR; j++)
@@ -1141,10 +1141,10 @@ namespace lluviaBackEnd.Utilerias
                         html += @"</tr>";
 
                         html += @"<tr>";
-                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Piso: " + ubicaciones[i].idPiso.ToString() + ", Pasillo: " + ubicaciones[i].idPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
                         html += @"</tr>";
 
                     }
@@ -1173,7 +1173,7 @@ namespace lluviaBackEnd.Utilerias
                 
                 for (int l = 0; l < ubicaciones.Count(); l++)
                 {
-                    DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].idPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
+                    DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
                 }
 
                 memStream.Write(content, 0, content.Length);
