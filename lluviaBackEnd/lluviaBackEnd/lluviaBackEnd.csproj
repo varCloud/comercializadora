@@ -306,6 +306,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
     <Compile Include="WebServices\WsInventarioFisicoController.cs" />
