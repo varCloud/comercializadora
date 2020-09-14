@@ -1,0 +1,98 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.PedidosEspeciales>>
+
+@{
+    List<lluviaBackEnd.Models.PedidosEspeciales> pedidosEspeciales = Model.Modelo;
+    int contador = 1;
+}
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblBitacoras">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-center">Folio</th>
+                    <th>Almacen Origen</th>
+                    <th>Almacen Destino</th>
+                    <th>Usuario</th>
+                    <th>Descripcion del Pedido</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.PedidosEspeciales c in pedidosEspeciales)
+                {
+                    <tr>
+                        <td class="details-control" idPedido="@c.idPedidoEspecial"></td>
+                        <td>@c.idPedidoEspecial</td>
+                        <td>@c.almacenOrigen.descripcion</td>
+                        <td>@c.almacenDestino.descripcion</td>
+                        <td>@c.usuario.nombreCompleto</td>
+                        <td>@c.descripcion</td>
+                        <td>@c.cantidad</td>
+                        <td>@c.fechaAlta.ToShortDateString()</td>
+                        <td>
+                            @{
+                                switch (c.estatusPedido.idStatus)
+                                {
+                                    case 1:
+                                        {
+                                            <div class="badge badge-info badge-shadow">@c.estatusPedido.descripcion</div>
+                                        }
+                                        break;
+
+                                    case 2:
+                                        {
+                                            <div class="badge badge-primary badge-shadow">@c.estatusPedido.descripcion</div>
+                                        }
+                                        break;
+
+                                    case 3:
+                                        {
+                                            <div class="badge badge-danger badge-shadow">@c.estatusPedido.descripcion</div>
+                                        }
+                                        break;
+
+                                    case 4:
+                                        {
+                                            <div class="badge badge-success badge-shadow">@c.estatusPedido.descripcion</div>
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            <div class="badge badge-warning badge-shadow">@c.estatusPedido.descripcion</div>
+                                        }
+                                        break;
+                                }
+                            }
+
+                        </td>
+                    </tr>
+
+                    contador = contador + 1;
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+
+

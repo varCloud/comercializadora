@@ -1042,6 +1042,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtCompras.js" />
+    <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtDashboard.js" />
@@ -1250,6 +1251,9 @@
     <Content Include="Views\Productos\_LimitesInventario.cshtml" />
     <Content Include="Views\PedidosEspeciales\PedidosEspeciales.cshtml" />
     <Content Include="Views\Ventas\VerTicketDespachadores.cshtml" />
+    <Content Include="Views\PedidosEspeciales\ConsultaPedidos.cshtml" />
+    <Content Include="Views\PedidosEspeciales\_ObtenerPedidosEspeciales.cshtml" />
+    <Content Include="Views\PedidosEspeciales\_DetallePedidoEspecial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

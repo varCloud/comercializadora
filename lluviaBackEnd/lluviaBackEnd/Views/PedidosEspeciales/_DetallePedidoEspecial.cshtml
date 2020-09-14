@@ -1,0 +1,90 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.PedidosEspeciales>>
+
+@{
+    List<lluviaBackEnd.Models.PedidosEspeciales> pedidosEspeciales = Model.Modelo;
+    int contador = 1;
+    string classColor = "";
+    DateTime fechaAnt = DateTime.MinValue;
+    string difFechas;
+}
+
+@if (Model.Estatus != 200)
+{
+    <h4>@Model.Mensaje</h4>
+}
+else
+{
+    <ul class="list-unstyled list-unstyled-border row">
+        @foreach (lluviaBackEnd.Models.PedidosEspeciales c in pedidosEspeciales)
+        {
+
+            switch (c.estatusPedido.idStatus)
+            {
+                case 1:
+                    {
+                        classColor = "badge-info";
+
+                    }
+                    break;
+
+                case 2:
+                    {
+                        classColor = "badge-primary";
+
+                    }
+                    break;
+
+                case 3:
+                    {
+                        classColor = "badge-danger";
+
+                    }
+                    break;
+
+                case 4:
+                    {
+                        classColor = "badge-success";
+
+                    }
+                    break;
+                default:
+                    {
+                        classColor = "badge-warning";
+
+                    }
+                    break;
+            }
+
+            difFechas = "";
+
+            if (fechaAnt != DateTime.MinValue)
+            {
+                TimeSpan span = (c.fechaAlta - fechaAnt);
+                difFechas = String.Format("{0} dias, {1} horas, {2} minutos, {3} segundos",
+        span.Days, span.Hours, span.Minutes, span.Seconds);
+            }
+            <li class="media col-xl-8 col-lg-6">
+                <img alt="image" src="~/assets/img/logo_lluvia.png"
+                     class="mr-3 user-img-radious-style user-list-img" width="40">
+                <div class="media-body">
+                    <div class="media-right"><p class="text-small text-muted"><i class="fa fa-clock"></i>@Html.Raw(string.IsNullOrEmpty(difFechas) ? "N/A" : difFechas)</p></div>
+                    <div class="media-title">@c.usuario.nombreCompleto</div>
+                    <div class="text-small text-muted">
+                        <div class="badge @classColor badge-shadow">@c.estatusPedido.descripcion</div>
+                        <div class="bullet"></div> @c.fechaAlta
+                    </div>
+                </div>
+            </li>
+
+
+            fechaAnt = c.fechaAlta;
+
+        }
+    </ul>
+
+
+
+
+}
+

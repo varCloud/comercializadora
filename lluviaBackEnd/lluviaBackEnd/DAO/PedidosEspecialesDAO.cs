@@ -423,7 +423,7 @@ namespace lluviaBackEnd.DAO
         //            parameters.Add("@idRetiro", retiros.idRetiro==0 ? (object) null : retiros.idRetiro);
         //            parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
         //            parameters.Add("@idAlmacen", retiros.idAlmacen == 0 ? (object)null : retiros.idAlmacen);
-                    
+
         //            var result = db.QueryMultiple("SP_CONSULTA_RETIROS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
         //            var r1 = result.ReadFirst();
         //            if (r1.status == 200)
@@ -588,6 +588,91 @@ namespace lluviaBackEnd.DAO
         //    return notificacion;
         //}
 
+
+
+        public Notificacion<List<PedidosEspeciales>> ObtenerPedidosEspeciales(PedidosEspeciales pedidosEspeciales)
+        {
+            Notificacion<List<PedidosEspeciales>> p = new Notificacion<List<PedidosEspeciales>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@IdEstatusPedidoInterno", pedidosEspeciales.estatusPedido.idStatus == 0 ? (object)null : pedidosEspeciales.estatusPedido.idStatus);
+                    parameters.Add("@idAlmancenOrigen", pedidosEspeciales.almacenOrigen.idAlmacen == 0 ? (object)null : pedidosEspeciales.almacenOrigen.idAlmacen);
+                    parameters.Add("@idAlmacenDestino", pedidosEspeciales.almacenDestino.idAlmacen == 0 ? (object)null : pedidosEspeciales.almacenDestino.idAlmacen);
+                    parameters.Add("@idUsuario", pedidosEspeciales.usuario.idUsuario == 0 ? (object)null : pedidosEspeciales.usuario.idUsuario);
+                    parameters.Add("@fechaIni", pedidosEspeciales.fechaIni == DateTime.MinValue ? (object)null : pedidosEspeciales.fechaIni);
+                    parameters.Add("@fechaFin", pedidosEspeciales.fechaFin == DateTime.MinValue ? (object)null : pedidosEspeciales.fechaFin);
+                    parameters.Add("@idPedidoInterno", pedidosEspeciales.idPedidoEspecial == 0 ? (object)null : pedidosEspeciales.idPedidoEspecial);
+                    parameters.Add("@idTipoPedidoInterno", 2);
+                    var rs = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                        p.Modelo = rs.Read<PedidosEspeciales, Almacen, Almacen, Usuario, Status, PedidosEspeciales>(MapPedidosEspeciales, splitOn: "idAlmacenOrigen,idAlmacenDestino,idUsuario,idStatus").ToList();
+                    }
+                    else
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return p;
+
+        }
+
+
+        public PedidosEspeciales MapPedidosEspeciales(PedidosEspeciales p, Almacen almacenOrigen, Almacen almacenDestino, Usuario usuario, Status status)
+        {
+            p.almacenOrigen = almacenOrigen;
+            p.almacenDestino = almacenDestino;
+            p.usuario = usuario;
+            p.estatusPedido = status;
+            //p.producto = producto;
+            return p;
+        }
+
+
+        public Notificacion<List<PedidosEspeciales>> ObtenerDetallePedidosEspeciales(int idPedidoInterno)
+        {
+            Notificacion<List<PedidosEspeciales>> p = new Notificacion<List<PedidosEspeciales>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoInterno", idPedidoInterno == 0 ? (object)null : idPedidoInterno);
+                    var rs = db.QueryMultiple("SP_CONSULTA_DETALLE_PEDIDOS_INTERNOS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                        p.Modelo = rs.Read<PedidosEspeciales, Almacen, Almacen, Usuario, Status, PedidosEspeciales>(MapPedidosEspeciales, splitOn: "idAlmacenOrigen,idAlmacenDestino,idUsuario,idStatus").ToList();
+                    }
+                    else
+                    {
+                        p.Estatus = rs1.status;
+                        p.Mensaje = rs1.mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return p;
+        }
 
 
     }

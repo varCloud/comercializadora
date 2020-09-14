@@ -119,32 +119,32 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        public ActionResult _ObtenerPedidosEspeciales(PedidosEspeciales PedidosEspeciales)
-        {
-            try
-            {
-                Notificacion<List<PedidosEspeciales>> notificacion = new Notificacion<List<PedidosEspeciales>>();
-                //PedidosEspeciales.tipoConsulta = 2;
-                //notificacion = new ReportesDAO().ObtenerPedidosEspeciales(PedidosEspeciales);
+        //public ActionResult _ObtenerPedidosEspeciales(PedidosEspeciales PedidosEspeciales)
+        //{
+        //    try
+        //    {
+        //        Notificacion<List<PedidosEspeciales>> notificacion = new Notificacion<List<PedidosEspeciales>>();
+        //        //PedidosEspeciales.tipoConsulta = 2;
+        //        //notificacion = new ReportesDAO().ObtenerPedidosEspeciales(PedidosEspeciales);
 
-                if (notificacion.Modelo != null)
-                {
-                    ViewBag.lstPedidosEspeciales = notificacion.Modelo;
-                    return PartialView("_ObtenerPedidosEspeciales");
-                }
-                else
-                {
-                    ViewBag.titulo = "Mensaje: ";
-                    ViewBag.mensaje = notificacion.Mensaje;
-                    return PartialView("_SinResultados");
-                }
+        //        if (notificacion.Modelo != null)
+        //        {
+        //            ViewBag.lstPedidosEspeciales = notificacion.Modelo;
+        //            return PartialView("_ObtenerPedidosEspeciales");
+        //        }
+        //        else
+        //        {
+        //            ViewBag.titulo = "Mensaje: ";
+        //            ViewBag.mensaje = notificacion.Mensaje;
+        //            return PartialView("_SinResultados");
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
 
         //[HttpPost]
@@ -177,205 +177,78 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        //[HttpPost]
-        //public ActionResult GuardarIVA(PedidosEspeciales venta)
-        //{
-        //    try
-        //    {
-        //        Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
-        //        notificacion = new PedidosEspecialesDAO().GuardarIVA(venta);
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  Herramientas
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //[HttpPost]
-        //public ActionResult ConsultaInfoCierre()
-        //{
-        //    try
-        //    {
-        //        Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        //notificacion = new PedidosEspecialesDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
+        public ActionResult ConsultaPedidos()
+        {
+            try
+            {
+                List<SelectListItem> listEstatus = new SelectList(new BitacoraDAO().ObtenerStatusPedidosInternos().Modelo, "idStatus", "descripcion").ToList();
+                List<SelectListItem> listAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                List<SelectListItem> listProductos = new SelectList(new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 }).Modelo, "idProducto", "descripcion").ToList();
+                List<SelectListItem> listUsuarios;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
 
-        //public ActionResult _ObtenerRetiros(Retiros retiros)
-        //{
-        //    try
-        //    {
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        retiros.idEstacion = usuario.idEstacion;
-        //        retiros.idAlmacen = usuario.idAlmacen;
-
-        //        if (usuario.idRol == 1 || usuario.idRol == 2)
-        //        {
-        //            retiros.idUsuario = 0;
-        //        }
-        //        else
-        //        {
-        //            retiros.idUsuario = usuario.idUsuario;
-        //        }
-
-        //        Notificacion<List<Retiros>> p = new PedidosEspecialesDAO().ConsultaRetirosEfectivo(retiros);
-        //        return PartialView(p);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //}
-
-        //public ActionResult _ObtenerRetirosV2(Retiros retiros)
-        //{
-        //    try
-        //    {
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        retiros.idEstacion = usuario.idEstacion;
-        //        retiros.idAlmacen = usuario.idAlmacen;
-
-        //        if (usuario.idRol == 1 || usuario.idRol == 2)
-        //        {
-        //            retiros.idUsuario = 0;
-        //        }
-        //        else
-        //        {
-        //            retiros.idUsuario = usuario.idUsuario;
-        //        }
-
-        //        Notificacion<List<Retiros>> p = new PedidosEspecialesDAO().ConsultaRetiros(retiros);
-        //        return PartialView(p);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //}
-
-        //public ActionResult Retiros()
-        //{
-        //    try
-        //    {
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-
-        //        Retiros retiros = new Retiros();
-        //        retiros.fechaAlta = DateTime.Now;
-        //        if ((usuario.idRol != 1) && (usuario.idRol != 2))
-        //        {
-        //            retiros.idAlmacen = usuario.idAlmacen;
-        //            retiros.idUsuario = usuario.idUsuario;
-
-        //        }
-        //        ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-        //        List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idUsuario = retiro.idUsuario, idAlmacen = retiros.idAlmacen, idRol = 3 }), "idUsuario", "nombreCompleto").ToList();
-
-        //        ViewBag.Usuarios = listUsuarios;
-        //        return View(retiros);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //}
-
-        //public ActionResult _ObtenerRetirosAutorizacion(Retiros retiros)
-        //{
-        //    try
-        //    {
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        ViewBag.idRol = usuario.idRol;
-
-        //        //if (usuario.idRol == 1 || usuario.idRol == 2)
-        //        //{
-        //        //    retiros.idUsuario = 0;
-        //        //}
-        //        //else
-        //        //{
-        //        //    retiros.idUsuario = usuario.idUsuario;
-        //        //}
-        //        //retiros.idAlmacen = usuario.idAlmacen;
-
-        //        Notificacion<List<Retiros>> p = new PedidosEspecialesDAO().ConsultaRetiros(retiros);
-        //        return PartialView(p);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //}
-
-        //[HttpPost]
-        //public ActionResult ActualizaEstatusRetiro(Retiros retiros)
-        //{
-        //    try
-        //    {
-        //        Notificacion<string> notificacion = new Notificacion<string>();
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        retiros.idUsuario = usuario.idUsuario;
-        //        notificacion = new PedidosEspecialesDAO().ActualizaEstatusRetiro(retiros);
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-        //[HttpPost]
-        //public ActionResult RetirarExcesoEfectivo(float montoRetiro)
-        //{
-        //    try
-        //    {
-        //        Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        Retiros retiros = new Retiros();
-        //        retiros.idEstacion = usuario.idEstacion;
-        //        retiros.idUsuario = usuario.idUsuario;
-        //        retiros.montoRetiro = montoRetiro;
-        //        notificacion = new PedidosEspecialesDAO().RetirarExcesoEfectivo(retiros);
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                if (usuario.idRol == 1)
+                {
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                }
+                else
+                    listUsuarios = new UsuarioDAO().ObtenerUsuarios(usuario.idUsuario).Where(x => x.Value != "0").ToList();
 
 
-        //[HttpPost]
-        //public ActionResult RealizaCierreEstacion(float monto)
-        //{
-        //    try
-        //    {
-        //        Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
-        //        Sesion usuario = Session["UsuarioActual"] as Sesion;
-        //        Retiros retiros = new Retiros();
-        //        retiros.idEstacion = usuario.idEstacion;
-        //        retiros.idUsuario = usuario.idUsuario;
-        //        retiros.montoRetiro = monto;
-        //        notificacion = new PedidosEspecialesDAO().RealizaCierreEstacion(retiros);
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                ViewBag.listEstatusPedidosInternos = listEstatus;
+                ViewBag.listAlmacenes = listAlmacenes;
+                ViewBag.listUsuarios = listUsuarios;
+                ViewBag.listProductos = listProductos;
+
+
+                return View(new PedidosEspeciales());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult _ObtenerPedidosEspeciales(PedidosEspeciales pedidosEspeciales)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                pedidosEspeciales.idUsuario = usuario.idUsuario;
+
+                //if (pedidosInternos.usuario.idUsuario == 0 && usuario.idRol != 1)
+                //    pedidosInternos.usuario.idUsuario = usuario.idUsuario;
+
+
+                Notificacion<List<PedidosEspeciales>> p = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(pedidosEspeciales);
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult _DetallePedidoEspecial(int idPedidoInterno)
+        {
+            try
+            {
+                Notificacion<List<PedidosEspeciales>> p = new PedidosEspecialesDAO().ObtenerDetallePedidosEspeciales(idPedidoInterno);
+                return PartialView(p);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

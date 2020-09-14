@@ -24,6 +24,7 @@ namespace lluviaBackEnd.Models
         public int idProducto { get; set; }
         public int idSucursal { get; set; }
         public string descripcion { get; set; }
+        public int cantidad { get; set; }
         public PedidosEspeciales()
         {
             almacenOrigen = new Almacen();
