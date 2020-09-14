@@ -81,6 +81,20 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ObtenerTodosLosProductos(Producto producto)
+        {
+            try
+            {
+                producto.idUsuario = 0;
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductosPorUsuario(producto);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public ActionResult _ObtenerProductos(Producto producto)
         {

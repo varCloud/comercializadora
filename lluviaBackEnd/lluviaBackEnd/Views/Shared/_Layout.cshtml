@@ -154,6 +154,17 @@
                             </li>
                         }
 
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PedidosEspeciales && p.tienePermiso) && !ExisteInventarioFisicoActivo)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="clipboard"></i><span>Pedidos Especiales</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Pedidos Especiales" ? "dropdown active" : "")" href="@Url.Action("PedidosEspeciales", "PedidosEspeciales")">Nuevo Pedido</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Pedidos" ? "dropdown active" : "")" href="@Url.Action("ConsultaPedidosEspeciales", "PedidosEspeciales")">Consultar Pedidos</a></li>
+                                </ul>
+                            </li>
+                        }
+
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Clientes && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             <li class="dropdown">

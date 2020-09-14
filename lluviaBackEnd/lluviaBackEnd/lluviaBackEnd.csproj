@@ -216,6 +216,7 @@
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
+    <Compile Include="Controllers\PedidosEspecialesController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="DAO\InventarioDAO.cs" />
     <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
+    <Compile Include="DAO\PedidosEspecialesDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -278,6 +280,7 @@
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />
     <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\PedidosEspeciales.cs" />
     <Compile Include="Models\Ventas.cs" />
     <Compile Include="Models\Enumeraciones.cs" />
     <Compile Include="Models\LineaProducto.cs" />
@@ -1059,6 +1062,7 @@
     <Content Include="js\EvtReporteVentas.js" />
     <Content Include="js\EvtConsultaVentas.js" />
     <Content Include="js\EvtUbicaciones.js" />
+    <Content Include="js\EvtPedidosEspeciales.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
@@ -1242,6 +1246,7 @@
     <Content Include="Views\Reportes\_Merma.cshtml" />
     <Content Include="Views\Productos\LimitesInventario.cshtml" />
     <Content Include="Views\Productos\_LimitesInventario.cshtml" />
+    <Content Include="Views\PedidosEspeciales\PedidosEspeciales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

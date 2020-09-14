@@ -44,7 +44,5 @@ function InitRecaptcha() {
 }
 $(document).ready(function () {
     InitRecaptcha();
-
-   
-    
+    $("#usuario").focus();    
 });
