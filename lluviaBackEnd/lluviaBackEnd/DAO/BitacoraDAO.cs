@@ -441,6 +441,50 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesAlmacenApp(RequestObtenerPedidosInternosAlamcen request)
+        {
+            Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> lst = new Notificacion<List<ResponseObtenerPedidosInternosEspeciales>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idAlmacen", request.idAlmacenDestino == 0 ? (object)null : request.idAlmacenDestino);
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno == 0 ? (object)null : request.idPedidoInterno);
+                    parameters.Add("@idEstatusPedidoInterno", request.idEstatusPedido == 0 ? (object)null : request.idEstatusPedido);
+                    parameters.Add("@fechaInicio", request.fechaInicio == DateTime.MinValue ? (object)null : request.fechaInicio);
+                    parameters.Add("@fechafin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
+
+                    var rs = db.QueryMultiple("SP_APP_OBTENER_PEDIDOS_INTERNOS_ESPECIALES_X_ALMACEN", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                        lst.Modelo = rs.Read<ResponseObtenerPedidosInternosEspeciales, Almacen, Almacen, ResponseObtenerPedidosInternosEspeciales>((responseObtenerPedidosInternos, almacenO, almacenD) =>
+                        {
+                            responseObtenerPedidosInternos.almacenOrigen = almacenO;
+                            responseObtenerPedidosInternos.almacenDestino = almacenD;
+                            return responseObtenerPedidosInternos;
+
+                        }, splitOn: "idAlmacenOrigen,idAlmacenDestino").ToList();
+                    }
+                    else
+                    {
+                        lst.Estatus = rs1.Estatus;
+                        lst.Mensaje = rs1.Mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lst;
+        }
+
+
         #endregion
     }
 }

@@ -168,5 +168,20 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+        [HttpPost]
+        public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesAlmacenApp(RequestObtenerPedidosInternosAlamcen request)
+        {
+            try
+            {
+                return new BitacoraDAO().ObtenerPedidosInternoEspecialesAlmacenApp(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<List<ResponseObtenerPedidosInternosEspeciales>>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
     }
 }
