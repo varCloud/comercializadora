@@ -83,6 +83,10 @@ namespace lluviaBackEnd.Models
         Puede_visualizar_Ventas,
         #endregion
 
+        #region PedidosEspeciales
+        Puede_visualizar_PedidosEspeciales,
+        #endregion
+
         #region  Clientes
         Puede_visualizar_Clientes,
         #endregion
@@ -129,6 +133,7 @@ namespace lluviaBackEnd.Models
     {
         Normal = 1,
         Devolucion = 2,
-        AgregarProductosVenta = 3
+        AgregarProductosVenta = 3,
+        ProductosLiquidos=4
     }
 }

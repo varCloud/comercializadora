@@ -920,6 +920,177 @@ namespace lluviaBackEnd.Utilerias
             return content;
         }
 
+        public static byte[] GeneraTicketDespachadoresPDF(List<Ticket> tickets)
+        {
+            byte[] content = null;
+
+            //string pathPdfTickets = ObtnerFolderTickets() + @"/";
+            string rutaPDF = string.Empty;
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            //string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            Document document = new Document(PageSize.A4, 0, 0, 10, 0);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Ver Ticket para Despachadores: ";
+
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "";
+                float monto = 0;
+                float montoIVA = 0;  
+
+                html +=
+                  @"<table  width='100%'>
+                    <tr>
+                        <td width='35%'>
+                            <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
+                                <tr>
+                                    <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
+                                </tr>                                
+                                
+                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>TICKET PARA DESPACHADORES</td></tr>
+                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>                                            
+                                            <td style='color:black; text-align:center;'>Ticket: " + tickets[0].idVenta.ToString() + @"</td>
+                                            <td>" + tickets[0].fechaAlta.ToString("dd-MM-yyyy") + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td></td>
+                                            <td>Hora: " + tickets[0].fechaAlta.ToShortTimeString() + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan=""2"">Cliente: " + tickets[0].nombreCliente.ToString().ToUpper() + @"</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='50%'>Descripcion</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Cantidad</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Precio</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>";
+
+
+                for (int i = 0; i < tickets.Count(); i++)
+                {
+                    monto += tickets[i].monto;
+                    montoIVA += tickets[i].montoIVA;                
+
+                    html += @"   <tr>
+                                                    <td style='color:black; '> 
+                                                        <table>
+                                                          <tr>
+                                                            <td width='60%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='15%'>" + tickets[i].cantidad.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                                          </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+
+                }
+
+
+                html += @"
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SUBTOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                if (montoIVA > 0)
+                {
+                    html += @"   <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                            <tr>
+                                            <td width='65%'>I.V.A:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+                }
+
+                html += @" <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>TOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+
+                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+
+        
+
+
+                html += @"
+                            </table>
+                        </td>
+                        <td width='65%'>                                        
+                        </td> 
+                   </tr>
+                </table>";
+
+
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Ticket: " + tickets[0].idVenta.ToString());
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Visualizacion de Ticket");
+                document.CloseDocument();
+
+                document.Close();
+                content = memStream.ToArray();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return content;
+        }
 
 
 
@@ -957,7 +1128,7 @@ namespace lluviaBackEnd.Utilerias
                     // codigos QR
                     html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >
                         <tr " + cabeceraTablas + @">
-                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
+                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
                         </tr>";
 
                     for (int j = 0; j < renglonesQR; j++)
@@ -970,10 +1141,10 @@ namespace lluviaBackEnd.Utilerias
                         html += @"</tr>";
 
                         html += @"<tr>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Raq: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
                         html += @"</tr>";
 
                     }

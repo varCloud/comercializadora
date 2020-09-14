@@ -85,6 +85,31 @@ function ImprimeTicketDevolucion(idVenta) {
     });
 }
 
+function ImprimeTicketDespachadores(idVenta) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketDespachadores"),
+        data: { idVenta: idVenta},
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 
 
 //function VerTicket(idVenta) {

@@ -2,6 +2,30 @@ use DB_A57E86_lluviadesarrollo
 go
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--	Permisos del nuevo modulo
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--select * from CatModulos order by idModulo
+--select * from PermisosRolPorModulo order by  idModulo
+--select * from PermisosRolPorModulo where idRol = 1
+
+if not exists ( select 1 from CatModulos where descripcion like 'Pedidos Especiales' )
+begin
+	insert into CatModulos(descripcion) values ('Pedidos Especiales')
+end
+go
+
+declare @idModulo as int 
+select @idModulo = idModulo from CatModulos where descripcion like 'Pedidos Especiales'
+
+
+-- permiso de epdidos especiales para admin
+if not exists (select 1 from PermisosRolPorModulo where idRol = 1 and idModulo = @idModulo)
+begin
+	insert into PermisosRolPorModulo(idRol,idModulo,tienePermiso) values (1, @idModulo, 1)
+end
+go
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --	[CatTipoPedidoInterno]
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CatTipoPedidoInterno]') AND type in (N'U'))
@@ -65,6 +89,22 @@ GO
 
 
 update PedidosInternos set idTipoPedidoInterno = 1 where idTipoPedidoInterno is null 
+
+
+
+
+-- movimeintos de pedidos internos en InventarioDetalleLog
+if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Envío de mercancia - Pedido Especial' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Envío de mercancia - Pedido Especial', -1)
+end
+
+
+if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Recepción de mercancia - Pedido Especial' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Recepción de mercancia - Pedido Especial', 1)
+end
+
 
 /*
 select * from CatTipoPedidoInterno
