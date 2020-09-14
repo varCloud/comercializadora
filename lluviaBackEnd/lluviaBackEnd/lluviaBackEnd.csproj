@@ -252,6 +252,7 @@
     </Compile>
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\DetallePedidoInterno.cs" />
     <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Utilerias\ProcesaCfdi.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
@@ -1247,6 +1249,7 @@
     <Content Include="Views\Productos\LimitesInventario.cshtml" />
     <Content Include="Views\Productos\_LimitesInventario.cshtml" />
     <Content Include="Views\PedidosEspeciales\PedidosEspeciales.cshtml" />
+    <Content Include="Views\Ventas\VerTicketDespachadores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -133,6 +133,7 @@ namespace lluviaBackEnd.Models
     {
         Normal = 1,
         Devolucion = 2,
-        AgregarProductosVenta = 3
+        AgregarProductosVenta = 3,
+        ProductosLiquidos=4
     }
 }

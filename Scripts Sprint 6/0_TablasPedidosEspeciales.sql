@@ -71,7 +71,14 @@ go
 -- id del nuevo catalogo CatTipoPedidoInterno
 if not exists (select 1 from sys.columns where name = N'idTipoPedidoInterno' AND Object_ID = Object_ID(N'dbo.PedidosInternos'))
 begin
-	ALTER TABLE PedidosInternos ADD idTipoPedidoInterno int;
+	ALTER TABLE PedidosInternos ADD idTipoPedidoInterno int DEFAULT  1;
+end
+GO
+
+-- descripcion para identificar el pedido en la app
+if not exists (select 1 from sys.columns where name = N'descripcion' AND Object_ID = Object_ID(N'dbo.PedidosInternos'))
+begin
+	ALTER TABLE PedidosInternos ADD descripcion  varchar(500) default null;
 end
 GO
 

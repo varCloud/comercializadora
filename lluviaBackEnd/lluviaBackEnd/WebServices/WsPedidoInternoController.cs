@@ -122,20 +122,38 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+        //[HttpPost]
+        //public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerPedidosInternosApp(RequestObtenerPedidosInternos request)
+        //{
+        //    try
+        //    {
+        //        return new BitacoraDAO().ObtenerPedidosInternosApp(request);
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return WsUtils<List<ResponseObtenerPedidosInternos>>.RegresaExcepcion(ex, null);
+        //    }
+
+        //}
+
+
         [HttpPost]
-        public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerPedidosInternosApp(RequestObtenerPedidosInternos request)
+        public Notificacion<List<DetallePedidoInterno>> ObtenerDetallePedidoInterno(RequestObtenerDetallePedidoInterno request)
         {
             try
             {
-                return new BitacoraDAO().ObtenerPedidosInternosApp(request);
+                return new BitacoraDAO().ObtenerDetallePedidoInterno(request);
             }
 
             catch (Exception ex)
             {
-                return WsUtils<List<ResponseObtenerPedidosInternos>>.RegresaExcepcion(ex, null);
+                return WsUtils<List<DetallePedidoInterno>>.RegresaExcepcion(ex, null);
             }
 
         }
+
+
 
 
     }
