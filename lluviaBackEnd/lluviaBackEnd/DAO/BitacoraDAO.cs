@@ -8,7 +8,10 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.DAO
 {
@@ -485,6 +488,41 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@productos", SerializeProductos(request.Productos));
+                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);                    
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_APROBAR_PEDIDOS_INTERNOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public string SerializeProductos(List<ProductosPedidoEspecial> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosPedidoEspecial>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+            return stringBuilder.ToString();
+
+        }
         #endregion
     }
 }
