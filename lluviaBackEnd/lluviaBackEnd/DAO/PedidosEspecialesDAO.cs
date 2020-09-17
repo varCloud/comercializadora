@@ -227,6 +227,44 @@ namespace lluviaBackEnd.DAO
         }
 
 
+
+        public Notificacion<Result> AceptarPedido(PedidosEspeciales pedido)
+        {
+            Notificacion<Result> notificacion = new Notificacion<Result>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", pedido.idPedidoEspecial);
+                    parameters.Add("@idUsuario", pedido.idUsuario);
+
+                    var result = db.QueryMultiple("SP_ACEPTA_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = new PedidosEspeciales() { idPedidoEspecial = r1.idPedidoEspecial };
+                        //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Editar PedidosEspeciales
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

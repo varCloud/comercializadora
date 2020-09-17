@@ -72,7 +72,6 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        //public ActionResult GuardarPedidoEspecial(List<PedidosEspeciales> productos, int idCliente, int idPedidoEspecial)
         public ActionResult GuardarPedidoEspecial(PedidosEspeciales pedido)
         {
             try
@@ -82,6 +81,24 @@ namespace lluviaBackEnd.Controllers
                 pedido.idUsuario = UsuarioActual.idUsuario;
                 pedido.almacenDestino.idAlmacen = UsuarioActual.idAlmacen;
                 result = new PedidosEspecialesDAO().GuardarPedidoEspecial(pedido);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult AceptarPedido(PedidosEspeciales pedido)
+        {
+            try
+            {
+                Notificacion<Result> result = new Notificacion<Result>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                pedido.idUsuario = UsuarioActual.idUsuario;
+                result = new PedidosEspecialesDAO().AceptarPedido(pedido);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
