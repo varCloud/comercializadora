@@ -39,10 +39,14 @@ exec SP_APP_APROBAR_PEDIDOS_INTERNOS_ESPECIALES
 @idAlmacenOrigen = 4,
 @idAlmacenDestino = 1
 
-SELECT * FROM PedidosInternos WHERE  idPedidoInterno = 173
-SELECT * FROM MovimientosDeMercancia WHERE idPedidoInterno = 173 and idEstatusPedidoInterno = 2
-select * from InventarioDetalleLog where idPedidoInterno = 173
-select * from PedidosInternosLog WHERE  idPedidoInterno = 173
+select top 2 * from InventarioDetalleLog where idUbicacion = 1 and idProducto = 1 order by  idInventarioDetalleLOG desc
+select top 2 * from InventarioDetalleLog where idUbicacion = 1 and idProducto = 2 order by  idInventarioDetalleLOG desc
+select top 2 * from InventarioDetalleLog where idUbicacion = 1 and idProducto = 3 order by  idInventarioDetalleLOG desc
+SELECT * FROM PedidosInternos WHERE  idPedidoInterno = 176
+
+SELECT * FROM MovimientosDeMercancia WHERE idPedidoInterno = 176 and idEstatusPedidoInterno = 2
+select * from InventarioDetalleLog where idPedidoInterno = 176
+select * from PedidosInternosLog WHERE  idPedidoInterno = 176
 
 ROLLBACK TRAN 
 
