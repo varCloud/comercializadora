@@ -83,8 +83,8 @@
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
-                                    <label>Producto</label>
-                                    @*@Html.DropDownListFor(x => x.producto.idProducto, (List<SelectListItem>)ViewBag.listProductos, "--TODOS--", new { @class = "select-multiple", data_val = "false" })*@
+                                    <label>Descripción del Pedido: </label>
+                                    @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control", data_val = "false" })
 
                                 </div>
                             </div>

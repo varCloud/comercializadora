@@ -135,18 +135,20 @@ as
 					@error_line error_line,
 					@mensaje mensaje
 
-			select	idPedidoInterno,
+			select	idPedidoInterno as idPedidoEspecial,
 					fechaAlta,
-					descripcionPedido,
+					coalesce(descripcionPedido, 'sin descripcion') as descripcion,
 					cantidad,
 					idAlmacenOrigen,
-					almacenOrigen,
+					idAlmacenOrigen as idAlmacen,
+					almacenOrigen as descripcion,
 					idAlmacenDestino,
-					almacenDestino,
+					idAlmacenDestino as idalmacen,
+					almacenDestino as descripcion,
 					idUsuario,
 					nombreCompleto,
 					idStatus, 
-					descripcionEstatus
+					descripcionEstatus as descripcion
 			from	#pedidosEspeciales
 				
 			

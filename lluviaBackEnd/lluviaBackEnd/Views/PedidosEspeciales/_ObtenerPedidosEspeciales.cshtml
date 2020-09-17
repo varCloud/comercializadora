@@ -20,7 +20,7 @@
 else
 {
     <div class="table-responsive">
-        <table class="table table-striped" id="tblBitacoras">
+        <table class="table table-striped" id="tblPedidosEspeciales">
             <thead>
                 <tr>
                     <th></th>
@@ -32,6 +32,7 @@ else
                     <th>Cantidad</th>
                     <th>Fecha</th>
                     <th>Estatus</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,6 +84,41 @@ else
                             }
 
                         </td>
+
+
+                        <td>
+
+                            <div class="dropdown d-inline">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesPedidosEspeciales" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Acciones
+                                </button>
+                                <div class="dropdown-menu">
+
+                                    <a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedido(@c.idPedidoEspecial);"><i class="fas fa-print"></i>Imprimir Ticket</a>
+                                    <a class="dropdown-item has-icon" href="@Url.Action("VerTicket", "PedidosEspeciales", new {idPedidoEspecial=c.idPedidoEspecial})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>
+
+                                    @if (c.estatusPedido.idStatus == 2)
+                                    {
+                                        <a class="dropdown-item has-icon" href="javascript:preguntaAceptarPedido(@c.idPedidoEspecial);"><i class="fas fa-check"></i>Aceptar Pedido</a>
+                                    }
+
+                                    @if (c.estatusPedido.idStatus == 2)
+                                    {
+                                        <a class="dropdown-item has-icon" href="javascript:preguntaRechazarPedido(@c.idPedidoEspecial);"><i class="fas fa-ban"></i>Rechazar Pedido</a>
+                                    }
+
+                                    @if (c.estatusPedido.idStatus == 1)
+                                    {
+                                        <a class="dropdown-item has-icon" href="@Url.Action("PedidosEspeciales", "PedidosEspeciales", new {idPedidoEspecial=c.idPedidoEspecial})" ><i class="fas fa-eye"></i>Editar Pedido</a>
+                                    }
+
+
+                                </div>
+                            </div>
+
+                        </td>
+
+
                     </tr>
 
                     contador = contador + 1;

@@ -1,6 +1,7 @@
-﻿var tablaBitacoras;
+﻿var tablaPedidosEspeciales;
 $(document).ready(function () {
-    if ($("#tblBitacoras ").length > 0) {
+
+    if ($("#tblPedidosEspeciales ").length > 0) {
         InitTableBitacoras();
     }
     InitRangePicker('rangeBitacoras', 'fechaIni', 'fechaFin');
@@ -30,17 +31,17 @@ $(document).ready(function () {
 });
 
 function InitTableBitacoras() {
-    var NombreTabla = "tblBitacoras";
-    tablaBitacoras = initDataTable(NombreTabla);
+    var NombreTabla = "tblPedidosEspeciales";
+    tablaPedidosEspeciales = initDataTable(NombreTabla);
 
-    new $.fn.dataTable.Buttons(tablaBitacoras, {
+    new $.fn.dataTable.Buttons(tablaPedidosEspeciales, {
         buttons: [
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a PDF',
-                title: "Bitàcoras",
+                title: "Pedidos Especiales",
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
@@ -67,13 +68,13 @@ function InitTableBitacoras() {
         ],
     });
 
-    tablaBitacoras.buttons(0, null).container().prependTo(
-        tablaBitacoras.table().container()
+    tablaPedidosEspeciales.buttons(0, null).container().prependTo(
+        tablaPedidosEspeciales.table().container()
     );
 
-    $('#tblBitacoras tbody').on('click', 'td.details-control', function () {
+    $('#tblPedidosEspeciales tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = tablaBitacoras.row(tr);
+        var row = tablaPedidosEspeciales.row(tr);
 
         if (row.child.isShown()) {
             // This row is already open - close it
@@ -106,42 +107,109 @@ function InitTableBitacoras() {
 
     }
 
-function onBeginSubmitObtenerBitacoras() {
+function onBeginSubmitObtenerPedidosEspeciales() {
     ShowLoader("Buscando...");
 }
-function onCompleteObtenerBitacoras() {
+function onCompleteObtenerPedidosEspeciales() {
     //OcultarLoader();
 }
-function onSuccessResultObtenerBitacoras(data) {
-    $("#DivtblBitacoras").html(data);
-    if ($("#tblBitacoras ").length > 0) {
-        tablaBitacoras.destroy();
+function onSuccessResultObtenerPedidosEspeciales(data) {
+    $("#DivtblPedidosEspeciales").html(data);
+    if ($("#tblPedidosEspeciales ").length > 0) {
+        tablaPedidosEspeciales.destroy();
         InitTableBitacoras();
     }
 
     OcultarLoader();
 }
-function onFailureResultObtenerBitacoras() {
+function onFailureResultObtenerPedidosEspeciales() {
     OcultarLoader();
 }
 
-function obtenerDetalleBitacora(idPedidoInterno) {
-    $.ajax({
-        url: rootUrl("/Bitacora/_DetalleBitacora"),
-        data: { idPedidoInterno: idPedidoInterno },
-        method: 'post',
-        dataType: 'html',
-        async: true,
-        beforeSend: function (xhr) {
-            ShowLoader();
-        },
-        success: function (view) {           
-            OcultarLoader();           
-            html=view;
-        },
-        error: function (xhr, status) {            
-            OcultarLoader();
-        }
-    });
+//function obtenerDetalleBitacora(idPedidoInterno) {
+//    $.ajax({
+//        url: rootUrl("/Bitacora/_DetalleBitacora"),
+//        data: { idPedidoInterno: idPedidoInterno },
+//        method: 'post',
+//        dataType: 'html',
+//        async: true,
+//        beforeSend: function (xhr) {
+//            ShowLoader();
+//        },
+//        success: function (view) {           
+//            OcultarLoader();           
+//            html=view;
+//        },
+//        error: function (xhr, status) {            
+//            OcultarLoader();
+//        }
+//    });
 
+//}
+
+
+
+function preguntaAceptarPedido(idPedidoEspecial) {
+
+    swal({
+        title: 'Mensaje',
+        text: '¿Esta seguro que quiere aceptar el pedido ' + idPedidoEspecial + '?',
+        icon: 'info',
+        buttons: ["No", "Sí"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+
+                const pedido = {};
+                pedido.idPedidoEspecial = idPedidoEspecial;
+
+                $.ajax({
+                    url: rootUrl("/PedidosEspeciales/AceptarPedido"),
+                    data: JSON.stringify(pedido),
+                    method: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    async: true,
+                    beforeSend: function (xhr) {
+                        ShowLoader();
+                    },
+                    success: function (data) {
+                        OcultarLoader();
+                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+                        
+                        
+                    },
+                    error: function (xhr, status) {
+                        OcultarLoader();
+                        console.log('Hubo un problema al aceptar el pedido especial, contactese con el administrador del sistema');
+                        console.log(xhr);
+                        console.log(status);
+                    }
+                });
+
+            } else {
+                console.log(willDelete);
+            }
+        });
+}
+
+function preguntaRechazarPedido(idPedidoInterno) {
+
+    swal({
+        title: 'Mensaje',
+        text: '¿Esta seguro que quiere rechazar el pedido ' + idPedidoInterno + '?',
+        icon: 'info',
+        buttons: ["No", "Sí"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                console.log(willDelete);
+                console.log(idPedidoInterno);
+                //                location.href = rootUrl("/Productos/Productos");
+            } else {
+                console.log("cancelar");
+            }
+        });
 }

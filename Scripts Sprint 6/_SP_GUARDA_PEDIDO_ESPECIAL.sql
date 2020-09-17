@@ -178,210 +178,210 @@ as
 						from	#pedidos
 						
 
-						-- calculamos las existencias del inventario despues de la venta
-						select idProducto, sum(cantidad) as cantidad into #totProductos from #pedidos group by idProducto
+						---- calculamos las existencias del inventario despues de la venta
+						--select idProducto, sum(cantidad) as cantidad into #totProductos from #pedidos group by idProducto
 
-						select	distinct idInventarioDetalle, id.idProducto, id.cantidad, fechaAlta, id.idUbicacion, 
-								fechaActualizacion, cast(0 as int) as cantidadDescontada, 
-								cast(0 as int) as cantidadFinal, a.idAlmacen
-						into	#tempExistencias 
-						from	Usuarios u
-									inner join Almacenes a
-										on a.idAlmacen = u.idAlmacen
-									inner join Ubicacion ub
-										on ub.idAlmacen = a.idAlmacen
-									inner join InventarioDetalle id
-										on id.idUbicacion = ub.idUbicacion
-									inner join #totProductos p
-										on p.idProducto = id.idProducto
-						where	a.idAlmacen = @idAlmacenAtiende
-							and	id.cantidad > 0
-
-
-						if not exists ( select 1 from #tempExistencias)
-							begin
-								select @mensaje = 'No se realizo el pedido, no se cuenta con suficientes existencias en el inventario.'
-								raiserror (@mensaje, 11, -1)
-							end
+						--select	distinct idInventarioDetalle, id.idProducto, id.cantidad, fechaAlta, id.idUbicacion, 
+						--		fechaActualizacion, cast(0 as int) as cantidadDescontada, 
+						--		cast(0 as int) as cantidadFinal, a.idAlmacen
+						--into	#tempExistencias 
+						--from	Usuarios u
+						--			inner join Almacenes a
+						--				on a.idAlmacen = u.idAlmacen
+						--			inner join Ubicacion ub
+						--				on ub.idAlmacen = a.idAlmacen
+						--			inner join InventarioDetalle id
+						--				on id.idUbicacion = ub.idUbicacion
+						--			inner join #totProductos p
+						--				on p.idProducto = id.idProducto
+						--where	a.idAlmacen = @idAlmacenAtiende
+						--	and	id.cantidad > 0
 
 
-						-- se calcula de que ubicaciones se van a descontar los productos
-						select @ini_ = min(idProducto), @fin_= max(idProducto) from #totProductos
+						--if not exists ( select 1 from #tempExistencias)
+						--	begin
+						--		select @mensaje = 'No se realizo el pedido, no se cuenta con suficientes existencias en el inventario.'
+						--		raiserror (@mensaje, 11, -1)
+						--	end
 
-						while ( @ini_ <= @fin_ )
-							begin
-								declare	@cantidadProductos as int = 0
-								select	@cantidadProductos = cantidad from #totProductos where idProducto = @ini_
 
-								while ( @cantidadProductos > 0 )
-									begin
-										declare @cantidadDest as int = 0, @idInventarioDetalle as int = 0
-										select	@cantidadDest = coalesce(max(cantidad), 0) from #tempExistencias where idProducto = @ini_ and cantidadDescontada = 0
-										select	@idInventarioDetalle = idInventarioDetalle from #tempExistencias where idProducto = @ini_ and cantidadDescontada = 0 and cantidad = @cantidadDest
+						---- se calcula de que ubicaciones se van a descontar los productos
+						--select @ini_ = min(idProducto), @fin_= max(idProducto) from #totProductos
 
-										-- si ya no hay ubicaciones con existencias a descontar
-										if ( @cantidadDest = 0 )
-											begin
-												update  #tempExistencias set cantidadDescontada = (select cantidad from #totProductos where idProducto = @ini_)
-												where	idProducto = @ini_
-												select @cantidadProductos = 0
-											end
-										else
-											begin
-												if ( @cantidadDest >= @cantidadProductos )
-													begin 
-														update #tempExistencias set cantidadDescontada = @cantidadProductos 
-														where idProducto = @ini_ and idInventarioDetalle = @idInventarioDetalle
-														select @cantidadProductos = 0 
-													end
-												else
-													begin
-														update	#tempExistencias set cantidadDescontada = @cantidadDest
-														where	 idProducto = @ini_ and idInventarioDetalle = @idInventarioDetalle
-														select @cantidadProductos = @cantidadProductos - @cantidadDest						
-													end
-											end 
-									end
+						--while ( @ini_ <= @fin_ )
+						--	begin
+						--		declare	@cantidadProductos as int = 0
+						--		select	@cantidadProductos = cantidad from #totProductos where idProducto = @ini_
 
-								select @ini_ = min(idProducto) from #totProductos where idProducto > @ini_
+						--		while ( @cantidadProductos > 0 )
+						--			begin
+						--				declare @cantidadDest as int = 0, @idInventarioDetalle as int = 0
+						--				select	@cantidadDest = coalesce(max(cantidad), 0) from #tempExistencias where idProducto = @ini_ and cantidadDescontada = 0
+						--				select	@idInventarioDetalle = idInventarioDetalle from #tempExistencias where idProducto = @ini_ and cantidadDescontada = 0 and cantidad = @cantidadDest
 
-							end  -- while ( @ini_ <= @fin_ )
+						--				-- si ya no hay ubicaciones con existencias a descontar
+						--				if ( @cantidadDest = 0 )
+						--					begin
+						--						update  #tempExistencias set cantidadDescontada = (select cantidad from #totProductos where idProducto = @ini_)
+						--						where	idProducto = @ini_
+						--						select @cantidadProductos = 0
+						--					end
+						--				else
+						--					begin
+						--						if ( @cantidadDest >= @cantidadProductos )
+						--							begin 
+						--								update #tempExistencias set cantidadDescontada = @cantidadProductos 
+						--								where idProducto = @ini_ and idInventarioDetalle = @idInventarioDetalle
+						--								select @cantidadProductos = 0 
+						--							end
+						--						else
+						--							begin
+						--								update	#tempExistencias set cantidadDescontada = @cantidadDest
+						--								where	 idProducto = @ini_ and idInventarioDetalle = @idInventarioDetalle
+						--								select @cantidadProductos = @cantidadProductos - @cantidadDest						
+						--							end
+						--					end 
+						--			end
+
+						--		select @ini_ = min(idProducto) from #totProductos where idProducto > @ini_
+
+						--	end  -- while ( @ini_ <= @fin_ )
 
 							
-							update	#tempExistencias
-							set		cantidadFinal = cantidad - cantidadDescontada
+						--	update	#tempExistencias
+						--	set		cantidadFinal = cantidad - cantidadDescontada
 
-							-- si el inventario de los productos vendidos queda negativo se paso de productos = rollback
-							if  exists	( select 1 from #tempExistencias where cantidadFinal < 0 )
-							begin
-								select @mensaje = 'No se realizo la venta, no se cuenta con suficientes existencias en el inventario.'
-								raiserror (@mensaje, 11, -1)
-							end
+						--	-- si el inventario de los productos vendidos queda negativo se paso de productos = rollback
+						--	if  exists	( select 1 from #tempExistencias where cantidadFinal < 0 )
+						--	begin
+						--		select @mensaje = 'No se realizo la venta, no se cuenta con suficientes existencias en el inventario.'
+						--		raiserror (@mensaje, 11, -1)
+						--	end
 
-							-- se descuentan existencias de almacen origen
-							--se actualiza inventario_general_log
-							INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
-							select a.idProducto,sum(a.cantidad),b.cantidad-sum(a.cantidad),dbo.FechaActual(),17 
-							from #totProductos a
-							join InventarioGeneral b on a.idProducto=b.idProducto
-							group by a.idProducto,b.cantidad
+						--	-- se descuentan existencias de almacen origen
+						--	--se actualiza inventario_general_log
+						--	INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
+						--	select a.idProducto,sum(a.cantidad),b.cantidad-sum(a.cantidad),dbo.FechaActual(),17 
+						--	from #totProductos a
+						--	join InventarioGeneral b on a.idProducto=b.idProducto
+						--	group by a.idProducto,b.cantidad
 					
 
-							-- se actualiza inventario detalle
-							update	InventarioDetalle
-							set		cantidad = a.cantidadFinal,
-									fechaActualizacion = dbo.FechaActual()
-							from	(
-										select	idInventarioDetalle, idProducto, cantidad, idUbicacion, cantidadDescontada, cantidadFinal
-										from	#tempExistencias
-									)A
-							where	InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
+						--	-- se actualiza inventario detalle
+						--	update	InventarioDetalle
+						--	set		cantidad = a.cantidadFinal,
+						--			fechaActualizacion = dbo.FechaActual()
+						--	from	(
+						--				select	idInventarioDetalle, idProducto, cantidad, idUbicacion, cantidadDescontada, cantidadFinal
+						--				from	#tempExistencias
+						--			)A
+						--	where	InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
 
-							-- se actualiza el inventario general
-							update	InventarioGeneral
-							set		InventarioGeneral.cantidad = InventarioGeneral.cantidad - A.cantidad,
-									fechaUltimaActualizacion = dbo.FechaActual()
-							from	(
-										select idProducto, cantidad from #totProductos
-									)A
-							where InventarioGeneral.idProducto = A.idProducto
-
-
-							-- se inserta el InventarioDetalleLog
-							insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
-							select	idUbicacion, idProducto, cantidadDescontada, cantidadFinal, cast(17 as int) as idTipoMovInventario,
-									@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
-							from	#tempExistencias
-							where	cantidadDescontada > 0
+						--	-- se actualiza el inventario general
+						--	update	InventarioGeneral
+						--	set		InventarioGeneral.cantidad = InventarioGeneral.cantidad - A.cantidad,
+						--			fechaUltimaActualizacion = dbo.FechaActual()
+						--	from	(
+						--				select idProducto, cantidad from #totProductos
+						--			)A
+						--	where InventarioGeneral.idProducto = A.idProducto
 
 
-							-- se agregann existencias a almacen destino en la ubicacion sin ubicacion
-							if not exists	(
-												select	1
-												from	Ubicacion 
-												where	idAlmacen = @idAlmacenDestino
-													and	idPasillo = 0
-													and idRaq = 0
-													and idPiso = 0
-											)
-								begin
-									insert into Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) values (@idAlmacenDestino, 0, 0, 0)
-								end
+						--	-- se inserta el InventarioDetalleLog
+						--	insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
+						--	select	idUbicacion, idProducto, cantidadDescontada, cantidadFinal, cast(17 as int) as idTipoMovInventario,
+						--			@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
+						--	from	#tempExistencias
+						--	where	cantidadDescontada > 0
 
-							select	@idUbicacionDestino = idUbicacion 
-							from	Ubicacion 
-							where	idAlmacen = @idAlmacenDestino
-								and	idPasillo = 0
-								and idRaq = 0
-								and idPiso = 0
+
+						--	-- se agregann existencias a almacen destino en la ubicacion sin ubicacion
+						--	if not exists	(
+						--						select	1
+						--						from	Ubicacion 
+						--						where	idAlmacen = @idAlmacenDestino
+						--							and	idPasillo = 0
+						--							and idRaq = 0
+						--							and idPiso = 0
+						--					)
+						--		begin
+						--			insert into Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) values (@idAlmacenDestino, 0, 0, 0)
+						--		end
+
+						--	select	@idUbicacionDestino = idUbicacion 
+						--	from	Ubicacion 
+						--	where	idAlmacen = @idAlmacenDestino
+						--		and	idPasillo = 0
+						--		and idRaq = 0
+						--		and idPiso = 0
 
 								
-							select	idProducto , @idUbicacionDestino as idUbicacionDestino, cantidad
-							into	#ubicacionesDestino
-							from	#pedidos
+						--	select	idProducto , @idUbicacionDestino as idUbicacionDestino, cantidad
+						--	into	#ubicacionesDestino
+						--	from	#pedidos
 	
 
-							-- si no existen las ubicaciones de los productos en almacen destino
-							if  exists	(
-											select	ud.idProducto as idProductoDestino
-											from	#ubicacionesDestino ud
-														left join InventarioDetalle id
-															on	id.idProducto = ud.idProducto 
-															and	id.idUbicacion = ud.idUbicacionDestino
-											where	id.idProducto is null 
-										)
-								begin
-									insert into InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
-									select	ud.idProducto as idProductoDestino, 0 as cantidad, @fecha, @idUbicacionDestino, @fecha
-									from	#ubicacionesDestino ud
-												left join InventarioDetalle id
-													on	id.idProducto = ud.idProducto 
-													and	id.idUbicacion = ud.idUbicacionDestino
-									where	id.idProducto is null 
-								end
+						--	-- si no existen las ubicaciones de los productos en almacen destino
+						--	if  exists	(
+						--					select	ud.idProducto as idProductoDestino
+						--					from	#ubicacionesDestino ud
+						--								left join InventarioDetalle id
+						--									on	id.idProducto = ud.idProducto 
+						--									and	id.idUbicacion = ud.idUbicacionDestino
+						--					where	id.idProducto is null 
+						--				)
+						--		begin
+						--			insert into InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
+						--			select	ud.idProducto as idProductoDestino, 0 as cantidad, @fecha, @idUbicacionDestino, @fecha
+						--			from	#ubicacionesDestino ud
+						--						left join InventarioDetalle id
+						--							on	id.idProducto = ud.idProducto 
+						--							and	id.idUbicacion = ud.idUbicacionDestino
+						--			where	id.idProducto is null 
+						--		end
 
 
-							--se actualiza inventario_general_log
-							INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
-							select a.idProducto,sum(a.cantidad),b.cantidad + sum(a.cantidad),dbo.FechaActual(),18 
-							from #totProductos a
-							join InventarioGeneral b on a.idProducto=b.idProducto
-							group by a.idProducto,b.cantidad
+						--	--se actualiza inventario_general_log
+						--	INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
+						--	select a.idProducto,sum(a.cantidad),b.cantidad + sum(a.cantidad),dbo.FechaActual(),18 
+						--	from #totProductos a
+						--	join InventarioGeneral b on a.idProducto=b.idProducto
+						--	group by a.idProducto,b.cantidad
 					
 
-							-- se actualiza inventario detalle
-							update	InventarioDetalle
-							set		cantidad = a.cantidadFinal,
-									fechaActualizacion = dbo.FechaActual()
-							from	(
-										select	p.idProducto, ( p.cantidad + id.cantidad ) as cantidadFinal, id.idUbicacion
-										from	#ubicacionesDestino p
-													inner join InventarioDetalle id 
-														on id.idProducto = p.idProducto 
-										where	id.idUbicacion = @idUbicacionDestino
-									)A
-							where	InventarioDetalle.idProducto = a.idProducto
-								and	InventarioDetalle.idUbicacion = a.idUbicacion
+						--	-- se actualiza inventario detalle
+						--	update	InventarioDetalle
+						--	set		cantidad = a.cantidadFinal,
+						--			fechaActualizacion = dbo.FechaActual()
+						--	from	(
+						--				select	p.idProducto, ( p.cantidad + id.cantidad ) as cantidadFinal, id.idUbicacion
+						--				from	#ubicacionesDestino p
+						--							inner join InventarioDetalle id 
+						--								on id.idProducto = p.idProducto 
+						--				where	id.idUbicacion = @idUbicacionDestino
+						--			)A
+						--	where	InventarioDetalle.idProducto = a.idProducto
+						--		and	InventarioDetalle.idUbicacion = a.idUbicacion
 
-							-- se actualiza el inventario general
-							update	InventarioGeneral
-							set		InventarioGeneral.cantidad = InventarioGeneral.cantidad + A.cantidad,
-									fechaUltimaActualizacion = dbo.FechaActual()
-							from	(
-										select idProducto, cantidad from #totProductos
-									)A
-							where InventarioGeneral.idProducto = A.idProducto
+						--	-- se actualiza el inventario general
+						--	update	InventarioGeneral
+						--	set		InventarioGeneral.cantidad = InventarioGeneral.cantidad + A.cantidad,
+						--			fechaUltimaActualizacion = dbo.FechaActual()
+						--	from	(
+						--				select idProducto, cantidad from #totProductos
+						--			)A
+						--	where InventarioGeneral.idProducto = A.idProducto
 
 
-							 --se inserta el InventarioDetalleLog
-							insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
-							select	@idUbicacionDestino, t.idProducto, cantidadDescontada, id.cantidad, cast(18 as int) as idTipoMovInventario,
-									@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
-							from	#tempExistencias t
-										inner join InventarioDetalle id
-										on t.idProducto = id.idProducto										
-							where	cantidadDescontada > 0
-								and id.idUbicacion = @idUbicacionDestino
+						--	 --se inserta el InventarioDetalleLog
+						--	insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
+						--	select	@idUbicacionDestino, t.idProducto, cantidadDescontada, id.cantidad, cast(18 as int) as idTipoMovInventario,
+						--			@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
+						--	from	#tempExistencias t
+						--				inner join InventarioDetalle id
+						--				on t.idProducto = id.idProducto										
+						--	where	cantidadDescontada > 0
+						--		and id.idUbicacion = @idUbicacionDestino
 							
 						
 						select @nombreAlmacenAtiende = descripcion from Almacenes where idAlmacen = @idAlmacenAtiende
