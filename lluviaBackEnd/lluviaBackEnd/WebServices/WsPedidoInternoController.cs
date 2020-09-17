@@ -16,7 +16,7 @@ namespace lluviaBackEnd.WebServices
     {
 
         [HttpPost]
-        public  Notificacion<List<Status>> ObtenerStatusPedidosInternos()
+        public Notificacion<List<Status>> ObtenerStatusPedidosInternos()
         {
             try
             {
@@ -183,5 +183,18 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+        [HttpPost]
+        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        {
+            try
+            {
+                return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+        }
     }
 }
