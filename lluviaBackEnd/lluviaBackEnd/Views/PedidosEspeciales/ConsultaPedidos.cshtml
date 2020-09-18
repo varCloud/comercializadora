@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewBag.Title = "Consultar Pedidos";
+}
+
+@model lluviaBackEnd.Models.PedidosEspeciales
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+
+    <style>
+        td.details-control {
+            background: url('../../assets/img/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('../../assets/img/details_close.png') no-repeat center center;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Buscar Pedidos Especiales</h4>
+                <div class="card-header-action">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                </div>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("_ObtenerPedidosEspeciales", "Bitacora",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitObtenerPedidosEspeciales",
+                        OnComplete = "onCompleteObtenerPedidosEspeciales",
+                        OnFailure = "onFailureResultObtenerPedidosEspeciales",
+                        OnSuccess = "onSuccessResultObtenerPedidosEspeciales",
+                    },
+                    new { id = "frmBuscarPedidosEspeciales" }))
+                    {
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label>Folio</label>
+                                    @Html.TextBoxFor(x => x.idPedidoEspecial, new { @class = "form-control", data_val = "false", onkeypress = "return esNumero(event)" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-3">
+                                <div class="form-group">
+                                    <label>Almacen Origen</label>
+                                    @Html.DropDownListFor(x => x.almacenOrigen.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-3">
+                                <div class="form-group">
+                                    <label>Almacen Destino</label>
+                                    @Html.DropDownListFor(x => x.almacenDestino.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    @Html.DropDownListFor(x => x.usuario.idUsuario, (List<SelectListItem>)ViewBag.listUsuarios, new { @class = "select-multiple", data_val = "false" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Estatus</label>
+                                    @Html.DropDownListFor(x => x.estatusPedido.idStatus, (List<SelectListItem>)ViewBag.listEstatusPedidosInternos, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Descripción del Pedido: </label>
+                                    @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control", data_val = "false" })
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Fecha</label>
+                                    <input type="text" id="rangePedidosEspeciales" class="form-control daterange-cus" autocomplete="off" />
+                                    @Html.HiddenFor(x => x.fechaIni)
+                                    @Html.HiddenFor(x => x.fechaFin)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>
+                            <button type="submit" id="btnBuscarPedidosEspeciales" class="btn btn-success">Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body" id="DivtblPedidosEspeciales">
+                    @Html.Action("_ObtenerPedidosEspeciales", "PedidosEspeciales")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtConsultaPedidosEspeciales.js"></script>
+
+}
+
+
+

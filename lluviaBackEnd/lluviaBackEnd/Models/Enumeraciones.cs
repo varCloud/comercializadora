@@ -83,6 +83,10 @@ namespace lluviaBackEnd.Models
         Puede_visualizar_Ventas,
         #endregion
 
+        #region PedidosEspeciales
+        Puede_visualizar_PedidosEspeciales,
+        #endregion
+
         #region  Clientes
         Puede_visualizar_Clientes,
         #endregion

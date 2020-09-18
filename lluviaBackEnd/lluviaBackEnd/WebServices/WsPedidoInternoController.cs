@@ -16,7 +16,7 @@ namespace lluviaBackEnd.WebServices
     {
 
         [HttpPost]
-        public  Notificacion<List<Status>> ObtenerStatusPedidosInternos()
+        public Notificacion<List<Status>> ObtenerStatusPedidosInternos()
         {
             try
             {
@@ -153,8 +153,48 @@ namespace lluviaBackEnd.WebServices
 
         }
 
+        [HttpPost]
+        public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesUsuariosApp(RequestObtenerPedidosInternosUsuario request)
+        {
+            try
+            {
+                return new BitacoraDAO().ObtenerPedidosInternoEspecialesUsuariosApp(request);
+            }
 
+            catch (Exception ex)
+            {
+                return WsUtils<List<ResponseObtenerPedidosInternosEspeciales>>.RegresaExcepcion(ex, null);
+            }
 
+        }
 
+        [HttpPost]
+        public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesAlmacenApp(RequestObtenerPedidosInternosAlamcen request)
+        {
+            try
+            {
+                return new BitacoraDAO().ObtenerPedidosInternoEspecialesAlmacenApp(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<List<ResponseObtenerPedidosInternosEspeciales>>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+        [HttpPost]
+        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        {
+            try
+            {
+                return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+        }
     }
 }
