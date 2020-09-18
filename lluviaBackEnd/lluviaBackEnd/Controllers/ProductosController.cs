@@ -81,6 +81,24 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ObtenerProductosPedidoEspecial(int idPedidoEspecial)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Producto producto = new Producto();
+                producto.activo = true;
+                producto.idUsuario = UsuarioActual.idUsuario;
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductosPorUsuario(producto, idPedidoEspecial);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public ActionResult _ObtenerProductos(Producto producto)
         {

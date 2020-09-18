@@ -59,7 +59,7 @@
 
                         <div class="row">
 
-                            <div class="col-12 col-sm-12 col-lg-2">
+                            <div class="col-12 col-sm-12 col-lg-3">
                                 <label>Herramientas</label>
                                 @*<div class="buttons">*@
                                 <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
@@ -68,11 +68,15 @@
                                         <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Cierre de Caja (Exceso de Efectivo)"><i class="fas fa-dollar-sign"> </i></a>
                                         <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-donate"></i></a>
                                         <a href="javascript:AbrirCajonDinero();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Abrir Cajón de Dinero"><i class="fas fa-external-link-alt"></i></a>
+                                        @if ((!esDevolucion) || (idVenta == 0))
+                                        {
+                                            <a href="javascript:AbrirModalPedidoEspecial();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Buscar Pedido Especial"><i class="fas fa-portrait"></i></a>
+                                        }
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-7">
+                            <div class="col-12 col-sm-12 col-lg-6">
                                 <div class="form-group">
                                     <label>Producto</label>
                                     @Html.HiddenFor(x => idVenta)
@@ -766,18 +770,18 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-sm-12 col-lg-3">                      
-                            <div class="form-group">
-                                <label>Cantidad</label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">#</span>
-                                    </div>
-                                    <input id="cantidadEnvase" type="text" class="form-control" onkeypress="return esNumero(event)">
+                    <div class="col-12 col-sm-12 col-lg-3">
+                        <div class="form-group">
+                            <label>Cantidad</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">#</span>
                                 </div>
+                                <input id="cantidadEnvase" type="text" class="form-control" onkeypress="return esNumero(event)">
                             </div>
+                        </div>
                     </div>
-                </div>     
+                </div>
 
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
@@ -792,6 +796,66 @@
     </div>
 </div>
 
+@*Modal Pedido Especial *@
+<div class="modal fade bd-example-modal-lg" id="ModalPedidoEspecial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pedido Especial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            @*<label># Ticket</label>*@
+                            <div class="input-group mb-3">
+
+                                @*<div class="input-group-prepend">
+                                        <span class="input-group-text"># Ticket</span>
+                                    </div>*@
+                                <input id="NoPedidoEspecial" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                <div class="input-group-append">
+                                    <button type="button" onclick="BuscarPedidoEspecial()" class="btn btn-success"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblProductosPedidoEspecial">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"> Id </th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Cantidad en Existencia</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" onclick="AgregarPedidoEspecial()" type="button" id="btnAgregarPedidoEspecial">Agregar Pedido Especial a la Venta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
