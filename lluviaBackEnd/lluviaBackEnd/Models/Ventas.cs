@@ -92,7 +92,6 @@ namespace lluviaBackEnd.Models
         public string descAlmacen { get; set; }
         public float precioVenta { get; set; }
         public int cantProductosLiq { get; set; }
-
-
+        public int idPedidoEspecial { get; set; }
     }
 }

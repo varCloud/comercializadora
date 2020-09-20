@@ -3,6 +3,9 @@ var iframe;
 var tablaVentas;
 var arrayPreciosRangos = [];
 var arrayProductos = [];
+var tblProductosPedidoEspecial;
+var productosPedidoEspecial = '';
+var idPedidoEspecial = parseInt(0);
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -138,6 +141,7 @@ function limpiarTicket() {
     $('#idProducto').val("0").trigger('change');
     $('#idVenta').val(0);
     $('#vaConDescuento').val(0);
+    idPedidoEspecial = 0;
 
 }
 
@@ -339,7 +343,7 @@ function AgregarProducto(producto, cantidad) {
         "  </td>" +
         "</tr >";
 
-    $("table tbody").append(row_);
+    $("#tablaRepVentas tbody").append(row_);
     return true;
 }
 
@@ -855,7 +859,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion });
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion, idPedidoEspecial: idPedidoEspecial });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -1710,3 +1714,130 @@ $(document).ready(function () {
     }
 
 });
+
+//*********************** PEDIDO ESPECIAL  ************************************
+$("#NoPedidoEspecial").keyup(function (evt) {
+    evt.preventDefault();
+    LimpiarFormPedidoEspecial();
+
+});
+
+function AbrirModalPedidoEspecial() {
+    $("#NoPedidoEspecial").val("");
+    LimpiarFormPedidoEspecial();    
+    $('#ModalPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+function BuscarPedidoEspecial() {
+
+    var NoPedidoEspecial = parseInt($("#NoPedidoEspecial").val()) || 0;
+    if (parseInt(NoPedidoEspecial) === 0) {
+        MuestraToast('warning', "Debe especificar el numero de ticket del pedido especial que desea buscar.");
+        return false;
+    }
+
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductosPedidoEspecial"),
+        data: { idPedidoEspecial: NoPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {            
+            if (data.Estatus === 200) {
+                productosPedidoEspecial = data;
+                var i;
+                var html = "";
+                
+                for (i = 0; i < productosPedidoEspecial.Modelo.length; i++) {
+
+                    html += '<tr>';
+                    html += '<td>' + productosPedidoEspecial.Modelo[i].idProducto + '</td>';
+                    html += '<td>' + productosPedidoEspecial.Modelo[i].descripcion + '</td>';
+                    html += '<td>' + productosPedidoEspecial.Modelo[i].cantidadRecibida + '</td>';
+                    html += '<td>' + productosPedidoEspecial.Modelo[i].cantidad + '</td>';
+
+                    if (productosPedidoEspecial.Modelo[i].precioIndividual <= 0 && productosPedidoEspecial.Modelo[i].precioMenudeo <= 0) {
+                        productosPedidoEspecial.Modelo[i].activo = false;
+                        html += '<td><div class="badge badge-danger badge-shadow">No tiene configurado un precio</div></td>';
+                    }
+                    else if (productosPedidoEspecial.Modelo[i].precioIndividual <= 0) {
+                        productosPedidoEspecial.Modelo[i].activo = false;
+                        html += '<td><div class="badge badge-danger badge-shadow">Debe configurar el precio invidual del producto.</div></td>';
+                    }
+                    else if (productosPedidoEspecial.Modelo[i].precioMenudeo <= 0) {
+                        productosPedidoEspecial.Modelo[i].activo = false;
+                        html += '<td><div class="badge badge-danger badge-shadow">Debe configurar el precio Mayoreo del producto.</div></td>';
+                    }
+                    else if (parseInt(productosPedidoEspecial.Modelo[i].cantidad) === 0) {
+                        productosPedidoEspecial.Modelo[i].activo = false;
+                        html += '<td><div class="badge badge-danger badge-shadow">Sin existencias en el inventario</div></td>';
+                    }
+                    else if (productosPedidoEspecial.Modelo[i].cantidadRecibida > productosPedidoEspecial.Modelo[i].cantidad)
+                        html += '<td><div class="badge badge-warning badge-shadow">Cantidad en existencia menor a la solicitada</div></td>';
+                    else
+                        html += '<td><div class="badge badge-success badge-shadow">Correcto</div></td>';
+
+                    html += '</tr>';
+
+                }
+
+                $("#tblProductosPedidoEspecial tbody").html(html);
+                tblProductosPedidoEspecial = initDataTable("tblProductosPedidoEspecial");
+                $("#tblProductosPedidoEspecial").show();
+                $("#btnAgregarPedidoEspecial").show();
+
+
+            } else {
+                MuestraToast('error', data.Mensaje);
+                LimpiarFormPedidoEspecial();
+            }
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error','Ocurrio un error al consultar el pedido especial');
+        }
+    });
+}
+
+function AgregarPedidoEspecial() {
+
+    var i,totalProductosAgregados=0;
+    for (i = 0; i < productosPedidoEspecial.Modelo.length; i++) {
+        if (productosPedidoEspecial.Modelo[i].activo) {
+            AgregarProducto(productosPedidoEspecial.Modelo[i], (productosPedidoEspecial.Modelo[i].cantidad < productosPedidoEspecial.Modelo[i].cantidadRecibida ? productosPedidoEspecial.Modelo[i].cantidad : productosPedidoEspecial.Modelo[i].cantidadRecibida))
+            totalProductosAgregados = totalProductosAgregados + 1;
+        }
+   }
+
+    if (totalProductosAgregados > 0) {
+
+        idPedidoEspecial = $("#NoPedidoEspecial").val();
+        actualizaTicketVenta();
+        initInputsTabla();
+        $('#ModalPedidoEspecial').modal('hide');
+    }
+    else {
+        MuestraToast("error","No existen productos válidos para agregar a la venta");
+    }
+
+
+   
+}
+
+function LimpiarFormPedidoEspecial() {  
+
+    if (tblProductosPedidoEspecial != null && tblProductosPedidoEspecial != undefined) {
+        tblProductosPedidoEspecial.destroy();
+        tblProductosPedidoEspecial = null;
+    }
+    $("#tblProductosPedidoEspecial tbody").html("");
+    $("#tblProductosPedidoEspecial").hide();
+    $("#btnAgregarPedidoEspecial").hide();
+    productosPedidoEspecial = '';
+
+}
+

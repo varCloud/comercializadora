@@ -73,7 +73,7 @@ namespace lluviaBackEnd.DAO
 
         }
 
-        public Notificacion<List<Producto>> ObtenerProductosPorUsuario(Producto producto)
+        public Notificacion<List<Producto>> ObtenerProductosPorUsuario(Producto producto,int idPedidoEspecial=0)
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
 
@@ -98,6 +98,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@fechaIni", producto.fechaIni == DateTime.MinValue ? (object)null : producto.fechaIni);
                     parameters.Add("@fechaFin", producto.fechaFin == DateTime.MinValue ? (object)null : producto.fechaFin);
                     parameters.Add("@idUsuario", producto.idUsuario);
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial==0 ? (object)null : idPedidoEspecial);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
