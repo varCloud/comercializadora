@@ -15,7 +15,7 @@ namespace lluviaBackEnd.Models
         public DateTime fechaAlta { get; set; }
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
-        public List<Producto> lstProductos { get; set; }
+        public List<PedidosInternosDetalle> lstPedidosInternosDetalle { get; set; }
         public Almacen almacenOrigen { get; set; }
         public Almacen almacenDestino { get; set; }
         public Usuario usuario { get; set; }
@@ -31,8 +31,7 @@ namespace lluviaBackEnd.Models
             almacenDestino = new Almacen();
             usuario = new Usuario();
             estatusPedido = new Status();
-            //producto = new Producto();
-            lstProductos = new List<Producto>();
+            lstPedidosInternosDetalle = new List<PedidosInternosDetalle>();
         }
     }
 }

@@ -28,28 +28,19 @@ namespace lluviaBackEnd.Controllers
         //  Nuevo PedidoEspecial
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
-        public ActionResult PedidosEspeciales(PedidosEspeciales peeidoEspecial)
+        public ActionResult PedidosEspeciales(PedidosEspeciales pedidoEspecial)
         {
             Sesion usuario = Session["UsuarioActual"] as Sesion;
 
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
             ViewBag.lstProductos = notificacion.Modelo;
-
-            //Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-            //formasPago = new PedidosEspecialesDAO().ObtenerFormasPago();
-            //ViewBag.lstFormasPago = formasPago.Modelo;
-
-            //Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-            //usoCFDI = new PedidosEspecialesDAO().ObtenerUsoCFDI();
-            //ViewBag.lstUsoCFDI = usoCFDI.Modelo;
-
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
             ViewBag.listAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-
             ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+            pedidoEspecial.lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidoEspecial.idPedidoEspecial);
 
-            ViewBag.peeidoEspecial = peeidoEspecial;
+            ViewBag.pedidoEspecial = pedidoEspecial;
 
             return View();
         }
@@ -79,7 +70,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<PedidosEspeciales> result = new Notificacion<PedidosEspeciales>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 pedido.idUsuario = UsuarioActual.idUsuario;
-                pedido.almacenDestino.idAlmacen = UsuarioActual.idAlmacen;
+                pedido.almacenOrigen.idAlmacen = UsuarioActual.idAlmacen;
                 result = new PedidosEspecialesDAO().GuardarPedidoEspecial(pedido);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -91,20 +82,84 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult AceptarPedido(PedidosEspeciales pedido)
+        public ActionResult AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
         {
             try
             {
                 Notificacion<Result> result = new Notificacion<Result>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 pedido.idUsuario = UsuarioActual.idUsuario;
-                result = new PedidosEspecialesDAO().AceptarPedido(pedido);
+                //pedido.almacenOrigen.idAlmacen = UsuarioActual.idAlmacen;
+
+                result = new PedidosEspecialesDAO().AceptarRechazarPedidoEspecial(pedido);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+
+        //[HttpPost]
+        //public ActionResult AceptarPedido(PedidosEspeciales pedido)
+        //{
+        //    try
+        //    {
+        //        Notificacion<Result> result = new Notificacion<Result>();
+        //        Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+        //        pedido.idUsuario = UsuarioActual.idUsuario;
+        //        result = new PedidosEspecialesDAO().AceptarPedido(pedido);
+        //        return Json(result, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+
+
+        public ActionResult _FinalizaPedido(int idPedidoEspecial)
+        {
+            try
+            {
+                Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
+                //Notificacion<PedidosEspeciales> pedido = new Notificacion<PedidosEspeciales>();
+
+                pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+                pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
+
+
+
+                //Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
+                //listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+                //ViewBag.listProductos = listProductos.Modelo;
+                //List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+                //ViewBag.listProveedores = listProveedores;
+                //List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
+                //ViewBag.listStatusCompra = listEstatus;
+
+                //if (compras.idCompra > 0)
+                //{
+                //    Notificacion<List<Compras>> notificacion = new ComprasDAO().ObtenerCompras(compras, true);
+                //    if (notificacion.Estatus == 200)
+                //    {
+                //        compras = notificacion.Modelo[0];
+                //        //compras.producto = new Producto();
+                //        foreach (Compras c in notificacion.Modelo)
+                //            compras.listProductos.Add(c.producto);
+                //        compras.producto = new Producto();
+                //    }
+                //}
+                return PartialView(pedidos.Modelo[0]);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
 

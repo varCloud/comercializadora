@@ -1,0 +1,141 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.PedidosEspeciales
+
+@{
+
+    lluviaBackEnd.Models.PedidosEspeciales pedido = new lluviaBackEnd.Models.PedidosEspeciales();
+    pedido = Model;
+
+}
+
+
+<section class="section">
+
+    <div class="section-body">
+
+        <div class="row">
+            <div class="col-md-12">
+
+            <div class="table-responsive">
+                <table class="table table-striped" id="tablaPedidosEspecialesDetalle">
+                    <thead>
+                        <tr>
+                            <th data-width="40" style="width: 40px;">#</th>
+                            <th>Id Producto</th>
+                            <th>Producto</th>
+                            <th class="text-center">Cantidad Solicitada</th>
+                            <th class="text-center">Cantidad Atendida</th>
+                            <th class="text-center">Cantidad Aceptada</th>
+                            <th class="text-center">Observaciones</th>
+                            <th>Fecha de Alta</th>
+                            <th class="text-center" style="display: none;">idPedidoInternoDetalle</th>
+                        </tr>
+                    </thead>
+                    @if (pedido != null)
+                    {
+                        if (pedido.lstPedidosInternosDetalle.Count() > 0)
+                        {
+
+                            <tbody>
+                                @foreach ( var item in pedido.lstPedidosInternosDetalle )
+                                {
+                                <tr>
+                                    <td>@item.contador</td>
+                                    <td>@item.idProducto</td>
+                                    <td>@item.descProducto</td>
+                                    <td class="text-center">@item.cantidad</td>
+                                    <td class="text-center">@item.cantidadAtendida</td>
+
+                                    
+                                    <td class="text-center"><input type='text' onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidadAceptada"></td>
+                                    <td class="text-center"><input type='text' style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.observacion"></td>
+                                    <td>@item.fechaAlta.ToShortDateString()</td>
+                                    <td style="display: none;">@item.idPedidoInternoDetalle</td>
+                                </tr>
+                                }
+                            </tbody>
+                        }
+                    }
+                    else
+                    {
+                        <tbody></tbody>
+                    }
+                </table>
+            </div>
+
+
+                
+
+                @*<div class="row mt-4">
+                    <div class="col-lg-6">
+
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name">Total</div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">@Model.montoTotal.ToString("C", new CultureInfo("en-US"))</div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+            <hr>
+        </div>
+
+        @*@Html.HiddenFor(model => model.statusCompra.idStatus)
+        @Html.HiddenFor(x => Model.idCompra)*@
+        @*<div class="row">
+            <div class="form-group col-lg-4">
+                <label>Proveedor</label>
+                <div class="input-group">
+                    @Html.DropDownListFor(model => model.proveedor.idProveedor, (List<SelectListItem>)ViewBag.listProveedores, "--SELECCIONA--", new { id = "idProveedor", style = "width:80%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione un proveedor", data_val = "true" })
+                    @Html.ValidationMessageFor(model => model.proveedor.idProveedor, null, new { @class = "text-danger was" })
+
+                    @if (puedeEditar)
+                    {
+                        <div class="input-group-append">
+                            <button id="btnNuevoProveedor" class="btn btn-icon btn-info" type="button" data-toggle="tooltip" data-placement="bottom" title="Nuevo proveedor."> <i class="fas fa-shipping-fast"></i></button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label>Estatus de la compra</label>
+                @Html.DropDownListFor(model => model.statusCompra.idStatus, estatusCompra, "--SELECCIONA--", new { id = "idStatusCompra", style = "width:100%", @class = Html.Raw(puedeEditar ? "select-multiple select-multipleCompra" : "form-control readonly"), @readonly = Html.Raw(puedeEditar ? "" : "readonly"), placeholder = "", data_val_required = "Seleccione el estatus de la compra", data_val = "true" })
+                @Html.ValidationMessageFor(model => model.statusCompra.idStatus, null, new { @class = "text-danger was" })
+            </div>
+            <div class="form-group col-lg-4">
+                <label>Observaciones</label>
+                @Html.TextAreaFor(model => model.observaciones, new { id = "ObservacionesCompra", @class = Html.Raw(puedeEditar ? "form-control" : "form-control"), placeholder = "", data_val = "false" })
+                @Html.ValidationMessageFor(model => model.observaciones, null, new { @class = "text-danger was" })
+            </div>
+        </div>*@
+        @*<div class="row">
+            <div class="col-12 col-sm-12 col-lg-12">
+                <div class="text-right" style="margin-top:15px;">
+                    @if (Model.idCompra == 0)
+                    {
+                        <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                    }
+                    @if (Model.statusCompra.idStatus <= 2)
+                    {
+                        <button id="btnGuardarCompra" class="btn btn-primary btn-icon icon-left" type="submit">
+                            <i class="fas fa-credit-card"></i> @Html.Raw(Model.idCompra > 0 ? "Actualizar Compra" : "Realizar Compra")
+                        </button>
+                    }
+
+
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+
+
+</section>
+
+@*@Html.Action("_NuevoProveedor", "Proveedores")*@
+
+
+
