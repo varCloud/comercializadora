@@ -252,6 +252,12 @@ $('#btnRechazarPedido').click(function (e) {
 
 $('#btnAceptarRechazarPedido').click(function (e) {
 
+
+    if ( ($('#motivoRechazo').val() == '') || ($('#motivoRechazo').val() == null) ) {
+        MuestraToast('warning', "Debe especificar el motivo por el que esta rechazando el Pedido Especial");
+        return;
+    }
+    
     AceptarPedido(true);
     $('#modalObservacionesRechazaPedido').modal('hide');
 
@@ -387,7 +393,7 @@ function AceptarPedido(esCancelacion) {
             if (data.Estatus == 200) {
 
                 //if ((esPedidoNormal == "true") || (esPedidoNormal == "True")) {
-                //    ImprimeTicket(data.Modelo.idPedidoEspecial);
+                    //ImprimeTicketPedido(data.Modelo.idPedidoEspecial);
                 //}
 
                 //InitSelect2Productos();

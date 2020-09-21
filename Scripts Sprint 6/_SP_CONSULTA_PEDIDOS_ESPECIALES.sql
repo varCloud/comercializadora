@@ -18,14 +18,15 @@ status			200 = ok
 
 create proc SP_CONSULTA_PEDIDOS_ESPECIALES
 
-	@IdEstatusPedidoInterno int=NULL,
-	@idAlmancenOrigen int=NULL,
-	@idAlmacenDestino int=NULL,
-	@idUsuario int=NULL,
-	@fechaIni date=NULL,
-	@fechaFin date=NULL,
-	@idPedidoInterno int=NULL,
-	@idTipoPedidoInterno int = null
+	@IdEstatusPedidoInterno			int=NULL,
+	@idAlmancenOrigen				int=NULL,
+	@idAlmacenDestino				int=NULL,
+	@idUsuario						int=NULL,
+	@fechaIni						date=NULL,
+	@fechaFin						date=NULL,
+	@idPedidoInterno				int=NULL,
+	@descripcion					varchar(300)=NULL,
+	@idTipoPedidoInterno			int = null
 
 as
 
@@ -56,6 +57,7 @@ as
 							@fechaIni is null and
 							@fechaFin is null and
 							@idPedidoInterno is null and
+							@descripcion is null and 
 							@idTipoPedidoInterno is null 
 						)
 						begin
@@ -91,6 +93,21 @@ as
 						and pe.idTipoPedidoInterno = coalesce(@idTipoPedidoInterno, pe.idTipoPedidoInterno)
 					order by fechaAlta desc
 
+
+					if ( @descripcion is not null )
+						begin
+						
+							delete from #pedidosEspeciales 
+							where idPedidoInterno not in	(	
+																select idPedidoInterno 
+																from	#pedidosEspeciales 
+																where  descripcionPedido like '%' + @descripcion + '%' 
+															)
+
+						end
+
+
+					--select * from #pedidosEspeciales
 					
 					update	#pedidosEspeciales
 					set		cantidad = a.cantidad
@@ -150,7 +167,6 @@ as
 					idStatus, 
 					descripcionEstatus as descripcion
 			from	#pedidosEspeciales
-				
 			
 					
 		end -- reporte de estatus

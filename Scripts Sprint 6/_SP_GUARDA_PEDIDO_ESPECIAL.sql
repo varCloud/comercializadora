@@ -126,6 +126,7 @@ as
 										on a.idAlmacen = u.idAlmacen
 						where	id.idproducto in (select distinct idProducto from #pedidos )
 							and	a.idTipoAlmacen in (1,2) -- Almacen General y Bodega
+							and	a.idAlmacen not in (@idAlmacenOrigen)
 						group by id.idProducto, u.idAlmacen, p.descripcion, p.precioIndividual,p.precioMenudeo
 						order by idProducto
 				
@@ -443,6 +444,7 @@ as
 										on a.idAlmacen = u.idAlmacen
 						where	id.idproducto in (select distinct idProducto from #pedidos )
 							and	a.idTipoAlmacen in (1,2) -- Almacen General y Bodega
+							and	a.idAlmacen not in (@idAlmacenOrigen)
 						group by id.idProducto, u.idAlmacen, p.descripcion, p.precioIndividual,p.precioMenudeo
 						order by idProducto
 				
@@ -549,8 +551,6 @@ as
 						end -- si la transacción se inició dentro de este ámbito
 				end -- commit de transaccion
 					
-				--drop table #Ventas
-				--drop table #VentasDetalle
 				drop table #cantidades
 				drop table #idProductos
 				

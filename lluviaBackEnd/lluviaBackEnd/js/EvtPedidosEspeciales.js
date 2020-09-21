@@ -808,7 +808,7 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
             if (data.Estatus == 200) {
 
                 //if ((esPedidoNormal == "true") || (esPedidoNormal == "True")) {
-                //    ImprimeTicket(data.Modelo.idPedidoEspecial);
+                ImprimeTicketPedido(data.Modelo.idPedidoEspecial);
                 //}
 
                 InitSelect2Productos();
@@ -829,9 +829,9 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
 
 
 
-function ImprimeTicket(idPedidoEspecial) {
+function ImprimeTicketPedido(idPedidoEspecial) {
     $.ajax({
-        url: rootUrl("/PedidosEspeciales/ImprimeTicket"),
+        url: rootUrl("/PedidosEspeciales/ImprimeTicketPedido"),
         data: { idPedidoEspecial: idPedidoEspecial },
         method: 'post',
         dataType: 'html',
@@ -840,7 +840,7 @@ function ImprimeTicket(idPedidoEspecial) {
             ShowLoader();
         },
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
         },
