@@ -15,5 +15,8 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
         public DateTime fechaAlta { get; set; }
         public Almacen almacenOrigen { get; set; }
         public Almacen almacenDestino { get; set; }
+
+        public string usuarioSolicito { get; set; }
+        public int idUsuarioSolicito { get; set; }
     }
 }
