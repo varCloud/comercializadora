@@ -1,6 +1,9 @@
 ﻿@model lluviaBackEnd.Models.PedidosEspeciales
 @{
     ViewBag.Title = "Pedidos Especiales";
+
+    lluviaBackEnd.Models.PedidosEspeciales pedidoEspecial = ViewBag.pedidoEspecial;
+
     List<lluviaBackEnd.Models.PedidosEspeciales> lstVentas = ViewBag.lstVentas;
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     //List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
@@ -8,20 +11,20 @@
     List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
     //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
     List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
-    lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
+    //lluviaBackEnd.Models.Ventas venta = ViewBag.venta;
     int idPedidoEspecial = 0;// ViewBag.venta.idVenta;
     int idClientePedidoEspecial = 0;
     //Boolean esDevolucion = false;// ViewBag.venta.esDevolucion;
     //Boolean esAgregarProductos = false;// ViewBag.venta.esAgregarProductos;
 
-    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+    //lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
 
 
-    if (idPedidoEspecial > 0)
-    {
-        notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idPedidoEspecial });
-        idClientePedidoEspecial = notificacion.Modelo[0].idCliente;
-    }
+    //if (idPedidoEspecial > 0)
+    //{
+    //    notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idPedidoEspecial });
+    //    idClientePedidoEspecial = notificacion.Modelo[0].idCliente;
+    //}
 
 
 }
@@ -151,43 +154,28 @@
                                             <th class="text-center">Total</th>
                                             <th class="text-center">Descuento</th>
                                             <th class="text-center">Acciones </th>
-                                            <th class="text-center" style="display: none;">idVentaDetalle</th>
+                                            <th class="text-center" style="display: none;">idPedidoInternoDetalle</th>
                                         </tr>
                                     </thead>
-                                    @if (notificacion.Modelo != null)
+                                    @if (pedidoEspecial != null)
                                     {
-                                        if (notificacion.Modelo.Count() > 0)
+                                        if (pedidoEspecial.lstPedidosInternosDetalle.Count() > 0)
                                         {
 
                                             <tbody>
-                                                @foreach (var item in notificacion.Modelo)
+                                                @foreach (var item in pedidoEspecial.lstPedidosInternosDetalle)
                                                 {
-                                                    <tr>
-                                                        <td>@item.contador</td>
-                                                        <td>@item.idProducto</td>
-                                                        <td>@item.descProducto</td>
-                                                        <td class="text-center">$@item.precioVenta</td>
-                                                        <td class="text-center"><input disabled type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
-                                                        <td class="text-center">$@Convert.ToInt32(@item.cantidad * item.precioVenta)</td>
-                                                        <td class="text-center">$@Convert.ToInt32(@item.ahorro)</td>
-                                                        @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
-
-
-                                                        @*@if (esAgregarProductos)
-                                                        {
-                                                            <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
-
-                                                        }*@
-
-                                                        <td style="display: none;">@item.idVentaDetalle</td>
-
-                                                    </tr>
-
+                                                <tr>
+                                                    <td>@item.contador</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descProducto</td>
+                                                    <td class="text-center">$0</td>
+                                                    <td class="text-center"><input type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$0</td>
+                                                    <td class="text-center">$0</td>
+                                                    <td class="text-center"><a href="javascript:eliminaFila(0)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                                                    <td style="display: none;">@item.idPedidoInternoDetalle</td>
+                                                </tr>
                                                 }
 
                                             </tbody>
@@ -312,43 +300,10 @@
 
                     <div class="col-lg-7">
 
-                        <!--<div class="section-title"><strong>Almacen que atendera el pedido: </strong></div>
-                        <div class="form-group">-->
-                            @*@Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idCliente", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })*@
-                            @*@Html.DropDownListFor(x => x.almacenOrigen.idAlmacen, lstSucursales, "-- SELECCIONA --  ", new { id = "idAlmacenOrigen", @class = "form-control", data_val = "false" })*@
-                            @*@Html.DropDownListFor(x => x.almacenDestino.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacenes, "--TODOS--", new { @class = "form-control", id = "idAlmacenDestino", data_val = "false" })*@
-
-                        <!--</div>-->
                         <div class="section-title"><strong>Descripción: </strong></div>
                         <div class="form-group">
                             <input id="descripcionPedidoInterno" type="text" class="form-control" >
                         </div>
-
-
-                        <div class="section-title"><strong>Cliente: </strong></div>
-                        <div class="form-group">
-                            @*@Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idCliente", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })*@
-                            @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
-
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="nombreCliente">
-                                    <address>
-                                        <strong></strong><br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-
-                                    </address>
-                                </div>
-                            </div>
-                        </div>
-
-
 
                     </div>
 

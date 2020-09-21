@@ -22,7 +22,7 @@ create proc SP_GUARDA_PEDIDO_ESPECIAL
 	@idCliente				int,
 	@idPedidoEspecial		int,
 	@idUsuario				int,
-	@idAlmacenDestino		int,
+	@idAlmacenOrigen		int,
 	@descripcion			varchar(500)
 
 as
@@ -63,6 +63,21 @@ as
 							idProducto	int
 						)
 
+				create table
+					#pedidos
+						(
+							idProducto		int,
+							cantidad		int
+						)
+					
+				create table
+					#productos
+						(
+							idProducto		int,
+							idAlmacen		int,
+							cantidad		int
+						)
+
 			end  --declaraciones 
 
 			begin -- principal
@@ -89,8 +104,8 @@ as
 					begin
 
 						-- universo de pedidos
+						insert into #pedidos (idProducto, cantidad)
 						select	p.idProducto, coalesce( sum(c.cantidad), 0 )  as cantidad
-						into	#pedidos
 						from	#cantidades c
 								inner join #idProductos p_
 									on c.id = p_.id
@@ -100,14 +115,17 @@ as
 							
 
 						-- universo de productos por idAlmacen
+						insert into #productos (idProducto,idAlmacen,cantidad)
 						select	id.idProducto, u.idAlmacen, coalesce( (sum(id.cantidad)), 0) as cantidad
-						into	#productos
 						from	InventarioDetalle id
 									inner join Ubicacion u
 										on id.idUbicacion =u.idUbicacion
 									inner join Productos p
 										on p.idProducto = id.idProducto
-						where id.idproducto in (select distinct idProducto from #pedidos )
+									inner join Almacenes a
+										on a.idAlmacen = u.idAlmacen
+						where	id.idproducto in (select distinct idProducto from #pedidos )
+							and	a.idTipoAlmacen in (1,2) -- Almacen General y Bodega
 						group by id.idProducto, u.idAlmacen, p.descripcion, p.precioIndividual,p.precioMenudeo
 						order by idProducto
 				
@@ -145,7 +163,7 @@ as
 								select @ini = min(idAlmacen) from #productos where idAlmacen > @ini
 								drop table #tempProductos
 
-							end
+							end -- while ( @ini <= @fin )
 
 						if not exists ( select 1 from #productos )
 							begin
@@ -162,7 +180,7 @@ as
 										
 						-- insertamos los registros del pedido interno
 						insert	into PedidosInternos (idAlmacenOrigen,idAlmacenDestino,idUsuario,IdEstatusPedidoInterno,fechaAlta,observacion,idTipoPedidoInterno,descripcion)
-						select	@idAlmacenAtiende, @idAlmacenDestino, @idUsuario, 1 as IdEstatusPedidoInterno, @fecha as fechaAlta, null as observacion, 2 as idTipoPedidoInterno, @descripcion as descripcion
+						select	@idAlmacenOrigen, @idAlmacenAtiende, @idUsuario, 1 as IdEstatusPedidoInterno, @fecha as fechaAlta, null as observacion, 2 as idTipoPedidoInterno, @descripcion as descripcion
 
 						select @idPedidoEspecial = max(idPedidoInterno) from PedidosInternos where idTipoPedidoInterno = 2
 						
@@ -170,10 +188,16 @@ as
 						select	@idPedidoEspecial as idPedidoInterno, idProducto, cantidad, @fecha as fechaAlta, 0 as cantidadAtendida, 0 as cantidadAceptada, 0 as cantidadRechazada
 						from	#pedidos
 
+
+						insert into PedidosInternosLog (idPedidoInterno,idAlmacenOrigen,idAlmacenDestino,idUsuario,IdEstatusPedidoInterno,fechaAlta)
+						select	@idPedidoEspecial, @idAlmacenOrigen, idAlmacenDestino, @idUsuario, cast(1 as int ) as  IdEstatusPedidoInterno, @fecha
+						from	PedidosInternos 
+						where	idPedidoInterno = @idPedidoEspecial
+
 						
 						-- se insertan los movimientos de los productos al almacen destino
 						insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
-						select	@idAlmacenAtiende as idAlmacenOrigen, @idAlmacenDestino as idAlmacenDestino, idProducto, cantidad, @idPedidoEspecial as  idPedidoInterno,
+						select	@idAlmacenOrigen as idAlmacenDestino, @idAlmacenAtiende as idAlmacenDestino, idProducto, cantidad, @idPedidoEspecial as  idPedidoInterno,
 								@idUsuario as idUsuario, @fecha as fechaAlta, 1 as idEstatusPedidoInterno, null as observaciones, cantidad as cantidadAtendida
 						from	#pedidos
 						
@@ -299,18 +323,18 @@ as
 						--	if not exists	(
 						--						select	1
 						--						from	Ubicacion 
-						--						where	idAlmacen = @idAlmacenDestino
+						--						where	idAlmacen = @idAlmacenOrigen
 						--							and	idPasillo = 0
 						--							and idRaq = 0
 						--							and idPiso = 0
 						--					)
 						--		begin
-						--			insert into Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) values (@idAlmacenDestino, 0, 0, 0)
+						--			insert into Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) values (@idAlmacenOrigen, 0, 0, 0)
 						--		end
 
 						--	select	@idUbicacionDestino = idUbicacion 
 						--	from	Ubicacion 
-						--	where	idAlmacen = @idAlmacenDestino
+						--	where	idAlmacen = @idAlmacenOrigen
 						--		and	idPasillo = 0
 						--		and idRaq = 0
 						--		and idPiso = 0
@@ -395,6 +419,121 @@ as
 					begin
 
 						print 'edicion'
+
+						-- universo de pedidos
+						insert into #pedidos ( idProducto, cantidad )
+						select	p.idProducto, coalesce( sum(c.cantidad), 0 )  as cantidad
+						from	#cantidades c
+								inner join #idProductos p_
+									on c.id = p_.id
+								inner join Productos p
+									on p.idProducto = p_.idProducto
+						group by p.idProducto
+							
+
+						-- universo de productos por idAlmacen
+						insert into #productos (idProducto, idAlmacen, cantidad)
+						select	id.idProducto, u.idAlmacen, coalesce( (sum(id.cantidad)), 0) as cantidad
+						from	InventarioDetalle id
+									inner join Ubicacion u
+										on id.idUbicacion =u.idUbicacion
+									inner join Productos p
+										on p.idProducto = id.idProducto
+									inner join Almacenes a
+										on a.idAlmacen = u.idAlmacen
+						where	id.idproducto in (select distinct idProducto from #pedidos )
+							and	a.idTipoAlmacen in (1,2) -- Almacen General y Bodega
+						group by id.idProducto, u.idAlmacen, p.descripcion, p.precioIndividual,p.precioMenudeo
+						order by idProducto
+				
+				
+				
+						-- buscamos quien tiene inventario para surtirlo
+						-- eliminamos lo que no son tienen existencias para surtir el pedido 
+						delete	#productos
+						where	idAlmacen in	(
+													select	pro.idAlmacen
+													from	#pedidos p 
+																inner join #productos pro 
+																	on p.idProducto = pro.idProducto 
+													where	pro.cantidad-p.cantidad <0
+												)
+										
+
+						-- eliminamos las que no contienen todos los productos del pedido
+						select @ini = min(idAlmacen) from #productos
+						select @fin = max(idAlmacen) from #productos
+
+				
+						while ( @ini <= @fin )
+							begin
+						
+								select '#productos'+CAST(@ini as varchar(10)) as _vuelta , * into #tempProductos_ from #productos  where idAlmacen = @ini
+					
+								-- si no cuenta con todas las existencias 
+								if exists ( select * from #pedidos p left join #tempProductos_ t on p.idProducto = t.idProducto where t.idProducto is null )
+									begin 
+										--select 'elimina '+  CAST(@ini as varchar(10))  --para debuguear
+										delete from #productos where idAlmacen = @ini
+									end
+
+								select @ini = min(idAlmacen) from #productos where idAlmacen > @ini
+								drop table #tempProductos_
+
+							end -- while ( @ini <= @fin )
+
+						if not exists ( select 1 from #productos )
+							begin
+								select @mensaje = 'No hay Almacenes que puedan atender el pedido.'
+								raiserror (@mensaje, 11, -1)
+							end
+
+						-- seleccionamos el almacen que atendera el pedido (aquel que tenga mas existencias en total)
+						select	top 1 @idAlmacenAtiende = idAlmacen
+						from	#productos 
+						group by idAlmacen
+						order by SUM(cantidad) desc
+										
+						
+						-- si todo bien
+						delete from PedidosInternosDetalle where idPedidoInterno = @idPedidoEspecial
+						delete from PedidosInternosLog where idPedidoInterno = @idPedidoEspecial
+						delete from MovimientosDeMercancia where idPedidoInterno = @idPedidoEspecial
+						
+						
+						update	PedidosInternos
+						set		idAlmacenOrigen = @idAlmacenOrigen,
+								idAlmacenDestino = @idAlmacenAtiende,
+								idUsuario = @idUsuario,
+								IdEstatusPedidoInterno = 1,
+								fechaAlta = @fecha,
+								idTipoPedidoInterno = 2,
+								descripcion = @descripcion
+						where	idPedidoInterno = @idPedidoEspecial
+						
+						
+						insert	into PedidosInternosDetalle (idPedidoInterno,idProducto, cantidad,fechaAlta,cantidadAtendida,cantidadAceptada,cantidadRechazada) 
+						select	@idPedidoEspecial as idPedidoInterno, idProducto, cantidad, @fecha as fechaAlta, 0 as cantidadAtendida, 0 as cantidadAceptada, 0 as cantidadRechazada
+						from	#pedidos
+
+						insert into PedidosInternosLog (idPedidoInterno,idAlmacenOrigen,idAlmacenDestino,idUsuario,IdEstatusPedidoInterno,fechaAlta)
+						select	@idPedidoEspecial, @idAlmacenOrigen, idAlmacenDestino, @idUsuario, cast(1 as int ) as  IdEstatusPedidoInterno, @fecha
+						from	PedidosInternos 
+						where	idPedidoInterno = @idPedidoEspecial
+
+
+						-- se insertan los movimientos de los productos al almacen origen
+						insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
+						select	@idAlmacenOrigen as idAlmacenDestino, @idAlmacenAtiende as idAlmacenDestino, idProducto, cantidad, @idPedidoEspecial as  idPedidoInterno,
+								@idUsuario as idUsuario, @fecha as fechaAlta, 1 as idEstatusPedidoInterno, null as observaciones, cantidad as cantidadAtendida
+						from	#pedidos
+						
+						
+						select @nombreAlmacenAtiende = descripcion from Almacenes where idAlmacen = @idAlmacenAtiende
+						select @mensaje = @mensaje + ' Sera atendido por: ' + @nombreAlmacenAtiende
+
+						drop table #pedidos
+						drop table #productos
 
 					end
 

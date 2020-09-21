@@ -99,13 +99,13 @@ else
 
                                     @if (c.estatusPedido.idStatus == 2)
                                     {
-                                        <a class="dropdown-item has-icon" href="javascript:preguntaAceptarPedido(@c.idPedidoEspecial);"><i class="fas fa-check"></i>Aceptar Pedido</a>
+                                        <a class="dropdown-item has-icon" href="javascript:FinalizarPedido(@c.idPedidoEspecial);"><i class="fas fa-check"></i>Finalizar Pedido</a>
                                     }
 
-                                    @if (c.estatusPedido.idStatus == 2)
+                                    @*@if (c.estatusPedido.idStatus == 2)
                                     {
                                         <a class="dropdown-item has-icon" href="javascript:preguntaRechazarPedido(@c.idPedidoEspecial);"><i class="fas fa-ban"></i>Rechazar Pedido</a>
-                                    }
+                                    }*@
 
                                     @if (c.estatusPedido.idStatus == 1)
                                     {

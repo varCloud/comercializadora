@@ -28,28 +28,19 @@ namespace lluviaBackEnd.Controllers
         //  Nuevo PedidoEspecial
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
-        public ActionResult PedidosEspeciales(PedidosEspeciales peeidoEspecial)
+        public ActionResult PedidosEspeciales(PedidosEspeciales pedidoEspecial)
         {
             Sesion usuario = Session["UsuarioActual"] as Sesion;
 
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
             ViewBag.lstProductos = notificacion.Modelo;
-
-            //Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-            //formasPago = new PedidosEspecialesDAO().ObtenerFormasPago();
-            //ViewBag.lstFormasPago = formasPago.Modelo;
-
-            //Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-            //usoCFDI = new PedidosEspecialesDAO().ObtenerUsoCFDI();
-            //ViewBag.lstUsoCFDI = usoCFDI.Modelo;
-
             ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
             ViewBag.listAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-
             ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+            pedidoEspecial.lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidoEspecial.idPedidoEspecial);
 
-            ViewBag.peeidoEspecial = peeidoEspecial;
+            ViewBag.pedidoEspecial = pedidoEspecial;
 
             return View();
         }
@@ -79,7 +70,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<PedidosEspeciales> result = new Notificacion<PedidosEspeciales>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 pedido.idUsuario = UsuarioActual.idUsuario;
-                pedido.almacenDestino.idAlmacen = UsuarioActual.idAlmacen;
+                pedido.almacenOrigen.idAlmacen = UsuarioActual.idAlmacen;
                 result = new PedidosEspecialesDAO().GuardarPedidoEspecial(pedido);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -91,20 +82,84 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult AceptarPedido(PedidosEspeciales pedido)
+        public ActionResult AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
         {
             try
             {
                 Notificacion<Result> result = new Notificacion<Result>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 pedido.idUsuario = UsuarioActual.idUsuario;
-                result = new PedidosEspecialesDAO().AceptarPedido(pedido);
+                //pedido.almacenOrigen.idAlmacen = UsuarioActual.idAlmacen;
+
+                result = new PedidosEspecialesDAO().AceptarRechazarPedidoEspecial(pedido);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+
+        //[HttpPost]
+        //public ActionResult AceptarPedido(PedidosEspeciales pedido)
+        //{
+        //    try
+        //    {
+        //        Notificacion<Result> result = new Notificacion<Result>();
+        //        Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+        //        pedido.idUsuario = UsuarioActual.idUsuario;
+        //        result = new PedidosEspecialesDAO().AceptarPedido(pedido);
+        //        return Json(result, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+
+
+        public ActionResult _FinalizaPedido(int idPedidoEspecial)
+        {
+            try
+            {
+                Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
+                //Notificacion<PedidosEspeciales> pedido = new Notificacion<PedidosEspeciales>();
+
+                pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+                pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
+
+
+
+                //Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
+                //listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+                //ViewBag.listProductos = listProductos.Modelo;
+                //List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+                //ViewBag.listProveedores = listProveedores;
+                //List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
+                //ViewBag.listStatusCompra = listEstatus;
+
+                //if (compras.idCompra > 0)
+                //{
+                //    Notificacion<List<Compras>> notificacion = new ComprasDAO().ObtenerCompras(compras, true);
+                //    if (notificacion.Estatus == 200)
+                //    {
+                //        compras = notificacion.Modelo[0];
+                //        //compras.producto = new Producto();
+                //        foreach (Compras c in notificacion.Modelo)
+                //            compras.listProductos.Add(c.producto);
+                //        compras.producto = new Producto();
+                //    }
+                //}
+                return PartialView(pedidos.Modelo[0]);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
 
@@ -179,20 +234,20 @@ namespace lluviaBackEnd.Controllers
         //    }
         //}
 
-        [HttpPost]
-        public ActionResult ConsultaVenta(PedidosEspeciales venta)
-        {
-            try
-            {
-                Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
-                //notificacion = new PedidosEspecialesDAO().ConsultaVenta(venta);
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //[HttpPost]
+        //public ActionResult ConsultaVenta(PedidosEspeciales venta)
+        //{
+        //    try
+        //    {
+        //        Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
+        //        //notificacion = new PedidosEspecialesDAO().ConsultaVenta(venta);
+        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
 
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
@@ -273,7 +328,7 @@ namespace lluviaBackEnd.Controllers
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public ActionResult ImprimeTicket(PedidosEspeciales pedidoEspecial)
+        public ActionResult ImprimeTicketPedido(PedidosEspeciales pedidoEspecial)
         {
             Notificacion<PedidosEspeciales> notificacion;
             try
@@ -317,7 +372,7 @@ namespace lluviaBackEnd.Controllers
                 //}
                 //else
                 //{
-                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                 //}
 
                 PaperSize ps = new PaperSize("", 285, 540);
@@ -352,13 +407,15 @@ namespace lluviaBackEnd.Controllers
 
         void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            //Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            Notificacion<List<PedidosEspeciales>> notificacion = new Notificacion<List<PedidosEspeciales>>();
             try
             {
-                notificacion = new PedidosEspecialesDAO().ObtenerTicketsPedidosEspeciales(new Ticket() { idVenta = this.idPedidoEspecial });
+                notificacion = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+                notificacion.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(notificacion.Modelo[0].idPedidoEspecial);
 
-                    //Logos
-                    Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
 
                     int ancho = 258;
                     int espaciado = 14;
@@ -390,11 +447,11 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
                     Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                    e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("*******************************************************************"  + "\n" + "**                          PEDIDO ESPECIAL                             **" + '\n' + "*******************************************************************" + '\n' + '\n' , font, drawBrush, datos, centrado);
 
-                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                    e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                    e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+                    e.Graphics.DrawString("# Pedido:" + notificacion.Modelo[0].idPedidoEspecial.ToString(), font, drawBrush, 40, 181, izquierda);
+                    e.Graphics.DrawString("Fecha:" +  notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
                     Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
                     Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
@@ -402,8 +459,8 @@ namespace lluviaBackEnd.Controllers
 
                     Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
-                    e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                    datosEnca.Y += 14;
+                    //e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                    //datosEnca.Y += 14;
 
                     e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
@@ -416,17 +473,17 @@ namespace lluviaBackEnd.Controllers
                     float montoIVA = 0;
                     float montoAhorro = 0;
 
-                for (int i = 0; i < notificacion.Modelo.Count(); i++)
+                for (int i = 0; i < notificacion.Modelo[0].lstPedidosInternosDetalle.Count(); i++)
                 {
-                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString(notificacion.Modelo[0].lstPedidosInternosDetalle[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].lstPedidosInternosDetalle[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString((notificacion.Modelo[0].lstPedidosInternosDetalle[i].monto + notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-                    monto += notificacion.Modelo[i].monto;
-                    montoIVA += notificacion.Modelo[i].montoIVA;
-                    montoAhorro += notificacion.Modelo[i].ahorro;
+                    monto += notificacion.Modelo[0].lstPedidosInternosDetalle[i].monto;
+                    montoIVA += notificacion.Modelo[0].lstPedidosInternosDetalle[i].montoIVA;
+                    montoAhorro += notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro;
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    if (notificacion.Modelo[0].lstPedidosInternosDetalle[i].descProducto.ToString().Length >= 27)
                     {
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
@@ -440,21 +497,21 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     // si hay descuentos por mayoreo o rango de precios
-                    if (notificacion.Modelo[i].ahorro > 0)
+                    if (notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro > 0)
                     {
                         e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        e.Graphics.DrawString("-" + (notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
-       
+
                     //// si hay descuentos por mayoreo o rango de precios
-                    //if (notificacion.Modelo[i].ahorro > 0)
+                    //if (notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro > 0)
                     //{
                     //    e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                    //    e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    e.Graphics.DrawString("-" + (notificacion.Modelo[0].lstPedidosInternosDetalle[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     //    datosProducto.Y += espaciado;
                     //    datosCantidad.Y += espaciado;
                     //    datosPrecio.Y += espaciado;
@@ -778,12 +835,17 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
-                Notificacion<List<Ticket>> ticket = new PedidosEspecialesDAO().ObtenerTicketsPedidosEspeciales(new Ticket() { idVenta = idPedidoEspecial });
+                //Notificacion<List<Ticket>> pedido = new PedidosEspecialesDAO().ObtenerTicketsPedidosEspeciales(new Ticket() { idVenta = idPedidoEspecial });
+                //PedidosEspeciales pedido = new PedidosEspeciales();
+                Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
+                pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+                pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
+
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDFPedidoEspecial(pedidos.Modelo[0]));
                 ViewBag.pdfBase64 = pdfCodigos;
-                ViewBag.title = "Ticket: " + idPedidoEspecial.ToString(); ;
+                ViewBag.title = "Pedido Especial: " + idPedidoEspecial.ToString(); ;
                 return View();
             }
             catch (Exception ex)

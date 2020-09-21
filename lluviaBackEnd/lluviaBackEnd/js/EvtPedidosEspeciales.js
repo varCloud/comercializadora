@@ -144,16 +144,16 @@ function limpiarTicket() {
 function limpiaModalPrevio() {
     //var esAgregarProductos = $('#esAgregarProductos').val();
 
-    var row_ = "<address>" +
-        "    <strong></strong><br>" +
-        "    <br>" +
-        "    <br>" +
-        "    <br>" +
-        "    <br>" +
-        "    <br>" +
-        "</address>";
+    //var row_ = "<address>" +
+    //    "    <strong></strong><br>" +
+    //    "    <br>" +
+    //    "    <br>" +
+    //    "    <br>" +
+    //    "    <br>" +
+    //    "    <br>" +
+    //    "</address>";
 
-    document.getElementById("nombreCliente").innerHTML = row_;
+    //document.getElementById("nombreCliente").innerHTML = row_;
 
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
@@ -163,17 +163,19 @@ function limpiaModalPrevio() {
     document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     //document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
-    $('#efectivo').val('');
-    $('#formaPago').val("1").trigger('change');
-    $('#usoCFDI').val("3").trigger('change');
+    //if ((idPedidoEspecial == 0)) {
+        $('#descripcionPedidoInterno').val('');
+    //}
+    //$('#formaPago').val("1").trigger('change');
+    //$('#usoCFDI').val("3").trigger('change');
 
     //if ((esAgregarProductos == "True") || (esAgregarProductos == "true")) {
-    if ((idPedidoEspecial > 0) ) {
-        $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
-    }
-    else {
-        $('#idCliente').val("1").trigger('change');
-    }
+    //if ((idPedidoEspecial > 0) ) {
+    //    $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
+    //}
+    //else {
+    //    $('#idCliente').val("1").trigger('change');
+    //}
 
 }
 
@@ -336,9 +338,9 @@ function actualizaTicketPedidoEspecial() {
     $('#tablaRepPedidosEspeciales tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
 
-        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
+        //if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
             fila.children[7].innerHTML = "      <a href=\"javascript:eliminaFila(" + parseFloat(index + 1) + ")\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
-        }
+        //}
 
     });
 
@@ -480,7 +482,7 @@ function actualizaTicketPedidoEspecial() {
 
                 var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
 
-                if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
+                //if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
                     //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
 
                     if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) === (parseInt(productos[j].idProducto))) {
@@ -488,7 +490,7 @@ function actualizaTicketPedidoEspecial() {
                         tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioVenta) * cantidad).toFixed(2);   //total
                         tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(productos[j].precioIndividual - productos[j].precioVenta) * cantidad).toFixed(2);  //descuento
                     }
-                }
+                //}
             }
         }
     }
@@ -654,9 +656,9 @@ function cuentaSubTotal() {
     var subTotal = parseFloat(0);
     $('#tablaRepPedidosEspeciales tbody tr').each(function (index, fila) {
 
-        if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
+        //if ((!fila.children[7].getAttribute("class").includes('esAgregarProductos')) && (!fila.children[7].getAttribute("class").includes('esDevolucion'))) {
             subTotal += parseFloat(fila.children[5].innerHTML.replace('$', ''));
-        }
+        //}
 
     });
     return subTotal;
@@ -749,16 +751,16 @@ function ObtenerCliente(idCliente) {
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
     var productos = [];
-    var idCliente = $('#idCliente').val();
+    //var idCliente = $('#idCliente').val();
     var idPedidoEspecial = $('#idPedidoEspecial').val();
     var esPedidoNormal = "true";
     var descripcion = $('#descripcionPedidoInterno').val();
 
 
-    if (descripcion == "") {
-        MuestraToast('warning', "Debe escribir una descripcion para el Pedido Interno");
-        return;
-    }
+    //if (descripcion == "") {
+    //    MuestraToast('warning', "Debe escribir una descripcion para el Pedido Interno");
+    //    return;
+    //}
 
 
     console.log(esPedidoNormal);
@@ -784,11 +786,11 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     }
    
     const pedido = {};
-    pedido.idCliente = idCliente;
+    //pedido.idCliente = idCliente;
     pedido.descripcion = descripcion;
     pedido.idPedidoEspecial = idPedidoEspecial;
-    pedido.lstProductos = productos;
-   
+    pedido.lstPedidosInternosDetalle = productos;
+
     $.ajax({
         url: rootUrl("/PedidosEspeciales/GuardarPedidoEspecial"),
         data: JSON.stringify(pedido),
@@ -1448,7 +1450,7 @@ function InitSelect2Productos() {
 
     var result = '';
     $.ajax({
-        url: rootUrl("/Productos/ObtenerTodosLosProductos"),
+        url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
         data: { idProducto: 0, idUsuario: 0, activo: true },
         method: 'post',
         dataType: 'json',
@@ -1495,7 +1497,7 @@ function InitSelect2Productos() {
     });
 
     $('#idProducto').val("0").trigger('change');
-    console.log(arrayProductos);
+    //console.log(arrayProductos);
 }
 
 

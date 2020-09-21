@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "Consultar Pedidos";
+    int idPedidoEspecial = 0;
+
 }
 
 @model lluviaBackEnd.Models.PedidosEspeciales
@@ -114,6 +116,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
+                    @Html.HiddenFor(x => idPedidoEspecial)
                 </div>
                 <div class="card-body" id="DivtblPedidosEspeciales">
                     @Html.Action("_ObtenerPedidosEspeciales", "PedidosEspeciales")
@@ -123,6 +126,100 @@
     </div>
 </div>
 
+
+
+@*<div class="modal fade bd-example-modal-xl show" id="modalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true" style="padding-right: 18.9884px; ">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Finalizar Pedido Especial</h5>
+                <br>
+                <h5 class="modal-title">Resumen de Productos:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="divFinalizarPedido">
+
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@*modal de finalizar pedido especial*@
+<div class="modal fade bd-example-modal-xl" id="modalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Finalizar Pedido Especial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="divFinalizarPedido">
+            </div>
+
+
+            <div class="modal-footer">
+
+                <hr>
+
+                <div class="text-md-right">
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+
+                    <button id="btnRechazarPedido" class="btn btn-warning btn-icon icon-left">
+                        <i class="fas fa-ban"></i> Rechazar Pedido
+                    </button>
+
+                    <button id="btnAceptarPedido" class="btn btn-primary btn-icon icon-left">
+                        <i class="fas fa-check"></i> Aceptar Pedido
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*modal de inserta motivo por el cual se cancela todo el pedido*@ 
+<div class="modal fade" id="modalObservacionesRechazaPedido" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModal">Motivo del Rechazo del pedido</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Especifique el motivo por el cual esta rechazando todo el pedido: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" name="motivoRechazo" id="motivoRechazo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <hr>
+                <div class="text-md-right">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                    <button id="btnAceptarRechazarPedido" class="btn btn-primary btn-icon icon-left">
+                        <i class="fas fa-check"></i> Aceptar 
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 @section scripts {

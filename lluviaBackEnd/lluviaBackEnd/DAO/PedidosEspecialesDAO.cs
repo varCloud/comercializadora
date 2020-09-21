@@ -169,11 +169,11 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
 
-                    parameters.Add("@XML", Serialize(pedido.lstProductos));
+                    parameters.Add("@XML", Serialize(pedido.lstPedidosInternosDetalle));
                     parameters.Add("@idCliente", pedido.idCliente);
                     parameters.Add("@idPedidoEspecial", pedido.idPedidoEspecial);
                     parameters.Add("@idUsuario", pedido.idUsuario);
-                    parameters.Add("@idAlmacenDestino", pedido.almacenDestino.idAlmacen);
+                    parameters.Add("@idAlmacenOrigen", pedido.almacenOrigen.idAlmacen);
                     parameters.Add("@descripcion", pedido.descripcion);
 
                     var result = db.QueryMultiple("SP_GUARDA_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
@@ -200,9 +200,9 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public string Serialize(List<Producto> productos)
+        public string Serialize(List<PedidosInternosDetalle> productos)
         {
-            var xmlSerializer = new XmlSerializer(typeof(List<Producto>));
+            var xmlSerializer = new XmlSerializer(typeof(List<PedidosInternosDetalle>));
             var stringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {
@@ -228,7 +228,43 @@ namespace lluviaBackEnd.DAO
 
 
 
-        public Notificacion<Result> AceptarPedido(PedidosEspeciales pedido)
+        //public Notificacion<Result> AceptarPedido(PedidosEspeciales pedido)
+        //{
+        //    Notificacion<Result> notificacion = new Notificacion<Result>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idPedidoEspecial", pedido.idPedidoEspecial);
+        //            parameters.Add("@idUsuario", pedido.idUsuario);
+
+        //            var result = db.QueryMultiple("SP_ACEPTA_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                //notificacion.Modelo = new PedidosEspeciales() { idPedidoEspecial = r1.idPedidoEspecial };
+        //                //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                //notificacion.Modelo = producto;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
+
+
+        public Notificacion<Result> AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
         {
             Notificacion<Result> notificacion = new Notificacion<Result>();
             try
@@ -236,10 +272,11 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
+                    parameters.Add("@XML", Serialize(pedido.lstPedidosInternosDetalle));
                     parameters.Add("@idPedidoEspecial", pedido.idPedidoEspecial);
                     parameters.Add("@idUsuario", pedido.idUsuario);
 
-                    var result = db.QueryMultiple("SP_ACEPTA_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
+                    var result = db.QueryMultiple("SP_ACEPTAR_RECHAZAR_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {
@@ -269,38 +306,38 @@ namespace lluviaBackEnd.DAO
         //  Editar PedidosEspeciales
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public Notificacion<List<Ticket>> ObtenerTicketsPedidosEspeciales(Ticket ticket)
-        {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
-            try
-            {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@idVenta", ticket.idVenta);
-                    parameters.Add("@tipoVenta", ticket.tipoVenta);
-                    var result = db.QueryMultiple("SP_CONSULTA_TICKET", parameters, commandType: CommandType.StoredProcedure);
-                    var r1 = result.ReadFirst();
-                    if (r1.status == 200)
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Ticket>().ToList();
-                    }
-                    else
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new List<Ticket> { ticket };
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return notificacion;
-        }
+        //public Notificacion<List<PedidosInternosDetalle>> ObtenerProductosPedidosEspeciales(Ticket ticket)
+        //{
+        //    Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idVenta", ticket.idVenta);
+        //            parameters.Add("@tipoVenta", ticket.tipoVenta);
+        //            var result = db.QueryMultiple("SP_CONSULTA_TICKET", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = result.Read<Ticket>().ToList();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = new List<Ticket> { ticket };
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
 
         public Notificacion<PedidosEspeciales> CancelaPedidoEspecial(PedidosEspeciales pedidoEspecial)
@@ -676,6 +713,40 @@ namespace lluviaBackEnd.DAO
             p.usuario = usuario;
             p.estatusPedido = status;
             //p.producto = producto;
+            return p;
+        }
+
+
+
+        public List<PedidosInternosDetalle> ObtenerProductosPedidoEspecial(int idPedidoEspecial)
+        {
+            List<PedidosInternosDetalle> p = new List<PedidosInternosDetalle>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    var rs = db.QueryMultiple("SP_CONSULTA_PEDIDOS_INTERNOS_DETALLE_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        //p.Estatus = rs1.status;
+                        //p.Mensaje = rs1.mensaje;
+                        p = rs.Read<PedidosInternosDetalle>().ToList();
+                    }
+                    //else
+                    //{
+                    //    p.Estatus = rs1.status;
+                    //    p.Mensaje = rs1.mensaje;
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return p;
         }
 
