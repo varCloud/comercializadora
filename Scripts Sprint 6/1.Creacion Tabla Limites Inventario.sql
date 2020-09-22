@@ -31,6 +31,9 @@ insert into CatEstatusLimiteInventario (descripcion) values ('Invietario dentro 
 insert into CatEstatusLimiteInventario (descripcion) values('Cantidad superior por el maximo permitido')
 insert into CatEstatusLimiteInventario (descripcion) values('Cantidad por debajo del minimo permitido')
 
+if not exists (select * from information_schema.columns where table_name like 'PedidosInternos' and column_name like 'idVenta')
+   alter table PedidosInternos add idVenta int null
+
 
 --INSERT INTO LimitesInventario(minimo,maximo,idProducto,idAlmacen,idUsuario,fechaAlta,fechaActualizacion)
 --SELECT (idProducto+idAlmacen),(idProducto+idAlmacen)+10,idProducto,idAlmacen,4,getdate(),getdate() 
