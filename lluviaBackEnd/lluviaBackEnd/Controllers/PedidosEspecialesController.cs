@@ -125,33 +125,8 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
-                //Notificacion<PedidosEspeciales> pedido = new Notificacion<PedidosEspeciales>();
-
                 pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
                 pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
-
-
-
-                //Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
-                //listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-                //ViewBag.listProductos = listProductos.Modelo;
-                //List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
-                //ViewBag.listProveedores = listProveedores;
-                //List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
-                //ViewBag.listStatusCompra = listEstatus;
-
-                //if (compras.idCompra > 0)
-                //{
-                //    Notificacion<List<Compras>> notificacion = new ComprasDAO().ObtenerCompras(compras, true);
-                //    if (notificacion.Estatus == 200)
-                //    {
-                //        compras = notificacion.Modelo[0];
-                //        //compras.producto = new Producto();
-                //        foreach (Compras c in notificacion.Modelo)
-                //            compras.listProductos.Add(c.producto);
-                //        compras.producto = new Producto();
-                //    }
-                //}
                 return PartialView(pedidos.Modelo[0]);
             }
             catch (Exception ex)
@@ -162,6 +137,22 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        public ActionResult _VerPedido(int idPedidoEspecial)
+        {
+            try
+            {
+                Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
+                pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+                pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
+                return PartialView(pedidos.Modelo[0]);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

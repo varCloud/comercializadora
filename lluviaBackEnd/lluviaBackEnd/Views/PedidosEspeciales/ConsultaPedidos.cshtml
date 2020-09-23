@@ -129,22 +129,22 @@
 
 
 @*<div class="modal fade bd-example-modal-xl show" id="modalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true" style="padding-right: 18.9884px; ">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Finalizar Pedido Especial</h5>
-                <br>
-                <h5 class="modal-title">Resumen de Productos:</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="divFinalizarPedido">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Finalizar Pedido Especial</h5>
+                    <br>
+                    <h5 class="modal-title">Resumen de Productos:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="divFinalizarPedido">
 
+                </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 @*modal de finalizar pedido especial*@
 <div class="modal fade bd-example-modal-xl" id="modalFinalizarPedido" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -183,7 +183,30 @@
     </div>
 </div>
 
-@*modal de inserta motivo por el cual se cancela todo el pedido*@ 
+
+@*modal de ver pedido especial*@
+<div class="modal fade bd-example-modal-xl" id="modalVerPedido" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ver Pedido Especial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="divVerPedido">
+            </div>
+            <div class="modal-footer">
+                <hr>
+                <div class="text-md-right">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal de inserta motivo por el cual se cancela todo el pedido*@
 <div class="modal fade" id="modalObservacionesRechazaPedido" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -212,7 +235,7 @@
                 <div class="text-md-right">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
                     <button id="btnAceptarRechazarPedido" class="btn btn-primary btn-icon icon-left">
-                        <i class="fas fa-check"></i> Aceptar 
+                        <i class="fas fa-check"></i> Aceptar
                     </button>
                 </div>
             </div>

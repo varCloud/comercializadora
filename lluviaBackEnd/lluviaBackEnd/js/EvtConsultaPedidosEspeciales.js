@@ -226,6 +226,35 @@ function FinalizarPedido(idPedidoEspecial) {
     });
 }
 
+function VerPedido(idPedidoEspecial) {
+
+    $('#idPedidoEspecial').val(idPedidoEspecial);
+
+    $.ajax({
+        url: rootUrl("/PedidosEspeciales/_VerPedido"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $("#divVerPedido").html('');
+            $("#divVerPedido").html(data);
+            //initInputsTablaPedidos();
+            $('#modalVerPedido').modal({ backdrop: 'static', keyboard: false, show: true });
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al intentar ver el pedido especial, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
+
 
 $('#btnRechazarPedido').click(function (e) {
 

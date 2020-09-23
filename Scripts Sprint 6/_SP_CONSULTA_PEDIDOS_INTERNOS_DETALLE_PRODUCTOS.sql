@@ -53,7 +53,8 @@ as
 							cantidad							int, 
 							cantidadAceptada					int, 
 							cantidadAtendida					int, 
-							cantidadRechazada					int
+							cantidadRechazada					int,
+							observaciones						varchar(255)
 						)
 						
 
@@ -104,8 +105,19 @@ as
 				where	pi_.idPedidoInterno = @idPedidoEspecial
 
 
-
-
+			-- insertamos las observaciones de movimientos de mercancia
+			update	#productos
+			set		#productos.observaciones = a.observaciones
+			from	(
+						select	mm.idPedidoInterno, mm.idProducto, pid.idPedidoInternoDetalle, pid.cantidadRechazada, mm.observaciones
+						from	MovimientosDeMercancia mm
+									inner join PedidosInternosDetalle pid
+										on pid.idPedidoInterno = mm.idPedidoInterno
+						where	mm.idPedidoInterno = @idPedidoEspecial
+							and	pid.cantidadRechazada > 0
+							and mm.idEstatusPedidoInterno in (3,4)
+					)A
+			where	#productos.idProducto = a.idProducto
 
 
 			-- universo de productos

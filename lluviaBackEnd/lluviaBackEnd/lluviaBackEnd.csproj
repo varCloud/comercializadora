@@ -1260,6 +1260,7 @@
     <Content Include="Views\PedidosEspeciales\_DetallePedidoEspecial.cshtml" />
     <Content Include="Views\PedidosEspeciales\_FinalizaPedido.cshtml" />
     <Content Include="Views\PedidosEspeciales\VerTicket.cshtml" />
+    <Content Include="Views\PedidosEspeciales\_VerPedido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
