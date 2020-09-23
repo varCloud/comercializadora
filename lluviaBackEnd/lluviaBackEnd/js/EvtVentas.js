@@ -466,7 +466,7 @@ function actualizaTicketVenta() {
 
         if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12)) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
-            var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
+            var costo = arrayPreciosRangos.find(x => x.max === max__ && x.idProducto === cantidadTotalPorProducto[q].idProducto).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
         }
     }
