@@ -1,0 +1,69 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.PedidosEspeciales
+
+@{
+
+    lluviaBackEnd.Models.PedidosEspeciales pedido = new lluviaBackEnd.Models.PedidosEspeciales();
+    pedido = Model;
+
+}
+
+<section class="section">
+    <div class="section-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="tablaPedidosEspecialesDetalle">
+                        <thead>
+                            <tr>
+                                <th data-width="40" style="width: 40px;">#</th>
+                                <th>Id Producto</th>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad Solicitada</th>
+                                <th class="text-center">Cantidad Atendida</th>
+                                <th class="text-center">Cantidad Aceptada</th>
+                                <th class="text-center">Cantidad Rechazada</th>
+                                <th class="text-center">Observaciones</th>
+                                <th>Fecha de Alta</th>
+                                <th class="text-center" style="display: none;">idPedidoInternoDetalle</th>
+                            </tr>
+                        </thead>
+                        @if (pedido != null)
+                        {
+                            if (pedido.lstPedidosInternosDetalle.Count() > 0)
+                            {
+
+                                <tbody>
+                                    @foreach (var item in pedido.lstPedidosInternosDetalle)
+                                    {
+                                        <tr>
+                                            <td>@item.contador</td>
+                                            <td>@item.idProducto</td>
+                                            <td>@item.descProducto</td>
+                                            <td class="text-center">@item.cantidad</td>
+                                            <td class="text-center">@item.cantidadAtendida</td>
+                                            <td class="text-center">@item.cantidadAceptada</td>
+                                            <td class="text-center">@item.cantidadRechazada</td>
+                                            <td class="text-center">@item.observaciones</td>
+                                            <td>@item.fechaAlta.ToShortDateString()</td>
+                                            <td style="display: none;">@item.idPedidoInternoDetalle</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        }
+                        else
+                        {
+                            <tbody></tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</section>
+
+
+
+
