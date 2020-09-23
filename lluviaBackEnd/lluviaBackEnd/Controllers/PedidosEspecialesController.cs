@@ -290,11 +290,10 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                pedidosEspeciales.idUsuario = usuario.idUsuario;
+                //pedidosEspeciales.idUsuario = usuario.idUsuario;
 
-                //if (pedidosInternos.usuario.idUsuario == 0 && usuario.idRol != 1)
-                //    pedidosInternos.usuario.idUsuario = usuario.idUsuario;
-
+                if (pedidosEspeciales.usuario.idUsuario == 0 && usuario.idRol != 1)
+                    pedidosEspeciales.usuario.idUsuario = usuario.idUsuario;
 
                 Notificacion<List<PedidosEspeciales>> p = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(pedidosEspeciales);
                 return PartialView(p);

@@ -282,10 +282,10 @@ $('#btnAgregarProducto').click(function (e) {
         return
     }
 
-    if ($('#idProducto').select2('data')[0].cantidad < parseInt($('#cantidad').val())) {
-        MuestraToast('warning', "no existe suficiente producto en inventario");
-        return;
-    }
+    //if ($('#idProducto').select2('data')[0].cantidad < parseInt($('#cantidad').val())) {
+    //    MuestraToast('warning', "no existe suficiente producto en inventario");
+    //    return;
+    //}
 
     if ($('#idProducto').select2('data')[0].precioIndividual <= 0) {
         MuestraToast('warning', "Debe configurar el precio invidual del producto.");
