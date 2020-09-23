@@ -191,7 +191,7 @@ as
 						where	idPedidoInterno = @idPedidoEspecial
 
 						insert into PedidosInternosLog (idPedidoInterno,idAlmacenOrigen,idAlmacenDestino,idUsuario,IdEstatusPedidoInterno,fechaAlta)
-						select	@idPedidoEspecial, idAlmacenOrigen, idAlmacenDestino, @idUsuario, cast(3 as int) as IdEstatusPedidoInterno, @fecha
+						select	@idPedidoEspecial, idAlmacenDestino, idAlmacenOrigen, @idUsuario, cast(3 as int) as IdEstatusPedidoInterno, @fecha
 						from	PedidosInternos
 						where	idPedidoInterno = @idPedidoEspecial
 					end
@@ -202,16 +202,13 @@ as
 						where	idPedidoInterno = @idPedidoEspecial
 
 						insert into PedidosInternosLog (idPedidoInterno,idAlmacenOrigen,idAlmacenDestino,idUsuario,IdEstatusPedidoInterno,fechaAlta)
-						select	@idPedidoEspecial, idAlmacenOrigen, idAlmacenDestino, @idUsuario, cast(4 as int) as IdEstatusPedidoInterno, @fecha
+						select	@idPedidoEspecial, idAlmacenDestino, idAlmacenOrigen, @idUsuario, cast(4 as int) as IdEstatusPedidoInterno, @fecha
 						from	PedidosInternos
 						where	idPedidoInterno = @idPedidoEspecial
 					end
 
 				
-
-				--select * from PedidosInternos 
 				--PedidosInternosDetalle
-				--select * from PedidosInternosDetalle where idPedidoInterno = 176 
 				update	PedidosInternosDetalle
 				set		PedidosInternosDetalle.cantidadAceptada = a.cantidadAceptada,
 						PedidosInternosDetalle.cantidadRechazada = a.cantidadRechazada						
@@ -220,11 +217,18 @@ as
 						)A
 				where	PedidosInternosDetalle.idPedidoInternoDetalle = a.idPedidoInternoDetalle
 				
+				
+				if exists ( select 1 from PedidosInternosDetalle where idPedidoInterno = @idPedidoEspecial and cantidadRechazada < 0 )
+					begin
+							select @mensaje = 'No se pueden aceptar/rechazar mas productos de los que fueron atendidos.'
+							raiserror (@mensaje, 11, -1)
+					end
+
 
 				--MovimientosDeMercancia
 				-- las aceptadas
 				insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
-				select	idAlmacenOrigen, idAlmacenDestino, p.idProducto, p.cantidadAceptada, p.idPedidoInterno , @idUsuario, @fecha, cast(4 as int) as IdEstatusPedidoInterno, 
+				select	idAlmacenDestino, idAlmacenOrigen,  p.idProducto, p.cantidadAceptada, p.idPedidoInterno , @idUsuario, @fecha, cast(4 as int) as IdEstatusPedidoInterno, 
 						p.observacion, p.cantidadAtendida
 				from	PedidosInternos pi_
 							inner join #pedido p
@@ -234,7 +238,7 @@ as
 
 				-- las rechazadas 
 				insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
-				select	idAlmacenOrigen, idAlmacenDestino, p.idProducto, p.cantidadRechazada, p.idPedidoInterno , @idUsuario, @fecha, cast(3 as int) as IdEstatusPedidoInterno, 
+				select	idAlmacenDestino,idAlmacenOrigen , p.idProducto, p.cantidadRechazada, p.idPedidoInterno , @idUsuario, @fecha, cast(3 as int) as IdEstatusPedidoInterno, 
 						p.observacion, p.cantidadAtendida
 				from	PedidosInternos pi_
 							inner join #pedido p
@@ -265,7 +269,7 @@ as
 					and idPiso = 0
 
 								
-				select	idProducto , @idUbicacionOrigen as idUbicacionOrigen, cantidadAceptada
+				select	idProducto , @idUbicacionOrigen as idUbicacionOrigen, cantidadAceptada, cantidadRechazada
 				into	#ubicacionesOrigen
 				from	#pedido
 	
@@ -290,35 +294,35 @@ as
 					end
 
 
-				--se actualiza inventario_general_log aceptadas
-				INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
-				select	a.idProducto,sum(a.cantidadAceptada),b.cantidad + sum(a.cantidadAceptada),dbo.FechaActual(),18 
-				from	#pedido a
-							join InventarioGeneral b 
-								on a.idProducto=b.idProducto
-				where	a.cantidadAceptada > 0
-				group by a.idProducto,b.cantidad
+				----se actualiza inventario_general_log aceptadas
+				--INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
+				--select	a.idProducto,sum(a.cantidadAceptada),b.cantidad + sum(a.cantidadAceptada),dbo.FechaActual(),18 
+				--from	#pedido a
+				--			join InventarioGeneral b 
+				--				on a.idProducto=b.idProducto
+				--where	a.cantidadAceptada > 0
+				--group by a.idProducto,b.cantidad
 					
-				--se actualiza inventario_general_log rechazadas
-				INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
-				select	a.idProducto,sum(a.cantidadRechazada),b.cantidad + sum(a.cantidadRechazada),dbo.FechaActual(),18 
-				from	#pedido a
-							join InventarioGeneral b 
-								on a.idProducto=b.idProducto
-				where	a.cantidadRechazada > 0
-				group by a.idProducto,b.cantidad
+				----se actualiza inventario_general_log rechazadas
+				--INSERT INTO InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
+				--select	a.idProducto,sum(a.cantidadRechazada),b.cantidad + sum(a.cantidadRechazada),dbo.FechaActual(),18 
+				--from	#pedido a
+				--			join InventarioGeneral b 
+				--				on a.idProducto=b.idProducto
+				--where	a.cantidadRechazada > 0
+				--group by a.idProducto,b.cantidad
 
-				-- se actualiza el inventario general 
-				update	InventarioGeneral
-				set		InventarioGeneral.cantidad = InventarioGeneral.cantidad + A.cantidad,
-						fechaUltimaActualizacion = dbo.FechaActual()
-				from	(
-							select idProducto, (cantidadAceptada + cantidadRechazada ) as cantidad from #pedido
-						)A
-				where InventarioGeneral.idProducto = A.idProducto
+				---- se actualiza el inventario general 
+				--update	InventarioGeneral
+				--set		InventarioGeneral.cantidad = InventarioGeneral.cantidad + A.cantidad,
+				--		fechaUltimaActualizacion = dbo.FechaActual()
+				--from	(
+				--			select idProducto, (cantidadAceptada + cantidadRechazada ) as cantidad from #pedido
+				--		)A
+				--where InventarioGeneral.idProducto = A.idProducto
 
 				
-				-- se actualiza inventario detalle
+				-- se actualiza inventario detalle aceptada
 				update	InventarioDetalle
 				set		cantidad = a.cantidadFinal,
 						fechaActualizacion = dbo.FechaActual()
@@ -332,11 +336,24 @@ as
 				where	InventarioDetalle.idProducto = a.idProducto
 					and	InventarioDetalle.idUbicacion = a.idUbicacion
 
+				-- se actualiza inventario detalle rechazada
+				update	InventarioDetalle
+				set		cantidad = a.cantidadFinal,
+						fechaActualizacion = dbo.FechaActual()
+				from	(
+							select	p.idProducto, ( p.cantidadRechazada + id.cantidad ) as cantidadFinal, id.idUbicacion
+							from	#ubicacionesOrigen p
+										inner join InventarioDetalle id 
+											on id.idProducto = p.idProducto 
+							where	id.idUbicacion = @idUbicacionDestino
+						)A
+				where	InventarioDetalle.idProducto = a.idProducto
+					and	InventarioDetalle.idUbicacion = a.idUbicacion
 
 
 				--se inserta el InventarioDetalleLog aceptadas
 				insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
-				select	@idUbicacionOrigen, t.idProducto, cantidadAceptada, id.cantidad, cast(18 as int) as idTipoMovInventario,
+				select	@idUbicacionOrigen, t.idProducto, cantidadAceptada, id.cantidad, cast(8 as int) as idTipoMovInventario,
 						@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
 				from	#pedido t
 							inner join InventarioDetalle id
@@ -347,7 +364,7 @@ as
 
 				--se inserta el InventarioDetalleLog rechazadas
 				insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
-				select	@idUbicacionOrigen, t.idProducto, cantidadRechazada, id.cantidad, cast(18 as int) as idTipoMovInventario,
+				select	@idUbicacionOrigen, t.idProducto, cantidadRechazada, id.cantidad, cast(11 as int) as idTipoMovInventario,
 						@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
 				from	#pedido t
 							inner join InventarioDetalle id

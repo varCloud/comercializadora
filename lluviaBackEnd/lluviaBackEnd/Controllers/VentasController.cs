@@ -161,7 +161,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
+                venta.idUsuario = UsuarioActual.idUsuario;
                 notificacion = new VentasDAO().CancelaVenta(venta);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
