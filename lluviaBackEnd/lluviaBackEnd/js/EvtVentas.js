@@ -327,23 +327,42 @@ function AgregarProducto(producto, cantidad) {
     var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
     var precio = parseFloat(0).toFixed(2);
     var descuento = parseFloat(0).toFixed(2);
+    var existeProducto = false;
 
-    // si todo bien    
-    var row_ = "<tr>" +
-        "  <td>1</td>" +
-        "  <td> " + producto.idProducto + "</td>" +
-        "  <td> " + producto.descripcion + "</td>" +
-        "  <td class=\"text-center\">$" + precio + "</td>" +
-        "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
-        "  <td class=\"text-center\">$" + precio + "</td>" +
-        "  <td class=\"text-center\">$" + descuento + "</td>" +
-        "  <td class=\"text-center\">" +
-        btnEliminaFila +
-        "  <td style=\"display: none;\">0</td>" +
-        "  </td>" +
-        "</tr >";
+    var tblVtas = document.getElementById('tablaRepVentas');
+    var rCount = tblVtas.rows.length;
+   
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
+                var cantidad = parseInt(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
+                tblVtas.rows[i].cells[4].children[0].value = cantidad;
+                existeProducto = true;
+            }
+        }
+    }
 
-    $("#tablaRepVentas tbody").append(row_);
+    if (!existeProducto) {
+
+        // si todo bien    
+        var row_ = "<tr>" +
+            "  <td>1</td>" +
+            "  <td> " + producto.idProducto + "</td>" +
+            "  <td> " + producto.descripcion + "</td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>" +
+            "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>" +
+            "  <td class=\"text-center\">$" + descuento + "</td>" +
+            "  <td class=\"text-center\">" +
+            btnEliminaFila +
+            "  <td style=\"display: none;\">0</td>" +
+            "  </td>" +
+            "</tr >";
+
+        $("#tablaRepVentas tbody").append(row_);
+
+    }
+
     return true;
 }
 
