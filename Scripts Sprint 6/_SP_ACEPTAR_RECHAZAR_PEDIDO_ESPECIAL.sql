@@ -228,23 +228,27 @@ as
 				--MovimientosDeMercancia
 				-- las aceptadas
 				insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
-				select	idAlmacenDestino, idAlmacenOrigen,  p.idProducto, p.cantidadAceptada, p.idPedidoInterno , @idUsuario, @fecha, cast(4 as int) as IdEstatusPedidoInterno, 
-						p.observacion, p.cantidadAtendida
+				select	idAlmacenDestino, idAlmacenOrigen,  p.idProducto, pid.cantidad, p.idPedidoInterno , @idUsuario, @fecha, cast(4 as int) as IdEstatusPedidoInterno, 
+						p.observacion, p.cantidadAceptada--p.cantidadAtendida
 				from	PedidosInternos pi_
 							inner join #pedido p
 								on p.idPedidoInterno = pi_.idPedidoInterno
+						inner join PedidosInternosDetalle pid 
+							on pid.idPedidoInternoDetalle=p.idPedidoInternoDetalle
 				where	pi_.idPedidoInterno = @idPedidoEspecial
-					and	cantidadAceptada > 0
+					and	p.cantidadAceptada > 0
 
 				-- las rechazadas 
 				insert into MovimientosDeMercancia (idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoInterno,idUsuario,fechaAlta,idEstatusPedidoInterno,observaciones,cantidadAtendida)
-				select	idAlmacenDestino,idAlmacenOrigen , p.idProducto, p.cantidadRechazada, p.idPedidoInterno , @idUsuario, @fecha, cast(3 as int) as IdEstatusPedidoInterno, 
-						p.observacion, p.cantidadAtendida
+				select	idAlmacenDestino,idAlmacenOrigen , p.idProducto, pid.cantidad, p.idPedidoInterno , @idUsuario, @fecha, cast(3 as int) as IdEstatusPedidoInterno, 
+						p.observacion, p.cantidadRechazada--p.cantidadAtendida
 				from	PedidosInternos pi_
 							inner join #pedido p
 								on p.idPedidoInterno = pi_.idPedidoInterno
+							inner join PedidosInternosDetalle pid 
+								on pid.idPedidoInternoDetalle=p.idPedidoInternoDetalle
 				where	pi_.idPedidoInterno = @idPedidoEspecial
-					and	cantidadRechazada > 0
+					and	p.cantidadRechazada > 0
 
 
 
@@ -364,7 +368,7 @@ as
 
 				--se inserta el InventarioDetalleLog rechazadas
 				insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idPedidoInterno)
-				select	@idUbicacionOrigen, t.idProducto, cantidadRechazada, id.cantidad, cast(11 as int) as idTipoMovInventario,
+				select	@idUbicacionDestino, t.idProducto, cantidadRechazada, id.cantidad, cast(10 as int) as idTipoMovInventario,
 						@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, @idPedidoEspecial as idPedidoInterno
 				from	#pedido t
 							inner join InventarioDetalle id
