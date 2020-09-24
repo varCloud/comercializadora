@@ -106,6 +106,15 @@ function InitTablePedidosEspeciales() {
 
     }
 
+
+
+function InitTableVerPedidosEspeciales() {
+    
+    tablaPedidosEspeciales = initDataTable("tblVerPedidosEspeciales");
+
+}
+
+
 function onBeginSubmitObtenerPedidosEspeciales() {
     ShowLoader("Buscando...");
 }
@@ -124,76 +133,6 @@ function onSuccessResultObtenerPedidosEspeciales(data) {
 function onFailureResultObtenerPedidosEspeciales() {
     OcultarLoader();
 }
-
-//function obtenerDetalleBitacora(idPedidoInterno) {
-//    $.ajax({
-//        url: rootUrl("/Bitacora/_DetalleBitacora"),
-//        data: { idPedidoInterno: idPedidoInterno },
-//        method: 'post',
-//        dataType: 'html',
-//        async: true,
-//        beforeSend: function (xhr) {
-//            ShowLoader();
-//        },
-//        success: function (view) {           
-//            OcultarLoader();           
-//            html=view;
-//        },
-//        error: function (xhr, status) {            
-//            OcultarLoader();
-//        }
-//    });
-
-//}
-
-
-
-//function preguntaAceptarPedido(idPedidoEspecial) {
-
-//    swal({
-//        title: 'Mensaje',
-//        text: '¿Esta seguro que quiere aceptar el pedido ' + idPedidoEspecial + '?',
-//        icon: 'info',
-//        buttons: ["No", "Sí"],
-//        dangerMode: true,
-//    })
-//        .then((willDelete) => {
-//            if (willDelete) {
-
-//                const pedido = {};
-//                pedido.idPedidoEspecial = idPedidoEspecial;
-
-//                $.ajax({
-//                    url: rootUrl("/PedidosEspeciales/AceptarPedido"),
-//                    data: JSON.stringify(pedido),
-//                    method: 'post',
-//                    dataType: 'json',
-//                    contentType: "application/json; charset=utf-8",
-//                    async: true,
-//                    beforeSend: function (xhr) {
-//                        ShowLoader();
-//                    },
-//                    success: function (data) {
-//                        OcultarLoader();
-//                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-                        
-                        
-//                    },
-//                    error: function (xhr, status) {
-//                        OcultarLoader();
-//                        console.log('Hubo un problema al aceptar el pedido especial, contactese con el administrador del sistema');
-//                        console.log(xhr);
-//                        console.log(status);
-//                    }
-//                });
-
-//            } else {
-//                console.log(willDelete);
-//            }
-//        });
-//}
-
-
 
 
 
@@ -243,7 +182,7 @@ function VerPedido(idPedidoEspecial) {
             OcultarLoader();
             $("#divVerPedido").html('');
             $("#divVerPedido").html(data);
-            //initInputsTablaPedidos();
+            InitTableVerPedidosEspeciales();
             $('#modalVerPedido').modal({ backdrop: 'static', keyboard: false, show: true });
         },
         error: function (xhr, status) {
@@ -300,14 +239,6 @@ $('#btnAceptarPedido').click(function (e) {
 });
 
 function AceptarPedido(esCancelacion) {
-
-    //if (esCancelacion == false) {
-    //    console.log('no es cancelacion');
-    //}
-    //if (esCancelacion == true) {
-    //    console.log('si es cancelacion');
-    //}
-
 
     var productos = [];
     //var idCliente = $('#idCliente').val();
@@ -422,7 +353,10 @@ function AceptarPedido(esCancelacion) {
             if (data.Estatus == 200) {
 
                 //if ((esPedidoNormal == "true") || (esPedidoNormal == "True")) {
-                    //ImprimeTicketPedido(data.Modelo.idPedidoEspecial);
+                ImprimeTicketPedido(data.Modelo.idPedidoEspecial);
+                document.getElementById("btnLimpiarForm").click(); 
+                document.getElementById("btnBuscarPedidosEspeciales").click(); 
+
                 //}
 
                 //InitSelect2Productos();

@@ -95,7 +95,7 @@ as
 							cantidadAtendida,cantidadRechazada
 						)
 				select	pi_.idPedidoInterno, idAlmacenOrigen, idAlmacenDestino, idUsuario, IdEstatusPedidoInterno, pi_.fechaAlta, observacion, 
-						idTipoPedidoInterno, pi_.descripcion, idPedidoInternoDetalle, pid.idProducto, pro.descripcion as descProducto, cantidad, 
+						idTipoPedidoInterno, pi_.descripcion, idPedidoInternoDetalle, pid.idProducto, pro.descripcion as descProducto, pid.cantidadAceptada as cantidad, 
 						cantidadAceptada, cantidadAtendida, cantidadRechazada
 				from	PedidosInternos pi_
 							inner join PedidosInternosDetalle pid

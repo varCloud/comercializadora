@@ -76,7 +76,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
                 }
             }
@@ -109,7 +108,6 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo.Clear();// [0] = producto;
                     }
                 }
             }
@@ -120,8 +118,6 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        
-        //public Notificacion<PedidosEspeciales> GuardarPedidoEspecial(List<PedidosEspeciales> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion)
         public Notificacion<PedidosEspeciales> GuardarPedidoEspecial(PedidosEspeciales pedido)
         {
             Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
@@ -190,9 +186,9 @@ namespace lluviaBackEnd.DAO
 
 
 
-        public Notificacion<Result> AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
+        public Notificacion<PedidosEspeciales> AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
         {
-            Notificacion<Result> notificacion = new Notificacion<Result>();
+            Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
             try
             {
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -208,14 +204,12 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo = new PedidosEspeciales() { idPedidoEspecial = r1.idPedidoEspecial };
-                        //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+                        notificacion.Modelo = pedido; 
                     }
                     else
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        //notificacion.Modelo = producto;
                     }
                 }
             }
@@ -363,15 +357,8 @@ namespace lluviaBackEnd.DAO
                     var rs1 = rs.ReadFirst();
                     if (rs1.status == 200)
                     {
-                        //p.Estatus = rs1.status;
-                        //p.Mensaje = rs1.mensaje;
                         p = rs.Read<PedidosInternosDetalle>().ToList();
                     }
-                    //else
-                    //{
-                    //    p.Estatus = rs1.status;
-                    //    p.Mensaje = rs1.mensaje;
-                    //}
                 }
             }
             catch (Exception ex)

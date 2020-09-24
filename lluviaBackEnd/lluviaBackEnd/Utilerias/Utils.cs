@@ -30,7 +30,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "barras_" + cadena + "_.jpg");
+                //img.Save(ObtnerFolderCodigos() + "barras_" + cadena + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -45,10 +45,43 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.Width = 200;
                 img = writer.Write(cadena);
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //img.Save(ObtnerFolderCodigos() + "QR_" + cadena + "_.jpg");
+                return ms.ToArray();
+            }
+        }
+
+
+        public static byte[] GenerarCodigoBarrasGuardado(string cadena)
+        {
+            System.Drawing.Image img = null;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new ZXing.BarcodeWriter() { Format = BarcodeFormat.CODE_128 };
+                writer.Options.Height = 80;
+                writer.Options.Width = 280;
+                writer.Options.PureBarcode = false;
+                img = writer.Write(cadena);
+                //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(ObtnerFolderCodigos() + "barras_" + cadena + "_.jpg");
+                return ms.ToArray();
+            }
+        }
+
+        public static byte[] GenerarQRGuardado(string cadena)
+        {
+            System.Drawing.Image img = null;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new BarcodeWriter() { Format = BarcodeFormat.QR_CODE };
+                writer.Options.Height = 200;
+                writer.Options.Width = 200;
+                img = writer.Write(cadena);
+                //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 img.Save(ObtnerFolderCodigos() + "QR_" + cadena + "_.jpg");
                 return ms.ToArray();
             }
         }
+
 
         public static byte[] GenerarQR(string cadena, string nombreArchivo)
         {
@@ -445,8 +478,8 @@ namespace lluviaBackEnd.Utilerias
             PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
             ItextEvents eventos = new ItextEvents();
             eventos.TituloCabecera = "Códigos del Producto: ";
-            Utilerias.Utils.GenerarQR(articulo);
-            Utilerias.Utils.GenerarCodigoBarras(articulo);
+            Utilerias.Utils.GenerarQRGuardado(articulo);
+            Utilerias.Utils.GenerarCodigoBarrasGuardado(articulo);
             int renglonesQR = 5;
             int renglonesBarras = 10;
 
