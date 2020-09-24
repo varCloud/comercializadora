@@ -3,7 +3,7 @@ DECLARE @idPedidoInterno int=null
 
 select @idPedidoInterno=coalesce(@idPedidoInterno,(select max(idPedidoInterno) from pedidosInternos where idTipoPedidoInterno=2))
 
-select 'pedidosInternos',* from pedidosInternos where idTipoPedidoInterno=2 and idPedidoInterno=@idPedidoInterno
+select 'pedidosInternos',* from pedidosInternos where  idPedidoInterno=@idPedidoInterno
 select 'PedidosInternosLog',* from PedidosInternosLog where idPedidoInterno=@idPedidoInterno
 select 'PedidosInternosDetalle',* from PedidosInternosDetalle where idPedidoInterno=@idPedidoInterno 
 select 'movimientosMercancia',* from MovimientosDeMercancia where idPedidoInterno=@idPedidoInterno
