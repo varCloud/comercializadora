@@ -307,24 +307,45 @@ $('#btnAgregarProducto').click(function (e) {
     //    btnEliminaFila = "";
     //}
 
+    var existeProducto = false;
 
-    // si todo bien    
-    var row_ = "<tr>" +
-        "  <td>1</td>" +
-        "  <td> " + $('#idProducto').val() + "</td>" +
-        "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
-        "  <td class=\"text-center\">$" + precio + "</td>" +
-        "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
-        "  <td class=\"text-center\">$" + precio + "</td>" +
-        "  <td class=\"text-center\">$" + descuento + "</td>" +
-        "  <td class=\"text-center\">" +
-        btnEliminaFila +
-        "  <td style=\"display: none;\">0</td>" +
-        "  </td>" +
-        "</tr >";
+    var tblPedidos = document.getElementById('tablaRepPedidosEspeciales');
+    var rCount = tblPedidos.rows.length;
 
-    $("table tbody").append(row_);
-    $('#cantidad').val('');
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {           
+            if ($('#idProducto').select2('data')[0].idProducto === parseInt(tblPedidos.rows[i].cells[1].innerHTML)) {
+                var cantidad = parseInt(tblPedidos.rows[i].cells[4].children[0].value) + parseInt(cantidad);
+                tblPedidos.rows[i].cells[4].children[0].value = cantidad;
+                existeProducto = true;
+            }
+        }
+    }
+
+    if (!existeProducto) {
+
+        // si todo bien    
+        var row_ = "<tr>" +
+            "  <td>1</td>" +
+            "  <td> " + $('#idProducto').val() + "</td>" +
+            "  <td> " + $("#idProducto").find("option:selected").text().substr(0, $("#idProducto").find("option:selected").text().indexOf('- (')) + "</td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>" +
+            "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>" +
+            "  <td class=\"text-center\">$" + descuento + "</td>" +
+            "  <td class=\"text-center\">" +
+            btnEliminaFila +
+            "  <td style=\"display: none;\">0</td>" +
+            "  </td>" +
+            "</tr >";
+
+        $("#tablaRepPedidosEspeciales tbody").append(row_);
+        $('#cantidad').val('');
+
+    }
+
+
+
 
     actualizaTicketPedidoEspecial();
     initInputsTabla();
@@ -450,7 +471,7 @@ function actualizaTicketPedidoEspecial() {
 
         if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12 )) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
-            var costo = arrayPreciosRangos.find(x => x.max === max__).costo;
+            var costo = arrayPreciosRangos.find(x => x.max === max__ && x.idProducto === cantidadTotalPorProducto[q].idProducto).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
         }
     }
