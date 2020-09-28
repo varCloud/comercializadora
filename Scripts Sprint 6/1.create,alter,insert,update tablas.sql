@@ -127,18 +127,18 @@ insert into CatTipoPedidoInterno (descripcion) values ('Pedido Especial')
 go
 
 -- movimeintos de pedidos internos en InventarioDetalleLog
-if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Envío de mercancia - Pedido Especial' )
-begin
-	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Envío de mercancia - Pedido Especial', -1)
-end
+--if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Envío de mercancia - Pedido Especial' )
+--begin
+--	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Envío de mercancia - Pedido Especial', -1)
+--end
 
 
-if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Recepción de mercancia - Pedido Especial' )
-begin
-	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Recepción de mercancia - Pedido Especial', 1)
-end
+--if not exists ( select idTipoMovInventario from  CatTipoMovimientoInventario where descripcion like 'Recepción de mercancia - Pedido Especial' )
+--begin
+--	insert into CatTipoMovimientoInventario (descripcion, operacion) values ('Recepción de mercancia - Pedido Especial', 1)
+--end
 
-go
+--go
 
 IF NOT EXISTS(SELECT * FROM LineaProducto WHERE descripcion like 'Linea LIQUIDOS')
 INSERT INTO LineaProducto(descripcion,activo) values('Linea LIQUIDOS',1)
