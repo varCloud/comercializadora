@@ -83,7 +83,7 @@ function InitTablePedidosEspeciales() {
             // Open this row
             //  console.log(obtenerDetalleBitacora($(this).attr("idPedido")));
             $.ajax({
-                url: rootUrl("/Bitacora/_DetalleBitacora"),
+                url: rootUrl("/PedidosEspeciales/_DetallePedidoEspecial"),
                 data: { idPedidoInterno: $(this).attr("idPedido") },
                 method: 'post',
                 dataType: 'html',

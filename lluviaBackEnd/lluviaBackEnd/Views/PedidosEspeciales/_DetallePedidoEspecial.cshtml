@@ -62,7 +62,7 @@ else
             {
                 TimeSpan span = (c.fechaAlta - fechaAnt);
                 difFechas = String.Format("{0} dias, {1} horas, {2} minutos, {3} segundos",
-        span.Days, span.Hours, span.Minutes, span.Seconds);
+                            span.Days, span.Hours, span.Minutes, span.Seconds);
             }
             <li class="media col-xl-8 col-lg-6">
                 <img alt="image" src="~/assets/img/logo_lluvia.png"
@@ -72,7 +72,16 @@ else
                     <div class="media-title">@c.usuario.nombreCompleto</div>
                     <div class="text-small text-muted">
                         <div class="badge @classColor badge-shadow">@c.estatusPedido.descripcion</div>
-                        <div class="bullet"></div> @c.fechaAlta
+                        @*<div class="bullet"></div> @c.fechaAlta*@
+                        @if (c.estatusPedido.idStatus == 3)
+                        {
+                            <div class="bullet"></div> @c.fechaAlta @Html.Raw(" - Observación:  " + c.observacion)
+                        }
+                        else
+                        {
+                            <div class="bullet"></div> @c.fechaAlta
+                        }
+
                     </div>
                 </div>
             </li>
