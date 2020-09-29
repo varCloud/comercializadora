@@ -7,6 +7,7 @@ namespace lluviaBackEnd.Models
 {
     public class DetallePedidoInterno
     {
+        public int idPedidoInternoDetalle { get; set; }
         public int idProducto { get; set; }
         public string descripcion { get; set; }
         public int cantidad { get; set; }

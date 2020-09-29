@@ -18,5 +18,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
 
         public string usuarioSolicito { get; set; }
         public int idUsuarioSolicito { get; set; }
+  
+        public string observacionGeneral { get; set; }
     }
 }
