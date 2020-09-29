@@ -1793,7 +1793,7 @@ as
 							cantidadAtendida,cantidadRechazada
 						)
 				select	pi_.idPedidoInterno, idAlmacenOrigen, idAlmacenDestino, idUsuario, IdEstatusPedidoInterno, pi_.fechaAlta, observacion, 
-						idTipoPedidoInterno, pi_.descripcion, idPedidoInternoDetalle, pid.idProducto, pro.descripcion as descProducto, pid.cantidadAceptada as cantidad, 
+						idTipoPedidoInterno, pi_.descripcion, idPedidoInternoDetalle, pid.idProducto, pro.descripcion as descProducto, pid.cantidad as cantidad, 
 						cantidadAceptada, cantidadAtendida, cantidadRechazada
 				from	PedidosInternos pi_
 							inner join PedidosInternosDetalle pid
@@ -1903,22 +1903,6 @@ as
 
 			-- actualizamos los descuentos
 				update	#ProductosPorPrecio set descuento = precioIndividual - costo
-
-		
-			--select '#ProductosPorPrecio', * from #ProductosPorPrecio
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 				if not exists ( select 1 from #productos )
