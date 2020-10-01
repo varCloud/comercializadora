@@ -21,6 +21,7 @@ namespace lluviaBackEnd.Models
         public int cantidadRechazada { get; set; }
         public string observacion { get; set; }
         public string observaciones { get; set; }
+        public string observacionesAtendidas { get; set; }
         public float monto { get; set; }
         public float ahorro { get; set; }
         public float montoIVA { get; set; }
