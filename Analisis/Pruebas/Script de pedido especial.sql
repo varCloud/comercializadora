@@ -1,8 +1,18 @@
 
---select * from PedidosInternos where idTipoPedidoInterno = 1 order by idPedidoInterno asc
+--select * from PedidosInternos where idTipoPedidoInterno = 2 order by idPedidoInterno asc
+
+select I.*,U.idAlmacen from InventarioDetalle I  join Ubicacion U on u.idUbicacion = I.idUbicacion
+where idProducto = 1 and idAlmacen =1 order by idInventarioDetalle 
 
 
-DECLARE @idPedidoInterno int=225
+
+--select I.*,MI.descripcion,U.idAlmacen from InventarioDetalleLog I  
+--join Ubicacion U on u.idUbicacion = I.idUbicacion
+--join CatTipoMovimientoInventario MI on MI.idTipoMovInventario = I.idTipoMovInventario
+--where idProducto = 3 and idAlmacen =1 order by idInventarioDetalleLOG 
+
+
+DECLARE @idPedidoInterno int=237
 
 select @idPedidoInterno=coalesce(@idPedidoInterno,(select max(idPedidoInterno) from pedidosInternos where idTipoPedidoInterno=2))
 
@@ -24,9 +34,10 @@ join Ubicacion u on b.idUbicacion=u.idUbicacion
 where idPedidoInterno=@idPedidoInterno 
 order by idAlmacen,idUbicacion
 
-select 'InventarioDetalleLog',b.fechaAlta,u.idAlmacen,b.idUbicacion,b.idProducto,b.cantidad,cantidadActual,b.idTipoMovInventario,b.idPedidoInterno 
+select 'InventarioDetalleLog',b.fechaAlta,u.idAlmacen,b.idUbicacion,b.idProducto,b.cantidad,cantidadActual,b.idTipoMovInventario,MI.descripcion,b.idPedidoInterno 
 from PedidosInternosDetalle a
-join InventarioDetalleLog b on a.idProducto=b.idProducto and A.idPedidoInterno = @idPedidoInterno
+join InventarioDetalleLog b on a.idProducto=b.idProducto and b.idPedidoInterno = @idPedidoInterno
 join Ubicacion u on b.idUbicacion=u.idUbicacion
+join CatTipoMovimientoInventario MI on MI.idTipoMovInventario = b.idTipoMovInventario
 where a.idPedidoInterno=@idPedidoInterno 
 order by b.idInventarioDetalleLOG
