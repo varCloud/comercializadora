@@ -26,6 +26,7 @@
                                 <th class="text-center">Observaciones</th>
                                 <th>Fecha de Alta</th>
                                 <th class="text-center" style="display: none;">idPedidoInternoDetalle</th>
+                                <th class="text-center">Observaciones Prod. Atendidos</th>
                             </tr>
                         </thead>
                         @if (pedido != null)
@@ -47,6 +48,7 @@
                                             <td class="text-center">@item.observaciones</td>
                                             <td>@item.fechaAlta.ToShortDateString()</td>
                                             <td style="display: none;">@item.idPedidoInternoDetalle</td>
+                                            <td class="text-center">@item.observacionesAtendidas</td>
                                         </tr>
                                     }
                                 </tbody>
