@@ -1923,7 +1923,8 @@ begin -- procedimiento
 					pi.idAlmacenOrigen,ao.Descripcion almacenOrigen,
 					pi.idAlmacenDestino,ad.Descripcion almacenDestino,
 					pi.idUsuario,coalesce(u.nombre,'') + ' ' + coalesce(u.apellidoPaterno,'') + ' ' + coalesce(u.apellidoMaterno,'') nombreCompleto,
-					pi.IdEstatusPedidoInterno idStatus,s.descripcion
+					pi.IdEstatusPedidoInterno idStatus,s.descripcion,
+					cast ('Sin Observación' as varchar(300)) as observacion
 					INTO #PEDIDOS_INTERNOS_LOG
 					FROM PedidosInternosLog pi					
 					join CatEstatusPedidoInterno s on pi.IdEstatusPedidoInterno=s.IdEstatusPedidoInterno
@@ -1931,6 +1932,18 @@ begin -- procedimiento
 					left join Almacenes ad on pi.idAlmacenDestino=ad.idAlmacen
 					join Usuarios u on pi.idUsuario=u.idUsuario					
 					where idPedidoInterno=@idPedidoInterno
+
+					--actualizamos el status de los cancelados
+					update	#PEDIDOS_INTERNOS_LOG
+					set		#PEDIDOS_INTERNOS_LOG.observacion = coalesce(a.observaciones, 'Sin Observación')
+					from	(
+								select	top 1 idPedidoInterno, observaciones 
+								from	MovimientosDeMercancia 
+								where	idPedidoInterno = @idPedidoInterno 
+									and idEstatusPedidoInterno = 3
+							)A
+					where	#PEDIDOS_INTERNOS_LOG.idPedidoInterno = a.idPedidoInterno
+						and	#PEDIDOS_INTERNOS_LOG.idStatus = 3
 					
 
 				if not exists (select 1 from #PEDIDOS_INTERNOS_LOG)
@@ -1972,7 +1985,7 @@ begin -- procedimiento
 					@error_message mensaje
 
 				select 
-			    idPedidoInterno,fechaAlta,
+			    idPedidoInterno,fechaAlta,observacion,
 			    idAlmacenOrigen,idAlmacenOrigen idAlmacen,almacenOrigen Descripcion,
 				idAlmacenDestino,idAlmacenOrigen idAlmacen,almacenDestino Descripcion,
 				idUsuario,nombreCompleto,

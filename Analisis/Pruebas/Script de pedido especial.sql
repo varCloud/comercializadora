@@ -1,8 +1,8 @@
 
-select * from PedidosInternos where idTipoPedidoInterno = 1 order by idPedidoInterno asc
+--select * from PedidosInternos where idTipoPedidoInterno = 1 order by idPedidoInterno asc
 
 
-DECLARE @idPedidoInterno int=209
+DECLARE @idPedidoInterno int=225
 
 select @idPedidoInterno=coalesce(@idPedidoInterno,(select max(idPedidoInterno) from pedidosInternos where idTipoPedidoInterno=2))
 
