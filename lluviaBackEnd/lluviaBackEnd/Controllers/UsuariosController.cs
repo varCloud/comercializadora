@@ -16,14 +16,22 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Usuarios)]
         public ActionResult Usuarios()
         {
-            //return View();
-            //List<Models.Usuario> LstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idRol = 1 });
-            ViewBag.lstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idUsuario = 0 });
-            ViewBag.lstRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
-            //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
-            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            
-            return View();
+            try
+            {
+                //return View();
+                //List<Models.Usuario> LstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idRol = 1 });
+                ViewBag.lstUsuario = new UsuarioDAO().ObtenerUsuarios(new Models.Usuario() { idUsuario = 0 });
+                ViewBag.lstRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
+                //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpPost]

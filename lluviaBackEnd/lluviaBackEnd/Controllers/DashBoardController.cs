@@ -45,115 +45,133 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult _Grafico(EnumTipoGrafico tipoGrafico, EnumTipoReporteGrafico tipoReporteGrafico)
         {
-            DashboardDAO dao = new DashboardDAO();
-            Notificacion<Grafico> grafico = new Notificacion<Grafico>();
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-            int idEstacion = 0;
-            if (usuario.idRol == 3)
+            try
             {
-                idEstacion = usuario.idEstacion;
-            }
-
-            if (tipoGrafico==EnumTipoGrafico.VentasPorFecha)
-            {
-                //Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
-                Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico, idEstacion);
-                grafico.Estatus = categorias.Estatus;
-                grafico.Mensaje = categorias.Mensaje;
-
-                List<Data> dataEstaciones = new List<Data>();
-                List<seriesDrilldown> SeriesDrilldown = new List<seriesDrilldown>();
-                
-                
-                if (categorias.Estatus==200)
+                DashboardDAO dao = new DashboardDAO();
+                Notificacion<Grafico> grafico = new Notificacion<Grafico>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                int idEstacion = 0;
+                if (usuario.idRol == 3)
                 {
-                    foreach(Categoria categoria in categorias.Modelo)
+                    idEstacion = usuario.idEstacion;
+                }
+
+                if (tipoGrafico == EnumTipoGrafico.VentasPorFecha)
+                {
+                    //Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
+                    Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico, idEstacion);
+                    grafico.Estatus = categorias.Estatus;
+                    grafico.Mensaje = categorias.Mensaje;
+
+                    List<Data> dataEstaciones = new List<Data>();
+                    List<seriesDrilldown> SeriesDrilldown = new List<seriesDrilldown>();
+
+
+                    if (categorias.Estatus == 200)
                     {
-                        Data data = new Data();
-                        data.name = categoria.categoria;
-                        data.y = categoria.total;
-                        if (idEstacion==0){
-                            Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion(categoria.fechaIni, categoria.fechaFin);
-                            if (estaciones.Estatus == 200)
+                        foreach (Categoria categoria in categorias.Modelo)
+                        {
+                            Data data = new Data();
+                            data.name = categoria.categoria;
+                            data.y = categoria.total;
+                            if (idEstacion == 0)
                             {
-                                data.y = estaciones.Modelo.Sum(x => x.montoTotalDia);
-
-                                List<List<Object>> DataDrilldown = new List<List<Object>>();
-                                foreach (Estacion e in estaciones.Modelo)
+                                Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion(categoria.fechaIni, categoria.fechaFin);
+                                if (estaciones.Estatus == 200)
                                 {
-                                    DataDrilldown.Add(new List<Object>() { e.nombre.ToString(), e.montoTotalDia });
+                                    data.y = estaciones.Modelo.Sum(x => x.montoTotalDia);
+
+                                    List<List<Object>> DataDrilldown = new List<List<Object>>();
+                                    foreach (Estacion e in estaciones.Modelo)
+                                    {
+                                        DataDrilldown.Add(new List<Object>() { e.nombre.ToString(), e.montoTotalDia });
+                                    }
+
+
+                                    SeriesDrilldown.Add(new seriesDrilldown()
+                                    {
+                                        id = categoria.id + "_" + categoria.categoria,
+                                        name = categoria.categoria,
+                                        data = DataDrilldown
+                                    });
                                 }
-
-
-                                SeriesDrilldown.Add(new seriesDrilldown()
-                                {
-                                    id = categoria.id + "_" + categoria.categoria,
-                                    name = categoria.categoria,
-                                    data = DataDrilldown
-                                });
+                                data.drilldown = categoria.id + "_" + categoria.categoria;
                             }
-                            data.drilldown = categoria.id + "_" + categoria.categoria;
-                        }                   
-                     
-                        dataEstaciones.Add(data);
+
+                            dataEstaciones.Add(data);
+                        }
+
+                        grafico.Modelo = new Grafico();
+                        if (dataEstaciones.Count > 0)
+                        {
+                            grafico.Estatus = 200;
+                            grafico.Modelo.data = dataEstaciones;
+                            grafico.Modelo.seriesDrilldowns = SeriesDrilldown;
+                        }
+                        else
+                        {
+                            grafico.Estatus = -1;
+                            grafico.Mensaje = "No existe información para mostrar";
+                        }
+
                     }
 
-                    grafico.Modelo = new Grafico();
-                    if(dataEstaciones.Count>0)
-                    {
-                        grafico.Estatus = 200;
-                        grafico.Modelo.data = dataEstaciones;
-                        grafico.Modelo.seriesDrilldowns = SeriesDrilldown;
-                    }
-                    else
-                    {
-                        grafico.Estatus = -1;
-                        grafico.Mensaje = "No existe información para mostrar";
-                    }
-                   
+
                 }
 
-                               
-            }
-
-            if(tipoGrafico==EnumTipoGrafico.TopTenProductos || tipoGrafico == EnumTipoGrafico.TopTenClientes || tipoGrafico == EnumTipoGrafico.TopTenProvedores)
-            {
-                Notificacion<List<Categoria>> categorias= dao.ObtenerTopTen(tipoReporteGrafico, tipoGrafico);
-                grafico.Estatus = categorias.Estatus;
-                grafico.Mensaje = categorias.Mensaje;
-                if(categorias.Estatus==200)
+                if (tipoGrafico == EnumTipoGrafico.TopTenProductos || tipoGrafico == EnumTipoGrafico.TopTenClientes || tipoGrafico == EnumTipoGrafico.TopTenProvedores)
                 {
-                    grafico.Modelo = new Grafico();
-                    grafico.Modelo.categorias = categorias.Modelo;
+                    Notificacion<List<Categoria>> categorias = dao.ObtenerTopTen(tipoReporteGrafico, tipoGrafico);
+                    grafico.Estatus = categorias.Estatus;
+                    grafico.Mensaje = categorias.Mensaje;
+                    if (categorias.Estatus == 200)
+                    {
+                        grafico.Modelo = new Grafico();
+                        grafico.Modelo.categorias = categorias.Modelo;
+                    }
+
                 }
 
-            }
-
-            if (tipoGrafico == EnumTipoGrafico.InformacionGlobal)
-            {
-                Notificacion<List<Categoria>> categorias = dao.ObtenerInformacionGlobal(tipoReporteGrafico);
-                grafico.Estatus = categorias.Estatus;
-                grafico.Mensaje = categorias.Mensaje;
-                if (categorias.Estatus == 200)
+                if (tipoGrafico == EnumTipoGrafico.InformacionGlobal)
                 {
-                    grafico.Modelo = new Grafico();
-                    grafico.Modelo.categorias = categorias.Modelo;
+                    Notificacion<List<Categoria>> categorias = dao.ObtenerInformacionGlobal(tipoReporteGrafico);
+                    grafico.Estatus = categorias.Estatus;
+                    grafico.Mensaje = categorias.Mensaje;
+                    if (categorias.Estatus == 200)
+                    {
+                        grafico.Modelo = new Grafico();
+                        grafico.Modelo.categorias = categorias.Modelo;
+                    }
+
                 }
 
+                ViewBag.tipoGrafico = tipoGrafico;
+                ViewBag.tipoReporteGrafico = tipoReporteGrafico;
+
+
+                return PartialView(grafico);
             }
+            catch (Exception ex)
+            {
 
-            ViewBag.tipoGrafico = tipoGrafico;
-            ViewBag.tipoReporteGrafico = tipoReporteGrafico;
-
-
-            return PartialView(grafico);
+                throw ex;
+            }
         }
 
         public ActionResult CerrarSesion()
         {
-            FormsAuthentication.SignOut();
-            Session.Abandon();
-            return RedirectToAction("Login", "Login");
+            try
+            {
+                FormsAuthentication.SignOut();
+                Session.Abandon();
+                return RedirectToAction("Login", "Login");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
 
     }
