@@ -502,7 +502,7 @@ $('#btnAgregarPrecio').click(function (e) {
                         MuestraToast('warning', "El mínimo que intenta insertar debe ser mayor al maximo del rango anterior");
                     }
                     else if ((precioMinimo == parseFloat(0)) && (parseFloat($('#precio').val()) >= parseFloat($('#precioIndividual').val()) || parseFloat($('#precio').val()) >= parseFloat($('#precioMenudeo').val()))) {
-                        MuestraToast('warning', "El precio debe ser menor que el precio individual y que el precio menudeo.");
+                        MuestraToast('warning', "El precio debe ser menor que el precio de mayoreo y que el precio de menudeo.");
                     }
                     else if (precioMinimo>0 && parseFloat($('#precio').val()) >= precioMinimo) {
                         MuestraToast('warning', "El precio que intenta insertar debe ser menor al precio minimo del rango anterior.");
@@ -542,10 +542,10 @@ $('#btnGuardarPrecios').click(function (e) {
 
     var error = 0;
     if ($('#precioIndividual').val() == "" || $('#precioMenudeo').val() == "" || $('#precioIndividual').val() == "0" || $('#precioMenudeo').val() == "0") {
-        MuestraToast('warning', "Por favor asigne un valor para los precios de Individual y Menudeo.");
+        MuestraToast('warning', "Por favor asigne un valor para los precios de Mayoreo y Menudeo.");
     }
     else if (parseFloat($('#precioIndividual').val()) < parseFloat($('#precioMenudeo').val())) {
-        MuestraToast('warning', "El precio individual debe ser mayor que el precio menudeo.");
+        MuestraToast('warning', "El precio de Menudeo debe ser mayor que el precio de Mayoreo.");
     }
     else {
 
@@ -567,7 +567,7 @@ $('#btnGuardarPrecios').click(function (e) {
 
             if (parseFloat(row_.costo) >= parseFloat($('#precioIndividual').val()) || row_.costo >= parseFloat($('#precioMenudeo').val())) {
                 error = error + 1;
-                MuestraToast('warning', "El precio de " + row_.min + " a " + row_.max + " productos debe ser menor que el precio individual y que el precio menudeo.");
+                MuestraToast('warning', "El precio de " + row_.min + " a " + row_.max + " productos debe ser menor que el precio de mayoreo y que el precio de menudeo.");
                 return
             }
             rangos.push(row_);

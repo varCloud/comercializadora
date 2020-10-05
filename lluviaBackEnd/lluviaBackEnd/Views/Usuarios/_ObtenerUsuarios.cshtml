@@ -41,53 +41,58 @@
 
                                     <td>
                                         @{
-                                            switch (item.Rol)
+                                            switch (item.idRol)
                                             {
-                                                case "Administrador":
+                                                case 1:
                                                     {
                                                         <div class="badge badge-dark badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Encargado de almacen":
+                                                case 2:
                                                     {
                                                         <div class="badge badge-primary badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Cajero":
+                                                case 3:
                                                     {
                                                         <div class="badge badge-secondary badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Montacarguista":
+                                                case 4:
                                                     {
                                                         <div class="badge badge-dark badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Distribuidor":
+                                                case 5:
                                                     {
                                                         <div class="badge badge-success badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Picker":
+                                                case 6:
                                                     {
                                                         <div class="badge badge-warning badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Almacenista":
+                                                case 7:
                                                     {
                                                         <div class="badge badge-info badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 
-                                                case "Usuario de Compras":
+                                                case 8:
                                                     {
                                                         <div class="badge badge-light badge-shadow">@item.Rol</div>
+                                                    }
+                                                    break;
+                                                case 9:
+                                                    {
+                                                        <div class="badge badge-primary badge-shadow">@item.Rol</div>
                                                     }
                                                     break;
 

@@ -48,11 +48,16 @@
                             @Html.DropDownListFor(x => x.estatusInventario.idStatus, (List<SelectListItem>)ViewBag.listEstatusLimitesInventario, "--TODOS--", new { @class = "form-control", data_val = "false" })
                         </div>
 
-                        <div class="col-lg-1" style="margin-top:30px;">
+                        <div class="col-lg-3" style="margin-top:30px;">
                             <button type="submit" class="btn btn-success">Buscar</button>
-                        </div>
-
-                        <div class="col-lg-2" style="margin-top:30px;">
+                       
+                       
+                           
+                            <a href="~/assets/limitesInventario.xlsx" class="btn btn-icon icon-left btn-info">
+                                <i class="fa fa-download"></i>Descarga Formato
+                            </a>
+                       
+                        
                             <button class="btn btn-warning" type="button" id="btnImportarArchivo">Importar</button>
                         </div>
 

@@ -1028,6 +1028,9 @@
     <Content Include="assets\js\page\widget-chart.js" />
     <Content Include="assets\js\page\widget-data.js" />
     <Content Include="assets\js\scripts.js" />
+    <Content Include="assets\limitesInventario.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\configuration91.svcinfo" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration.svcinfo" />
     <Content Include="Connected Services\servicioTimbrarPruebas\lluviaBackEnd.servicioTimbrarPruebas.respuestaTimbrado.datasource">
