@@ -30,19 +30,27 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
         public ActionResult PedidosEspeciales(PedidosEspeciales pedidoEspecial)
         {
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
 
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
-            ViewBag.lstProductos = notificacion.Modelo;
-            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            ViewBag.listAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
-            pedidoEspecial.lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidoEspecial.idPedidoEspecial);
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
+                ViewBag.lstProductos = notificacion.Modelo;
+                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                ViewBag.listAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+                pedidoEspecial.lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidoEspecial.idPedidoEspecial);
 
-            ViewBag.pedidoEspecial = pedidoEspecial;
+                ViewBag.pedidoEspecial = pedidoEspecial;
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
      
@@ -141,25 +149,33 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult ConsultaPedidosEspeciales()
         {
-            Notificacion<List<PedidosEspeciales>> notificacion = new Notificacion<List<PedidosEspeciales>>();
-            //notificacion = new ReportesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales() { idPedidoEspecial = 0, tipoConsulta = 2 });
-            ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
-            ViewBag.lstPedidosEspeciales = notificacion.Modelo;
-            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            try
+            {
+                Notificacion<List<PedidosEspeciales>> notificacion = new Notificacion<List<PedidosEspeciales>>();
+                //notificacion = new ReportesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales() { idPedidoEspecial = 0, tipoConsulta = 2 });
+                ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
+                ViewBag.lstPedidosEspeciales = notificacion.Modelo;
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-            ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
-            ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
+                ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
 
-            Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-            formasPago = new PedidosEspecialesDAO().ObtenerFormasPago();
-            ViewBag.lstFormasPago = formasPago.Modelo;
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new PedidosEspecialesDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
 
-            Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-            usoCFDI = new PedidosEspecialesDAO().ObtenerUsoCFDI();
-            ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new PedidosEspecialesDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]

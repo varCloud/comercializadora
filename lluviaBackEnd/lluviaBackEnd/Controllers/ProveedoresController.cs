@@ -16,8 +16,16 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Proveedores)]
         public ActionResult Proveedores()
         {
-            ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(new Models.Proveedor() { idProveedor = 0 });
-            return View();
+            try
+            {
+                ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(new Models.Proveedor() { idProveedor = 0 });
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

@@ -16,13 +16,21 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Reportes)]
         public ActionResult Inventario()
         {
-            //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            //notificacion = new ReportesDAO().ObtenerInventario(new Models.Producto() { idProducto = 0 });
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            //ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
-            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-            //ViewBag.lstProductos = notificacion.Modelo;
-            return View();
+            try
+            {
+                //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                //notificacion = new ReportesDAO().ObtenerInventario(new Models.Producto() { idProducto = 0 });
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                //ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
+                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                //ViewBag.lstProductos = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
       
@@ -58,14 +66,22 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Compras()
         {
-            Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
-            notificacion = new ComprasDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 },true);
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
-            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
-            ViewBag.lstEstatusProducto = new ProductosDAO().ObtenerEstatusProductoCompra(); // todos los estatus en formato select list
-            ViewBag.lstCompras = notificacion.Estatus==200 ?  notificacion.Modelo : new List<Compras>();
-            return View();
+            try
+            {
+                Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
+                notificacion = new ComprasDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 }, true);
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
+                ViewBag.lstEstatusProducto = new ProductosDAO().ObtenerEstatusProductoCompra(); // todos los estatus en formato select list
+                ViewBag.lstCompras = notificacion.Estatus == 200 ? notificacion.Modelo : new List<Compras>();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
        
@@ -105,13 +121,21 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Ventas()
         {
-            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
-            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
-            ViewBag.lstVentas = notificacion.Modelo;
-            return View();
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                ViewBag.lstVentas = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
       
@@ -233,9 +257,17 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult DevolucionesProveedor()
         {
-            List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
-            ViewBag.listProveedores = listProveedores;
-            return View();
+            try
+            {
+                List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
+                ViewBag.listProveedores = listProveedores;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public ActionResult ObtenerDevolucionesProveedor(Proveedor proveedor)
@@ -256,12 +288,20 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Merma()
         {
-            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();  
-            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-            ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
-            
-            return View(new AjusteInventarioFisico());
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
+                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
+
+                return View(new AjusteInventarioFisico());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public ActionResult ObtenerMerma(AjusteInventarioFisico ajusteInventario)
@@ -284,15 +324,23 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Devoluciones()
         {
-            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-            notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
-            ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
-            List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
-            lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
-            lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
-            ViewBag.lstAlmacenes = lstAlmacenes;
-            ViewBag.lstVentas = notificacion.Modelo;
-            return View();
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
+                lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+                ViewBag.lstAlmacenes = lstAlmacenes;
+                ViewBag.lstVentas = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

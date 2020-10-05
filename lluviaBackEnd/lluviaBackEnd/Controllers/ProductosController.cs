@@ -22,15 +22,22 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Productos)]
         public ActionResult Productos()
         {
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
-            ViewBag.lstClaveProdServ = new LineaProductoDAO().ObtenerClavesProductos();
-            ViewBag.lstClavesUnidad = new LineaProductoDAO().ObtenerClavesUnidad();
-            ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstClaveProdServ = new LineaProductoDAO().ObtenerClavesProductos();
+                ViewBag.lstClavesUnidad = new LineaProductoDAO().ObtenerClavesUnidad();
+                ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
 
-            ViewBag.lstProductos = notificacion.Modelo;
-            return View();
+                ViewBag.lstProductos = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost]
@@ -289,13 +296,22 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Ubicaciones(Producto producto)
         {
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
-            ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
-            ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
-            ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
-            return View();
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+                ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
+                ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
+                ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 
@@ -328,7 +344,7 @@ namespace lluviaBackEnd.Controllers
             catch (Exception ex)
             {
                 notificacion.Mensaje = ex.Message;
-                throw;
+                throw ex;
             }
         }
 
@@ -367,12 +383,20 @@ namespace lluviaBackEnd.Controllers
         //Límites Inventario
         public ActionResult LimitesInventario()
         {
-            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-            ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
-            ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-            //List<SelectListItem> selectLists = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList();
-            ViewBag.listEstatusLimitesInventario = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList(); ;
-            return View(new LimiteInvetario());
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
+                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                //List<SelectListItem> selectLists = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList();
+                ViewBag.listEstatusLimitesInventario = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList(); ;
+                return View(new LimiteInvetario());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public ActionResult ObtenerLimitesInventario(LimiteInvetario limiteInvetario)

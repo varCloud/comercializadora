@@ -32,26 +32,34 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Ventas)]
         public ActionResult Ventas(Ventas venta)
         {
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
 
-            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-            notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
-            ViewBag.lstProductos = notificacion.Modelo;
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
+                ViewBag.lstProductos = notificacion.Modelo;
 
-            Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-            formasPago = new VentasDAO().ObtenerFormasPago();
-            ViewBag.lstFormasPago = formasPago.Modelo;
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
 
-            Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-            usoCFDI = new VentasDAO().ObtenerUsoCFDI();
-            ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
-            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
 
-            ViewBag.venta = venta;
+                ViewBag.venta = venta;
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         //public ActionResult ObtenerProductoPorPrecio(Precio precio)
@@ -107,25 +115,33 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult ConsultaVentas()
         {
-            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-            notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2 });
-            ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
-            ViewBag.lstVentas = notificacion.Modelo;
-            ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2 });
+                ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
+                ViewBag.lstVentas = notificacion.Modelo;
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
-            Sesion usuario = Session["UsuarioActual"] as Sesion;
-            ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
-            ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
+                ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
 
-            Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-            formasPago = new VentasDAO().ObtenerFormasPago();
-            ViewBag.lstFormasPago = formasPago.Modelo;
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
 
-            Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-            usoCFDI = new VentasDAO().ObtenerUsoCFDI();
-            ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public ActionResult _ObtenerVentas(Ventas ventas)

@@ -17,11 +17,20 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Estaciones)]
         public ActionResult Estaciones()
         {
-            Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
-            notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = 0 });
-            ViewBag.lstEstaciones = notificacion.Modelo;
-            ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-            return View();
+            try
+            {
+                Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
+                notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = 0 });
+                ViewBag.lstEstaciones = notificacion.Modelo;
+                ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
 
         [HttpPost]
@@ -42,17 +51,28 @@ namespace lluviaBackEnd.Controllers
         [HttpPost]
         public ActionResult _ObtenerEstaciones()
         {
-            Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
-            notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = 0 });
+            try
+            {
+                Notificacion<List<Estacion>> notificacion = new Notificacion<List<Estacion>>();
+                notificacion = new EstacionesDAO().ObtenerEstaciones(new Estacion() { idEstacion = 0 });
 
-            if ( notificacion.Modelo == null ) {
-                ViewBag.titulo = "Mensaje: ";
-                ViewBag.mensaje = notificacion.Mensaje;
-                return PartialView("_SinResultados");
+                if (notificacion.Modelo == null)
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+                else
+                {
+                    return PartialView("_ObtenerEstaciones", notificacion.Modelo);
+
+                }
+
             }
-            else {
-                return PartialView("_ObtenerEstaciones", notificacion.Modelo);
+            catch (Exception ex)
+            {
 
+                throw ex;
             }
 
         }

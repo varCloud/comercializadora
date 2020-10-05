@@ -16,22 +16,46 @@ namespace lluviaBackEnd.Controllers
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_Clientes)]
         public ActionResult Clientes()
         {
-
-            ViewBag.lstClientes = this.ObtenerClientes(new Cliente() { idCliente = 0 });
-            ViewBag.lstTipoClientes = this.ObtenerTipoClientes(new TipoCliente() {idTipoCliente  = 0 });
-            return View();
+            try
+            {
+                ViewBag.lstClientes = this.ObtenerClientes(new Cliente() { idCliente = 0 });
+                ViewBag.lstTipoClientes = this.ObtenerTipoClientes(new TipoCliente() { idTipoCliente = 0 });
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost]
         public ActionResult _ObtenerClientes()
         {
-            return PartialView("_ObtenerClientes", this.ObtenerClientes(new Cliente() { idCliente = 0 }));
+            try
+            {
+                return PartialView("_ObtenerClientes", this.ObtenerClientes(new Cliente() { idCliente = 0 }));
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpPost]
         public List<Cliente> ObtenerClientes(Cliente c)
         {
-            return new ClienteDAO().ObtenerClientes(c);
+            try
+            {
+                return new ClienteDAO().ObtenerClientes(c);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+          
         }
 
         [HttpPost]
@@ -41,16 +65,18 @@ namespace lluviaBackEnd.Controllers
             {
                 List<Cliente> lstClientes = this.ObtenerClientes(c);
                 Notificacion<Cliente> n = new Notificacion<Cliente>();
-                if (lstClientes == null) {
+                if (lstClientes == null)
+                {
                     n.Estatus = -1;
                     n.Mensaje = "Espere un momento y vuelva a intentar";
 
                 }
-                else {
+                else
+                {
                     n.Estatus = 200;
                     n.Modelo = lstClientes.FirstOrDefault();
                 }
-                
+
                 return Json(n, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -64,13 +90,13 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-               return Json(new ClienteDAO().GuardarCliente(c), JsonRequestBehavior.AllowGet);
+                return Json(new ClienteDAO().GuardarCliente(c), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         [HttpPost]
@@ -88,19 +114,36 @@ namespace lluviaBackEnd.Controllers
         }
         private List<TipoCliente> ObtenerTipoClientes(TipoCliente tipoCliente)
         {
-            return new ClienteDAO().ObtenerTipoClientes(tipoCliente);
+            try
+            {
+                return new ClienteDAO().ObtenerTipoClientes(tipoCliente);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+           
         }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// DESCUENTOS
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// DESCUENTOS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ActionResult Descuentos()
         {
-            Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
-            notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = 0 });
-            ViewBag.LstTiposClientes = notificacion.Modelo;
-            return View();
+            try
+            {
+                Notificacion<List<TipoCliente>> notificacion = new Notificacion<List<TipoCliente>>();
+                notificacion = new ClienteDAO().ObtenerTiposClientes(new TipoCliente() { idTipoCliente = 0 });
+                ViewBag.LstTiposClientes = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
 
         [HttpPost]
@@ -154,7 +197,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<TipoCliente> notificacion = new Notificacion<TipoCliente>();
-                notificacion = new ClienteDAO().EliminarTipoCliente(new TipoCliente() { idTipoCliente = idTipoCliente }); 
+                notificacion = new ClienteDAO().EliminarTipoCliente(new TipoCliente() { idTipoCliente = idTipoCliente });
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

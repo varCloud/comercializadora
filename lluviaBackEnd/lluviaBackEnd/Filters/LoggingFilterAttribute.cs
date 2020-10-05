@@ -1,4 +1,7 @@
-﻿using System;
+﻿using lluviaBackEnd.Models;
+using lluviaBackEnd.Utilerias;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,111 +17,78 @@ namespace lluviaBackEnd.Filters
         /// <summary>
         /// Access to the log4Net logging object
         /// </summary>
-        protected static readonly log4net.ILog log =
-          log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private const string StopwatchKey = "DebugLoggingStopWatch";
+        //protected static readonly log4net.ILog log =
+        //  log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private const string StopwatchKey = "DebugLoggingStopWatch";
 
         #endregion
 
         // Método ejecutado justo antes de la ejecución de la acción
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            string tmpMsg = string.Empty;
-            base.OnActionExecuting(filterContext);
-
-            // Almacenamos el nombre del método
-            //log.Debug("Metodo:" + System.Reflection.MethodBase.GetCurrentMethod().ToString());
-
-            // Recorremos los parámetros de la acción y los mostramos
-            IDictionary<string, object> actionParameters = filterContext.ActionParameters;
-
-            /*
-            foreach (KeyValuePair<string, object>  item  in actionParameters)
+            try
             {
-                object values = item.Value;
-                if(values!=null && !string.IsNullOrEmpty(values.ToString()))
-                {
-                    //if(values. )
-                    tmpMsg += "[" + values.GetType().ToString() + "] ";
-                    string[] propertyNames = values.GetType().GetProperties().Select(p => p.Name).ToArray();
+                int idUsuario = 0;
+                string tmpMsg = string.Empty;
+                base.OnActionExecuting(filterContext);
 
-                    if(propertyNames.Length>0)
-                    {
-                        foreach (var prop in propertyNames)
-                        {
-                            var propValue = values.GetType().GetProperty(prop).GetValue(values);
-                            tmpMsg += "[" + prop + ": " + propValue + "] ";
-                        }
-                    }
-                    else
-                    {
-                        var myKey = actionParameters.FirstOrDefault(x => x.Value.ToString() == values.ToString()).Key;
-                        tmpMsg += "[" + myKey + ": " + values.ToString() + "] ";
-                    }
-                    
+                // Recorremos los parámetros de la acción y los mostramos
+                IDictionary<string, object> actionParameters = filterContext.ActionParameters;
+
+                HttpContext context = HttpContext.Current;
+                Sesion sesion = (Sesion)context.Session["UsuarioActual"];
+                if (sesion != null)
+                    idUsuario = sesion.idUsuario;
 
 
-                }
-               
+                string json = JsonConvert.SerializeObject(actionParameters, Formatting.Indented);
+                BitacoraRequest<string> Bitacora = new BitacoraRequest<string>(idUsuario.ToString(), json, filterContext.Controller.ToString());
+                Utils.EscribirLog(SerializerManager<BitacoraRequest<string>>.SerealizarObjtecToString(Bitacora));
+
             }
-            */
+            catch (Exception ex)
+            {
+                Utils.EscribirLog("Error al escribir en log en el metodo OnActionExecuting " + ex.Message);
 
+            }
 
-            log.Debug("Controller: " + filterContext.Controller);            
-            log.Debug("ActionParameters: " + tmpMsg);
-            log.Debug(" --------------------------------------- ");
         }
 
         // Método ejecutado justo después de la ejecución de la acción
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            string tmpMsg = string.Empty;
-            base.OnActionExecuted(filterContext);
+            try
+            {
+                int idUsuario = 0;
+                string tmpMsg = string.Empty;
+                base.OnActionExecuted(filterContext);
 
-            // Almacenamos el nombre del método
-            //log.Debug(System.Reflection.MethodBase.GetCurrentMethod().ToString());
+                HttpContext context = HttpContext.Current;
+                Sesion sesion = (Sesion)context.Session["UsuarioActual"];
+                if (sesion != null)
+                    idUsuario = sesion.idUsuario;
 
-            log.Debug("Controller: " + filterContext.Controller);
-            // Recogemos el resultado
-            ActionResult result = filterContext.Result;
-            log.Debug("ActionResult: " + result.ToString());
+                if (filterContext.Exception != null)
+                {
+                    //log.Error("Error durante la ejecución de la acción", filterContext.Exception);
 
-            // Comprobamos si se ha producido alguna excepción durante la ejecución.
-            // En caso afirmativo, la almacenamos
-            if (filterContext.Exception != null)
-                log.Error("Error durante la ejecución de la acción", filterContext.Exception);
+                    string json = JsonConvert.SerializeObject(filterContext.Exception, Formatting.Indented);
+                    BitacoraException<string> Bitacora = new BitacoraException<string>(idUsuario.ToString(), json, filterContext.Controller.ToString());
+                    Utils.EscribirLog(SerializerManager<BitacoraException<string>>.SerealizarObjtecToString(Bitacora));
 
-            log.Debug(" --------------------------------------- ");
+                }
+                else
+                {
+                    string json = JsonConvert.SerializeObject(filterContext.Result, Formatting.Indented);
+                    BitacoraResponse<string> Bitacora = new BitacoraResponse<string>(idUsuario.ToString(), json, filterContext.Controller.ToString());
+                    Utils.EscribirLog(SerializerManager<BitacoraResponse<string>>.SerealizarObjtecToString(Bitacora));
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.EscribirLog("Error al escribir en log en el metodo OnActionExecuted " + ex.Message);
+            }     
 
         }
-
-        // Método ejecutado justo antes de la ejecución del resultado
-        //public override void OnResultExecuting(ResultExecutingContext filterContext)
-        //{
-        //    base.OnResultExecuting(filterContext);
-        //    log.Debug(System.Reflection.MethodBase.GetCurrentMethod().ToString());
-
-        //    log.Debug("Controller: " + filterContext.Controller);
-        //    Recogemos el resultado
-        //   ActionResult result = filterContext.Result;
-        //    log.Debug("ActionResult: " + result.ToString());
-
-        //    log.Debug(" --------------------------------------- ");
-        //}
-
-        //Método ejecutado justo después de la ejecución del resultado
-        //public override void OnResultExecuted(ResultExecutedContext filterContext)
-        //{
-        //    base.OnResultExecuted(filterContext);
-        //    log.Debug(System.Reflection.MethodBase.GetCurrentMethod().ToString());
-        //    log.Debug("Controller: " + filterContext.Controller);
-        //    Recogemos el resultado
-        //   ActionResult result = filterContext.Result;
-        //    log.Debug("ActionResult: " + result.ToString());
-
-        //    log.Debug(" --------------------------------------- ");
-        //}
-
-
     }
 }

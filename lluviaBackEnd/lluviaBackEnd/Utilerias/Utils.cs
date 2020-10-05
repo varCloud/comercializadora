@@ -6,6 +6,7 @@ using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -1425,6 +1426,30 @@ namespace lluviaBackEnd.Utilerias
         {
             return (idPasillo == "0" && idRaq == "0" && idPiso == "0") || idPasillo == "ninguno" && idRaq == "ninguno" && idPiso == "ninguno" ? true : false;
         }
+
+        public static string EscribirLog(string mensaje)
+        {
+            string resultado = "";
+            try
+            {
+                string fechaHora = "Fecha :" + System.DateTime.Now.ToShortDateString() + "\n" + "Hora :" + System.DateTime.Now.ToShortTimeString() + "\n" + mensaje;
+                fechaHora = fechaHora.Length > 32766 ? fechaHora.Substring(0, 32750) : fechaHora;
+
+                //mensaje = "*****************************************************************************************" + "\n" + mensaje + "\n" + "\n" + "\n";
+
+                string folder = Path.Combine(ConfigurationManager.AppSettings["pathLog"].ToString());
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+
+                System.IO.File.AppendAllText(Path.Combine(folder, @"Log" + System.DateTime.Now.ToString("yyyyMMdd") + ".txt"), mensaje + "\n" + "\n" + "\n");
+            }
+            catch (Exception ex)
+            {
+                resultado = ex.Message;
+            }
+            return resultado;
+        }
+
 
 
     }

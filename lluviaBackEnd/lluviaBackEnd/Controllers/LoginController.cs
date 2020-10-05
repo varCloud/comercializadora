@@ -26,7 +26,15 @@ namespace lluviaBackEnd.Controllers
         // GET: Login
         public ActionResult Login()
         {
-            return View(new Sesion());
+            try
+            {
+                return View(new Sesion());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+           
         }
 
         [HttpPost]
@@ -82,18 +90,26 @@ namespace lluviaBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
+                throw ex;
+                //return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
             }
 
         }
 
         public ActionResult EstacionesDisponibles()
         {
-            Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-            
-           Notificacion<List<Estacion>> lst= new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = usuarioSesion.idAlmacen });
-            ViewBag.Notificacion = lst;
-            return View();
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+
+                Notificacion<List<Estacion>> lst = new lluviaBackEnd.DAO.EstacionesDAO().ObtenerEstaciones(new lluviaBackEnd.Models.Estacion() { idEstacion = 0, idAlmacen = usuarioSesion.idAlmacen });
+                ViewBag.Notificacion = lst;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
         }
 
 
@@ -139,7 +155,8 @@ namespace lluviaBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
+                throw ex;
+                //return View("Error", new HandleErrorInfo(ex, " Login", "ValidarUsuario"));
             }
 
         }
