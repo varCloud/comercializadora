@@ -173,13 +173,19 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult CancelaVenta(Ventas venta)
+        public JsonResult CancelaVenta(Ventas venta)
         {
             try
             {
-                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                if (Session != null)
+                {
+                    Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                    venta.idUsuario = UsuarioActual.idUsuario;
+                }
+
+               
                 Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
-                venta.idUsuario = UsuarioActual.idUsuario;
+               
                 notificacion = new VentasDAO().CancelaVenta(venta);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }

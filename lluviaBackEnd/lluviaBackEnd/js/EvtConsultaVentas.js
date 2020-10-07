@@ -6,15 +6,18 @@ var tablaConsultaVentas;
 function onBeginSubmitConsultaVentas() {
     console.log("onBeginSubmitConsultaVentas");
 }
+
 function onCompleteSubmitConsultaVentas() {
     console.log("onCompleteSubmitConsultaVentas");
 }
+
 function onSuccessResultConsultaVentas(data) {
     console.log("onSuccessResultVentas", JSON.stringify(data) );    
     tablaConsultaVentas.destroy();
     $('#rowConsultaVentas').html(data);
     InitDataTableConsultaVentas();
 }
+
 function onFailureResultConsultaVentas() {
     console.log("onFailureResult___");
 }

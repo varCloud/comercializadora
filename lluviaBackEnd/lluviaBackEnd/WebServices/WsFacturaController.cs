@@ -15,6 +15,7 @@ namespace lluviaBackEnd.WebServices
     {
         public Notificacion<String> GenerarFactura(Factura f) {
             Notificacion<String> n = new Notificacion<string>();
+            
             try
             {
                 var j =  new FacturaController().GenerarFactura(f);

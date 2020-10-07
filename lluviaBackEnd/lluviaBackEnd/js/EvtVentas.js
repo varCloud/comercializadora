@@ -67,6 +67,7 @@ function _facturaVenta(idVenta) {
         }
     });
 }
+
 function facturaVenta(idVenta) {
     console.log("facturaVenta_" + idVenta);
     $.ajax({
@@ -113,7 +114,6 @@ function eliminaFila(index_) {
 $('#limpiar').click(function (e) {
     limpiarTicket();
 });
-
 
 $('#cancelar').click(function (e) {
     limpiaModalPrevio();

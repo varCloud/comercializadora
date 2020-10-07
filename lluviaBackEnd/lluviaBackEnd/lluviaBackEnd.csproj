@@ -311,6 +311,7 @@
     <Compile Include="Utilerias\SerializerManager.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\ApiBackEndVentas\WsBackVentasController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAprobarPedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
