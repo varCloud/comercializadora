@@ -13,10 +13,28 @@
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 
 }
 @*<!DOCTYPE html>*@
+<style>
+    .disabled-lluvia {
+       
+    }
 
+        .disabled-lluvia:before {
+            content:'';
+            display: flex;
+            width: 92%;
+            height: 42px;
+            background-color: #808080;
+            opacity: .2;
+            flex-direction: row;
+            flex-wrap: wrap;
+            position: absolute;
+        }
+
+</style>
 
 <h2>Productos</h2>
 
@@ -73,7 +91,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Claves de Unidades</label>
-                                    @Html.DropDownListFor(x => x.claveUnidad , lstUnidadMedida, "--TODOS--", new { @class = "form-control", id = "claveUnidadBusqueda", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.claveUnidad, lstUnidadMedida, "--TODOS--", new { @class = "form-control", id = "claveUnidadBusqueda", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -98,7 +116,7 @@
 
 
 
- @*Modal Guardar/Modificar Producto*@ 
+@*Modal Guardar/Modificar Producto*@
 <div class="modal fade bd-example-modal-lg" id="EditarProductoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -124,47 +142,49 @@
                     @Html.HiddenFor(x => x.idProducto, new { @id = "idProducto" })
                     @Html.HiddenFor(x => x.activo, new { @id = "activo" })
 
-                <div class="row">
+                    <div class="row">
 
-                    <div class="form-group col-lg-6">
-                        <label>Descripción</label>
-                        @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
-                        @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
+                        <div class="form-group col-lg-6">
+                            <label>Descripción</label>
+                            @Html.TextBoxFor(x => x.descripcion, null, new { @class = "form-control", @id = "descripcion" })
+                            @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Cantidad Unidad de Medida</label>
+                            <div class="disabled-lluvia">
+                                @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control  ", @id = "cantidadUnidadMedida" })
+                            </div>
+                            @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
+
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Unidad de Medida</label>
+                            @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, new { id = "idUnidadMedida", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Clave de Producto</label>
+                            @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, "--SELECCIONA--", new { @class = "form-control", id = "cbClaveProdServ" })
+                            @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Linea de Producto</label>
+                            @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, "--SELECCIONA--", new { id = "idLineaProducto", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
+                        </div>
+
+
+                        <div class="form-group col-lg-6">
+                            <label>Artículo</label>
+                            @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
+                            @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
+                        </div>
+
                     </div>
-
-                    <div class="form-group col-lg-6">
-                        <label>Cantidad Unidad de Medida</label>
-                        @Html.TextBoxFor(x => x.cantidadUnidadMedida, null, new { @class = "form-control", @id = "cantidadUnidadMedida" })
-                        @Html.ValidationMessageFor(x => x.cantidadUnidadMedida, null, new { @class = "text-danger was" })
-
-                    </div>
-
-                    <div class="form-group col-lg-6">
-                        <label>Unidad de Medida</label>
-                        @Html.DropDownListFor(x => x.idUnidadMedida, lstUnidadMedida, "--SELECCIONA--", new { id = "idUnidadMedida", @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.idUnidadMedida, null, new { @class = "text-danger was" })
-                    </div>
-
-                    <div class="form-group col-lg-6">
-                        <label>Clave de Producto</label>
-                        @Html.DropDownListFor(x => x.idClaveProdServ, lstClaveProdServ, "--SELECCIONA--", new { @class = "form-control", id = "cbClaveProdServ" })
-                        @Html.ValidationMessageFor(x => x.idClaveProdServ, null, new { @class = "text-danger was" })
-                    </div>
-
-                    <div class="form-group col-lg-6">
-                        <label>Linea de Producto</label>
-                        @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, "--SELECCIONA--", new { id = "idLineaProducto", @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.idLineaProducto, null, new { @class = "text-danger was" })
-                    </div>
-
-
-                    <div class="form-group col-lg-6">
-                        <label>Artículo</label>
-                        @Html.TextBoxFor(x => x.articulo, null, new { @class = "form-control", @id = "articulo" })
-                        @Html.ValidationMessageFor(x => x.articulo, null, new { @class = "text-danger was" })
-                    </div>
-
-                </div>
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12" style="text-align:center">
                             <div class="form-group">
@@ -186,7 +206,7 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">
                             <div class="text-right" style="margin-top:15px;">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger" id="btnCancelar" >Cancelar</button>
                                 <button type="submit" id="btnGuardarProducto" class="btn btn-success">Guardar</button>
                             </div>
                         </div>
@@ -388,6 +408,7 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtProductos.js"></script>
 
 }

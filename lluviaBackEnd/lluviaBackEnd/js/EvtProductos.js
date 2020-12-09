@@ -371,10 +371,10 @@ function InitBtnAgregar() {
 
         $('#idProducto').val(0);
         $('#descripcion').val('').prop('disabled', false);
-        $('#idUnidadMedida').val('').prop('disabled', false);
+        $('#idUnidadMedida').val(' ').prop('disabled', false);
         $('#idLineaProducto').val('').prop('disabled', false);
         $('#cbClaveProdServ').val('').prop('disabled', false);
-        $('#cantidadUnidadMedida').val('').prop('disabled', false);
+        $('#cantidadUnidadMedida').val('1').prop('disabled', false);
         $('#articulo').val('').prop('disabled', false);
         $('.field-validation-error').html("");
         document.getElementById('barra').src = '';
@@ -682,6 +682,23 @@ function CalcularPecioPorUtilidad(Costo,Utilidad) {
     return Precio;
 }
 
+function initSelect(item) {
+    $('#'+item).select2({
+        width: "100%",
+        placeholder: "--SELECCIONA--",
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        }
+    });
+
+    $('#' + item).val("0").trigger('change');
+}
+
 $(document).ready(function () {
 
     InitTableProductos();
@@ -691,6 +708,12 @@ $(document).ready(function () {
     document.getElementById('articulo').onchange = function () {
         obtenerCodigos();
     };
+    
+
+    $('#btnCancelar').click(function () {
+      
+        console.log($('#descripcion').val());
+    })
 
     $('#articulo').keyup(function () {
         obtenerCodigos();
@@ -731,11 +754,11 @@ $(document).ready(function () {
         $("#precioMenudeo").val(CalcularPecioPorUtilidad($("#ultimoCostoCompra").val(), $("#porcUtilidadMayoreo").val()));
     });
 
-    $("#precio").keyup(function () {       
+    $("#precio").keyup(function () {
         $("#porcUtilidad").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precio").val()));
     });
 
-    $("#porcUtilidad").keyup(function () {       
+    $("#porcUtilidad").keyup(function () {
         $("#precio").val(CalcularPecioPorUtilidad($("#ultimoCostoCompra").val(), $("#porcUtilidad").val()));
     });
 
@@ -745,9 +768,15 @@ $(document).ready(function () {
         $("#porcUtilidadMayoreo").val(CalcularPorcUtilidad($("#ultimoCostoCompra").val(), $("#precioMenudeo").val()));
 
         $('#tablaRangosPrecios tbody tr').each(function (index, fila) {
-            var Precio=fila.children[3].innerHTML;
+            var Precio = fila.children[3].innerHTML;
             fila.children[4].innerHTML = CalcularPorcUtilidad($("#ultimoCostoCompra").val(), Precio)
         });
 
     });
+
+    initSelect('idLineaProducto');
+    initSelect('cbClaveProdServ');
+    initSelect('idUnidadMedida');
+   
+
 });

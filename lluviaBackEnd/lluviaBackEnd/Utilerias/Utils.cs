@@ -1151,46 +1151,62 @@ namespace lluviaBackEnd.Utilerias
                 DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
                 string html = "<br/>";
-
-
-                for (int i = 0; i < ubicaciones.Count(); i++)
-                {
-                    ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() +  "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() +  "\"}";
-                    nombreArchivo = "A"+ ubicaciones[i].idAlmacen.ToString() + "P"+ ubicaciones[i].idPiso.ToString() + "P"+ ubicaciones[i].descripcionPasillo.ToString() + "R"+ ubicaciones[i].idRaq.ToString() + "";
-                    Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
-
-                    // codigos QR
-                    html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >
-                        <tr " + cabeceraTablas + @">
-                            <td colspan='4' >Ubicacion: " + ubicaciones[i].descripcionAlmacen.ToString() + ", Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + " , Piso: " + ubicaciones[i].idPiso.ToString() +  @" </td>    
-                        </tr>";
-
-                    for (int j = 0; j < renglonesQR; j++)
+                string tds = string.Empty;
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >";
+                
+                int i = 0;
+                for (int c = 0; c < 4; c++) {
+                    if (i < ubicaciones.Count)
                     {
-                        html += @"<tr>";
-                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
-                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
-                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
-                        html += @"   <td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='right' /></td>";
-                        html += @"</tr>";
 
-                        html += @"<tr>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
-                        html += @"</tr>";
+                        for (int indexCol = 0; indexCol < 4; indexCol++)
+                        {
+                            if (i < ubicaciones.Count)
+                            {
+                                ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
+                                nombreArchivo = "A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
 
-                    }
 
-                    if (i == ubicaciones.Count()-1) {
-                        html += "</table> <br><br><br><br><br> ";
+                                tds += @"<td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='left' />";
+                                tds += @"<p style='color:black; text-align:left;' >Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + "</p>";
+                                tds += @"</td>";
+                                i++;
+                            }
+                            else {
+                                tds += @"<td>";
+                                tds += @"</td>";
+                            }
+
+                        }
+                        html += @" < tr>" + tds + "</tr>";
+                        tds = string.Empty;
                     }
-                    else
-                    {
-                        html += "</table> <br><br><br><br><br><br> ";
-                    }
+                    
                 }
+                
+                //for (int i = 0; i < ubicaciones.Count(); i++)
+                //{
+                //    html += @"<tr>";
+                //    html += @"<td style='color:black; text-align:left;'>Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                //    //html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                //    //html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                //    //html += @"   <td style='color:black; text-align:right;'> Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + @"</td>";
+                //    html += @"</tr>";
+
+                //    //}
+                //}
+                html += "</table>";
+                        //if (i == ubicaciones.Count() - 1)
+                        //{
+                        //    html += "</table> <br><br><br><br><br> ";
+                        //}
+                        //else
+                        //{
+                        //    html += "</table> <br><br><br><br><br><br> ";
+                        //}
+
+
 
                 document.Open();
                 foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
