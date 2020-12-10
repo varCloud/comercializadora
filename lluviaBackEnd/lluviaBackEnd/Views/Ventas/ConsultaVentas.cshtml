@@ -1,7 +1,7 @@
 ﻿@model lluviaBackEnd.Models.Ventas
 @{
     ViewBag.Title = "Consulta Ventas";
-    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    //List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
     List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
@@ -84,7 +84,7 @@
 
 
 <div id="rowConsultaVentas">
-    @Html.Partial("_ObtenerVentas", lstVentas)
+    @Html.Action("_ObtenerVentas","Ventas")
 </div>
 
 

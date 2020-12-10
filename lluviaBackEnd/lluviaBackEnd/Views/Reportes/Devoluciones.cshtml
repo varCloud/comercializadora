@@ -1,7 +1,7 @@
 ﻿@model lluviaBackEnd.Models.Ventas
 @{
     ViewBag.Title = "Devoluciones";
-    List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    //List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
     List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
 }
@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 }
 @*<!DOCTYPE html>*@
 
@@ -50,13 +51,13 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Almacen</label>
-                                    @Html.DropDownListFor(x => x.idAlmacen, lstAlmacenes, new { @class = "form-control", id = "idAlmacen", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idAlmacen, lstAlmacenes, new { @class = "select-multiple", id = "idAlmacen", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Usuario</label>
-                                    @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "form-control", id = "idUsuario", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
                                 </div>
                             </div>
                         </div>
@@ -97,7 +98,7 @@
 
 
 <div id="rowDevoluciones">
-    @Html.Partial("_Devoluciones", lstVentas)
+    @Html.Action("BuscarDevoluciones", "Reportes", new lluviaBackEnd.Models.Ventas { idVenta = 0 });
 </div>
 
 
@@ -111,5 +112,6 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtReporteDevoluciones.js"></script>
 }

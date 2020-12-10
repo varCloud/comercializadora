@@ -3,7 +3,7 @@
     ViewBag.Title = "Inventario";
     List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
     List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
-   // List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
+    // List<SelectListItem> lstUnidadMedida = (List<SelectListItem>)ViewBag.lstUnidadMedida;
 
 }
 @section Styles {
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
-
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
     @*<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />*@
 
 }
@@ -44,33 +44,33 @@
                         @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
                         @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Linea de Producto</label>
-                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Linea de Producto</label>
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "select-multiple", id = "idLineaProductoBusqueda", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Almacen</label>
-                                @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacen,"--TODOS--", new { @class = "form-control", id = "idAlmacen", data_val = "false" })
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Almacen</label>
+                                    @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.listAlmacen, "--TODOS--", new { @class = "select-multiple", id = "idAlmacen", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Rango de Fechas</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-calendar"></i>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
                                         </div>
+                                        <input type="text" id="rangeInventario" class="form-control daterange-cus">
                                     </div>
-                                    <input type="text" id="rangeInventario" class="form-control daterange-cus">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                         @*<div class="row">
 
@@ -125,5 +125,6 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtInventario.js"></script>
 }

@@ -257,3 +257,19 @@ $(document).ready(function () {
 function roundToTwo(valor) {
     return +(Math.round(valor + "e+2") + "e-2");
 }
+
+function InitSelect2() {
+    $('.select-multiple').select2({
+        width: "100%",       
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        }
+    });
+
+   // $('#' + item).val("0").trigger('change');
+}

@@ -1,5 +1,6 @@
 ﻿var tblDropSize;
 $(document).ready(function () {
+    InitSelect2();
     InitRangePicker('rangeDropSize', 'fechaIni', 'fechaFin');
     $('#fechaIni').val($('#rangeDropSize').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeDropSize').data('daterangepicker').startDate.format('YYYY-MM-DD'));

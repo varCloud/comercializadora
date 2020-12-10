@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 
 }
 @*<!DOCTYPE html>*@
@@ -43,26 +44,26 @@
                         @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
                         @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Linea de Producto</label>
-                                @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Linea de Producto</label>
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, new { @class = "select-multiple", id = "idLineaProductoBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    @Html.DropDownListFor(x => x.idCliente, lstClientes, new { @class = "select-multiple", id = "idClienteBusqueda", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "select-multiple", id = "idUsuarioBusqueda", data_val = "false" })
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Cliente</label>
-                                @Html.DropDownListFor(x => x.idCliente, lstClientes, new { @class = "form-control", id = "idClienteBusqueda", data_val = "false" })
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Usuario</label>
-                                @Html.DropDownListFor(x => x.idUsuario, lstUsuarios, new { @class = "form-control", id = "idUsuarioBusqueda", data_val = "false" })
-                            </div>
-                        </div>
-                    </div>
 
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -100,7 +101,7 @@
 
 
 <div id="rowVentas">
-    @Html.Partial("_Ventas", new lluviaBackEnd.Models.Ventas() { idVenta = 0 })
+    @Html.Action("BuscarVentas", "Reportes", new lluviaBackEnd.Models.Ventas() { idVenta = 0 })
 </div>
 
 
@@ -114,5 +115,6 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtReporteVentas.js"></script>
 }

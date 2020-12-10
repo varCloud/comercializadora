@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 }
 
 @*<!DOCTYPE html>*@
@@ -43,54 +44,54 @@
                         @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
                         @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Línea de Producto</label>
-                                @Html.DropDownListFor(x => x.producto.idLineaProducto, lstLineasDeProductos, new { @class = "form-control", id = "idLineaProductoBusqueda", data_val = "false" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Línea de Producto</label>
+                                    @Html.DropDownListFor(x => x.producto.idLineaProducto, lstLineasDeProductos, new { @class = "select-multiple", id = "idLineaProductoBusqueda", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Proveedor</label>
-                                @Html.DropDownListFor(x => x.proveedor.idProveedor, lstProveedores, new { @class = "form-control", id = "lstProveedoresBusqueda", data_val = "false" })
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Proveedor</label>
+                                    @Html.DropDownListFor(x => x.proveedor.idProveedor, lstProveedores, new { @class = "select-multiple", id = "lstProveedoresBusqueda", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Comprador</label>
-                                @Html.DropDownListFor(x => x.usuario.idUsuario, lstUsuarios, new { @class = "form-control", id = "lstUsuariosBusqueda", data_val = "false" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Estatus</label>
-                                @Html.DropDownListFor(x => x.producto.estatusProducto.idEstatusProducto, lstEstatusProducto, new { @class = "form-control", id = "lstEstatusProducto", data_val = "false" })
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Rango de Fechas</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                    <input type="text" id="rangeCompras" class="form-control daterange-cus" autocomplete="off">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Comprador</label>
+                                    @Html.DropDownListFor(x => x.usuario.idUsuario, lstUsuarios, new { @class = "select-multiple", id = "lstUsuariosBusqueda", data_val = "false" })
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Estatus</label>
+                                    @Html.DropDownListFor(x => x.producto.estatusProducto.idEstatusProducto, lstEstatusProducto, new { @class = "select-multiple", id = "lstEstatusProducto", data_val = "false" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="rangeCompras" class="form-control daterange-cus" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>
@@ -105,7 +106,7 @@
 
 
 <div id="rowCompras">
-    @Html.Action("BuscarCompras","Reportes", new lluviaBackEnd.Models.Compras() { idCompra = 0 })
+    @Html.Action("BuscarCompras", "Reportes", new lluviaBackEnd.Models.Compras() { idCompra = 0 })
 </div>
 
 
@@ -124,6 +125,7 @@
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtCompras.js"></script>
 
 }

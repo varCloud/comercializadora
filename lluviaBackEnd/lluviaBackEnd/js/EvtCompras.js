@@ -70,6 +70,7 @@ function InitDataTableCompras() {
 $(document).ready(function () {
 
     InitDataTableCompras();
+    InitSelect2();
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
     $('#rangeCompras').val('');
     //$('#idLineaProductoBusqueda').val('0');

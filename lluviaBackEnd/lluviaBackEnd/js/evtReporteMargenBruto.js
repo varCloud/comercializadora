@@ -1,6 +1,6 @@
 ﻿var tblMargenBruto;
 $(document).ready(function () {
-
+    InitSelect2();
     InitRangePicker('rangeMargenBruto', 'fechaIni', 'fechaFin');
     //$('#fechaIni').val($('#rangeMargenBruto').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeMargenBruto').data('daterangepicker').startDate.format('YYYY-MM-DD'));
