@@ -1,5 +1,6 @@
 ﻿var tblDiasPromedioInventario;
 $(document).ready(function () {
+    InitSelect2();
     InitRangePicker('rangeDiasPromedioInventario', 'fechaIni', 'fechaFin');
     $('#fechaIni').val($('#rangeDiasPromedioInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeDiasPromedioInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
