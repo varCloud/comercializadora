@@ -352,14 +352,14 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult GenerarUbicaciones(List<Ubicacion> ubicaciones)
         {
-            Notificacion<String> notificacion = new Notificacion<string>();
+            Notificacion<Dictionary<string, object>> notificacion = new Notificacion<Dictionary<string, object>>();
             try
             {
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ubicaciones generadas correctamente.";
-                notificacion.Modelo = "ok";
                 string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
-                string pdf = Convert.ToBase64String(Utilerias.Utils.GenerarUbicaciones(ubicaciones, pathPdfCodigos));
+                notificacion.Modelo  =  Utilerias.Utils.GenerarUbicaciones(ubicaciones, pathPdfCodigos);
+                
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -367,12 +367,12 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
-
+        [HttpPost]
         public void EliminaArchivo(string rutaArchivo) 
         {
             try
             {
-                Utilerias.Utils.DeleteFile(Utilerias.Utils.ObtnerFolderCodigos() + "Ubicaciones.pdf");
+                Utilerias.Utils.DeleteFile(Utilerias.Utils.ObtnerFolderCodigos() + rutaArchivo);
             }
             catch (Exception ex )
             {

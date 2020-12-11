@@ -1129,7 +1129,7 @@ namespace lluviaBackEnd.Utilerias
 
 
 
-        public static byte[] GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
+        public static Dictionary<string,object> GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
         {
             byte[] content = null;
             string TamañoLetra = "10px";
@@ -1145,6 +1145,7 @@ namespace lluviaBackEnd.Utilerias
             string ubica = string.Empty;
             string nombreArchivo = string.Empty;
             int renglonesQR = 4;
+            Dictionary<string, object> dic = new Dictionary<string, object>();
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -1152,7 +1153,7 @@ namespace lluviaBackEnd.Utilerias
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
                 string html = "<br/>";
                 string tds = string.Empty;
-                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >";
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' border='0'>";
                 
                 int i = 0;
                 for (int c = 0; c < 4; c++) {
@@ -1168,8 +1169,8 @@ namespace lluviaBackEnd.Utilerias
                                 Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
 
 
-                                tds += @"<td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='left' />";
-                                tds += @"<p style='color:black; text-align:left;' >Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + "</p>";
+                                tds += @"<td style='text-align:center;'  align='center' ><div  align='center' style='text-align:center;' ><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '120' height = '120' align='center' style='text-align:center;' /></div>";
+                                tds += @"<p style='color:black; text-align:center;' >Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + "</p>";
                                 tds += @"</td>";
                                 i++;
                             }
@@ -1223,21 +1224,26 @@ namespace lluviaBackEnd.Utilerias
                 
                 for (int l = 0; l < ubicaciones.Count(); l++)
                 {
-                    DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
+                   // DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
                 }
 
                 memStream.Write(content, 0, content.Length);
                 memStream.Position = 0;
-                using (FileStream fs = File.Create(Path.Combine(path, "Ubicaciones.pdf")))
+                string nombreArchivoPDF = "Ubicaciones_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf";
+                using (FileStream fs = File.Create(Path.Combine(path, nombreArchivoPDF)))
                  {
-                     fs.Write(content, 0, (int)content.Length);
+                    fs.Write(content, 0, (int)content.Length);
+                    fs.Flush();
                  }
+                dic.Add("nombreArchivoPDF", nombreArchivoPDF);
+                dic.Add("content", content);
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return content;
+            return dic;
         }
 
 

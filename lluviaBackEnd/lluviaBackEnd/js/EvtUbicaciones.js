@@ -134,10 +134,11 @@ $('#btnGenerarUbicaciones').click(function (e) {
             ShowLoader("Generando Ubicaciones...");
         },
         success: function (data) {
+            console.log("data :::::::::" , data)
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            window.open("http://" + window.location.host + "/Codigos/Ubicaciones.pdf");
-            setTimeout(() => { eliminaArchivo("Ubicaciones.pdf"); }, 3000);
+            window.open("http://" + window.location.host + "/Codigos/"+data.Modelo.nombreArchivoPDF+"");
+            setTimeout(() => { eliminaArchivo(data.Modelo.nombreArchivoPDF); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();
@@ -153,10 +154,10 @@ $('#btnGenerarUbicaciones').click(function (e) {
 function eliminaArchivo(rutaArchivo) {
     $.ajax({
         url: rootUrl("/Productos/EliminaArchivo"),
-        data: { 'rutaArchivo': "Ubicaciones.pdf" },
+        data: { 'rutaArchivo': rutaArchivo },
         method: 'post',
-        //dataType: 'json',
-        contentType: "text/xml",
+        dataType: 'json',
+        //contentType: "text/xml",
         async: true,
         beforeSend: function (xhr) {
             ShowLoader()
