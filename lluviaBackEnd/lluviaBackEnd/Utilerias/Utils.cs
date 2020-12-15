@@ -1156,7 +1156,8 @@ namespace lluviaBackEnd.Utilerias
                 html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' border='0'>";
                 
                 int i = 0;
-                for (int c = 0; c < 4; c++) {
+                int renglones = (ubicaciones.Count / 4) + 1;
+                for (int c = 0; c < renglones; c++) {
                     if (i < ubicaciones.Count)
                     {
 
@@ -1180,7 +1181,7 @@ namespace lluviaBackEnd.Utilerias
                             }
 
                         }
-                        html += @" < tr>" + tds + "</tr>";
+                        html += @" <tr>" + tds + "</tr>";
                         tds = string.Empty;
                     }
                     
