@@ -367,6 +367,25 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+        public ActionResult GenerarCodigosBarras(List<Producto> productos)
+        {
+            Notificacion<Dictionary<string, object>> notificacion = new Notificacion<Dictionary<string, object>>();
+            try
+            {
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Códigos generadso correctamente.";
+                string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
+                notificacion.Modelo = Utilerias.Utils.GenerarCodigosBarras(productos, pathPdfCodigos);
+
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         public void EliminaArchivo(string rutaArchivo) 
         {
@@ -523,6 +542,34 @@ namespace lluviaBackEnd.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult CodigosDeBarras(Producto producto)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Notificacion<List<Producto>> p = new Notificacion<List<Producto>>();
+                p = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+                ViewBag.lstProductos = p.Modelo;
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+
+                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                //ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+                //ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
+                //ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
+                //ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
+
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
     }
 
 
