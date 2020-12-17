@@ -316,6 +316,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestRechazarPedidoInternoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
@@ -357,8 +358,6 @@
     <Content Include="assets\bundles\amcharts4\maps.js" />
     <Content Include="assets\bundles\amcharts4\worldLow.js" />
     <Content Include="assets\bundles\apexcharts\apexcharts.min.js" />
-    <Content Include="assets\bundles\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.min.css" />
-    <Content Include="assets\bundles\bootstrap-colorpicker\dist\js\bootstrap-colorpicker.min.js" />
     <Content Include="assets\bundles\bootstrap-daterangepicker\daterangepicker.css" />
     <Content Include="assets\bundles\bootstrap-daterangepicker\daterangepicker.js" />
     <Content Include="assets\bundles\bootstrap-social\bootstrap-social.css" />
@@ -367,13 +366,6 @@
     <Content Include="assets\bundles\bootstrap-timepicker\css\bootstrap-timepicker.min.css" />
     <Content Include="assets\bundles\bootstrap-timepicker\js\bootstrap-timepicker.min.js" />
     <Content Include="assets\bundles\chartjs\chart.min.js" />
-    <Content Include="assets\bundles\chocolat\dist\css\chocolat.css" />
-    <Content Include="assets\bundles\chocolat\dist\images\close.png" />
-    <Content Include="assets\bundles\chocolat\dist\images\fullscreen.png" />
-    <Content Include="assets\bundles\chocolat\dist\images\left.png" />
-    <Content Include="assets\bundles\chocolat\dist\images\loader.gif" />
-    <Content Include="assets\bundles\chocolat\dist\images\right.png" />
-    <Content Include="assets\bundles\chocolat\dist\js\jquery.chocolat.min.js" />
     <Content Include="assets\bundles\ckeditor\ckeditor.js" />
     <Content Include="assets\bundles\cleave-js\dist\addons\cleave-phone.us.js" />
     <Content Include="assets\bundles\cleave-js\dist\cleave.min.js" />
@@ -392,8 +384,6 @@
     <Content Include="assets\bundles\datatables\export-tables\pdfmake.min.js" />
     <Content Include="assets\bundles\datatables\export-tables\vfs_fonts.js" />
     <Content Include="assets\bundles\datatables\Select-1.2.4\css\select.bootstrap4.min.css" />
-    <Content Include="assets\bundles\dropzonejs\dropzone.css" />
-    <Content Include="assets\bundles\dropzonejs\min\dropzone.min.js" />
     <Content Include="assets\bundles\echart\echarts.js" />
     <Content Include="assets\bundles\editable-table\mindmup-editabletable.js" />
     <Content Include="assets\bundles\flag-icon-css\css\flag-icon.min.css" />
@@ -937,10 +927,6 @@
     <Content Include="assets\bundles\morris\morris.css" />
     <Content Include="assets\bundles\morris\morris.min.js" />
     <Content Include="assets\bundles\morris\raphael-min.js" />
-    <Content Include="assets\bundles\owlcarousel2\dist\assets\owl.carousel.min.css" />
-    <Content Include="assets\bundles\owlcarousel2\dist\assets\owl.theme.default.min.css" />
-    <Content Include="assets\bundles\owlcarousel2\dist\assets\owl.video.play.png" />
-    <Content Include="assets\bundles\owlcarousel2\dist\owl.carousel.min.js" />
     <Content Include="assets\bundles\pretty-checkbox\pretty-checkbox.min.css" />
     <Content Include="assets\bundles\prism\prism.css" />
     <Content Include="assets\bundles\prism\prism.js" />
@@ -1272,6 +1258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\bundles\bootstrap-colorpicker\" />
     <Folder Include="assets\img\banner\" />
     <Folder Include="assets\img\blog\" />
     <Folder Include="assets\img\browsers\" />
