@@ -1076,6 +1076,7 @@
     <Content Include="js\EvtClientes.js" />
     <Content Include="js\EvtReporteVentas.js" />
     <Content Include="js\EvtConsultaVentas.js" />
+    <Content Include="js\EvtCodigosBarras.js" />
     <Content Include="js\EvtUbicaciones.js" />
     <Content Include="js\EvtPedidosEspeciales.js" />
     <Content Include="js\EvtVentas.js" />
@@ -1269,6 +1270,7 @@
     <Content Include="Views\PedidosEspeciales\_FinalizaPedido.cshtml" />
     <Content Include="Views\PedidosEspeciales\VerTicket.cshtml" />
     <Content Include="Views\PedidosEspeciales\_VerPedido.cshtml" />
+    <Content Include="Views\Productos\CodigosDeBarras.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
