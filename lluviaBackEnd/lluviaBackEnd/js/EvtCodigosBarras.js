@@ -47,7 +47,7 @@ $('#btnAgregarCodigo').click(function (e) {
         "  <td class=\"text-center\"> " + producto.DescripcionLinea + "</td>" +
         "  <td class=\"text-center\"> " + producto.precioIndividual + "</td>" +
         "  <td class=\"text-center\"> " + producto.precioMenudeo + "</td>" +
-        "  <td class=\"text-center\"> " + producto.articulo + "</td>" +
+        "  <td class=\"text-center\"> " + producto.codigoBarras + "</td>" +
         "  <td class=\"text-center\">" + btnEliminaFila + "  </td>" +
         "</tr >";
 
@@ -84,7 +84,7 @@ $('#btnGenerarCodigos').click(function (e) {
                 DescripcionLinea: tblCodigos.rows[i].cells[3].innerHTML,
                 precioIndividual: parseInt(tblCodigos.rows[i].cells[4].innerHTML),
                 precioMenudeo: parseInt(tblCodigos.rows[i].cells[5].innerHTML),
-                articulo: tblCodigos.rows[i].cells[6].innerHTML,
+                codigoBarras: tblCodigos.rows[i].cells[6].innerHTML,
             };
             productos.push(row_);
         }
@@ -125,6 +125,7 @@ $('#btnGenerarCodigos').click(function (e) {
 
 
 function eliminaArchivo(rutaArchivo) {
+    console.log(rutaArchivo);
     $.ajax({
         url: rootUrl("/Productos/EliminaArchivo"),
         data: { 'rutaArchivo': rutaArchivo },
