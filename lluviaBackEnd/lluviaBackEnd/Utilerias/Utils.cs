@@ -106,7 +106,7 @@ namespace lluviaBackEnd.Utilerias
             {
                 var writer = new ZXing.BarcodeWriter() { Format = BarcodeFormat.CODE_128 };
                 writer.Options.Height = 80;
-                writer.Options.Width = 280;
+                writer.Options.Width = 150;
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -1287,7 +1287,7 @@ namespace lluviaBackEnd.Utilerias
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
                 string html = "<br/>";
                 string tds = string.Empty;
-                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='4' border='0'>";
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' border='1'>";
 
                 int i = 0;
                 int renglones = (productos.Count / 3) + 1;
@@ -1301,14 +1301,17 @@ namespace lluviaBackEnd.Utilerias
                             if (i < productos.Count)
                             {
                                 //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
-                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].articulo.ToString(); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
-                                Utilerias.Utils.GenerarCodigoBarras(productos[i].articulo, nombreArchivo);
+                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString(); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
 
                                 tds += @"<td style='text-align:center;'  align='center' >";
-                                tds += @"<p style='color:black; text-align:center;' >Descripción:" + productos[i].descripcion.ToString() + "</p><br>";
-                                tds += @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='200' height='60' align='left' style='text-align:left;' /></div>";
-                                tds += @"<p style='color:black; text-align:center;' >Precio Menudeo:" + productos[i].precioIndividual.ToString() + @" Precio Mayoreo: " + productos[i].precioMenudeo.ToString() + "</p>";
+                                tds += @"<p style='color:black; text-align:center;' >" + productos[i].descripcion.ToString() + "</p><br>";
+                                tds += @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='125' height='51' align='center' style='text-align:center;' /></div>";
+                                //tds += @"<p style='color:black; text-align:center;' >$ Menudeo:" + productos[i].precioIndividual.ToString() + @" $ Mayoreo: " + productos[i].precioMenudeo.ToString() + "</p>";
+                                tds += @"<table width='100%' " + cssTabla + @"  CELLPADDING='5' border='0'> <tr> <td style='text-align:center;' align='center' > <p style='color:black; text-align:center;' >$ Menudeo:" + productos[i].precioIndividual.ToString() + "</p>   </td>  <td style='text-align:center;' align='center' > <p style='color:black; text-align:center;' >$ Mayoreo: " + productos[i].precioMenudeo.ToString() + "</p>   </td>  </tr> </table>";
                                 tds += @"</td>";
+
+
                                 i++;
                             }
                             else
