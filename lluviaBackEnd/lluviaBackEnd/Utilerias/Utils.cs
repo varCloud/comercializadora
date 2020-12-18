@@ -63,7 +63,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "barras_" + cadena + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/","") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -78,7 +78,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.Width = 200;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "QR_" + cadena + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "QR_" + cadena.Replace("/","_") + "_.jpg");
                 return ms.ToArray();
             }
         }
