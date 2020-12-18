@@ -1,4 +1,6 @@
 ﻿var arrayProductos = [];
+var productosPorLinea = '';
+var tablaProductos; 
 
 function eliminaFila(index_) {
     document.getElementById("tablaCodigos").deleteRow(index_);
@@ -26,7 +28,6 @@ function limpiarTabla() {
         document.getElementById("tablaCodigos").deleteRow(i);
     }
 
-    //$('#idAlmacen').val("0").trigger('change');
     actualizaTabla();
 
 }
@@ -58,6 +59,66 @@ $('#btnAgregarCodigo').click(function (e) {
 });
 
 
+$('#btnAgregarLinea').click(function (e) {
+
+    var idLineaProducto = $('#idLineaProducto').val();
+
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductosPorLineaProducto"),
+        data: { idProducto: 0, idUsuario: 0, idLineaProducto: idLineaProducto },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Agregando Códigos de Barras...");
+        },
+        success: function (data) {
+
+            if (data.Estatus === 200) {
+                productosPorLinea = data;
+
+                if (data.Modelo.length <= 0) {
+                    MuestraToast('warning', "Esta linea no tiene productos registrados.");
+                }
+                else {
+                    var btnEliminaFila = "      <a href=\"javascript:eliminaFila(0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>";
+                    var i;
+                    for (i = 0; i < productosPorLinea.Modelo.length; i++) {
+
+                        // si todo bien    
+                        var row_ =
+                            "<tr>" +
+                            "  <td class=\"text-center\">1</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].idProducto + "</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].descripcion + "</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].DescripcionLinea + "</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].precioIndividual + "</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].precioMenudeo + "</td>" +
+                            "  <td class=\"text-center\"> " + productosPorLinea.Modelo[i].codigoBarras + "</td>" +
+                            "  <td class=\"text-center\">" + btnEliminaFila + "  </td>" +
+                            "</tr >";
+
+                        $("table tbody").append(row_);
+
+                        actualizaTabla();
+
+                    }
+
+                }
+
+            }
+            OcultarLoader();
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+});
 
 function actualizaTabla() {
 
@@ -131,7 +192,6 @@ function eliminaArchivo(rutaArchivo) {
         data: { 'rutaArchivo': rutaArchivo },
         method: 'post',
         dataType: 'json',
-        //contentType: "text/xml",
         async: true,
         beforeSend: function (xhr) {
             ShowLoader()
@@ -197,20 +257,12 @@ function InitSelect2Productos() {
 
 }
 
-
 $(document).ready(function () {
 
     InitSelect2(); // los demas select2
     InitSelect2Productos();
 
 });
-
-
-
-
-
-
-
 
 
 
