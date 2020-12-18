@@ -34,7 +34,7 @@ namespace lluviaBackEnd.WebServices
                 Producto p = new Producto();
                 p.articulo = request.articulo;
                 p.idLineaProducto = request.idLineaProducto.ToString();
-                p.descripcion= request.descripcion;
+                p.descripcion = request.descripcion;
                 p.idProducto = request.idProducto;
                 return new ProductosDAO().ObtenerProductos(p);
             }
@@ -54,6 +54,17 @@ namespace lluviaBackEnd.WebServices
             catch (Exception ex)
             {
                 return WsUtils<Producto>.RegresaExcepcion(ex, null);
+            }
+        }
+        public Notificacion<List<Producto>> ObtenerProductoXDescripcion(RequestObtenerProductoXDescripcion request)
+        {
+            try
+            {
+                return new ProductosDAO().ObtenerProductoXDescripcion(request);
+            }
+            catch (Exception ex)
+            {
+                return WsUtils<List<Producto>>.RegresaExcepcion(ex, null);
             }
         }
     }
