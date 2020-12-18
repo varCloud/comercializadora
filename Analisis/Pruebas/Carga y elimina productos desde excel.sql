@@ -25,12 +25,25 @@ select * from [Productos] order by descripcion asc
 
 
 
-select * from [dbo].[productos_dic]
+select * from [dbo].[productos_dic] where ClaveProductoServicio is null or ClaveProductoServicio = ''
+
+select * from [dbo].[productos_dic] where ClaveProductoServicio is not null
+
+
+
 
 select * from [LineaProducto]
 
-select * from [dbo].[productos_dic] A
-join CatUnidadMedida b on A.Unidad_de_Medida = b.descripcion
+--update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICOS+B962:K962'
+--update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICOS+B962:K961'
+--update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICO'
+
+
+select * from [dbo].[productos_dic] A where a.Linea = 'PLASTICOS+B962:K961'
+select * from [dbo].[productos_dic] A where a.Linea = 'PLASTICO'
+
+select * from [dbo].[productos_dic] A where a.Linea = 'BOLSA'
+
 
 select  a.Linea from [dbo].[productos_dic] A
 left join [LineaProducto] b on UPPER(replace(A.Linea,' ','')) = replace(replace(b.descripcion,'LINEA' , ''),' ','')
@@ -43,6 +56,13 @@ select  a.Linea from [dbo].[productos_dic] A
   
 select replace(A.Linea,' ','')  from [dbo].[productos_dic] A
 select  replace(replace(b.descripcion,'LINEA' , ''),' ','')  from [LineaProducto] b 
+
+select  * from [productos_dic] A
+left join [dbo].[FactCatClaveProdServicio] b ON A.ClaveProductoServicio =B.claveProdServ
+
+select * from [productos_dic] A join [dbo].[FactCatClaveProdServicio] B ON replace(A.ClaveProductoServicio,' ','') = replace(B.claveProdServ,' ','')
+
+
 
 
 
@@ -66,18 +86,18 @@ a.DESCRIPCION
 ,b.idUnidadMedida 
 ,l.idLineaProducto
 ,1
-,isnull(a.Codigo_de_Barras,'')
+,isnull(a.CodigoDeBarras,'')
 ,getdate()
 ,1
-,isnull(a.Codigo_de_Barras,'')
-,CAST(a.[Clave_del_Producto_Servicio ] AS VARCHAR)
-,a.Precio_Menudeo
-,a.[      Precio_Mayoreo]
-,a.[ Costo_Ultimo]
-,a.Utilidad_Menudeo
-,a.Utilidad_Mayoreo
+,isnull(a.CodigoDeBarras,'')
+,replace(isnull(CAST(a.ClaveProductoServicio AS VARCHAR),''),' ','')
+,a.PrecioMenudeo
+,a.PrecioMayoreo
+,a.CostoUltimo
+,a.UtilidadMenudeo
+,a.UtilidadMayoreo
 from [dbo].[productos_dic] A
-join CatUnidadMedida b on A.Unidad_de_Medida = b.descripcion
+join CatUnidadMedida b on A.UnidadDeMedida = b.descripcion
 join [LineaProducto] L on UPPER(replace(A.Linea,' ','')) = replace(replace(L.descripcion,'LINEA' , ''),' ','')
 
 
