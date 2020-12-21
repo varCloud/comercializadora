@@ -1,0 +1,130 @@
+﻿@model lluviaBackEnd.Models.Producto
+@{
+    ViewBag.Title = "Codigos de Barras";
+    List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<SelectListItem> lstLineasDeProductos = ((List<SelectListItem>)ViewBag.lstLineasDeProductos).Where(x => x.Value != "").ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<section class="section">
+
+    <div class="section-body">
+
+        <div class="row mt-sm-4">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>Códigos de Barras de Productos</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Linea de Producto</label>
+                                    @Html.DropDownListFor(x => x.idLineaProducto, lstLineasDeProductos, "--TODOS--", new { @class = "select-multiple", id = "idLineaProducto", data_val = "false" })
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <br>
+                                    <button id="btnAgregarLinea" class="btn btn-success btn-icon icon-left">
+                                        <i class="fas fa-plus"></i> Agregar Linea
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <label>Producto: </label>
+                                @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <br>
+                                    <button id="btnAgregarCodigo" class="btn btn-success btn-icon icon-left">
+                                        <i class="fas fa-plus"></i> Agregar Producto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-sm-12">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="padding-20">
+                        <div class="col-md-12">
+                            <div class="section-title">Códigos a Generar: </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="tablaCodigos">
+                                    <thead>
+                                        <tr>
+                                            <th data-width="40" style="width: 40px;">#</th>
+                                            <th class="text-center">idProducto</th>
+                                            <th class="text-center">Descripcion</th>
+                                            <th class="text-center">Linea de Producto</th>
+                                            <th class="text-center">Precio Menudeo</th>
+                                            <th class="text-center">Precio Mayoreo</th>
+                                            <th class="text-center">Artículo</th>
+                                            <th class="text-center">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="text-md-right">
+                            <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                            <button id="btnGenerarCodigos" class="btn btn-primary btn-icon icon-left">
+                                <i class="fas fa-credit-card"></i> Generar Códigos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtCodigosBarras.js"></script>
+
+}
+
+

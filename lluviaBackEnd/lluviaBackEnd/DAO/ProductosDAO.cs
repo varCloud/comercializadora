@@ -241,6 +241,40 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<List<Producto>> ObtenerProductoXDescripcion(RequestObtenerProductoXDescripcion request)
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@descripcion", request.descripcion);
+                    var result = db.QueryMultiple("SP_APP_CONSULTA_PRODUCTOS_POR_DESCRIPCION", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.estatus == 200)
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
 
         public Notificacion<Precio> GuardarPrecios(List<Precio> precios, Producto producto)
         {

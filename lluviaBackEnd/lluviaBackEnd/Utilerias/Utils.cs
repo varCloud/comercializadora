@@ -63,7 +63,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "barras_" + cadena + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/","") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -78,7 +78,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.Width = 200;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "QR_" + cadena + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "QR_" + cadena.Replace("/","_") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -95,6 +95,22 @@ namespace lluviaBackEnd.Utilerias
                 img = writer.Write(cadena);
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 img.Save(ObtnerFolderCodigos() + "QR_" + nombreArchivo + "_.jpg");
+                return ms.ToArray();
+            }
+        }
+
+        public static byte[] GenerarCodigoBarras(string cadena, string nombreArchivo)
+        {
+            System.Drawing.Image img = null;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new ZXing.BarcodeWriter() { Format = BarcodeFormat.CODE_128 };
+                writer.Options.Height = 80;
+                writer.Options.Width = 150;
+                writer.Options.PureBarcode = false;
+                img = writer.Write(cadena);
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(ObtnerFolderCodigos() + "barras_" + nombreArchivo + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -1129,7 +1145,7 @@ namespace lluviaBackEnd.Utilerias
 
 
 
-        public static byte[] GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
+        public static Dictionary<string,object> GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
         {
             byte[] content = null;
             string TamañoLetra = "10px";
@@ -1145,6 +1161,7 @@ namespace lluviaBackEnd.Utilerias
             string ubica = string.Empty;
             string nombreArchivo = string.Empty;
             int renglonesQR = 4;
+            Dictionary<string, object> dic = new Dictionary<string, object>();
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -1152,10 +1169,11 @@ namespace lluviaBackEnd.Utilerias
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
                 string html = "<br/>";
                 string tds = string.Empty;
-                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' >";
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' border='0'>";
                 
                 int i = 0;
-                for (int c = 0; c < 4; c++) {
+                int renglones = (ubicaciones.Count / 4) + 1;
+                for (int c = 0; c < renglones; c++) {
                     if (i < ubicaciones.Count)
                     {
 
@@ -1168,8 +1186,8 @@ namespace lluviaBackEnd.Utilerias
                                 Utilerias.Utils.GenerarQR(ubica, nombreArchivo);
 
 
-                                tds += @"<td><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '150' height = '150' align='left' />";
-                                tds += @"<p style='color:black; text-align:left;' >Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + "</p>";
+                                tds += @"<td style='text-align:center;'  align='center' ><div  align='center' style='text-align:center;' ><img src='" + Path.Combine(path, "QR_" + nombreArchivo + "_.jpg") + @"' width = '120' height = '120' align='center' style='text-align:center;' /></div>";
+                                tds += @"<p style='color:black; text-align:center;' >Almacen:" + ubicaciones[i].descripcionAlmacen.ToString() + @" Pasillo: " + ubicaciones[i].descripcionPasillo.ToString() + ", Rack: " + ubicaciones[i].idRaq.ToString() + ", Piso: " + ubicaciones[i].idPiso.ToString() + "</p>";
                                 tds += @"</td>";
                                 i++;
                             }
@@ -1179,7 +1197,7 @@ namespace lluviaBackEnd.Utilerias
                             }
 
                         }
-                        html += @" < tr>" + tds + "</tr>";
+                        html += @" <tr>" + tds + "</tr>";
                         tds = string.Empty;
                     }
                     
@@ -1223,24 +1241,123 @@ namespace lluviaBackEnd.Utilerias
                 
                 for (int l = 0; l < ubicaciones.Count(); l++)
                 {
-                    DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
+                   // DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
                 }
 
                 memStream.Write(content, 0, content.Length);
                 memStream.Position = 0;
-                using (FileStream fs = File.Create(Path.Combine(path, "Ubicaciones.pdf")))
+                string nombreArchivoPDF = "Ubicaciones_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf";
+                using (FileStream fs = File.Create(Path.Combine(path, nombreArchivoPDF)))
                  {
-                     fs.Write(content, 0, (int)content.Length);
+                    fs.Write(content, 0, (int)content.Length);
+                    fs.Flush();
                  }
+                dic.Add("nombreArchivoPDF", nombreArchivoPDF);
+                dic.Add("content", content);
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return content;
+            return dic;
         }
 
+        public static Dictionary<string, object> GenerarCodigosBarras(List<Producto> productos, string path)
+        {
+            byte[] content = null;
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            Document document = new Document(PageSize.A4, 30, 30, 15, 15);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            PDFWriter.CloseStream = false;
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Códigos de Barras: ";
+            //string ubica = string.Empty;
+            string nombreArchivo = string.Empty;
+            int renglonesQR = 4;
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "<br/>";
+                string tds = string.Empty;
+                html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' border='1'>";
 
+                int i = 0;
+                int renglones = (productos.Count / 3) + 1;
+                for (int c = 0; c < renglones; c++)
+                {
+                    if (i < productos.Count)
+                    {
+
+                        for (int indexCol = 0; indexCol < 3; indexCol++)
+                        {
+                            if (i < productos.Count)
+                            {
+                                //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
+                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
+
+                                tds += @"<td style='text-align:center;'  align='center' >";
+                                tds += @"<p style='color:black; text-align:center;' >" + productos[i].descripcion.ToString() + "</p><br>";
+                                tds += @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='125' height='51' align='center' style='text-align:center;' /></div>";
+                                //tds += @"<p style='color:black; text-align:center;' >$ Menudeo:" + productos[i].precioIndividual.ToString() + @" $ Mayoreo: " + productos[i].precioMenudeo.ToString() + "</p>";
+                                tds += @"<table width='100%' " + cssTabla + @"  CELLPADDING='5' border='0'> <tr> <td style='text-align:center;' align='center' > <p style='color:black; text-align:center;' >$ Menudeo:" + productos[i].precioIndividual.ToString() + "</p>   </td>  <td style='text-align:center;' align='center' > <p style='color:black; text-align:center;' >$ Mayoreo: " + productos[i].precioMenudeo.ToString() + "</p>   </td>  </tr> </table>";
+                                tds += @"</td>";
+
+                                i++;
+                            }
+                            else
+                            {
+                                tds += @"<td>";
+                                tds += @"</td>";
+                            }
+
+                        }
+                        html += @" <tr>" + tds + "</tr>";
+                        tds = string.Empty;
+                    }
+
+                }
+
+                html += "</table>";
+              
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Códigos de Barras: ");
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Códigos de Barras de Productos");
+                document.CloseDocument();
+                document.Close();
+                content = memStream.ToArray();
+                memStream.Write(content, 0, content.Length);
+                memStream.Position = 0;
+                string nombreArchivoPDF = "Codigos_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf";
+                using (FileStream fs = File.Create(Path.Combine(path, nombreArchivoPDF)))
+                {
+                    fs.Write(content, 0, (int)content.Length);
+                    fs.Flush();
+                }
+                dic.Add("nombreArchivoPDF", nombreArchivoPDF);
+                dic.Add("content", content);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dic;
+        }
 
         public static byte[] GeneraTicketPDFPedidoEspecial(PedidosEspeciales pedido )
         {
