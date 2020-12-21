@@ -6,6 +6,7 @@ var arrayProductos = [];
 var tblProductosPedidoEspecial;
 var productosPedidoEspecial = '';
 var idPedidoEspecial = parseInt(0);
+var producto_value = null;
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -137,8 +138,10 @@ function limpiarTicket() {
 
     actualizaTicketVenta();
     limpiaModalPrevio();
-    $('#cantidad').val('');
-    $('#idProducto').val("0").trigger('change');
+    $('#cantidad').val('1');
+    $("#listProductos").val("");
+    producto_value = null;
+    //$('#idProducto').val("0").trigger('change');
     $('#idVenta').val(0);
     $('#vaConDescuento').val(0);
     idPedidoEspecial = 0;
@@ -267,13 +270,30 @@ $('#btnAceptarDevolucion').click(function (e) {
 
 
 $('#btnAgregarProducto').click(function (e) {
-    if (AgregarProducto($('#idProducto').select2('data')[0], $('#cantidad').val())) {
-        $('#cantidad').val('');
+
+    //if (AgregarProducto($('#idProducto').select2('data')[0], $('#cantidad').val())) {
+    //    $('#cantidad').val('');
+
+    //    Agregar envase
+    //    if (parseInt($('#idProducto').select2('data')[0].idLineaProducto) === 20) {
+    //        $('#ModalAgregarEnvase').modal({ backdrop: 'static', keyboard: false, show: true });
+    //    }
+
+    //    actualizaTicketVenta();
+    //    initInputsTabla();
+    //}
+
+    if (AgregarProducto(producto_value, $('#cantidad').val())) {       
 
         //Agregar envase
-        if (parseInt($('#idProducto').select2('data')[0].idLineaProducto) === 20) {
+        if (parseInt(producto_value.idLineaProducto) === 20) {
             $('#ModalAgregarEnvase').modal({ backdrop: 'static', keyboard: false, show: true });
         }
+
+        $('#cantidad').val('1');
+        $("#listProductos").val('');
+        producto_value = null;
+        $("#listProductos").focus(); 
 
         actualizaTicketVenta();
         initInputsTabla();
@@ -304,13 +324,13 @@ function AgregarProducto(producto, cantidad) {
         return false;
     }
 
-    if (producto.precioIndividual <= 0 && producto.precioMenudeo <= 0) {
-        preguntaAltaPrecios();
+    if (producto.cantidad < parseInt(cantidad)) {
+        MuestraToast('warning', "no existe suficiente producto en inventario");
         return false;
     }
 
-    if (producto.cantidad < parseInt(cantidad)) {
-        MuestraToast('warning', "no existe suficiente producto en inventario");
+    if (producto.precioIndividual <= 0 && producto.precioMenudeo <= 0) {
+        preguntaAltaPrecios();
         return false;
     }
 
@@ -331,7 +351,7 @@ function AgregarProducto(producto, cantidad) {
 
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
-   
+
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
             if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
@@ -1646,30 +1666,74 @@ function InitSelect2Productos() {
             result.Modelo[i].disabled = false;
     }
 
-    $("#idProducto").html('').select2();
-    $('#idProducto').select2({
-        width: "100%",
-        placeholder: "--SELECCIONA--",
-        data: result.Modelo,
+    var finalData = $.map(result.Modelo, function (item) {
 
-        language: {
-            noResults: function () {
-                return "No hay resultado";
-            },
-            searching: function () {
-                return "Buscando..";
+        return {
+            label: item.descripcionConExistencias,
+            producto: item
+        }
+
+    });
+
+    $("#listProductos").autocomplete({
+        //source take a list of data
+        source: finalData,
+        minLength: 1,//min = 2 characters
+        select: function (event, ui) {
+            producto_value = null;
+            //producto_value = ui.item.producto; // start an alert which contains the value of proposal
+            if (ui.item.producto.cantidad > 0) {                
+                $("#listProductos").val(ui.item.label);
+                producto_value = ui.item.producto;
+            } else {
+                MuestraToast('warning', "No existe suficiente producto en inventario");
+                $("#listProductos").val("");
+            }
+            return false;
+        }
+    });
+
+    $("#listProductos").keypress(function (evt) {
+        producto_value = null;
+        if (evt.which == 13) {
+            var producto = arrayProductos.find(x => x.codigoBarras == $("#listProductos").val());
+            if (producto != null) {
+                $("#listProductos").val(producto.descripcionConExistencias);
+                producto_value = producto;
+                $("#cantidad").val(1);
+                $("#btnAgregarProducto").click();
+            }
+            else {
+                MuestraToast("error", "El producto no existe");
+                $("#listProductos").val("");
             }
         }
     });
 
-    $('#idProducto').val("0").trigger('change');
+    //$("#idProducto").html('').select2();
+    //$('#idProducto').select2({
+    //    width: "100%",
+    //    placeholder: "--SELECCIONA--",
+    //    data: result.Modelo,
+
+    //    language: {
+    //        noResults: function () {
+    //            return "No hay resultado";
+    //        },
+    //        searching: function () {
+    //            return "Buscando..";
+    //        }
+    //    }
+    //});
+
+    //$('#idProducto').val("0").trigger('change');
 
     //Producto Tipo Envase
     $("#idProductoEnvase").html('').select2();
     $('#idProductoEnvase').select2({
         width: "100%",
         placeholder: "--SELECCIONA--",
-        data: (result.Modelo).filter(x => x.idLineaProducto == "19"),
+        data: (result.Modelo).filter(x => x.idLineaProducto == 19),
 
         language: {
             noResults: function () {
@@ -1732,6 +1796,8 @@ $(document).ready(function () {
         $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
     }
 
+    $("#listProductos").focus(); 
+
 });
 
 //*********************** PEDIDO ESPECIAL  ************************************
@@ -1743,7 +1809,7 @@ $("#NoPedidoEspecial").keyup(function (evt) {
 
 function AbrirModalPedidoEspecial() {
     $("#NoPedidoEspecial").val("");
-    LimpiarFormPedidoEspecial();    
+    LimpiarFormPedidoEspecial();
     $('#ModalPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
@@ -1764,12 +1830,12 @@ function BuscarPedidoEspecial() {
         beforeSend: function (xhr) {
             ShowLoader();
         },
-        success: function (data) {            
+        success: function (data) {
             if (data.Estatus === 200) {
                 productosPedidoEspecial = data;
                 var i;
                 var html = "";
-                
+
                 for (i = 0; i < productosPedidoEspecial.Modelo.length; i++) {
 
                     html += '<tr>';
@@ -1817,20 +1883,20 @@ function BuscarPedidoEspecial() {
         },
         error: function (xhr, status) {
             OcultarLoader();
-            MuestraToast('error','Ocurrio un error al consultar el pedido especial');
+            MuestraToast('error', 'Ocurrio un error al consultar el pedido especial');
         }
     });
 }
 
 function AgregarPedidoEspecial() {
 
-    var i,totalProductosAgregados=0;
+    var i, totalProductosAgregados = 0;
     for (i = 0; i < productosPedidoEspecial.Modelo.length; i++) {
         if (productosPedidoEspecial.Modelo[i].activo) {
             AgregarProducto(productosPedidoEspecial.Modelo[i], (productosPedidoEspecial.Modelo[i].cantidad < productosPedidoEspecial.Modelo[i].cantidadRecibida ? productosPedidoEspecial.Modelo[i].cantidad : productosPedidoEspecial.Modelo[i].cantidadRecibida))
             totalProductosAgregados = totalProductosAgregados + 1;
         }
-   }
+    }
 
     if (totalProductosAgregados > 0) {
 
@@ -1840,14 +1906,14 @@ function AgregarPedidoEspecial() {
         $('#ModalPedidoEspecial').modal('hide');
     }
     else {
-        MuestraToast("error","No existen productos válidos para agregar a la venta");
+        MuestraToast("error", "No existen productos válidos para agregar a la venta");
     }
 
 
-   
+
 }
 
-function LimpiarFormPedidoEspecial() {  
+function LimpiarFormPedidoEspecial() {
 
     if (tblProductosPedidoEspecial != null && tblProductosPedidoEspecial != undefined) {
         tblProductosPedidoEspecial.destroy();
