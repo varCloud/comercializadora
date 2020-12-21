@@ -27,11 +27,13 @@
 }
 
 @section Styles {
+    <link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+
 
     <style>
         .modal {
@@ -85,7 +87,8 @@
                                     @Html.HiddenFor(x => idClienteDevolucion)
 
                                     <input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">
-                                    <select id="idProducto"></select>
+                                    @*<select id="idProducto"></select>*@
+                                    <input type="text" class="form-control" id="listProductos" name="listProductos" placeholder="Escriba el nombre del producto">
                                 </div>
                             </div>
 
@@ -100,7 +103,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             </div>
-                                            <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                            <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event)" value="1">
                                             <div class="input-group-append">
                                                 <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
                                             </div>
@@ -837,7 +840,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               
                             </tbody>
                         </table>
                     </div>
@@ -863,7 +865,8 @@
 
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>   
+    <script src="~/assets/js/jquery-ui.min.js"></script>
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/page/datatables.js"></script>
