@@ -4,6 +4,9 @@
 
     List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
     DateTime hoy = DateTime.Now;
+    lluviaBackEnd.Models.Sesion usuario = Session["UsuarioActual"] as lluviaBackEnd.Models.Sesion;
+    ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
+    ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
     //List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
     //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
     //List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
