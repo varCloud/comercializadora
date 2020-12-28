@@ -1301,7 +1301,7 @@ namespace lluviaBackEnd.Utilerias
                             if (i < productos.Count)
                             {
                                 //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
-                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", "").Replace("'",""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
                                 Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
 
                                 tds += @"<td style='text-align:center;'  align='center' >";
@@ -1349,7 +1349,7 @@ namespace lluviaBackEnd.Utilerias
                     fs.Flush();
                 }
                 dic.Add("nombreArchivoPDF", nombreArchivoPDF);
-                dic.Add("content", content);
+                dic.Add("content", new byte[8]);
 
             }
             catch (Exception ex)
