@@ -1,0 +1,31 @@
+﻿@model lluviaBackEnd.Models.Ventas
+@{
+    ViewBag.Title = "Ventas";   
+}
+
+<section class="section">
+    <div class="section-body">
+        <div class="row mt-sm-12">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="padding-20">
+                        <div class="col-md-12">
+                            <div class="section-title">Apertura de Caja</div>
+                            <hr />
+                            @Html.Action("_IngresoEfectivo", "Ventas", new { idTipoIngresoEfectivo = 1 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+   
+    <script src="~/js/index.js"></script>
+    <script src="~/js/EvtAperturaCaja.js"></script>
+}

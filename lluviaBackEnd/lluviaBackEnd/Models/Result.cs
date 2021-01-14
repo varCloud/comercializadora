@@ -11,6 +11,8 @@ namespace lluviaBackEnd.Models
 
         public int status { get; set; }
         public string Mensaje { get; set; }
+        public int id { get; set; }
+
 
     }
 }

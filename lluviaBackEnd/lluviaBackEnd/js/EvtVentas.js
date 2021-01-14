@@ -283,7 +283,7 @@ $('#btnAgregarProducto').click(function (e) {
     //    initInputsTabla();
     //}
 
-    if (AgregarProducto(producto_value, $('#cantidad').val())) {       
+    if (AgregarProducto(producto_value, $('#cantidad').val())) {
 
         //Agregar envase
         if (parseInt(producto_value.idLineaProducto) === 20) {
@@ -293,7 +293,7 @@ $('#btnAgregarProducto').click(function (e) {
         $('#cantidad').val('1');
         $("#listProductos").val('');
         producto_value = null;
-        $("#listProductos").focus(); 
+        $("#listProductos").focus();
 
         actualizaTicketVenta();
         initInputsTabla();
@@ -1343,7 +1343,6 @@ function AbrirModalCierreDia() {
     $('#ModalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
-
 $('#btnRetirarExcesoEfectivo').click(function (e) {
 
     var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
@@ -1505,6 +1504,9 @@ function ConsultaInfoCierre() {
         },
         success: function (data) {
             OcultarLoader();
+            $('#AperturaCaja').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">$" + data.Modelo.montoApertura + "</span></p>");
+            $('#IngresosEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">$" + data.Modelo.montoIngresosEfectivo + "</span></p>");
+
             $('#ventasDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
             $('#montoVentasDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Monto de Ventas: </span><span class=\"float-right text-muted\">$" + data.Modelo.montoVentasDelDia + "</span></p>");
             $('#cantidadEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
@@ -1531,6 +1533,8 @@ function ConsultaInfoCierreDia() {
         },
         success: function (data) {
             OcultarLoader();
+            $('#AperturaCajaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">$" + data.Modelo.montoApertura + "</span></p>");
+            $('#IngresosEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">$" + data.Modelo.montoIngresosEfectivo + "</span></p>");
             $('#vtasDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día:</span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
             $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
             $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$" + data.Modelo.retirosHechosDia + "</span></p>");
@@ -1682,7 +1686,7 @@ function InitSelect2Productos() {
         select: function (event, ui) {
             producto_value = null;
             //producto_value = ui.item.producto; // start an alert which contains the value of proposal
-            if (ui.item.producto.cantidad > 0) {                
+            if (ui.item.producto.cantidad > 0) {
                 $("#listProductos").val(ui.item.label);
                 producto_value = ui.item.producto;
             } else {
@@ -1781,7 +1785,7 @@ function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
 
 
 $(document).ready(function () {
-
+    //ValidaAperturaCajas();
     arrayPreciosRangos = ObtenerPrecios_(0);
     InitSelect2Productos();
     InitSelect2(); // los demas select2
@@ -1796,7 +1800,7 @@ $(document).ready(function () {
         $('#idCliente').val($('#idClienteDevolucion').val()).trigger('change');
     }
 
-    $("#listProductos").focus(); 
+    $("#listProductos").focus();
 
 });
 
@@ -1925,4 +1929,77 @@ function LimpiarFormPedidoEspecial() {
     productosPedidoEspecial = '';
 
 }
+
+//Ingreso Efectivo
+function AbrirModalIngresoEfectivo() {
+    $.ajax({
+        url: rootUrl("/Ventas/_IngresoEfectivo"),
+        data: { idTipoIngresoEfectivo: 2 },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $("#viewIngresoEfectivo").html(data);
+            $('#ModalIngresoEfectivo').modal({ backdrop: 'static', keyboard: false, show: true });
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al intentar mostrar la vista de ingreso de efectivo');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
+
+function onBeginSubmitIngresoEfectivo() {
+    ShowLoader();
+}
+function onCompleteSubmitIngresoEfectivo() {
+    OcultarLoader();
+}
+function onSuccessResultIngresoEfectivo(data) {
+    OcultarLoader();
+    if (data.status === 200) {
+        MuestraToast('success', data.Mensaje);
+        ImprimeTicketIngresoEfectivo(data.id);
+        $('#ModalIngresoEfectivo').modal('hide');
+    }
+    else {
+        MuestraToast('error', data.Mensaje);
+    }
+
+}
+function onFailureResultIngresoEfectivo() {
+    OcultarLoader();
+}
+
+function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketIngresosEfectivo"),
+        data: { idIngresoEfectivo: idIngresoEfectivo},
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
 

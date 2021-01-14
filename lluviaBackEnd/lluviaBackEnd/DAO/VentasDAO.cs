@@ -159,7 +159,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion,int idPedidoEspecial)
+        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial)
         {
             Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
             try
@@ -187,7 +187,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta,cantProductosLiq=r1.cantProductosLiq };
+                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta, cantProductosLiq = r1.cantProductosLiq };
                         //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
                     }
                     else
@@ -222,7 +222,7 @@ namespace lluviaBackEnd.DAO
         {
             var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
             var stringBuilder = new StringBuilder();
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 , OmitXmlDeclaration= true }))
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8, OmitXmlDeclaration = true }))
             {
                 xmlSerializer.Serialize(xmlWriter, precios);
             }
@@ -424,19 +424,19 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idEstacion", retiros.idEstacion==0 ? (object) null : retiros.idEstacion);
+                    parameters.Add("@idEstacion", retiros.idEstacion == 0 ? (object)null : retiros.idEstacion);
                     parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
-                    parameters.Add("@idRetiro", retiros.idRetiro==0 ? (object) null : retiros.idRetiro);
+                    parameters.Add("@idRetiro", retiros.idRetiro == 0 ? (object)null : retiros.idRetiro);
                     parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
                     parameters.Add("@idAlmacen", retiros.idAlmacen == 0 ? (object)null : retiros.idAlmacen);
-                    
+
                     var result = db.QueryMultiple("SP_CONSULTA_RETIROS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros,splitOn: "idStatus").ToList();
+                        notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros, splitOn: "idStatus").ToList();
                     }
                     else
                     {
@@ -471,7 +471,7 @@ namespace lluviaBackEnd.DAO
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {
-                        notificacion.Estatus = r1.status;   
+                        notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
                         notificacion.Modelo = result.Read<Retiros, Status, Retiros>(MapRetiros, splitOn: "idStatus").ToList();
                     }
@@ -515,7 +515,7 @@ namespace lluviaBackEnd.DAO
 
 
 
-        public Retiros MapRetiros(Retiros r,Status s)
+        public Retiros MapRetiros(Retiros r, Status s)
         {
             r.estatusRetiro = s;
             return r;
@@ -595,6 +595,81 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Result ValidaAperturaCajas(int idUsuario)
+        {
+            Result result = new Result();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", idUsuario);
+                    result = db.Query<Result>("SP_VALIDA_APERTURA_CAJAS", parameters, commandType: CommandType.StoredProcedure).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public Result IngresoEfectivo(int idUsuario,float monto,int idTipoIngreso)
+        {
+            Result result = new Result();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", idUsuario);
+                    parameters.Add("@monto", monto);
+                    parameters.Add("@idTipoIngreso", idTipoIngreso);
+                    result = db.Query<Result>("SP_INGRESO_ECTIVO", parameters, commandType: CommandType.StoredProcedure).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public Notificacion<List<IngresoEfectivo>> ConsultaIngresosEfectivo(IngresoEfectivo ingresoEfectivo)
+        {
+            Notificacion<List<IngresoEfectivo>> notificacion = new Notificacion<List<IngresoEfectivo>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoIngreso", ingresoEfectivo.idTipoIngreso == 0 ? (object)null : ingresoEfectivo.idTipoIngreso);
+                    parameters.Add("@fecha", ingresoEfectivo.fechaAlta == DateTime.MinValue ? (object)null : ingresoEfectivo.fechaAlta);
+                    parameters.Add("@idIngreso", ingresoEfectivo.idIngreso == 0 ? (object)null : ingresoEfectivo.idIngreso);
+                    parameters.Add("@idUsuario", ingresoEfectivo.idUsuario == 0 ? (object)null : ingresoEfectivo.idUsuario);
+                    parameters.Add("@idAlmacen", ingresoEfectivo.idAlmacen == 0 ? (object)null : ingresoEfectivo.idAlmacen);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_INGRESOS_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<IngresoEfectivo>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
 
     }
 }

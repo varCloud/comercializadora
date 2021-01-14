@@ -259,6 +259,7 @@
     <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
+    <Compile Include="Models\IngresoEfectivo.cs" />
     <Compile Include="Models\InventarioFisico.cs" />
     <Compile Include="Models\LimiteInvetario.cs" />
     <Compile Include="Models\MargenBruto.cs" />
@@ -1043,6 +1044,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\EvtAperturaCaja.js" />
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
@@ -1261,6 +1263,8 @@
     <Content Include="Views\PedidosEspeciales\VerTicket.cshtml" />
     <Content Include="Views\PedidosEspeciales\_VerPedido.cshtml" />
     <Content Include="Views\Productos\CodigosDeBarras.cshtml" />
+    <Content Include="Views\Ventas\_IngresoEfectivo.cshtml" />
+    <Content Include="Views\Ventas\AperturaCajas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

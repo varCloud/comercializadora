@@ -48,6 +48,15 @@ namespace lluviaBackEnd.Models
         RetirosCierreDia = 2
     }
 
+    public enum EnumTipoIngresoEfectivo
+    {
+        [Description("Apertura de cajas")]
+        AperturaCajas = 1,
+
+        [Description("Solicitud de efectivo")]
+        SolicitudEfectivo = 2
+    }
+
     public enum EnumTipoMargenBruto
     {
         Global=1,
