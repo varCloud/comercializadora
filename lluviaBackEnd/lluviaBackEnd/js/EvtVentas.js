@@ -1376,10 +1376,10 @@ $('#btnCierreDia').click(function (e) {
     var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
     var monto = totEfe - totRet;
 
-    if ((monto) <= 0.0) {
-        MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
-        return
-    }
+    //if ((monto) <= 0.0) {
+    //    MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
+    //    return
+    //}
 
     swal({
         title: 'Mensaje',
