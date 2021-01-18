@@ -1752,6 +1752,19 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        public ActionResult _ExcesoEfectivo()
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                List<ExcesoEfectivo> excesoEfectivos = new VentasDAO().excesoEfectivo((usuario.idRol == 1?0:usuario.idUsuario));
+                return PartialView(excesoEfectivos);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
 

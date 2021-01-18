@@ -671,5 +671,27 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public List<ExcesoEfectivo> excesoEfectivo(int idUsuario)
+        {
+            List<ExcesoEfectivo> excesoEfectivos = new List<ExcesoEfectivo>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", idUsuario == 0 ? (object)null : idUsuario);
+                    excesoEfectivos = db.Query<ExcesoEfectivo>("SP_CONSULTA_EXCESO_EFECTIVO", parameters, commandType: CommandType.StoredProcedure).ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return excesoEfectivos;
+        }
+
     }
 }

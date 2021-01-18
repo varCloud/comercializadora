@@ -273,3 +273,32 @@ function InitSelect2() {
 
    // $('#' + item).val("0").trigger('change');
 }
+
+function ConsultExcesoEfectivo() {
+    $.ajax({
+        url: rootUrl("/Ventas/_ExcesoEfectivo"),       
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $('#NotificacionesExcesoEfectivo').html(data);
+            feather.replace();
+            iziToast.warning({
+                title: 'Exceso de efectivo en caja',
+                message: '',
+                position: 'bottomRight'
+            });
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+

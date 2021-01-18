@@ -1,0 +1,39 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models
+@model List<lluviaBackEnd.Models.ExcesoEfectivo>
+
+@if (Model.Count() > 0)
+{
+
+    <a href="#" data-toggle="dropdown"
+       class="nav-link nav-link-lg message-toggle">
+        @*<img src="~/assets/img/icon_notificacion.png" class="user-img-radious-style">*@
+        <i data-feather="bell" class="bell"></i>
+        <span class="badge headerBadge1">
+            @Model.Count()
+        </span>
+    </a>
+    <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
+        <div class="dropdown-header">
+            Notificaciones
+            <div class="float-right">
+                Exceso de Efectivo
+            </div>
+        </div>
+        <div class="dropdown-list-content dropdown-list-icons">
+            @foreach (ExcesoEfectivo e in Model)
+            {
+                <a href="#" class="dropdown-item dropdown-item-unread">
+                    <span class="dropdown-item-icon bg-danger text-white">
+                        <i class="fas fa-dollar-sign"></i>
+                    </span> <span class="dropdown-item-desc">
+                        @e.Nombre <span class="time">
+                            @e.EfectivoDisponible.ToString("C", new CultureInfo("en-US"))
+                        </span>
+                    </span>
+                </a>
+            }
+
+        </div>
+    </div>
+}

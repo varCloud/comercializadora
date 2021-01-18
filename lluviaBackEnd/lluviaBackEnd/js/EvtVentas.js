@@ -942,6 +942,7 @@ $('#btnGuardarVenta').click(function (e) {
 
                 InitSelect2Productos();
                 limpiarTicket();
+                ConsultExcesoEfectivo();
             }
             $('#ModalPrevioVenta').modal('hide');
 
@@ -1405,6 +1406,7 @@ $('#btnCierreDia').click(function (e) {
                         $('#ModalCierre').modal('hide');
                         OcultarLoader();
                         ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
+                        ConsultExcesoEfectivo();
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
@@ -1436,6 +1438,7 @@ function retirarExcesoEfectivo(montoRetiro) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             $('#ModalCierreExceso').modal('hide');
             ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
+            ConsultExcesoEfectivo();
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -1967,6 +1970,7 @@ function onSuccessResultIngresoEfectivo(data) {
         MuestraToast('success', data.Mensaje);
         ImprimeTicketIngresoEfectivo(data.id);
         $('#ModalIngresoEfectivo').modal('hide');
+        ConsultExcesoEfectivo();
     }
     else {
         MuestraToast('error', data.Mensaje);

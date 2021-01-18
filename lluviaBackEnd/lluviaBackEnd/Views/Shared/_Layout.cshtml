@@ -1,5 +1,5 @@
 ﻿@using lluviaBackEnd.Models;
-@{ 
+@{
     Sesion sesion = Session["UsuarioActual"] as Sesion;
     Boolean ExisteInventarioFisicoActivo = Sesion.ExisteInventarioFisicoActivo();
 
@@ -59,6 +59,9 @@
                     </ul>
                 </div>
                 <ul class="navbar-nav navbar-right">
+                    <li class="dropdown dropdown-list-toggle" id="NotificacionesExcesoEfectivo">
+                       @Html.Action("_ExcesoEfectivo", "Ventas")
+                    </li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown"
                            class="nav-link dropdown-toggle nav-link-lg nav-link-user">
@@ -80,7 +83,7 @@
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
                         @*<a href="index.html">*@
-                            <img style="width:60px; height:53px;" alt="image" src="~/assets/img/logo_lluvia_64.png" class="header-logo" /> <span class="logo-name"></span>
+                        <img style="width:60px; height:53px;" alt="image" src="~/assets/img/logo_lluvia_64.png" class="header-logo" /> <span class="logo-name"></span>
                         @*</a>*@
                     </div>
                     <div class="sidebar-user">
@@ -133,12 +136,12 @@
                                 </a>
                             </li>
                             @*<li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
-                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
-                </ul>
-            </li>*@
+                                    <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
+                                    </ul>
+                                </li>*@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
