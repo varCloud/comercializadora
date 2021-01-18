@@ -56,6 +56,7 @@ namespace lluviaBackEnd.Controllers
                     ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
 
                     ViewBag.venta = venta;
+                    ViewBag.comisionBancaria = usuario.comisionBancaria;
                     return View();
                 }
                 else
@@ -547,13 +548,15 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
                 e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
-                Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
-                Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
-                Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
+                Rectangle datosProducto = new Rectangle(5, 285, 180, 82);
+                Rectangle datosCantidad = new Rectangle(190, 285, 30, 82);
+                Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
 
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
                 e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+                e.Graphics.DrawString("  Forma de Pago: " + notificacion.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 14;
 
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
@@ -565,6 +568,7 @@ namespace lluviaBackEnd.Controllers
 
                 float monto = 0;
                 float montoIVA = 0;
+                float montoComisionBancaria = 0;
                 float montoAhorro = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
@@ -575,6 +579,7 @@ namespace lluviaBackEnd.Controllers
 
                     monto += notificacion.Modelo[i].monto;
                     montoIVA += notificacion.Modelo[i].montoIVA;
+                    montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
                     montoAhorro += notificacion.Modelo[i].ahorro;
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
@@ -621,6 +626,13 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
+                if (montoComisionBancaria > 0)
+                {
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
+
                 if (montoIVA > 0)
                 {
                     e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -629,7 +641,7 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
                 if (montoAhorro > 0)

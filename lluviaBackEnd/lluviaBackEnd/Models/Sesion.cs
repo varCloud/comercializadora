@@ -36,6 +36,7 @@ namespace lluviaBackEnd.Models
         public string configurado { get; set; }
         public int idEstacion { get; set; }
         public string macAdress { get; set; }
+        public float comisionBancaria { get; set; }
 
         public int devolucionesPermitidas { get; set; }
         public int agregarProductosPermitidos { get; set; }
