@@ -635,6 +635,7 @@ namespace lluviaBackEnd.Utilerias
                 string html = "";
                 float monto = 0;
                 float montoIVA = 0;
+                float montoComisionBancaria = 0;
                 float montoAhorro = 0;
 
                 html +=
@@ -667,6 +668,9 @@ namespace lluviaBackEnd.Utilerias
                                           <tr>
                                             <td colspan=""2"">Cliente: " + tickets[0].nombreCliente.ToString().ToUpper() + @"</td>
                                           </tr>
+                                          <tr>
+                                            <td colspan=""2"">Forma de Pago: " + tickets[0].descFormaPago.ToString() + @"</td>
+                                          </tr>
                                         </table>
                                     </td>
                                 </tr>
@@ -689,6 +693,7 @@ namespace lluviaBackEnd.Utilerias
                                 {
                                     monto += tickets[i].monto;
                                     montoIVA += tickets[i].montoIVA;
+                                    montoComisionBancaria += tickets[i].montoComisionBancaria;
                                     montoAhorro += tickets[i].ahorro;
 
                                     html+= @"   <tr>
@@ -738,6 +743,21 @@ namespace lluviaBackEnd.Utilerias
                                     </td>
                                 </tr>";
 
+                if (montoComisionBancaria > 0)
+                {
+                    html += @"   <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                            <tr>
+                                            <td width='65%'>COMISIÓN BANCARIA:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+                }
+
                 if (montoIVA > 0)
                 {
                     html+= @"   <tr>
@@ -758,7 +778,7 @@ namespace lluviaBackEnd.Utilerias
                                         <table>
                                           <tr>
                                             <td width='65%'>TOTAL:</td>
-                                            <td width='25%' style='color:black; text-align:right;'>" + (monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                             <td width='10%' style='color:black; text-align:left;'></td>
                                           </tr>
                                         </table>

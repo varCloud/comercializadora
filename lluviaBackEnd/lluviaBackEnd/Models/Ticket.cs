@@ -23,9 +23,12 @@ namespace lluviaBackEnd.Models
         public int cantidadAnteriorInvGeneral { get; set; }
         public DateTime fechaAlta { get; set; }
         public float montoIVA { get; set; }
+        public float montoComisionBancaria { get; set; }
         public float ahorro { get; set; }
         public float precioVenta { get; set; }
         public int idVentaDetalle { get; set; }
+        public int formaPago { get; set; }
+        public string descFormaPago { get; set; }
         public int productosDevueltos { get; set; }
         public int productosAgregados { get; set; }
         public EnumTipoVenta tipoVenta { get; set; }
