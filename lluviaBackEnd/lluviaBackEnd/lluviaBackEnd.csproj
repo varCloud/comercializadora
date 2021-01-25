@@ -257,6 +257,7 @@
     <Compile Include="Models\DiasPromedioInventario.cs" />
     <Compile Include="Models\DropSize.cs" />
     <Compile Include="Models\EstatusProducto.cs" />
+    <Compile Include="Models\ExcesoEfectivo.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\IngresoEfectivo.cs" />
@@ -962,6 +963,7 @@
     <Content Include="assets\img\details_close.png" />
     <Content Include="assets\img\details_open.png" />
     <Content Include="assets\img\favicon.ico" />
+    <Content Include="assets\img\icon_notificacion.png" />
     <Content Include="assets\img\image-64.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\logo_lluvia.png" />
@@ -1265,6 +1267,7 @@
     <Content Include="Views\Productos\CodigosDeBarras.cshtml" />
     <Content Include="Views\Ventas\_IngresoEfectivo.cshtml" />
     <Content Include="Views\Ventas\AperturaCajas.cshtml" />
+    <Content Include="Views\Ventas\_ExcesoEfectivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

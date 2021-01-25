@@ -165,6 +165,7 @@ function limpiaModalPrevio() {
     document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoComisionBancaria").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
@@ -826,7 +827,7 @@ $('#btnGuardarVenta').click(function (e) {
 
     if ((esDevolucion == "false") || (esDevolucion == "False")) {
         // validaciones
-        if ($('#efectivo').val() == "") {
+        if ( ( $('#efectivo').val() == "") && ( parseInt(formaPago) == parseInt(1) ) ) {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
             return
         }
@@ -942,6 +943,7 @@ $('#btnGuardarVenta').click(function (e) {
 
                 InitSelect2Productos();
                 limpiarTicket();
+                ConsultExcesoEfectivo();
             }
             $('#ModalPrevioVenta').modal('hide');
 
@@ -1246,13 +1248,23 @@ $("#montoARetirar").on("keyup", function (event) {
 
 
 $("#idCliente").on("change", function () {
+    calculaTotales();
+});
+
+function calculaTotales() {
 
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("chkFacturar").checked = false;
     document.getElementById("divUsoCFDI").style.display = 'none';
     $('#usoCFDI').val("3").trigger('change');
-    $('#formaPago').val("1").trigger('change');
+    var formaPago = $('#formaPago').val();
+    var porcentajeComisionBancaria = parseFloat(0);
+
+    // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
+    if ((parseInt(formaPago) == parseInt(4)) || (parseInt(formaPago) == parseInt(18))) {
+        porcentajeComisionBancaria = $('#comisionBancaria').val();
+    }
 
     var idCliente = parseFloat($('#idCliente').val());
     var data = ObtenerCliente(idCliente);
@@ -1272,6 +1284,8 @@ $("#idCliente").on("change", function () {
     }
 
     var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
+    var comisionBancaria = parseFloat((subTotal) * (porcentajeComisionBancaria / 100)).toFixed(2);
+    subTotal = parseFloat(subTotal) + parseFloat(comisionBancaria);
     var iva = parseFloat(0).toFixed(2);
 
     // si lleva iva
@@ -1282,6 +1296,7 @@ $("#idCliente").on("change", function () {
     var final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
 
     document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + cantidadDescontada + "</h4>";
+    document.getElementById("previoComisionBancaria").innerHTML = "<h4>$" + comisionBancaria + "</h4>";
     document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
@@ -1321,7 +1336,14 @@ $("#idCliente").on("change", function () {
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;
+
+}
+
+
+$("#formaPago").on("change", function () {
+    calculaTotales();
 });
+
 
 
 function AbrirModalConsultaExistencias() {
@@ -1405,6 +1427,7 @@ $('#btnCierreDia').click(function (e) {
                         $('#ModalCierre').modal('hide');
                         OcultarLoader();
                         ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
+                        ConsultExcesoEfectivo();
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
@@ -1436,6 +1459,7 @@ function retirarExcesoEfectivo(montoRetiro) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             $('#ModalCierreExceso').modal('hide');
             ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
+            ConsultExcesoEfectivo();
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -1967,6 +1991,7 @@ function onSuccessResultIngresoEfectivo(data) {
         MuestraToast('success', data.Mensaje);
         ImprimeTicketIngresoEfectivo(data.id);
         $('#ModalIngresoEfectivo').modal('hide');
+        ConsultExcesoEfectivo();
     }
     else {
         MuestraToast('error', data.Mensaje);
