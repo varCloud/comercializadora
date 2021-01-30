@@ -28,7 +28,7 @@ namespace lluviaBackEnd.Models
 
         [Display(Name = "cantidad")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public int cantidad { get; set; }
+        public float cantidad { get; set; }
 
         [Display(Name = "fechaAlta")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]

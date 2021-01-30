@@ -7,6 +7,7 @@ var tblProductosPedidoEspecial;
 var productosPedidoEspecial = '';
 var idPedidoEspecial = parseInt(0);
 var producto_value = null;
+var esDecimal_ = parseInt(0);
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -313,19 +314,19 @@ $('#btnAgregarEnvase').click(function (e) {
 
 function AgregarProducto(producto, cantidad) {
 
-    cantidad = parseInt(cantidad) || 0;
+    cantidad = parseFloat(cantidad) || 0.0;
 
     if (producto === null || producto === undefined) {
         MuestraToast('warning', "Debe seleccionar el producto que desea agregar.");
         return false;
     }
 
-    if (parseInt(cantidad) === 0) {
+    if (parseFloat(cantidad) === 0) {
         MuestraToast('warning', "Debe escribir la cantidad de productos que va a agregar.");
         return false;
     }
 
-    if (producto.cantidad < parseInt(cantidad)) {
+    if (producto.cantidad < parseFloat(cantidad)) {
         MuestraToast('warning', "no existe suficiente producto en inventario");
         return false;
     }
@@ -356,7 +357,7 @@ function AgregarProducto(producto, cantidad) {
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
             if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
-                var cantidad = parseInt(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
+                var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
                 tblVtas.rows[i].cells[4].children[0].value = cantidad;
                 existeProducto = true;
             }
@@ -863,7 +864,7 @@ $('#btnGuardarVenta').click(function (e) {
             for (var i = 1; i < rCount; i++) {
                 var row_ = {
                     idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
                 };
                 productos.push(row_);
             }
@@ -876,7 +877,7 @@ $('#btnGuardarVenta').click(function (e) {
             for (var i = 1; i < rCount; i++) {
                 var row_ = {
                     idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
                     productosDevueltos: parseInt(tblVtas.rows[i].cells[7].children[0].value),
                     idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
                 };
@@ -891,7 +892,7 @@ $('#btnGuardarVenta').click(function (e) {
             for (var i = 1; i < rCount; i++) {
                 var row_ = {
                     idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                    cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                    cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
                     idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
                 };
                 productos.push(row_);
@@ -1715,6 +1716,25 @@ function InitSelect2Productos() {
                 MuestraToast('warning', "No existe suficiente producto en inventario");
                 $("#listProductos").val("");
             }
+
+            console.log(ui.item.producto.idUnidadMedida);
+            var cantidad_ = document.getElementById("cantidad");
+
+            // se valida si el campo cantidad puede aceptar decimales para cuando la unidad de medida es Kilogramo,Gramo,Litro,Mililitro
+            if  (
+                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(1) ||    // Kilogramo
+                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(2) ||    // Gramo
+                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(3) ||    // Litro
+                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(4)       // Mililitro
+            ) {
+                esDecimal_ = parseInt(1);
+            }
+            else {
+                esDecimal_ = parseInt(0);
+            }
+
+            $('#cantidad').val('1');
+
             return false;
         }
     });
@@ -1774,6 +1794,37 @@ function InitSelect2Productos() {
     $('#idProductoEnvase').val("0").trigger('change');
 
 }
+
+
+function validaTipoMedida(txt, evt) {
+
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+    if ( esDecimal_ === parseInt(1) ) {
+
+        if (charCode == 46) {
+            if (txt.value.indexOf('.') === -1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (charCode > 31 &&
+                (charCode < 48 || charCode > 57))
+                return false;
+        }
+        return true;
+    }
+    else {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+}
+
 
 
 
