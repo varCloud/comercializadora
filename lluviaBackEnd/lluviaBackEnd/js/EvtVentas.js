@@ -789,7 +789,7 @@ function ObtenerCliente(idCliente) {
         dataType: 'json',
         async: false,
         beforeSend: function (xhr) {
-            console.log("Antes_")
+            //console.log("Antes_")
         },
         success: function (data) {
             result = data;
@@ -827,7 +827,7 @@ $('#btnGuardarVenta').click(function (e) {
 
     if ((esDevolucion == "false") || (esDevolucion == "False")) {
         // validaciones
-        if ( ( $('#efectivo').val() == "") && ( parseInt(formaPago) == parseInt(1) ) ) {
+        if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
             return
         }
@@ -1340,7 +1340,8 @@ function calculaTotales() {
 }
 
 
-$("#formaPago").on("change", function () {
+$("#formaPago").on("change", function (value) {
+    this.value == 1 ? $('#dvEfectivo').css('display','') : $('#dvEfectivo').css('display','none');
     calculaTotales();
 });
 
@@ -1390,7 +1391,6 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
     retirarExcesoEfectivo(montoARetirar_);
 
 });
-
 
 $('#btnCierreDia').click(function (e) {
     //var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
@@ -1493,7 +1493,6 @@ function ConsultRetiros() {
     });
 }
 
-
 function ConsultRetirosV2() {
     $.ajax({
         url: rootUrl("/Ventas/_ObtenerRetirosV2"),
@@ -1544,7 +1543,6 @@ function ConsultaInfoCierre() {
         }
     });
 }
-
 
 function ConsultaInfoCierreDia() {
     $.ajax({
@@ -1825,6 +1823,7 @@ $(document).ready(function () {
     }
 
     $("#listProductos").focus();
+    $('#dvEfectivo').css('display', '')
 
 });
 
