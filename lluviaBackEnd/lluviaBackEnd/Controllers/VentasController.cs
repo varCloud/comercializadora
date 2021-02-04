@@ -26,6 +26,7 @@ namespace lluviaBackEnd.Controllers
         int idVenta = 0;
         Retiros retiro = new Retiros();
         int idIngresoEfectivo = 0;
+        string nombreCodigoTicket = string.Empty;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
@@ -481,6 +482,7 @@ namespace lluviaBackEnd.Controllers
                 pd.DefaultPageSettings.Margins.Bottom = 0;
                 pd.DefaultPageSettings.PaperSize = ps;
                 pd.Print();
+                //Utils.DeleteFile(Utils.ObtnerFolderCodigos() + nombreCodigoTicket);
 
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
@@ -656,6 +658,21 @@ namespace lluviaBackEnd.Controllers
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
 
+
+
+                //Se pinta codigo de barras en ticket
+                nombreCodigoTicket = "Ticket_" + this.idVenta.ToString();
+                Utils.GenerarCodigoBarras(this.idVenta.ToString(), nombreCodigoTicket);
+                nombreCodigoTicket = "barras_" + nombreCodigoTicket + "_.jpg";
+
+                Image imagenCodigoTicket = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "Codigos\\" + nombreCodigoTicket);
+                datosfooter1.Y += 40;
+                Rectangle logo_ = new Rectangle(80, datosfooter1.Y, 300, 80);
+                e.Graphics.DrawImage(imagenCodigoTicket, logo_, 0, 0, 380.0F, 120.0F, units);
+
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
                 // para mas espaciado al final del ticket
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
@@ -677,8 +694,7 @@ namespace lluviaBackEnd.Controllers
                 //return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
 
-
-
+            
         }
 
 
