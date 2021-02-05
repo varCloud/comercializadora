@@ -10,7 +10,7 @@ namespace lluviaBackEnd.Models
     {
         public int Estatus { get; set; }
         public string Mensaje { get; set; }
-
+        public string archivo { get; set; }
         public string Errorline { get; set; }
         public T Modelo { get; set; }
     }

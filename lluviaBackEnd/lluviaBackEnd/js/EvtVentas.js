@@ -1007,6 +1007,7 @@ function ImprimeTicket(idVenta) {
             console.log(data);
             OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
+            setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();
@@ -1092,6 +1093,30 @@ function AbrirCajonDinero() {
     });
 }
 
+
+function eliminaArchivo(rutaArchivo) {
+    $.ajax({
+        url: rootUrl("/Productos/EliminaArchivo"),
+        data: { 'rutaArchivo': rutaArchivo },
+        method: 'post',
+        dataType: 'json',
+        //contentType: "text/xml",
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
 
 function numerico(evt) {
     evt = (evt) ? evt : window.event;

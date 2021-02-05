@@ -42,7 +42,7 @@ function ImprimeTicket(idVenta) {
         url: rootUrl("/Ventas/ImprimeTicket"),
         data: { idVenta: idVenta },
         method: 'post',
-        dataType: 'html',
+        dataType: 'json',
         async: true,
         beforeSend: function (xhr) {
             ShowLoader();
@@ -51,6 +51,9 @@ function ImprimeTicket(idVenta) {
             console.log(data);
             OcultarLoader();           
             MuestraToast('success', "Se envio el ticket a la impresora.");
+            //alert(data);
+            //alert(data.archivo);
+            setTimeout(() => { eliminaArchivo(data.archivo); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();           
@@ -113,7 +116,29 @@ function ImprimeTicketDespachadores(idVenta) {
     });
 }
 
-
+function eliminaArchivo(rutaArchivo) {
+    $.ajax({
+        url: rootUrl("/Productos/EliminaArchivo"),
+        data: { 'rutaArchivo': rutaArchivo },
+        method: 'post',
+        dataType: 'json',
+        //contentType: "text/xml",
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
 
 //function VerTicket(idVenta) {
 //    $.ajax({
