@@ -20,9 +20,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
-                listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-                ViewBag.listProductos = listProductos.Modelo;
+                //Notificacion<List<Producto>> listProductos = new Notificacion<List<Producto>>();
+                //listProductos = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
+                //ViewBag.listProductos = listProductos.Modelo;
                 List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
                 ViewBag.listProveedores = listProveedores;
                 List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();

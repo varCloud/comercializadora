@@ -196,12 +196,14 @@ function VerProducto(idProducto) {
     $('#idProducto').val(idProducto);
     $('#activo').val(data.activo);
     $('#descripcion').val(data.descripcion).prop('disabled', true);
-    $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', true);
-    $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', true);
-    $('#claveProdServ').val(data.claveProdServ).prop('disabled', true);
+    $('#idUnidadMedida').val(data.idUnidadMedida).trigger('change').prop('disabled', true);
+    $('#idLineaProducto').val(data.idLineaProducto).trigger('change').prop('disabled', true);
+    $('#claveProdServ').val(data.claveProdServ).trigger('change').prop('disabled', true);
     $('#claveUnidad').val(data.claveUnidad).prop('disabled', true);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', true);
     $('#articulo').val(data.articulo).prop('disabled', true);
+    $('#cantidadUnidadCompra').val(data.unidadCompra.cantidadUnidadCompra).prop('disabled', true);
+    $('#idUnidadCompra').val(data.unidadCompra.idUnidadCompra).trigger('change').prop('disabled', true);
     $('.field-validation-error').html("");
     document.getElementById('barra').src = '';
     document.getElementById('qr').src = '';
@@ -348,13 +350,15 @@ function EditarProducto(idProducto) {
     $('#idProducto').val(idProducto);
     $('#activo').val(data.activo);
     $('#descripcion').val(data.descripcion).prop('disabled', false);
-    $('#idUnidadMedida').val(data.idUnidadMedida).prop('disabled', false);
-    $('#idLineaProducto').val(data.idLineaProducto).prop('disabled', false);
+    $('#idUnidadMedida').val(data.idUnidadMedida).trigger('change').prop('disabled', false);
+    $('#idLineaProducto').val(data.idLineaProducto).trigger('change').prop('disabled', false);
     //console.log("idClaveProdServ", data.idClaveProdServ)
-    $('#cbClaveProdServ').val(data.idClaveProdServ).prop('disabled', false);
+    $('#cbClaveProdServ').val(data.idClaveProdServ).trigger('change').prop('disabled', false);
     $('#claveUnidad').val(data.claveUnidad).prop('disabled', false);
     $('#cantidadUnidadMedida').val(data.cantidadUnidadMedida).prop('disabled', false);
     $('#articulo').val(data.articulo).prop('disabled', false);
+    $('#cantidadUnidadCompra').val(data.unidadCompra.cantidadUnidadCompra).prop('disabled', false);
+    $('#idUnidadCompra').val(data.unidadCompra.idUnidadCompra).trigger('change').prop('disabled', false);
     $('.field-validation-error').html("");
     document.getElementById('barra').src = '';
     document.getElementById('qr').src = '';
@@ -371,11 +375,13 @@ function InitBtnAgregar() {
 
         $('#idProducto').val(0);
         $('#descripcion').val('').prop('disabled', false);
-        $('#idUnidadMedida').val(' ').prop('disabled', false);
-        $('#idLineaProducto').val('').prop('disabled', false);
-        $('#cbClaveProdServ').val('').prop('disabled', false);
+        $('#idUnidadMedida').val('').trigger('change').prop('disabled', false);
+        $('#idLineaProducto').val('').trigger('change').prop('disabled', false);
+        $('#cbClaveProdServ').val('').trigger('change').prop('disabled', false);
         $('#cantidadUnidadMedida').val('1').prop('disabled', false);
         $('#articulo').val('').prop('disabled', false);
+        $('#cantidadUnidadCompra').val('').prop('disabled', false);
+        $('#idUnidadCompra').val('').trigger('change').prop('disabled', false);
         $('.field-validation-error').html("");
         document.getElementById('barra').src = '';
         document.getElementById('qr').src = '';
@@ -780,6 +786,7 @@ $(document).ready(function () {
     initSelect('idLineaProductoBusqueda');
     initSelect('claveProdServBusqueda');
     initSelect('claveUnidadBusqueda');
+    initSelect('idUnidadCompra');
     /*
     $('#claveUnidadBusqueda').select2();
 

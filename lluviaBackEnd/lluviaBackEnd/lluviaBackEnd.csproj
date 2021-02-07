@@ -280,6 +280,7 @@
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
     <Compile Include="Models\Retiros.cs" />
     <Compile Include="Models\Ubicacion.cs" />
+    <Compile Include="Models\UnidadCompra.cs" />
     <Compile Include="Models\UsoCFDI.cs" />
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Precio.cs" />

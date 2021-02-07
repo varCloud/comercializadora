@@ -90,9 +90,12 @@ namespace lluviaBackEnd.Models
         public float porcUtilidadIndividual { get; set; }
         public float porcUtilidadMayoreo { get; set; }
 
+        public UnidadCompra unidadCompra { get; set; }
+
         public Producto()
         {
             estatusProducto = new EstatusProducto();
+            unidadCompra = new UnidadCompra();
         }
     }
 }

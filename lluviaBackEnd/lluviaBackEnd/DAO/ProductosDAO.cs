@@ -53,7 +53,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Producto>().ToList();
+                        notificacion.Modelo = result.Read<Producto,UnidadCompra,Producto>(mapProductos, splitOn: "idUnidadCompra").ToList();
                     }
                     else
                     {
@@ -70,6 +70,13 @@ namespace lluviaBackEnd.DAO
                 throw ex;
             }
             return notificacion;
+
+        }
+
+        public Producto mapProductos(Producto p,UnidadCompra u)
+        {
+            p.unidadCompra = u;
+            return p;
 
         }
 
@@ -106,7 +113,8 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Producto>().ToList();
+                        notificacion.Modelo = result.Read<Producto, UnidadCompra, Producto>(mapProductos, splitOn: "idUnidadCompra").ToList();
+
                     }
                     else
                     {
@@ -145,6 +153,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
                     parameters.Add("@claveProdServ", producto.idClaveProdServ);
+                    parameters.Add("@idUnidadCompra", producto.unidadCompra.idUnidadCompra);
+                    parameters.Add("@cantidadUnidadCompra", producto.unidadCompra.cantidadUnidadCompra);
                     //parameters.Add("@claveUnidad", producto.claveUnidad);
 
                     var result = db.QueryMultiple("SP_INSERTA_ACTUALIZA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);

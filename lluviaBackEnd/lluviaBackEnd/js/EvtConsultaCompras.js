@@ -1,9 +1,10 @@
 ﻿var tblCompras
+var arrayProductos = [];
 $(document).ready(function () {
-    if ($("#tblCompras").length > 0) {       
+    if ($("#tblCompras").length > 0) {
         InitTableCompras();
     }
-   
+    ConsultaProductos();
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
     //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
@@ -32,6 +33,58 @@ $(document).ready(function () {
 
 });
 
+function ConsultaProductos() {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
+        data: { activo: true },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+    var i;
+    for (i = 0; i < result.Modelo.length; i++) {
+        result.Modelo[i].id = result.Modelo[i]['idProducto'];
+        result.Modelo[i].text = result.Modelo[i]['descripcion'];
+    }
+
+    arrayProductos = result.Modelo;
+
+}
+
+function InitSelect2Productos() {
+    $("#idProducto").html('').select2();
+    $('#idProducto').select2({
+        width: "100%",
+        placeholder: "--SELECCIONA--",
+        data: arrayProductos,
+
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        }
+    });
+
+    $('#idProducto').val("0").trigger('change');
+}
+
+
 function InitTableCompras() {
     var NombreTabla = "tblCompras";
     tblCompras = initDataTable(NombreTabla);
@@ -55,7 +108,7 @@ function InitTableCompras() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
             },
             {
@@ -64,7 +117,7 @@ function InitTableCompras() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
             },
         ],
@@ -86,14 +139,13 @@ function onBeginSubmitObtenerCompras() {
 function onCompleteObtenerCompras() {
     //OcultarLoader();
 }
-function onSuccessResultObtenerCompras(data) {    
+function onSuccessResultObtenerCompras(data) {
     $("#DivtblCompras").html(data);
-    if ($("#tblCompras").length > 0)
-    {
+    if ($("#tblCompras").length > 0) {
         tblCompras.destroy();
         InitTableCompras();
     }
-    
+
     OcultarLoader();
 }
 function onFailureResultObtenerCompras() {
@@ -150,7 +202,7 @@ function NuevaCompra(idCompra) {
 
     $.ajax({
         url: rootUrl("/Compras/_Compra"),
-        data: { idCompra: idCompra},
+        data: { idCompra: idCompra },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -159,8 +211,8 @@ function NuevaCompra(idCompra) {
         },
         success: function (data) {
             OcultarLoader();
-            
-            if (idCompra>0)
+
+            if (idCompra > 0)
                 $("#titleModalCompra").html("Editar Compra");
             else
                 $("#titleModalCompra").html("Nueva Compra");
@@ -183,6 +235,7 @@ function NuevaCompra(idCompra) {
 ////////////////////////// COMPONENTES NUEVA O EDITAR COMPRA ////////////////////////////////
 
 function InicializaElementosCompra() {
+    InitSelect2Productos();
     actualizaTicket();
     $('.select-multipleCompra').select2({
 
@@ -195,6 +248,26 @@ function InicializaElementosCompra() {
             }
         },
 
+    });
+    $("#idProducto").change(function (evt) {
+        evt.preventDefault();
+        var producto = $('#idProducto').select2('data')[0];
+        if (producto != null && producto != undefined) {
+            $("#unidadCompra").val(producto.unidadCompra.descripcionUnidadCompra);
+            $("#cantidadUnidadCompra").val(producto.unidadCompra.cantidadUnidadCompra);
+            $("#unidadVenta").val(producto.DescripcionUnidadMedida);
+            $("#precio").val(producto.costo);
+            $("#cantPorUnidadCompra").val(0);
+            $("#cantidad").val(0);
+        }
+
+
+    });
+
+    $("#cantPorUnidadCompra").blur(function (evt) {
+        var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
+        var cantidadPorUnidadCompra = parseInt($("#cantPorUnidadCompra").val());
+        $("#cantidad").val((cantidadUnidadCompra * cantidadPorUnidadCompra));
     });
 
     $('#limpiar').click(function (e) {
@@ -240,7 +313,7 @@ function InicializaElementosCompra() {
                     "  <td>0</td>" +
                     "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>" +
                     "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + precio + "\" ></td>" +
-                    "  <td class=\"text-center\">$" + cantidad * precio + "</td>" +
+                    "  <td class=\"text-center\">$" + roundToTwo(cantidad * precio) + "</td>" +
                     "  <td class=\"text-center\">" +
                     "      <a href=\"javascript:eliminaFila(" + idProducto + ",0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
                     "  </td>" +
@@ -251,6 +324,10 @@ function InicializaElementosCompra() {
             $('#cantidad').val('');
             $('#precio').val('');
             $('#idProducto').val('').trigger('change');
+            $("#unidadCompra").val('');
+            $("#cantidadUnidadCompra").val('');
+            $("#unidadVenta").val('');
+            $("#cantPorUnidadCompra").val('');
             actualizaTicket();
 
 
@@ -395,14 +472,17 @@ function actualizaTicket() {
         Precio = Number($(fila.children[7].children[0]).val().replace(',', '.'));
         //if ($("#idStatusCompra").val()==)
         //Cantidad = Number($(fila.children[4].children[0]).val());
-
-        Cantidad = Number($(fila.children[6].children[0]).val());
-        fila.children[8].innerHTML = "$" + (Precio * Cantidad)
+        if ($("#idStatusCompra").val() == 3)
+            Cantidad = Number(fila.children[4].innerHTML);
+        else
+            Cantidad = Number($(fila.children[6].children[0]).val());
+       
+        fila.children[8].innerHTML = "$" + roundToTwo(Precio * Cantidad)
         total += parseFloat(fila.children[8].innerHTML.replace('$', ''));
     });
 
 
-    document.getElementById("divTotal").innerHTML = "<h4>$" + parseFloat(total).toFixed(2) + "</h4>";
+    document.getElementById("divTotal").innerHTML = "<h4>$" + roundToTwo(total) + "</h4>";
 }
 
 function eliminaFila(idProducto, idEstatusProducto) {

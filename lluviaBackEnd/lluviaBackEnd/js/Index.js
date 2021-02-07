@@ -17,7 +17,7 @@ function toDataURL(src, callback, outputFormat) {
 }
 
 function ShowLoader(mensaje) {
-    $('#textLoader').html((mensaje==='undefined' || mensaje ==='' ? "Cargadno" : mensaje));
+    $('#textLoader').html((mensaje==='undefined' || mensaje ==='' ? "Cargando" : mensaje));
     $('#loader-lluvia').css('display', 'flex');
 }
 
@@ -202,20 +202,55 @@ function esNumero(evt) {
     return true;
 }
 
-function esDecimal(txt, evt) {
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode == 46) {
-        if (txt.value.indexOf('.') === -1) {
+//function esDecimal(txt, evt) {
+//    var charCode = (evt.which) ? evt.which : evt.keyCode;
+//    if (charCode == 46) {
+//        if (txt.value.indexOf('.') === -1) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    } else {
+//        if (charCode > 31 &&
+//            (charCode < 48 || charCode > 57))
+//            return false;
+//    }
+//    return true;
+//}
+
+function esDecimal(input,evt) {
+    // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+    var key = window.Event ? evt.which : evt.keyCode;
+    var chark = String.fromCharCode(key);
+    var tempValue = input.value + chark;
+    if (key >= 48 && key <= 57) {
+        if (filter(tempValue) === false) {
+            return false;
+        } else {
             return true;
+        }
+    } else {
+        if (key == 8 || key == 13 || key == 0) {
+            return true;
+        } else if (key == 46) {
+            if (filter(tempValue) === false) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return false;
         }
-    } else {
-        if (charCode > 31 &&
-            (charCode < 48 || charCode > 57))
-            return false;
     }
-    return true;
+}
+function filter(__val__) {
+    var preg = /^([0-9]+\.?[0-9]{0,2})$/;
+    if (preg.test(__val__) === true) {
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 

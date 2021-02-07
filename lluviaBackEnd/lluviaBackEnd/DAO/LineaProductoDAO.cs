@@ -27,7 +27,7 @@ namespace lluviaBackEnd.DAO
                 {
                     db.Open();
                     db.CreateParameters(1);
-                    db.AddParameters(0, "@idLineaProducto", lineaProducto.idLineaProducto); 
+                    db.AddParameters(0, "@idLineaProducto", lineaProducto.idLineaProducto);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_LINEAS_PRODUCTO]");
 
                     while (db.DataReader.Read())
@@ -149,7 +149,7 @@ namespace lluviaBackEnd.DAO
             lstLineasDeProductos.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "" });
             return lstLineasDeProductos;
         }
-        
+
         public List<SelectListItem> ObtenerUnidadesMedidas()
         {
             List<SelectListItem> lstUnidadMedida = new List<SelectListItem>();
@@ -175,7 +175,7 @@ namespace lluviaBackEnd.DAO
                             }
                         }
                     }
- 
+
                 }
             }
             catch (Exception ex)
@@ -243,6 +243,35 @@ namespace lluviaBackEnd.DAO
             lstClavesUnidad.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
             return lstClavesUnidad;
         }
+
+        public List<SelectListItem> ObtenerUnidadesCompra()
+        {
+            List<SelectListItem> lstUnidadCompra = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_CONSULTA_UNIDADES_COMPRA");
+                    while (db.DataReader.Read())
+                    {
+                        lstUnidadCompra.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["descripcion"].ToString(),
+                                Value = db.DataReader["idUnidadCompra"].ToString()
+                            });
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstUnidadCompra;
+        }
+
 
 
     }
