@@ -26,6 +26,7 @@ namespace lluviaBackEnd.Controllers
         int idVenta = 0;
         Retiros retiro = new Retiros();
         int idIngresoEfectivo = 0;
+        string nombreCodigoTicket = string.Empty;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
@@ -424,7 +425,8 @@ namespace lluviaBackEnd.Controllers
         //  Impresion de 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        
+        [HttpPost]
         public ActionResult ImprimeTicket(Ventas venta)
         {
             Notificacion<Ventas> notificacion;
@@ -437,51 +439,58 @@ namespace lluviaBackEnd.Controllers
 
                 this.idVenta = venta.idVenta;
 
-                PrintDocument pd = new PrintDocument();
-
-                if (venta.ticketVistaPrevia)
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
                 {
-                    notificacion.Mensaje = "Abriendo Ticket.";
-                    string nombreImpresora = string.Empty;
-                    foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                    if (venta.ticketVistaPrevia)
                     {
-                        if (strPrinter.Contains("PDF"))
+                        notificacion.Mensaje = "Abriendo Ticket.";
+                        string nombreImpresora = string.Empty;
+                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
                         {
-                            nombreImpresora = strPrinter;
+                            if (strPrinter.Contains("PDF"))
+                            {
+                                nombreImpresora = strPrinter;
+                            }
                         }
-                    }
 
-                    if (nombreImpresora == string.Empty)
-                    {
-                        notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
-                        notificacion.Estatus = -1;
-                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        if (nombreImpresora == string.Empty)
+                        {
+                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                            notificacion.Estatus = -1;
+                            //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        }
+                        else
+                        {
+                            pd.PrinterSettings = new PrinterSettings
+                            {
+                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                                PrintToFile = true,
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
+                            };
+                        }
                     }
                     else
                     {
-                        pd.PrinterSettings = new PrinterSettings
-                        {
-                            PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
-                            PrintToFile = true,
-                            PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
-                        };
+                        //pd.PrinterSettings.PrinterName = WebConfigurationMan ager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
-                }
-                else
-                {
-                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+
+                    PaperSize ps = new PaperSize("", 285, 540);
+                    pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    pd.DefaultPageSettings.PaperSize = ps;
+                    pd.Print();
+                    pd.Dispose();
+                    notificacion.archivo = nombreCodigoTicket;
+                    //Utils.DeleteFile(Utils.ObtnerFolderCodigos() + nombreCodigoTicket);
+
                 }
 
-                PaperSize ps = new PaperSize("", 285, 540);
-                pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
-                pd.PrintController = new StandardPrintController();
-                pd.DefaultPageSettings.Margins.Left = 10;
-                pd.DefaultPageSettings.Margins.Right = 0;
-                pd.DefaultPageSettings.Margins.Top = 0;
-                pd.DefaultPageSettings.Margins.Bottom = 0;
-                pd.DefaultPageSettings.PaperSize = ps;
-                pd.Print();
-
+                Utils.DeleteFile(Utils.ObtnerFolderCodigos() + nombreCodigoTicket);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
             }
@@ -514,6 +523,7 @@ namespace lluviaBackEnd.Controllers
 
                 int ancho = 258;
                 int espaciado = 14;
+                nombreCodigoTicket = "";
 
                 //Configuración Global
                 GraphicsUnit units = GraphicsUnit.Pixel;
@@ -656,6 +666,21 @@ namespace lluviaBackEnd.Controllers
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
 
+
+
+                //Se pinta codigo de barras en ticket
+                nombreCodigoTicket = "Ticket_" + this.idVenta.ToString();
+                Utils.GenerarCodigoBarras(this.idVenta.ToString(), nombreCodigoTicket);
+                nombreCodigoTicket = "barras_" + nombreCodigoTicket + "_.jpg";
+
+                Image imagenCodigoTicket = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "Codigos\\" + nombreCodigoTicket);
+                datosfooter1.Y += 40;
+                Rectangle logo_ = new Rectangle(80, datosfooter1.Y, 300, 80);
+                e.Graphics.DrawImage(imagenCodigoTicket, logo_, 0, 0, 380.0F, 120.0F, units);
+
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
                 // para mas espaciado al final del ticket
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
@@ -677,8 +702,7 @@ namespace lluviaBackEnd.Controllers
                 //return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
 
-
-
+            
         }
 
 
