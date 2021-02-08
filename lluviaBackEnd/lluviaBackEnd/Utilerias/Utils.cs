@@ -626,6 +626,8 @@ namespace lluviaBackEnd.Utilerias
             PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
             ItextEvents eventos = new ItextEvents();
             eventos.TituloCabecera = "Ver Ticket: ";
+            string nombreArchivo = string.Empty;
+            string path = Utils.ObtnerFolderCodigos() + @"/";
 
             try
             {
@@ -798,9 +800,24 @@ namespace lluviaBackEnd.Utilerias
                                                 <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
 
                                 }
+                // se agrega el codigo de barras en el ticket 
+                nombreArchivo = tickets[0].codigoBarras.ToString();
+                Utilerias.Utils.GenerarCodigoBarras(tickets[0].codigoBarras.ToString(), nombreArchivo);
 
 
-                    html += @"
+                html += @"
+                          <tr>
+                            <td style='text-align:center;'  align='center' >
+                                <div  align='center' style='text-align:center;' >
+                                    <br>
+                                    <img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width = '90' height = '30' align='center' style='text-align:center;' />
+                                </div>
+                            </td>
+                         </tr>
+                         ";                
+
+
+                html += @"
                             </table>
                         </td>
                         <td width='65%'>                                        
@@ -822,7 +839,7 @@ namespace lluviaBackEnd.Utilerias
 
                 document.Close();
                 content = memStream.ToArray();
-
+                DeleteFile(Path.Combine(path, "barras_" + nombreArchivo + "_.jpg"));
             }
             catch (Exception ex)
             {
@@ -847,6 +864,8 @@ namespace lluviaBackEnd.Utilerias
             PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
             ItextEvents eventos = new ItextEvents();
             eventos.TituloCabecera = "Ticket de Devolución: ";
+            string nombreArchivo = string.Empty;
+            string path = Utils.ObtnerFolderCodigos() + @"/";
 
             try
             {
@@ -957,7 +976,22 @@ namespace lluviaBackEnd.Utilerias
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 <tr><td style='color:black; text-align:center;'>_________________________________________________</td></tr>
                                 <tr><td style='color:black; text-align:center;'>FIRMA DEL CLIENTE </td></tr>";
-               
+
+                // se agrega el codigo de barras en el ticket 
+                nombreArchivo = tickets[0].codigoBarras.ToString();
+                Utilerias.Utils.GenerarCodigoBarras(tickets[0].codigoBarras.ToString(), nombreArchivo);
+
+
+                html += @"
+                          <tr>
+                            <td style='text-align:center;'  align='center' >
+                                <div  align='center' style='text-align:center;' >
+                                    <br>
+                                    <img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width = '90' height = '30' align='center' style='text-align:center;' />
+                                </div>
+                            </td>
+                         </tr>
+                         ";
 
 
                 html += @"
@@ -981,6 +1015,7 @@ namespace lluviaBackEnd.Utilerias
                 document.CloseDocument();
                 document.Close();
                 content = memStream.ToArray();
+                DeleteFile(Path.Combine(path, "barras_" + nombreArchivo + "_.jpg"));
 
             }
             catch (Exception ex)

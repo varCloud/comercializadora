@@ -51,9 +51,6 @@ function ImprimeTicket(idVenta) {
             console.log(data);
             OcultarLoader();           
             MuestraToast('success', "Se envio el ticket a la impresora.");
-            //alert(data);
-            //alert(data.archivo);
-            setTimeout(() => { eliminaArchivo(data.archivo); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();           

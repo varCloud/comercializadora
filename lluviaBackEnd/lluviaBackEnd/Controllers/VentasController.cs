@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 
 using lluviaBackEnd.Utilerias;
+using System.IO;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -26,7 +27,7 @@ namespace lluviaBackEnd.Controllers
         int idVenta = 0;
         Retiros retiro = new Retiros();
         int idIngresoEfectivo = 0;
-        string nombreCodigoTicket = string.Empty;
+        
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
@@ -458,7 +459,7 @@ namespace lluviaBackEnd.Controllers
                         {
                             notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
                             notificacion.Estatus = -1;
-                            //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                         }
                         else
                         {
@@ -472,7 +473,7 @@ namespace lluviaBackEnd.Controllers
                     }
                     else
                     {
-                        //pd.PrinterSettings.PrinterName = WebConfigurationMan ager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
 
                     PaperSize ps = new PaperSize("", 285, 540);
@@ -485,12 +486,8 @@ namespace lluviaBackEnd.Controllers
                     pd.DefaultPageSettings.PaperSize = ps;
                     pd.Print();
                     pd.Dispose();
-                    notificacion.archivo = nombreCodigoTicket;
-                    //Utils.DeleteFile(Utils.ObtnerFolderCodigos() + nombreCodigoTicket);
-
                 }
 
-                Utils.DeleteFile(Utils.ObtnerFolderCodigos() + nombreCodigoTicket);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
             }
@@ -519,11 +516,10 @@ namespace lluviaBackEnd.Controllers
                 notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
                 //Logos
-                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");                
 
                 int ancho = 258;
                 int espaciado = 14;
-                nombreCodigoTicket = "";
 
                 //Configuración Global
                 GraphicsUnit units = GraphicsUnit.Pixel;
@@ -669,14 +665,11 @@ namespace lluviaBackEnd.Controllers
 
 
                 //Se pinta codigo de barras en ticket
-                nombreCodigoTicket = "Ticket_" + this.idVenta.ToString();
-                Utils.GenerarCodigoBarras(this.idVenta.ToString(), nombreCodigoTicket);
-                nombreCodigoTicket = "barras_" + nombreCodigoTicket + "_.jpg";
+                Image imagenCodigoTicket = ByteArrayToImage( Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
 
-                Image imagenCodigoTicket = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "Codigos\\" + nombreCodigoTicket);
                 datosfooter1.Y += 40;
-                Rectangle logo_ = new Rectangle(80, datosfooter1.Y, 300, 80);
-                e.Graphics.DrawImage(imagenCodigoTicket, logo_, 0, 0, 380.0F, 120.0F, units);
+                Rectangle posImgCodigoTicket = new Rectangle(55, datosfooter1.Y, 210, 60);
+                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
 
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
@@ -705,7 +698,12 @@ namespace lluviaBackEnd.Controllers
             
         }
 
-
+        public Image ByteArrayToImage(byte[] data)
+        {
+            MemoryStream bipimag = new MemoryStream(data);
+            Image imag = new Bitmap(bipimag);
+            return imag;
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Impresion de Ticket de Retiro por Exceso de Efectivo
@@ -1240,6 +1238,15 @@ namespace lluviaBackEnd.Controllers
                 datosfooter1.Y += espaciado * 2;
                 datosfooter2.Y += espaciado * 2;
 
+                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+
+                datosfooter1.Y += 40;
+                Rectangle posImgCodigoTicket = new Rectangle(55, datosfooter1.Y, 210, 60);
+                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
                 // para mas espaciado al final del ticket
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
@@ -1455,6 +1462,16 @@ namespace lluviaBackEnd.Controllers
 
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
                 e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+                //Se pinta codigo de barras en ticket
+                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+
+                datosfooter1.Y += 40;
+                Rectangle posImgCodigoTicket = new Rectangle(55, datosfooter1.Y, 210, 60);
+                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
 
