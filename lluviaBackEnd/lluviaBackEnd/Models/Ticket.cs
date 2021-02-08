@@ -32,5 +32,7 @@ namespace lluviaBackEnd.Models
         public int productosDevueltos { get; set; }
         public int productosAgregados { get; set; }
         public EnumTipoVenta tipoVenta { get; set; }
+        public string codigoBarras { get; set; }
+
     }
 }
