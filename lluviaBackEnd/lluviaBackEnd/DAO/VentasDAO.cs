@@ -159,7 +159,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial)
+        public Notificacion<Ventas> GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int idUsuario, int idEstacion, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial,Int64 idVentaComplemento,float montoTotalVenta)
         {
             Notificacion<Ventas> notificacion = new Notificacion<Ventas>();
             try
@@ -180,6 +180,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@tipoVenta", tipoVenta);
                     parameters.Add("@motivoDevolucion", motivoDevolucion);
                     parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    parameters.Add("@idVentaComplemento", idVentaComplemento);
+                    parameters.Add("@montoTotalVenta", montoTotalVenta);
 
                     var result = db.QueryMultiple("SP_REALIZA_VENTA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -692,6 +694,38 @@ namespace lluviaBackEnd.DAO
 
             return excesoEfectivos;
         }
+
+        public Notificacion<List<Ventas>> BuscaVentaCodigoBarras(string codigoBarras)
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@codigoBarras", codigoBarras);
+                    var result = db.QueryMultiple("SP_CONSULTA_VENTA_CODIGO_BARRAS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ventas>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

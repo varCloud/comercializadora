@@ -105,13 +105,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial = 0)
+        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial = 0,Int64 idVentaComplemento=0, float montoTotalVenta=0)
         {
             try
             {
                 Notificacion<Ventas> result = new Notificacion<Ventas>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos, tipoVenta, motivoDevolucion, idPedidoEspecial);
+                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos, tipoVenta, motivoDevolucion, idPedidoEspecial,idVentaComplemento,montoTotalVenta);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -421,12 +421,27 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult BuscaVentaCodigoBarras(string codigoBarras)
+        {
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                notificacion = new VentasDAO().BuscaVentaCodigoBarras(codigoBarras);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Impresion de 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         [HttpPost]
         public ActionResult ImprimeTicket(Ventas venta)
         {

@@ -17,7 +17,7 @@ function toDataURL(src, callback, outputFormat) {
 }
 
 function ShowLoader(mensaje) {
-    $('#textLoader').html((mensaje==='undefined' || mensaje ==='' ? "Cargando" : mensaje));
+    $('#textLoader').html((mensaje === 'undefined' || mensaje === '' ? "Cargando" : mensaje));
     $('#loader-lluvia').css('display', 'flex');
 }
 
@@ -79,7 +79,7 @@ function setFooterPDF(page, pages) {
 
 function SetHeaderPDF(titulo) {
 
-  return {
+    return {
         columns: [
             {
                 image: logoBase64,
@@ -178,7 +178,7 @@ function InitRangePicker(nombrePicker, fechaIni, fechaFin) {
 
     $('#' + nombrePicker).on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-        $('#' + fechaIni).val(picker.startDate.format('YYYY-MM-DD') );
+        $('#' + fechaIni).val(picker.startDate.format('YYYY-MM-DD'));
         $('#' + fechaFin).val(picker.endDate.format('YYYY-MM-DD'));
 
     });
@@ -218,7 +218,7 @@ function esNumero(evt) {
 //    return true;
 //}
 
-function esDecimal(input,evt) {
+function esDecimal(input, evt) {
     // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
     var key = window.Event ? evt.which : evt.keyCode;
     var chark = String.fromCharCode(key);
@@ -295,7 +295,7 @@ function roundToTwo(valor) {
 
 function InitSelect2() {
     $('.select-multiple').select2({
-        width: "100%",       
+        width: "100%",
         language: {
             noResults: function () {
                 return "No hay resultado";
@@ -306,12 +306,12 @@ function InitSelect2() {
         }
     });
 
-   // $('#' + item).val("0").trigger('change');
+    // $('#' + item).val("0").trigger('change');
 }
 
 function ConsultExcesoEfectivo() {
     $.ajax({
-        url: rootUrl("/Ventas/_ExcesoEfectivo"),       
+        url: rootUrl("/Ventas/_ExcesoEfectivo"),
         method: 'post',
         dataType: 'html',
         async: false,
@@ -321,12 +321,13 @@ function ConsultExcesoEfectivo() {
         success: function (data) {
             OcultarLoader();
             $('#NotificacionesExcesoEfectivo').html(data);
-            feather.replace();
-            iziToast.warning({
-                title: 'Exceso de efectivo en caja',
-                message: '',
-                position: 'bottomRight'
-            });
+            feather.replace();            
+            //iziToast.warning({
+            //    title: 'Exceso de efectivo en caja',
+            //    message: '',
+            //    position: 'bottomRight'
+            //});
+
         },
         error: function (xhr, status) {
             console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');

@@ -53,6 +53,9 @@
 
                     <div class="card-header">
                         <h4>Productos</h4>
+                        <div class="card-header-action" id="actionVenta">
+                            
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -72,6 +75,7 @@
                                         @if ((!esDevolucion) || (idVenta == 0))
                                         {
                                             <a href="javascript:AbrirModalPedidoEspecial();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Buscar Pedido Especial"><i class="fas fa-portrait"></i></a>
+                                            <a href="javascript:AbrirModalComplementoVenta();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Complemento de venta"><i class="fas fa-ticket-alt"></i></a>
                                         }
                                     </div>
                                 </div>
@@ -895,6 +899,41 @@
             </div>
             <div class="modal-body" id="viewIngresoEfectivo">
 
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Complemento de Venta *@
+<div class="modal fade bd-example-modal-lg" id="ModalComplementoVenta" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complemento de Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">                           
+                            <div class="input-group mb-3">
+                                <input id="codigoBarrasTicketVenta" type="text" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" onclick="BuscarVentaCodigoBarras()" class="btn btn-success"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>             
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

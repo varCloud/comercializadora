@@ -8,6 +8,8 @@ var productosPedidoEspecial = '';
 var idPedidoEspecial = parseInt(0);
 var producto_value = null;
 var esDecimal_ = parseInt(0);
+var idVentaComplemento = parseInt(0);
+var arrayProductosVentaComplemento = [];
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -69,6 +71,7 @@ function _facturaVenta(idVenta) {
         }
     });
 }
+
 
 function facturaVenta(idVenta) {
     console.log("facturaVenta_" + idVenta);
@@ -146,6 +149,9 @@ function limpiarTicket() {
     $('#idVenta').val(0);
     $('#vaConDescuento').val(0);
     idPedidoEspecial = 0;
+    idVentaComplemento = 0;
+    arrayProductosVentaComplemento = [];
+    $("#actionVenta").html("");
 
 }
 
@@ -421,6 +427,31 @@ function actualizaTicketVenta() {
             };
             productos.push(row_);
         }
+
+        //Si es complemento de venta se suman a la cantidad los productos vendidos
+        if (idVentaComplemento > 0) {
+
+            for (var c = 0; c < arrayProductosVentaComplemento.length; c++) {
+                if (productos.some(x => x.idProducto === arrayProductosVentaComplemento[c].idProducto)) {
+                    productos.find(x => x.idProducto == arrayProductosVentaComplemento[c].idProducto).cantidad += arrayProductosVentaComplemento[c].cantidad;
+                }
+                else {
+                    var row_ = {
+                        idProducto: parseInt(arrayProductosVentaComplemento[c].idProducto),
+                        cantidad: parseInt(arrayProductosVentaComplemento[c].cantidad),
+                        min: 1,
+                        max: 11,
+                        maxCantidad: 0,
+                        precioIndividual: 0,
+                        precioVenta: 0,
+                        descuento: 0,
+                        totalPorIdProductos: 0
+                    };
+                    productos.push(row_);
+                }
+            }
+        }
+
     }
 
     var cantidadTotalPorProducto = [];
@@ -821,6 +852,8 @@ $('#btnGuardarVenta').click(function (e) {
     var esVentaNormal = "true";
     var motivoDevolucion = $('#motivoDevolucion').val();
     var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
+   
+
 
     if (((esDevolucion == "true") || (esDevolucion == "True")) || ((esAgregarProductos == "true") || (esAgregarProductos == "True"))) {
         esVentaNormal = "false"
@@ -900,7 +933,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion, idPedidoEspecial: idPedidoEspecial });
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion, idPedidoEspecial: idPedidoEspecial, idVentaComplemento: idVentaComplemento, montoTotalVenta: total_ });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
@@ -2102,4 +2135,46 @@ function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
     });
 }
 
+//Complemento de ticket de venta
 
+$("#codigoBarrasTicketVenta").keypress(function (evt) {   
+    if (evt.which == 13) {
+        BuscarVentaCodigoBarras();
+    }
+});
+
+function AbrirModalComplementoVenta() {
+    $("#codigoBarrasTicketVenta").val("");  
+    $('#ModalComplementoVenta').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+function BuscarVentaCodigoBarras() {
+    $.ajax({
+        url: rootUrl("/Ventas/BuscaVentaCodigoBarras"),
+        data: { codigoBarras: $("#codigoBarrasTicketVenta").val() },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            if (data.Estatus == 200) {               
+                $("#actionVenta").html("<a class='btn btn-primary' style='cursor:default'>Complemento del ticket " + $("#codigoBarrasTicketVenta").val()+"</a>");
+                arrayProductosVentaComplemento = data.Modelo;
+                idVentaComplemento = data.Modelo[0].idVenta;              
+                $('#ModalComplementoVenta').modal('hide');
+                actualizaTicketVenta();
+            }
+            else {
+                MuestraToast("error", data.Mensaje);
+            }
+            
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast("error", "Hubo un problema pongase en contacto con el administrador del sistema");
+        }
+    });
+}
