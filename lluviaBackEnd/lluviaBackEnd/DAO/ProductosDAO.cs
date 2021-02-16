@@ -167,8 +167,8 @@ namespace lluviaBackEnd.DAO
                     }
                     else
                     {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Estatus = r1.Estatus;
+                        notificacion.Mensaje = r1.Mensaje;
                         notificacion.Modelo = producto;
                     }
                 }
