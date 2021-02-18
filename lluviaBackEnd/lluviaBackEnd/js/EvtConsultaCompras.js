@@ -260,14 +260,19 @@ function InicializaElementosCompra() {
             $("#cantPorUnidadCompra").val(0);
             $("#cantidad").val(0);
         }
-
-
     });
 
     $("#cantPorUnidadCompra").blur(function (evt) {
         var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
-        var cantidadPorUnidadCompra = parseInt($("#cantPorUnidadCompra").val());
-        $("#cantidad").val((cantidadUnidadCompra * cantidadPorUnidadCompra));
+        var cantidadPorUnidadCompra = parseFloat($("#cantPorUnidadCompra").val());
+        $("#cantidad").val(Math.round(cantidadUnidadCompra * cantidadPorUnidadCompra));
+    });
+
+    $("#cantidad").blur(function (evt) {
+        var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
+        var cantidadComprada = parseInt($("#cantidad").val());
+        var cantidadPorUnidadCompra = (cantidadUnidadCompra > 0 ? roundToTwo(cantidadComprada / cantidadUnidadCompra) : cantidadComprada);
+        $("#cantPorUnidadCompra").val(cantidadPorUnidadCompra);
     });
 
     $('#limpiar').click(function (e) {
@@ -472,7 +477,7 @@ function actualizaTicket() {
         Precio = Number($(fila.children[7].children[0]).val().replace(',', '.'));
         //if ($("#idStatusCompra").val()==)
         //Cantidad = Number($(fila.children[4].children[0]).val());
-        if ($("#idStatusCompra").val() == 3)
+        if ($("#idStatusCompra").val() == 3 || $("#idStatusCompra").val() == 2)
             Cantidad = Number(fila.children[4].innerHTML);
         else
             Cantidad = Number($(fila.children[6].children[0]).val());

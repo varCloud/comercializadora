@@ -49,20 +49,21 @@ function onFailureResultProductos() {
 
 // guardar-modificar
 function onBeginSubmitGuardarProducto() {
-    console.log("onBeginSubmit___");
+    ShowLoader();
 }
 function onCompleteSubmitGuardarProducto() {
-    console.log("onCompleteSubmit___");
+    OcultarLoader();
 }
 function onSuccessResultGuardarProducto(data) {
-    console.log("onSuccessResult", JSON.stringify(data));
+    OcultarLoader();
     if (data.Estatus == 200) {
         MuestraToast('success', data.Mensaje);
+        $('#EditarProductoModal').modal('hide');
         PintarTabla();
     } else {
-        //MuestraToast("error", data.Mensaje);
+        MuestraToast("error", data.Mensaje);        
     }
-    $('#EditarProductoModal').modal('hide');
+    
 }
 function onFailureResultGuardarProducto() {
     console.log("onFailureResult___");
