@@ -6,13 +6,15 @@ function onCompleteSubmitIngresoEfectivo() {
     OcultarLoader();
 }
 function onSuccessResultIngresoEfectivo(data) {
-    OcultarLoader();   
+    
     if (data.status === 200) {
         MuestraToast('success', data.Mensaje);
         ImprimeTicketIngresoEfectivo(data.id);
+        OcultarLoader();   
         location.href = rootUrl("Ventas/Ventas/");
     }
     else {
+        OcultarLoader();   
         MuestraToast('error', data.Mensaje);
     }
 

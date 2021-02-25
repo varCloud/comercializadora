@@ -1,3 +1,5 @@
+/// <reference path="calendar.js" />
+/// <reference path="calendar.js" />
 'use strict';
 $(function () {
     //Horizontal form basic

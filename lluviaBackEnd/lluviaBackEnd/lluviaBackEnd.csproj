@@ -355,11 +355,6 @@
     <Compile Include="WebServices\WsProveedorController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\bundles\amcharts4\animated.js" />
-    <Content Include="assets\bundles\amcharts4\charts.js" />
-    <Content Include="assets\bundles\amcharts4\core.js" />
-    <Content Include="assets\bundles\amcharts4\maps.js" />
-    <Content Include="assets\bundles\amcharts4\worldLow.js" />
     <Content Include="assets\bundles\apexcharts\apexcharts.min.js" />
     <Content Include="assets\bundles\bootstrap-daterangepicker\daterangepicker.css" />
     <Content Include="assets\bundles\bootstrap-daterangepicker\daterangepicker.js" />
@@ -976,13 +971,10 @@
     <Content Include="assets\img\spinner-white.svg" />
     <Content Include="assets\img\spinner.svg" />
     <Content Include="assets\img\typing.svg" />
-    <Content Include="assets\img\user.png" />
     <Content Include="assets\js\app.min.js" />
     <Content Include="assets\js\custom.js" />
     <Content Include="assets\js\jquery-ui.js" />
     <Content Include="assets\js\jquery-ui.min.js" />
-    <Content Include="assets\js\page\advance-table.js" />
-    <Content Include="assets\js\page\auth-register.js" />
     <Content Include="assets\js\page\calendar.js" />
     <Content Include="assets\js\page\chart-amchart.js" />
     <Content Include="assets\js\page\chart-apexcharts.js" />
@@ -997,15 +989,6 @@
     <Content Include="assets\js\page\editable-table.js" />
     <Content Include="assets\js\page\form-wizard.js" />
     <Content Include="assets\js\page\forms-advanced-forms.js" />
-    <Content Include="assets\js\page\gallery1.js" />
-    <Content Include="assets\js\page\gmaps-advanced-route.js" />
-    <Content Include="assets\js\page\gmaps-draggable-marker.js" />
-    <Content Include="assets\js\page\gmaps-geocoding.js" />
-    <Content Include="assets\js\page\gmaps-geolocation.js" />
-    <Content Include="assets\js\page\gmaps-marker.js" />
-    <Content Include="assets\js\page\gmaps-multiple-marker.js" />
-    <Content Include="assets\js\page\gmaps-route.js" />
-    <Content Include="assets\js\page\gmaps-simple.js" />
     <Content Include="assets\js\page\highcharts\data.js" />
     <Content Include="assets\js\page\highcharts\drilldown.js" />
     <Content Include="assets\js\page\highcharts\exporting.js" />
