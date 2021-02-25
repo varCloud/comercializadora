@@ -1307,24 +1307,6 @@ $("#montoARetirar").on("keyup", function (event) {
 
 
 $("#idCliente").on("change", function () {
-    calculaTotales();
-});
-
-function calculaTotales() {
-
-    $('#efectivo').val('');
-    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-    document.getElementById("chkFacturar").checked = false;
-    document.getElementById("divUsoCFDI").style.display = 'none';
-    $('#usoCFDI').val("3").trigger('change');
-    var formaPago = $('#formaPago').val();
-    var porcentajeComisionBancaria = parseFloat(0);
-
-    // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
-    if ((parseInt(formaPago) == parseInt(4)) || (parseInt(formaPago) == parseInt(18))) {
-        porcentajeComisionBancaria = $('#comisionBancaria').val();
-    }
-
     var idCliente = parseFloat($('#idCliente').val());
     var data = ObtenerCliente(idCliente);
     var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
@@ -1333,33 +1315,7 @@ function calculaTotales() {
     if (idCliente != 1) {
         descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
     }
-
-    var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
-    var descuentoMenudeo = parseFloat(document.getElementById("previoDescuentoMenudeo").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
-    var cantidadDescontada = parseFloat(0).toFixed(2);
-
-    if (descuento > 0.0) {
-        cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
-    }
-
-    var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
-    var comisionBancaria = parseFloat((subTotal) * (porcentajeComisionBancaria / 100)).toFixed(2);
-    subTotal = parseFloat(subTotal) + parseFloat(comisionBancaria);
-    var iva = parseFloat(0).toFixed(2);
-
-    // si lleva iva
-    if ($("#chkFacturar").is(":checked")) {
-        iva = parseFloat(subTotal * 0.16).toFixed(2);
-    }
-
-    var final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
-
-    document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + cantidadDescontada + "</h4>";
-    document.getElementById("previoComisionBancaria").innerHTML = "<h4>$" + comisionBancaria + "</h4>";
-    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
-    document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
-    document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
-
+    $("#txtDescuentoCliente").val(descuento);
     // para los datos del cliente
     var row_ = "<address>" +
         "    <strong></strong><br>" +
@@ -1395,14 +1351,66 @@ function calculaTotales() {
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;
+    calculaTotales();
+});
+
+
+$("#formaPago").on("change", function (value) {
+    this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
+    calculaTotales();
+});
+
+function calculaTotales() {
+
+    $('#efectivo').val('');
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("chkFacturar").checked = false;
+    document.getElementById("divUsoCFDI").style.display = 'none';
+    $('#usoCFDI').val("3").trigger('change');
+    var formaPago = $('#formaPago').val();
+    var porcentajeComisionBancaria = parseFloat(0);
+    var descuento = parseFloat(0);
+
+    // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
+    if ((parseInt(formaPago) == parseInt(4)) || (parseInt(formaPago) == parseInt(18))) {
+        porcentajeComisionBancaria = $('#comisionBancaria').val();
+    } 
+
+    if (parseFloat($('#idCliente').val()) !=1) {
+        descuento=$("#txtDescuentoCliente").val();
+    }
+
+    var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var descuentoMenudeo = parseFloat(document.getElementById("previoDescuentoMenudeo").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var cantidadDescontada = parseFloat(0).toFixed(2);
+
+    if (descuento > 0.0) {
+        cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
+    }
+
+    var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
+    var comisionBancaria = parseFloat((subTotal) * (porcentajeComisionBancaria / 100)).toFixed(2);
+    subTotal = parseFloat(subTotal) + parseFloat(comisionBancaria);
+    var iva = parseFloat(0).toFixed(2);
+
+    // si lleva iva
+    if ($("#chkFacturar").is(":checked")) {
+        iva = parseFloat(subTotal * 0.16).toFixed(2);
+    }
+
+    var final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
+
+    document.getElementById("previoDescuentoCliente").innerHTML = "<h4>$" + cantidadDescontada + "</h4>";
+    document.getElementById("previoComisionBancaria").innerHTML = "<h4>$" + comisionBancaria + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
+
+   
 
 }
 
 
-$("#formaPago").on("change", function (value) {
-    this.value == 1 ? $('#dvEfectivo').css('display','') : $('#dvEfectivo').css('display','none');
-    calculaTotales();
-});
 
 
 
