@@ -63,7 +63,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/","") + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/","_") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -497,6 +497,7 @@ namespace lluviaBackEnd.Utilerias
             eventos.TituloCabecera = "Códigos del Producto: ";
             Utilerias.Utils.GenerarQRGuardado(articulo);
             Utilerias.Utils.GenerarCodigoBarrasGuardado(articulo);
+            articulo = articulo.Replace("/", "_");
             int renglonesQR = 5;
             int renglonesBarras = 10;
 
