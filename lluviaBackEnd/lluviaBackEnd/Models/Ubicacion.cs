@@ -8,6 +8,7 @@ namespace lluviaBackEnd.Models
     public class Ubicacion
     {
         public int idProducto { get; set; }
+        public string descripcionProducto { get; set; }
         public Int64 cantidad { get; set; }
         public DateTime fechaAlta { get; set; }
         public int idUbicacion { get; set; }
