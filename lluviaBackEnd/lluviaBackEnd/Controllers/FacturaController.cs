@@ -132,6 +132,7 @@ namespace lluviaBackEnd.Controllers
         public JsonResult GenerarFactura(Factura factura)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
+            Dictionary<string, object> items = null;
             try
             {
                 string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\","/");
@@ -151,61 +152,70 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Emisor.RegimenFiscal = 621;                
                 */
 
-                Dictionary<string, object> items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
-                comprobante = (items["comprobante"] as Comprobante);
-                facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
-                facturacionDAO.ObtenerTotal(ref comprobante);
-
-                Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
-                if (certificados == null)
-                    return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
-
-                comprobante.Certificado = certificados["Certificado"];
-                comprobante.NoCertificado = certificados["NoCertificado"];
-                
-                string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
-                string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
-                comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
-                respuestaTimbrado respuesta = (respuestaTimbrado) ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
-
-                if (respuesta.codigoResultado.Equals("100"))
+                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                if (items["estatus"].ToString().Equals("200"))
                 {
+                    comprobante = (items["comprobante"] as Comprobante);
+                    facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
+                    facturacionDAO.ObtenerTotal(ref comprobante);
 
-                    string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
-                    
-                    Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeXMLStringToObject(xmlTimbradoDecodificado);
-                    comprobanteTimbrado.Addenda = new ComprobanteAddenda();
-                    comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
-                    comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
-                    comprobanteTimbrado.Addenda.descripcionUsoCFDI= items["descripcionUsoCFDI"].ToString();
-                    comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
+                    Dictionary<string, string> certificados = Utilerias.ProcesaCfdi.ObtenerCertificado();
+                    if (certificados == null)
+                        return Json("Error al obtener los certificados", JsonRequestBehavior.AllowGet);
 
-                    
-                    Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                    Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta);
-                    System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
+                    comprobante.Certificado = certificados["Certificado"];
+                    comprobante.NoCertificado = certificados["NoCertificado"];
 
-                    factura.pathArchivoFactura = pathFactura;
-                    factura.estatusFactura = EnumEstatusFactura.Facturada;
-                    factura.mensajeError = "OK";
-                    factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
-                    factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
+                    string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                    string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
+                    comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
+                    xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
 
+                    if (respuesta.codigoResultado.Equals("100"))
+                    {
+
+                        string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
+
+                        Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeserializeXMLStringToObject(xmlTimbradoDecodificado);
+                        comprobanteTimbrado.Addenda = new ComprobanteAddenda();
+                        comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
+                        comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
+                        comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
+                        comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
+
+
+                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta);
+                        System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
+
+                        factura.pathArchivoFactura = pathFactura;
+                        factura.estatusFactura = EnumEstatusFactura.Facturada;
+                        factura.mensajeError = "OK";
+                        factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
+                        factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
+
+                    }
+                    else
+                    {
+                        factura.estatusFactura = EnumEstatusFactura.Error;
+                        factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
+                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + ".xml"), xmlSerealizado);
+                        Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                    }
+
+                    notificacion = new FacturaDAO().GuardarFactura(factura);
+                    return Json(notificacion, JsonRequestBehavior.AllowGet);
                 }
-                else
-                {
-                    factura.estatusFactura = EnumEstatusFactura.Error;
-                    factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
-                    System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta+".xml"), xmlSerealizado);
-                    Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                else {
+                    notificacion.Estatus = Convert.ToInt16(items["estatus"]);
+                    notificacion.Mensaje = items["mensaje"].ToString();
+                    return Json(notificacion, JsonRequestBehavior.AllowGet);
                 }
-                notificacion = new FacturaDAO().GuardarFactura(factura);
-                return Json(notificacion, JsonRequestBehavior.AllowGet); ;
+
             }
             catch (Exception ex)
             {
-
                 return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
             }
 

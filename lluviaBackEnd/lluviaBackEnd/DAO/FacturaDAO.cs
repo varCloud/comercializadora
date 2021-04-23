@@ -8,6 +8,7 @@ using Dapper;
 using System.Data.SqlClient;
 using System.Configuration;
 using lluviaBackEnd.Models;
+using System.ServiceModel;
 
 namespace lluviaBackEnd.DAO
 {
@@ -55,7 +56,7 @@ namespace lluviaBackEnd.DAO
                 if (r1.Estatus == 200)
                 {
                     items = new Dictionary<string, object>();
-
+                    items.Add("estatus", r1.Estatus);
                     var receptor = result.ReadFirst();
                     //OBTENER LA FORMA DE PAGO 
                     c.FormaPago = receptor.FormaPago;
@@ -100,9 +101,12 @@ namespace lluviaBackEnd.DAO
                     items.Add("comprobante", c);
                     items.Add("conceptosAddenda", listConceptosAdenda);
                 }
+                else {
 
-
-
+                    items = new Dictionary<string, object>();
+                    items.Add("estatus", r1.Estatus);
+                    items.Add("mensaje", r1.mensaje);
+                }
             }
 
             catch (Exception ex)
