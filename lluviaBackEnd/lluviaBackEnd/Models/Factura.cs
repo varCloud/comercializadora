@@ -19,14 +19,14 @@ namespace lluviaBackEnd.Models
         public string nombreCliente { get; set; }
         public string nombreUsuarioFacturacion { get; set; }
         public string nombreUsuarioCancelacion { get; set; }
-
         public DateTime fechaCancelacion { get; set; }
-
-
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
-
         public string pathArchivoFactura { get; set; }
+        public string codigoBarras { get; set; }
+
+        public decimal montoTotal { get; set; }
+
 
 
 

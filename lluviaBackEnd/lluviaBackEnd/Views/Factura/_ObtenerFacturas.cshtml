@@ -23,9 +23,11 @@ else
         <table class="table table-striped" id="tblFacturas">
             <thead>
                 <tr>
-                    <th class="text-center">Id</th>
+                    <th class="text-center"># Ticket</th>
                     <th>Cliente</th>
                     <th>Usuario</th>
+                    <th>Codigo Barras</th>
+                    <th>Monto</th>
                     <th>Fecha Timbrado</th>
                     <th>Fecha Cancelaciòn</th>
                     <th>Estatus</th>
@@ -37,54 +39,56 @@ else
 
                 @foreach (lluviaBackEnd.Models.Factura f in facturas)
                 {
-                    <tr>
-                        <td>@contador</td>
-                        <td>@f.nombreCliente</td>
-                        <td>@f.nombreUsuarioFacturacion</td>
-                        <td>@f.fechaTimbrado.ToShortDateString()</td>
-                        <td>@Html.Raw(f.fechaCancelacion == DateTime.MinValue ? "" : f.fechaCancelacion.ToShortDateString())</td>
-                        <td>
-                            @{
-                                switch (f.estatusFactura)
-                                {
-                                    case EnumEstatusFactura.Facturada:
-                                        {
-                                            <div class="badge badge-success badge-shadow">@f.estatusFactura.ToString()</div>
+                <tr>
+                    <td>@f.idVenta</td>
+                    <td>@f.nombreCliente</td>
+                    <td>@f.nombreUsuarioFacturacion</td>
+                    <td>@f.codigoBarras</td>
+                    <td>@f.montoTotal.ToString("C2")</td>
+                    <td>@f.fechaTimbrado.ToShortDateString()</td>
+                    <td>@Html.Raw(f.fechaCancelacion == DateTime.MinValue ? "" : f.fechaCancelacion.ToShortDateString())</td>
+                    <td>
+                        @{
+                            switch (f.estatusFactura)
+                            {
+                                case EnumEstatusFactura.Facturada:
+                                    {
+                                        <div class="badge badge-success badge-shadow">@f.estatusFactura.ToString()</div>
+                                    }
+                                    break;
+
+                                case EnumEstatusFactura.Cancelada:
+                                    {
+                                        <div class="badge badge-primary badge-shadow" data-container="body" data-toggle="popover"
+                                             data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
                                         }
                                         break;
 
-                                    case EnumEstatusFactura.Cancelada:
+                                    case EnumEstatusFactura.Error:
                                         {
-                                            <div class="badge badge-primary badge-shadow" data-container="body" data-toggle="popover"
+                                            <div class="badge badge-danger badge-shadow" data-container="body" data-toggle="popover"
                                                  data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
                                             }
                                             break;
-
-                                        case EnumEstatusFactura.Error:
+                                        default:
                                             {
-                                                <div class="badge badge-danger badge-shadow" data-container="body" data-toggle="popover"
-                                                     data-placement="top" data-content="@f.mensajeError" style="cursor: pointer">@f.estatusFactura.ToString()</div>
-                                                }
-                                                break;
-                                            default:
-                                                {
-                                                    <div class="badge badge-dark badge-shadow">@f.estatusFactura.ToString()</div>
-                                                }
-                                                break;
-                                        }
-                            }
+                                                <div class="badge badge-dark badge-shadow">@f.estatusFactura.ToString()</div>
+                                            }
+                                            break;
+                                    }
+                        }
 
-                        </td>
-                        <td>
-                            @if (f.estatusFactura == EnumEstatusFactura.Facturada)
-                            {
-                                <a href="@f.pathArchivoFactura" target="_blank" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a> 
-                                
-                                <a href="javascript:CancelarFactura(@f.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Factura"><i class="fas fa-ban"></i></a>
-                            }
-                        </td>
+                    </td>
+                    <td>
+                        @if (f.estatusFactura == EnumEstatusFactura.Facturada)
+                        {
+                            <a href="@f.pathArchivoFactura" target="_blank" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
 
-                    </tr>
+                            <a href="javascript:CancelarFactura(@f.idVenta);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cancelar Factura"><i class="fas fa-ban"></i></a>
+                        }
+                    </td>
+
+                </tr>
 
                     contador = contador + 1;
                 }
