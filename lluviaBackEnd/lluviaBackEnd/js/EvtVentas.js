@@ -1494,7 +1494,8 @@ $('#btnCierreDia').click(function (e) {
                         $('#ModalCierre').modal('hide');
                         OcultarLoader();
                         ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
-                        ConsultExcesoEfectivo();
+                        location.href = rootUrl("Ventas/Ventas/");
+                        //ConsultExcesoEfectivo();
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');

@@ -1,0 +1,75 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models
+@{
+    ViewBag.Title = "Ventas";
+}
+
+@model Notificacion<Cierre>
+<section class="section">
+    <div class="section-body">
+        <div class="row mt-sm-12">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="padding-20">
+                        <div class="col-md-12">
+                            <div class="section-title">Caja Cerrada</div>
+                            <hr />
+                            <div class="col-12 col-sm-12 col-lg-5">
+                                <div class="form-group">
+
+                                    <h5>Resumen:</h5>
+
+                                    <div class="py-4">
+                                        <div>
+                                            <p class="clearfix">
+                                                <span class="float-left">Apertura de Caja:</span>
+                                                <span class="float-right text-muted">@Model.Modelo.montoApertura.ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="clearfix">
+                                                <span class="float-left">Ingresos de Efectivo:</span>
+                                                <span class="float-right text-muted">@Model.Modelo.montoIngresosEfectivo.ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p class="clearfix">
+                                                <span class="float-left">Monto Ventas del día:</span>
+                                                <span class="float-right text-muted">@Model.Modelo.montoVentasDelDia.ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p class="clearfix">
+                                                <span class="float-left">Retiros del Día (Exceso de efectivo):</span>                                                
+                                                <span class="float-right text-muted">@Model.Modelo.retirosExcesoEfectivo.ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        </div>
+
+                                        <di>
+                                            <p class="clearfix">
+                                                <span class="float-left">Monto del Cierre de Día:</span>
+                                                <span class="float-right text-muted">@Model.Modelo.montoCierre.ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/js/index.js"></script>
+    <script src="~/js/EvtAperturaCaja.js"></script>
+}

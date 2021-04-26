@@ -39,27 +39,33 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.cajaAbierta = new VentasDAO().ValidaAperturaCajas(usuario.idUsuario).status==200 ? true : false;
+                ViewBag.cierreCaja = new VentasDAO().ValidaCierreCajas(usuario.idUsuario).status != 200 ? true : false;
 
-                if(ViewBag.cajaAbierta)
+                if (ViewBag.cajaAbierta)
                 {
-                    Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                    notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
-                    ViewBag.lstProductos = notificacion.Modelo;
+                    if (ViewBag.cierreCaja)
+                        return RedirectToAction("CierreCajas");                    
+                    else
+                    {
+                        Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                        notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
+                        ViewBag.lstProductos = notificacion.Modelo;
 
-                    Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
-                    formasPago = new VentasDAO().ObtenerFormasPago();
-                    ViewBag.lstFormasPago = formasPago.Modelo;
+                        Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                        formasPago = new VentasDAO().ObtenerFormasPago();
+                        ViewBag.lstFormasPago = formasPago.Modelo;
 
-                    Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
-                    usoCFDI = new VentasDAO().ObtenerUsoCFDI();
-                    ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+                        Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                        usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                        ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
-                    ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-                    ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+                        ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                        ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
 
-                    ViewBag.venta = venta;
-                    ViewBag.comisionBancaria = usuario.comisionBancaria;
-                    return View();
+                        ViewBag.venta = venta;
+                        ViewBag.comisionBancaria = usuario.comisionBancaria;
+                        return View();
+                    }
                 }
                 else
                 {
@@ -67,6 +73,22 @@ namespace lluviaBackEnd.Controllers
                 }
 
               
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult CierreCajas()
+        {
+            try
+            {
+                Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
+                return View(notificacion);
             }
             catch (Exception ex)
             {

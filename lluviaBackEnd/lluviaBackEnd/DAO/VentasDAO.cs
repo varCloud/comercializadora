@@ -615,6 +615,25 @@ namespace lluviaBackEnd.DAO
             }
             return result;
         }
+        public Result ValidaCierreCajas(int idUsuario)
+        {
+            Result result = new Result();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", idUsuario);
+                    result = db.Query<Result>("SP_VALIDA_CIERRE_CAJAS", parameters, commandType: CommandType.StoredProcedure).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
 
         public Result IngresoEfectivo(int idUsuario,float monto,int idTipoIngreso)
         {
