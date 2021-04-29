@@ -28,6 +28,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                string version = string.IsNullOrEmpty(ConfigurationManager.AppSettings["web-app-version"].ToString()) ? "0.0.0" : ConfigurationManager.AppSettings["web-app-version"].ToString();
+                ViewBag.appVersion = version;
                 return View(new Sesion());
             }
             catch (Exception ex)
