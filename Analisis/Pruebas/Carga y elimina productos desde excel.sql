@@ -23,29 +23,35 @@ DBCC CHECKIDENT ('Productos', RESEED, 0)
 
 select * from [Productos] order by descripcion asc
 
+select * from [dbo].[productos_abril_2021] where ClaveProductoServicio is null or ClaveProductoServicio = ''
+
+select * from [dbo].[productos_abril_2021] where ClaveProductoServicio is not null
+
+select * from CatUnidadCompra
+
+select * from CatUnidadMedida
+
+select  * from LineaProducto order by descripcion asc
 
 
-select * from [dbo].[productos_dic] where ClaveProductoServicio is null or ClaveProductoServicio = ''
 
-select * from [dbo].[productos_dic] where ClaveProductoServicio is not null
-
+select * from Productos
 
 
-
-select * from [LineaProducto]
-
---update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICOS+B962:K962'
---update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICOS+B962:K961'
---update [dbo].[productos_dic]   set Linea='PLASTICOS' where Linea = 'PLASTICO'
+select 
+CAST(ClaveProductoServicio as varchar),
+ClaveProductoServicio
+from [dbo].[productos_abril_2021] 
 
 
-select * from [dbo].[productos_dic] A where a.Linea = 'PLASTICOS+B962:K961'
+
+
 select * from [dbo].[productos_dic] A where a.Linea = 'PLASTICO'
 
 select * from [dbo].[productos_dic] A where a.Linea = 'BOLSA'
 
 
-select  a.Linea from [dbo].[productos_dic] A
+select  a.Linea from [dbo].[productos_abril_2021] A
 left join [LineaProducto] b on UPPER(replace(A.Linea,' ','')) = replace(replace(b.descripcion,'LINEA' , ''),' ','')
 where b.descripcion is null group by A.Linea
 
@@ -62,10 +68,6 @@ left join [dbo].[FactCatClaveProdServicio] b ON A.ClaveProductoServicio =B.clave
 
 select * from [productos_dic] A join [dbo].[FactCatClaveProdServicio] B ON replace(A.ClaveProductoServicio,' ','') = replace(B.claveProdServ,' ','')
 
-
-
-
-
 insert into [Productos] 
 (descripcion
 ,idUnidadMedida
@@ -80,7 +82,10 @@ insert into [Productos]
 ,precioMenudeo
 ,ultimoCostoCompra
 ,porcUtilidadIndividual
-,porcUtilidadMayoreo)
+,porcUtilidadMayoreo
+,idUnidadCompra
+,cantidadUnidadCompra)
+
 select 
 a.DESCRIPCION
 ,b.idUnidadMedida 
@@ -90,20 +95,23 @@ a.DESCRIPCION
 ,getdate()
 ,1
 ,isnull(a.CodigoDeBarras,'')
-,replace(isnull(CAST(a.ClaveProductoServicio AS VARCHAR),''),' ','')
-,a.PrecioMenudeo
-,a.PrecioMayoreo
-,a.CostoUltimo
-,a.UtilidadMenudeo
-,a.UtilidadMayoreo
-from [dbo].[productos_dic] A
+,isnull(a.ClaveProductoServicio,'')--replace(isnull(CAST(a.ClaveProductoServicio AS VARCHAR(100)),''),' ','')
+,cast(a.PrecioMenudeo as decimal (18,2))
+,cast(a.PrecioMayoreo as decimal(18,2))
+,cast(a.CostoUltimo as decimal(18,2))
+,cast(a.UtilidadMenudeo as decimal(18,2))
+,cast(a.UtilidadMayoreo as decimal(18,2))
+,UC.idUnidadCompra
+,A.[CANTIDAD UNITARIA/ UNIDAD DE COMPRA]
+from [dbo].[productos_abril_2021] A
 join CatUnidadMedida b on A.UnidadDeMedida = b.descripcion
 join [LineaProducto] L on UPPER(replace(A.Linea,' ','')) = replace(replace(L.descripcion,'LINEA' , ''),' ','')
-
+join CatUnidadCompra UC on UPPER(replace(UC.descripcion,' ','')) = UPPER(replace(replace(A.UnidadCompra,' ' , ''),' ',''))
 
 select * from Usuarios
 select * from Almacenes
 select * from LimitesInventario
+select * from CatUnidadMedida
 
 
 
