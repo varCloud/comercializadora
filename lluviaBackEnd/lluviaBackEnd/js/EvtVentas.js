@@ -333,7 +333,7 @@ function AgregarProducto(producto, cantidad) {
     }
 
     if (producto.cantidad < parseFloat(cantidad)) {
-        MuestraToast('warning', "no existe suficiente producto en inventario");
+        MuestraToast('warning', "No existe suficiente producto en inventario.");
         return false;
     }
 
@@ -364,6 +364,12 @@ function AgregarProducto(producto, cantidad) {
         for (var i = 1; i < rCount; i++) {
             if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
                 var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
+                console.log(cantidad);
+                if (cantidad > producto.cantidad) {
+                    MuestraToast('warning', "No existe suficiente producto en inventario.");
+                    return false;
+                }
+
                 tblVtas.rows[i].cells[4].children[0].value = cantidad;
                 existeProducto = true;
             }
@@ -681,6 +687,21 @@ function initInputsTabla() {
 
         var thisInput = $(this);
         var mensaje = "Debe escribir la cantidad de productos.";
+        var cell = $(this).closest('td');
+        var row = cell.closest('tr');
+        var rowIndex = row[0].rowIndex;
+        var tblVtas = document.getElementById('tablaRepVentas');
+        var idProducto = parseInt(tblVtas.rows[rowIndex].cells[1].innerHTML);
+        var producto = arrayProductos.find(x => x.idProducto == idProducto);
+
+        console.log(producto);
+        console.log(parseInt(thisInput.val()));
+
+        if ( (parseInt(thisInput.val())) > (parseInt(producto.cantidad) ) ) {
+            MuestraToast('warning', "No existe suficiente producto en inventario.");
+            document.execCommand('undo');
+            return;
+        }
 
         if (thisInput.hasClass("esDevolucion")) {
             mensaje = "Debe escribir la cantidad de productos que va a devolver.";
@@ -693,11 +714,6 @@ function initInputsTabla() {
 
         if (thisInput.hasClass("esDevolucion")) {
 
-            var cell = $(this).closest('td');
-            var row = cell.closest('tr');
-            var rowIndex = row[0].rowIndex;
-            var tblVtas = document.getElementById('tablaRepVentas');
-
             if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value))) {
                 MuestraToast('warning', "No puede regresar mas de lo que compro.");
                 document.execCommand('undo');
@@ -709,6 +725,9 @@ function initInputsTabla() {
         else {
             actualizaTicketVenta();
         }
+
+        $("#listProductos").focus();
+
     });
 }
 
@@ -947,7 +966,13 @@ $('#btnGuardarVenta').click(function (e) {
         },
         success: function (data) {
             OcultarLoader();
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+
+            if ((esDevolucion == "true") || (esDevolucion == "True")) {
+                //swal(data.Mensaje, '', data.Estatus == 200 ? 'success' : 'error');
+            }
+            else {
+                MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            }
 
             if (data.Estatus == 200) {
                 //console.log(esVentaNormal);
@@ -965,13 +990,19 @@ $('#btnGuardarVenta').click(function (e) {
                 if ((esDevolucion == "true") || (esDevolucion == "True")) {
                     ImprimeTicketDevolucion(data.Modelo.idVenta);
                     ImprimeTicket(data.Modelo.idVenta);
-                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
-                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
+
+                    swal({
+                        title: "Mensaje",
+                        text: data.Mensaje,
+                        type: data.Estatus == 200 ? 'success' : 'error'
+                    }).then(function () {
+                        window.location.href = "http://" + window.location.host + "/Ventas/ConsultaVentas";
+                    });
+
                 }
 
                 if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
-                    //window.open("http://" + window.location.host + "/Ventas/Ventas");
                     window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
