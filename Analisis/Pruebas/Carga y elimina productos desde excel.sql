@@ -20,6 +20,8 @@ delete from LimitesInventario
 DBCC CHECKIDENT ('LimitesInventario', RESEED, 0) 
 delete from Productos
 DBCC CHECKIDENT ('Productos', RESEED, 0) 
+delete from Ventas
+DBCC CHECKIDENT ('Ventas', RESEED, 0) 
 
 select * from [Productos] order by descripcion asc
 
@@ -115,7 +117,8 @@ select * from CatUnidadMedida
 
 
 
-
+delete from LimitesInventario
+DBCC CHECKIDENT ('LimitesInventario', RESEED, 0) 
 insert into LimitesInventario
 (
 minimo
