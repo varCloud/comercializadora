@@ -1840,16 +1840,19 @@ function InitSelect2Productos() {
     $("#listProductos").keypress(function (evt) {
         producto_value = null;
         if (evt.which == 13) {
-            var producto = arrayProductos.find(x => x.codigoBarras == $("#listProductos").val());
-            if (producto != null) {
-                $("#listProductos").val(producto.descripcionConExistencias);
-                producto_value = producto;
-                $("#cantidad").val(1);
-                $("#btnAgregarProducto").click();
-            }
-            else {
-                MuestraToast("error", "El producto no existe");
-                $("#listProductos").val("");
+            if (($("#listProductos").val()) !== "")
+            {
+                var producto = arrayProductos.find(x => x.codigoBarras == $("#listProductos").val());
+                if (producto != null) {
+                    $("#listProductos").val(producto.descripcionConExistencias);
+                    producto_value = producto;
+                    $("#cantidad").val(1);
+                    $("#btnAgregarProducto").click();
+                }
+                else {
+                    MuestraToast("error", "El producto no existe");
+                    $("#listProductos").val("");
+                }
             }
         }
     });
