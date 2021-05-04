@@ -496,7 +496,7 @@ namespace lluviaBackEnd.Controllers
                         {
                             notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
                             notificacion.Estatus = -1;
-                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                            pd.PrinterSettings.PrinterName = "EPSON";//WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                         }
                         else
                         {
@@ -510,7 +510,7 @@ namespace lluviaBackEnd.Controllers
                     }
                     else
                     {
-                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        pd.PrinterSettings.PrinterName = "EPSON";//WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
 
                     PaperSize ps = new PaperSize("", 285, 540);
@@ -705,7 +705,7 @@ namespace lluviaBackEnd.Controllers
                 Image imagenCodigoTicket = ByteArrayToImage( Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
 
                 datosfooter1.Y += 40;
-                Rectangle posImgCodigoTicket = new Rectangle(55, datosfooter1.Y, 210, 60);
+                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
                 e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
 
                 datosfooter1.Y += espaciado;
