@@ -640,6 +640,8 @@ namespace lluviaBackEnd.Utilerias
                 float montoIVA = 0;
                 float montoComisionBancaria = 0;
                 float montoAhorro = 0;
+                float montoPagado = 0;
+                float suCambio = 0;
 
                 html +=
                   @"<table  width='100%'>
@@ -776,12 +778,42 @@ namespace lluviaBackEnd.Utilerias
                                 </tr>";
                 }
 
+                montoPagado = tickets[0].montoPagado;
+                suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
+
+
                         html+=@" <tr>
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
                                             <td width='65%'>TOTAL:</td>
                                             <td width='25%' style='color:black; text-align:right;'>" + (monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>RECIBIDO:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + montoPagado.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SU CAMBIO:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + suCambio.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                             <td width='10%' style='color:black; text-align:left;'></td>
                                           </tr>
                                         </table>
