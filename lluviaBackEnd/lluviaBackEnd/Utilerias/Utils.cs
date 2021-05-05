@@ -1378,7 +1378,7 @@ namespace lluviaBackEnd.Utilerias
                                                         </tr>    
                                                         <tr>
                                                             <td>
-                                                               <div align='left' style='text-align:center;' font-size: 14px>  Menudeo: $ " + productos[i].precioMenudeo.ToString() + @" </div>
+                                                               <div align='left' style='text-align:center;' font-size: 14px>  Mayoreo: $ " + productos[i].precioMenudeo.ToString() + @" </div>
 
                                                                 
                                                             </td>
