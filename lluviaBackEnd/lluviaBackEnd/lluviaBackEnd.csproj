@@ -1031,6 +1031,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtAperturaCaja.js" />
+    <Content Include="js\evtCierreCajas.js" />
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
@@ -1253,6 +1254,7 @@
     <Content Include="Views\Ventas\AperturaCajas.cshtml" />
     <Content Include="Views\Ventas\_ExcesoEfectivo.cshtml" />
     <Content Include="Views\Ventas\CierreCajas.cshtml" />
+    <Content Include="Views\Ventas\_CierreDia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
