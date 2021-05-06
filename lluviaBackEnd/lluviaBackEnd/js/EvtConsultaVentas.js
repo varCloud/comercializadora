@@ -313,9 +313,16 @@ function CancelaVenta(idVenta) {
                         console.log("Antes ")
                     },
                     success: function (data) {
-                        MuestraToast('success', data.Mensaje);
-                        ImprimeTicketVentaCancelada(idVenta);
-                        PintarTabla();
+                       
+                        if (data.Estatus == 200) {
+                            MuestraToast('success', data.Mensaje);
+                            ImprimeTicketVentaCancelada(idVenta);
+                            PintarTabla();
+                        }
+                        else {
+                            MuestraToast('error', data.Mensaje);
+                        }
+                        
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
