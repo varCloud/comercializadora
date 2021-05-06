@@ -882,7 +882,7 @@ $('#btnGuardarVenta').click(function (e) {
         // validaciones
         if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-            return
+            return;
         }
 
         if (parseFloat(efectivo_) < parseFloat(total_)) {
@@ -904,7 +904,17 @@ $('#btnGuardarVenta').click(function (e) {
                 numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
             }
         }
+
+        if ((parseInt(formaPago) !== parseInt(1))) // si no es efectivo
+        {
+            efectivo_ = total_;
+        }
+
     }
+    else {
+        efectivo_ = parseFloat(0);
+    }
+
 
 
     // si todo bien
@@ -952,7 +962,7 @@ $('#btnGuardarVenta').click(function (e) {
         }
     }
 
-    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion, idPedidoEspecial: idPedidoEspecial, idVentaComplemento: idVentaComplemento, montoTotalVenta: total_ });
+    dataToPost = JSON.stringify({ venta: productos, idCliente: idCliente, formaPago: formaPago, usoCFDI: usoCFDI, idVenta: idVenta, aplicaIVA: aplicaIVA, numClientesAtendidos: numClientesAtendidos, tipoVenta: tipoVenta, motivoDevolucion: motivoDevolucion, idPedidoEspecial: idPedidoEspecial, idVentaComplemento: idVentaComplemento, montoTotalVenta: total_, montoPagado: efectivo_ });
 
     $.ajax({
         url: rootUrl("/Ventas/GuardarVenta"),
