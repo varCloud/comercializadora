@@ -145,4 +145,10 @@ namespace lluviaBackEnd.Models
         AgregarProductosVenta = 3,
         ProductosLiquidos=4
     }
+
+    public enum EnumEstatusVenta
+    {
+        Activa = 1,
+        Cancelada = 2
+    }
 }

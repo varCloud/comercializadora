@@ -755,6 +755,271 @@ namespace lluviaBackEnd.Controllers
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Impresion de Ticket de Venta Cancelada
+        //
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        [HttpPost]
+        public ActionResult ImprimeTicketVentaCancelada(Ventas venta)
+        {
+            Notificacion<Ventas> notificacion;
+            try
+            {
+
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Se envio el ticket a la impresora.";
+                notificacion.Estatus = 200;
+
+                this.idVenta = venta.idVenta;
+               
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
+                {
+                    if (venta.ticketVistaPrevia)
+                    {
+                        notificacion.Mensaje = "Abriendo Ticket.";
+                        string nombreImpresora = string.Empty;
+                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                        {
+                            if (strPrinter.Contains("PDF"))
+                            {
+                                nombreImpresora = strPrinter;
+                            }
+                        }
+
+                        if (nombreImpresora == string.Empty)
+                        {
+                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                            notificacion.Estatus = -1;
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        }
+                        else
+                        {
+                            pd.PrinterSettings = new PrinterSettings
+                            {
+                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                                PrintToFile = true,
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
+                            };
+                        }
+                    }
+                    else
+                    {
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    }
+
+                    PaperSize ps = new PaperSize("", 285, 540);
+                    pd.PrintPage += new PrintPageEventHandler(pd_PrintPageVentaCancelada);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    pd.DefaultPageSettings.PaperSize = ps;
+                    pd.Print();
+                    pd.Dispose();
+                }
+
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        void pd_PrintPageVentaCancelada(object sender, PrintPageEventArgs e)
+        {
+            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            try
+            {
+                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta,estatusVenta=EnumEstatusVenta.Cancelada });
+
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+
+                int ancho = 258;
+                int espaciado = 14;
+
+                //Configuración Global
+                GraphicsUnit units = GraphicsUnit.Pixel;
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+                //Configuración Texto
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;//Cetrado
+                StringFormat izquierda = new StringFormat();
+                izquierda.Alignment = StringAlignment.Near; //Izquierda
+                StringFormat derecha = new StringFormat();
+                derecha.Alignment = StringAlignment.Far; //Izquierda
+
+                //Tipo y tamaño de letra
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
+
+                //Color de texto
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+                //Se pinta logo 
+                Rectangle logo = new Rectangle(80, 15, 280, 81);
+                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                e.Graphics.DrawString("VENTA CANCELADA", Bold, drawBrush, datos, centrado);
+
+                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 136, izquierda);
+                e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
+                e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 146, izquierda);
+
+                Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
+                Rectangle datosCantidad = new Rectangle(190, 240, 30, 82);
+                Rectangle datosPrecio = new Rectangle(220, 240, 48, 82);
+
+                Rectangle datosEnca = new Rectangle(0, 170, 280, 82);
+
+                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+                e.Graphics.DrawString("  Forma de Pago: " + notificacion.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+                e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 8;
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                //datosEnca.Y += 14;
+
+                float monto = 0;
+                float montoIVA = 0;
+                float montoComisionBancaria = 0;
+                float montoAhorro = 0;
+
+                for (int i = 0; i < notificacion.Modelo.Count(); i++)
+                {
+                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+
+                    monto += notificacion.Modelo[i].monto;
+                    montoIVA += notificacion.Modelo[i].montoIVA;
+                    montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
+                    montoAhorro += notificacion.Modelo[i].ahorro;
+
+                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    {
+                        datosProducto.Y += espaciado + 10;
+                        datosCantidad.Y += espaciado + 10;
+                        datosPrecio.Y += espaciado + 10;
+                    }
+                    else
+                    {
+                        datosProducto.Y += espaciado;
+                        datosCantidad.Y += espaciado;
+                        datosPrecio.Y += espaciado;
+                    }
+
+                    // si hay descuentos por mayoreo o rango de precios
+                    if (notificacion.Modelo[i].ahorro > 0)
+                    {
+                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        datosProducto.Y += espaciado;
+                        datosCantidad.Y += espaciado;
+                        datosPrecio.Y += espaciado;
+                    }
+
+
+                    //// si hay descuentos por mayoreo o rango de precios
+                    //if (notificacion.Modelo[i].ahorro > 0)
+                    //{
+                    //    e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    //    e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    datosProducto.Y += espaciado;
+                    //    datosCantidad.Y += espaciado;
+                    //    datosPrecio.Y += espaciado;
+
+                    //}
+                }
+
+                Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado;
+
+                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                if (montoComisionBancaria > 0)
+                {
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
+
+                if (montoIVA > 0)
+                {
+                    e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                //if (montoAhorro > 0)
+                //{
+                //    Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
+                //    e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
+                //    datosfooter1.Y += espaciado;
+                //}
+
+                //Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                //e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                //datosfooter1.Y += espaciado;
+                //datosfooter2.Y += espaciado;               
+
+                // para mas espaciado al final del ticket
+                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter1.Y, centrado);
+                datosfooter1.Y += espaciado;
+               // datosfooter2.Y += espaciado;
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Impresion de Ticket de Retiro por Exceso de Efectivo
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
