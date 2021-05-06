@@ -127,13 +127,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial = 0,Int64 idVentaComplemento=0, float montoTotalVenta=0)
+        public ActionResult GuardarVenta(List<Ventas> venta, int idCliente, int formaPago, int usoCFDI, int idVenta, int aplicaIVA, int numClientesAtendidos, int tipoVenta, string motivoDevolucion, int idPedidoEspecial = 0,Int64 idVentaComplemento=0, float montoTotalVenta=0, float montoPagado = 0)
         {
             try
             {
                 Notificacion<Ventas> result = new Notificacion<Ventas>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos, tipoVenta, motivoDevolucion, idPedidoEspecial,idVentaComplemento,montoTotalVenta);
+                result = new VentasDAO().GuardarVenta(venta, idCliente, formaPago, usoCFDI, idVenta, UsuarioActual.idUsuario, UsuarioActual.idEstacion, aplicaIVA, numClientesAtendidos, tipoVenta, motivoDevolucion, idPedidoEspecial,idVentaComplemento,montoTotalVenta, montoPagado);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -613,6 +613,8 @@ namespace lluviaBackEnd.Controllers
                 float montoIVA = 0;
                 float montoComisionBancaria = 0;
                 float montoAhorro = 0;
+                float montoPagado = 0;
+                float suCambio = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
@@ -686,6 +688,23 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
+
+                montoPagado = notificacion.Modelo[0].montoPagado;
+                suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
+
+
+                e.Graphics.DrawString("___________________________________________________" + " \n" , font, drawBrush, 0, datosfooter1.Y, izquierda);
+                datosfooter1.Y += espaciado;
+
+                e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((montoPagado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                e.Graphics.DrawString("  SU CAMBIO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((suCambio).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+
 
                 if (montoAhorro > 0)
                 {
