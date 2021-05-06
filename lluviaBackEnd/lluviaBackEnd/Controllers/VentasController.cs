@@ -27,7 +27,7 @@ namespace lluviaBackEnd.Controllers
         int idVenta = 0;
         Retiros retiro = new Retiros();
         int idIngresoEfectivo = 0;
-        
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
@@ -38,13 +38,13 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                ViewBag.cajaAbierta = new VentasDAO().ValidaAperturaCajas(usuario.idUsuario).status==200 ? true : false;
+                ViewBag.cajaAbierta = new VentasDAO().ValidaAperturaCajas(usuario.idUsuario).status == 200 ? true : false;
                 ViewBag.cierreCaja = new VentasDAO().ValidaCierreCajas(usuario.idUsuario).status != 200 ? true : false;
 
                 if (ViewBag.cajaAbierta)
                 {
                     if (ViewBag.cierreCaja)
-                        return RedirectToAction("CierreCajas");                    
+                        return RedirectToAction("CierreCajas");
                     else
                     {
                         Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
@@ -72,7 +72,7 @@ namespace lluviaBackEnd.Controllers
                     return View("AperturaCajas");
                 }
 
-              
+
             }
             catch (Exception ex)
             {
@@ -85,10 +85,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<Cierre> notificacion = new Notificacion<Cierre>();
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                notificacion = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
-                return View(notificacion);
+                return View();
             }
             catch (Exception ex)
             {
@@ -96,20 +94,6 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
-
-        //public ActionResult ObtenerProductoPorPrecio(Precio precio)
-        //{
-        //    try
-        //    {
-        //        Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
-        //        notificacion = new VentasDAO().ObtenerProductoPorPrecio(precio);
-        //        return Json(notificacion, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
 
         public ActionResult ObtenerPreciosDeProductos(List<Precio> precios)
         {
@@ -261,6 +245,32 @@ namespace lluviaBackEnd.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Herramientas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///
+
+        public ActionResult _CierreDia()
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Notificacion<Cierre> cierre = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
+                Notificacion<List<Retiros>> retirosExcesoEfectivo = new VentasDAO().ConsultaRetirosEfectivo(new Retiros() { idEstacion = usuario.idEstacion, idAlmacen = usuario.idAlmacen, idUsuario = usuario.idUsuario });
+                Notificacion<List<Retiros>> retirosDia = new VentasDAO().ConsultaRetiros(new Retiros() { idEstacion = usuario.idEstacion, idAlmacen = usuario.idAlmacen, idUsuario = usuario.idUsuario });
+
+                List<Retiros> retiros = new List<Retiros>();
+                if (retirosExcesoEfectivo.Estatus == 200)
+                    retiros.AddRange(retirosExcesoEfectivo.Modelo);
+                if (retirosDia.Estatus == 200)
+                    retiros.AddRange(retirosDia.Modelo);
+
+                return PartialView(new Tuple<Notificacion<Cierre>, List<Retiros>>(cierre, retiros));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         [HttpPost]
         public ActionResult ConsultaInfoCierre()
         {
@@ -276,6 +286,8 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+
 
         public ActionResult _ObtenerRetiros(Retiros retiros)
         {
@@ -510,7 +522,7 @@ namespace lluviaBackEnd.Controllers
                     }
                     else
                     {
-                        pd.PrinterSettings.PrinterName =WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
 
                     PaperSize ps = new PaperSize("", 285, 540);
@@ -553,7 +565,7 @@ namespace lluviaBackEnd.Controllers
                 notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
 
                 //Logos
-                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");                
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
 
                 int ancho = 258;
                 int espaciado = 14;
@@ -721,7 +733,7 @@ namespace lluviaBackEnd.Controllers
 
 
                 //Se pinta codigo de barras en ticket
-                Image imagenCodigoTicket = ByteArrayToImage( Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
 
                 datosfooter1.Y += 40;
                 Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
@@ -751,7 +763,7 @@ namespace lluviaBackEnd.Controllers
                 //return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
 
-            
+
         }
 
         public Image ByteArrayToImage(byte[] data)
@@ -778,9 +790,10 @@ namespace lluviaBackEnd.Controllers
                 else
                     notificacion.Mensaje = "Se envio el ticket de cierre de día a la impresora.";
 
+
                 notificacion.Estatus = 200;
                 PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";               
                 this.retiro = retiros;
                 this.retiro.idEstacion = usuario.idEstacion;
                 PaperSize ps = new PaperSize("", 285, 540);
@@ -812,8 +825,6 @@ namespace lluviaBackEnd.Controllers
             }
 
         }
-
-
         void pd_PrintPageRetiro(object sender, PrintPageEventArgs e)
         {
             Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
@@ -822,6 +833,7 @@ namespace lluviaBackEnd.Controllers
                 string titulo = string.Empty;
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 retiro.idAlmacen = usuario.idAlmacen;
+
                 if (usuario.idRol == 1 || usuario.idRol == 2)
                 {
                     this.retiro.idUsuario = 0;
@@ -878,100 +890,90 @@ namespace lluviaBackEnd.Controllers
                 Rectangle datos = new Rectangle(5, 110, ancho, 82);
                 e.Graphics.DrawString(titulo, Bold, drawBrush, datos, centrado);
 
-                Rectangle datosDescripcion = new Rectangle(5, 160, 280, 82);
-                Rectangle datosTikcet = new Rectangle(120, 160, 180, 82);
 
-                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosDescripcion, izquierda);
-                datosDescripcion.Y += 14;
-                datosTikcet.Y += 14;
+                Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
+                Rectangle datosPrecio = new Rectangle(220, 240, 48, 82);
 
-                e.Graphics.DrawString("Usuario: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[0].nombreUsuario.ToString(), font, drawBrush, datosTikcet, izquierda);
+                Rectangle datosEnca = new Rectangle(0, 160, 280, 82);
 
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
+
+                e.Graphics.DrawString("  Usuario: " + notificacion.Modelo[0].nombreUsuario.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Fecha: " + notificacion.Modelo[0].fechaAlta.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Sucursal: " + notificacion.Modelo[0].descripcionSucursal.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Almacen: " + notificacion.Modelo[0].descripcionAlmacen.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Estacion: " + notificacion.Modelo[0].nombreEstacion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+
+                if (this.retiro.tipoRetiro == EnumTipoRetiro.RetirosCierreDia)
                 {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
+                    e.Graphics.DrawString("No. Ventas" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].totalVentas + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Apertura de Caja" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoApertura.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Ingresos de Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoIngresosEfectivo.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Contado" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasContado.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Tarjeta" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasTarjeta.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Canceladas" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasCanceladas.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Retiros" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].retirosExcesoEfectivo.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    datosfooter1.Y = datosProducto.Y;
+
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                    datosfooter1.Y += espaciado;
+
+                    e.Graphics.DrawString("  SALDO TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoCierre.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+
+                    e.Graphics.DrawString("  SALDO EN CAJA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
                 }
                 else
                 {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
+                    e.Graphics.DrawString("  MONTO RETIRO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
                 }
 
-                e.Graphics.DrawString("Fecha: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[0].fechaAlta.ToString(), font, drawBrush, datosTikcet, izquierda);
-
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
-                {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
-                }
-
-                e.Graphics.DrawString("Sucursal: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[0].descripcionSucursal.ToString(), font, drawBrush, datosTikcet, izquierda);
-
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
-                {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
-                }
-
-                e.Graphics.DrawString("Alamcen: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[0].descripcionAlmacen.ToString(), font, drawBrush, datosTikcet, izquierda);
-
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
-                {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
-                }
-
-                e.Graphics.DrawString("Estación: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[0].nombreEstacion.ToString(), font, drawBrush, datosTikcet, izquierda);
-
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
-                {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
-                }
-
-
-                e.Graphics.DrawString("Monto: ", font, drawBrush, datosDescripcion, izquierda);
-                e.Graphics.DrawString("" + notificacion.Modelo[0].montoRetiro.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, datosTikcet, izquierda);
-
-                if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
-                {
-                    datosDescripcion.Y += espaciado + 10;
-                    datosTikcet.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosDescripcion.Y += espaciado;
-                    datosTikcet.Y += espaciado;
-                }
-
-
-                Rectangle datosfooter1 = new Rectangle(5, datosDescripcion.Y, 280, 82);
                 e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
                 datosfooter1.Y += espaciado + 50;
 
@@ -989,6 +991,7 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y + 30, centrado);
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
+
             }
             catch (InvalidPrinterException ex)
             {
@@ -1008,7 +1011,6 @@ namespace lluviaBackEnd.Controllers
 
 
         }
-
 
 
 
@@ -1623,8 +1625,8 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                notificacion = new Notificacion<Retiros>(); 
-                notificacion.Mensaje = "Se envio el ticket a la impresora.";               
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Se envio el ticket a la impresora.";
                 notificacion.Estatus = 200;
                 PrintDocument pd = new PrintDocument();
                 //string nombreImpresora = string.Empty;
@@ -1687,11 +1689,11 @@ namespace lluviaBackEnd.Controllers
                 ingresoEfectivo = notificacion.Modelo[0];
 
                 if ((EnumTipoIngresoEfectivo)ingresoEfectivo.idTipoIngreso == EnumTipoIngresoEfectivo.AperturaCajas)
-                {                   
+                {
                     titulo = "\nCOMPROBANTE DE " + "\n" + "APERTURA DE CAJAS";
                 }
                 else
-                {                  
+                {
                     titulo = "\nCOMPROBANTE DE " + "\n" + "INGRESO DE EFECTIVO";
                 }
 
@@ -1866,7 +1868,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                List<ExcesoEfectivo> excesoEfectivos = new VentasDAO().excesoEfectivo((usuario.idRol == 1?0:usuario.idUsuario));
+                List<ExcesoEfectivo> excesoEfectivos = new VentasDAO().excesoEfectivo((usuario.idRol == 1 ? 0 : usuario.idUsuario));
                 return PartialView(excesoEfectivos);
             }
             catch (Exception ex)

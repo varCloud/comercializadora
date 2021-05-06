@@ -24,8 +24,8 @@ namespace lluviaBackEnd.Filters
         {
             filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary()
             {
-                { "action", "Login" },
-                { "controller", "Login" }
+                { "action", "SesionExpirada" },
+                { "controller", "SesionExpirada" }
             });
         }
     }

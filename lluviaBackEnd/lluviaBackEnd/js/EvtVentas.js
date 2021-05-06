@@ -697,7 +697,7 @@ function initInputsTabla() {
         console.log(producto);
         console.log(parseInt(thisInput.val()));
 
-        if ( (parseInt(thisInput.val())) > (parseInt(producto.cantidad) ) ) {
+        if ((parseInt(thisInput.val())) > (parseInt(producto.cantidad))) {
             MuestraToast('warning', "No existe suficiente producto en inventario.");
             document.execCommand('undo');
             return;
@@ -871,7 +871,7 @@ $('#btnGuardarVenta').click(function (e) {
     var esVentaNormal = "true";
     var motivoDevolucion = $('#motivoDevolucion').val();
     var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
-   
+
 
 
     if (((esDevolucion == "true") || (esDevolucion == "True")) || ((esAgregarProductos == "true") || (esAgregarProductos == "True"))) {
@@ -1415,10 +1415,10 @@ function calculaTotales() {
     // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
     if ((parseInt(formaPago) == parseInt(4)) || (parseInt(formaPago) == parseInt(18))) {
         porcentajeComisionBancaria = $('#comisionBancaria').val();
-    } 
+    }
 
-    if (parseFloat($('#idCliente').val()) !=1) {
-        descuento=$("#txtDescuentoCliente").val();
+    if (parseFloat($('#idCliente').val()) != 1) {
+        descuento = $("#txtDescuentoCliente").val();
     }
 
     var total = parseFloat(document.getElementById("previoTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
@@ -1447,7 +1447,7 @@ function calculaTotales() {
     document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
 
-   
+
 
 }
 
@@ -1469,7 +1469,7 @@ function AbrirModalCierreCajaExcedentes() {
 }
 
 function AbrirModalCierreDia() {
-    ConsultRetirosV2();
+    //ConsultRetirosV2();
     ConsultaInfoCierreDia();
     $('#ModalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
 }
@@ -1502,9 +1502,9 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
 $('#btnCierreDia').click(function (e) {
     //var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var totEfe = parseFloat($('#totalEfectivoCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var monto = totEfe - totRet;
+    //var totEfe = parseFloat($('#totalEfectivoCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    //var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+    //var monto = totEfe - totRet;
 
     //if ((monto) <= 0.0) {
     //    MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
@@ -1523,7 +1523,7 @@ $('#btnCierreDia').click(function (e) {
 
                 $.ajax({
                     url: rootUrl("/Ventas/RealizaCierreEstacion"),
-                    data: { monto: monto },
+                    data: { monto: 0 },
                     method: 'post',
                     dataType: 'json',
                     async: true,
@@ -1655,21 +1655,16 @@ function ConsultaInfoCierre() {
 
 function ConsultaInfoCierreDia() {
     $.ajax({
-        url: rootUrl("/Ventas/ConsultaInfoCierre"),
+        url: rootUrl("/Ventas/_CierreDia"),
         method: 'post',
-        dataType: 'json',
+        dataType: 'html',
         async: true,
         beforeSend: function (xhr) {
             ShowLoader()
         },
-        success: function (data) {
+        success: function (view) {
+            $('#PartialViewCierreDia').html(view);
             OcultarLoader();
-            $('#AperturaCajaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">$" + data.Modelo.montoApertura + "</span></p>");
-            $('#IngresosEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">$" + data.Modelo.montoIngresosEfectivo + "</span></p>");
-            $('#vtasDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día:</span><span class=\"float-right text-muted\">" + data.Modelo.totalVentas + "</span></p>");
-            $('#totalEfectivoCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
-            $('#retirosDelDiaCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$" + data.Modelo.retirosHechosDia + "</span></p>");
-            $('#totalCierre').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$" + data.Modelo.efectivoDisponible + "</span></p>");
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -1829,11 +1824,11 @@ function InitSelect2Productos() {
             var cantidad_ = document.getElementById("cantidad");
 
             // se valida si el campo cantidad puede aceptar decimales para cuando la unidad de medida es Kilogramo,Gramo,Litro,Mililitro
-            if  (
-                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(1) ||    // Kilogramo
-                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(2) ||    // Gramo
-                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(3) ||    // Litro
-                    parseInt(ui.item.producto.idUnidadMedida) === parseInt(4)       // Mililitro
+            if (
+                parseInt(ui.item.producto.idUnidadMedida) === parseInt(1) ||    // Kilogramo
+                parseInt(ui.item.producto.idUnidadMedida) === parseInt(2) ||    // Gramo
+                parseInt(ui.item.producto.idUnidadMedida) === parseInt(3) ||    // Litro
+                parseInt(ui.item.producto.idUnidadMedida) === parseInt(4)       // Mililitro
             ) {
                 esDecimal_ = parseInt(1);
             }
@@ -1850,8 +1845,7 @@ function InitSelect2Productos() {
     $("#listProductos").keypress(function (evt) {
         producto_value = null;
         if (evt.which == 13) {
-            if (($("#listProductos").val()) !== "")
-            {
+            if (($("#listProductos").val()) !== "") {
                 var producto = arrayProductos.find(x => x.codigoBarras == $("#listProductos").val());
                 if (producto != null) {
                     $("#listProductos").val(producto.descripcionConExistencias);
@@ -1912,7 +1906,7 @@ function validaTipoMedida(txt, evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
 
-    if ( esDecimal_ === parseInt(1) ) {
+    if (esDecimal_ === parseInt(1)) {
 
         if (charCode == 46) {
             if (txt.value.indexOf('.') === -1) {
@@ -2166,7 +2160,7 @@ function onFailureResultIngresoEfectivo() {
 function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
     $.ajax({
         url: rootUrl("/Ventas/ImprimeTicketIngresosEfectivo"),
-        data: { idIngresoEfectivo: idIngresoEfectivo},
+        data: { idIngresoEfectivo: idIngresoEfectivo },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -2190,14 +2184,14 @@ function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
 
 //Complemento de ticket de venta
 
-$("#codigoBarrasTicketVenta").keypress(function (evt) {   
+$("#codigoBarrasTicketVenta").keypress(function (evt) {
     if (evt.which == 13) {
         BuscarVentaCodigoBarras();
     }
 });
 
 function AbrirModalComplementoVenta() {
-    $("#codigoBarrasTicketVenta").val("");  
+    $("#codigoBarrasTicketVenta").val("");
     $('#ModalComplementoVenta').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
@@ -2213,17 +2207,17 @@ function BuscarVentaCodigoBarras() {
         },
         success: function (data) {
             OcultarLoader();
-            if (data.Estatus == 200) {               
-                $("#actionVenta").html("<a class='btn btn-primary' style='cursor:default'>Complemento del ticket " + $("#codigoBarrasTicketVenta").val()+"</a>");
+            if (data.Estatus == 200) {
+                $("#actionVenta").html("<a class='btn btn-primary' style='cursor:default'>Complemento del ticket " + $("#codigoBarrasTicketVenta").val() + "</a>");
                 arrayProductosVentaComplemento = data.Modelo;
-                idVentaComplemento = data.Modelo[0].idVenta;              
+                idVentaComplemento = data.Modelo[0].idVenta;
                 $('#ModalComplementoVenta').modal('hide');
                 actualizaTicketVenta();
             }
             else {
                 MuestraToast("error", data.Mensaje);
             }
-            
+
         },
         error: function (xhr, status) {
             OcultarLoader();
