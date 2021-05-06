@@ -1,5 +1,4 @@
-﻿@model lluviaBackEnd.Models.Sesion
-@{
+﻿@{
     ViewBag.Title = "Login";
     Layout = null;
 }
@@ -24,8 +23,8 @@
     <script>
         var pathServer = '@Url.Content("~/assets/img/logo_lluvia.png")';
         console.log("pathServer", pathServer)
-    
-        
+
+
         function rootUrl(url) {
             var _rootUrl = '@Url.Content("~")';
             var x = url;
@@ -48,59 +47,20 @@
                     <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h4>Login</h4>
+                                <h4>Sesión Expirada</h4>
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align:center">
                                     <img alt="image" src="~/assets/img/logo_lluvia.png" style="width: 200px;height: 200px;" class="user-img-radious-style">
                                 </div>
-                                @*<form method="POST" action="#" class="needs-validation" novalidate="">*@
-                                @using (Ajax.BeginForm("ValidarUsuario", "Login",
-
-                                 new AjaxOptions
-                                 {
-                                     HttpMethod = "Post",
-                                     OnBegin = "onBeginSubmit",
-                                     OnComplete = "onCompleteSubmit",
-                                     OnFailure = "onFailureResult",
-                                     OnSuccess = "onSuccessResult",
-                                  
-                                  
-                                 },
-                                 new { id = "frmLogin" }))
-                                {
-                                    <div class="form-group">
-                                        <label for="email">Usuario</label>
-                                        @Html.TextBoxFor(x => x.usuario, null, new { @class = "form-control", @tabindex = "1" })
-                                        @Html.ValidationMessageFor(m => m.usuario, null, new { @class = "text-danger was" })
-
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="d-block">
-                                            <label for="password" class="control-label">Contraseña</label>
-                                            <div class="float-right">
-                                                <a href="#" class="text-small">
-                                                    Forgot Password?
-                                                </a>
-                                            </div>
-                                        </div>
-                                        @Html.HiddenFor(x => x.Token)
-                                        @Html.PasswordFor(x => x.contrasena, new { @class = "form-control", @tabindex = "2" })
-                                        @Html.ValidationMessageFor(m => m.contrasena, null, new { @class = "text-danger" })
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit" id="btnIniciarSesion" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                                            Iniciar Sesion
-                                        </button>
-                                    </div>
-                                }
-
+                                <h6 style="color:red">Su sesión ha expirado por tiempo de inactividad, por favor vuelva a iniciar sesión</h6>
+                                <div class="buttons">
+                                    <a href="@Url.Action("Login","Login")" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cancelar Factura">Iniciar Sesion</a>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-5 text-muted text-center">
-                            <a href="#">Administrador</a><a href="#"> Version: @ViewBag.appVersion</a>
+
                         </div>
                     </div>
                 </div>

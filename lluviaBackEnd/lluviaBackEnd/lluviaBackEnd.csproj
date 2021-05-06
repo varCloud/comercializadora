@@ -215,6 +215,7 @@
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
+    <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
@@ -1255,6 +1256,7 @@
     <Content Include="Views\Ventas\_ExcesoEfectivo.cshtml" />
     <Content Include="Views\Ventas\CierreCajas.cshtml" />
     <Content Include="Views\Ventas\_CierreDia.cshtml" />
+    <Content Include="Views\SesionExpirada\SesionExpirada.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
