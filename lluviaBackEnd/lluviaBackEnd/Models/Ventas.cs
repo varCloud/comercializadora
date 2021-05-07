@@ -94,5 +94,8 @@ namespace lluviaBackEnd.Models
         public float precioVenta { get; set; }
         public int cantProductosLiq { get; set; }
         public int idPedidoEspecial { get; set; }
+        public int estatusVenta { get; set; }
+        public DateTime fechaCancelacion { get; set; }
+
     }
 }

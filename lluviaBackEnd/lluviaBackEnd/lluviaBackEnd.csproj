@@ -1037,6 +1037,7 @@
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
+    <Content Include="js\EvtConsultaVentasCanceladas.js" />
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
@@ -1257,6 +1258,8 @@
     <Content Include="Views\Ventas\CierreCajas.cshtml" />
     <Content Include="Views\Ventas\_CierreDia.cshtml" />
     <Content Include="Views\SesionExpirada\SesionExpirada.cshtml" />
+    <Content Include="Views\Ventas\ConsultaVentasCanceladas.cshtml" />
+    <Content Include="Views\Ventas\_ObtenerVentasCanceladas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

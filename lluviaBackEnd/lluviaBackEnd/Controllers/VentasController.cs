@@ -243,6 +243,51 @@ namespace lluviaBackEnd.Controllers
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  Consultar Ventas Canceladas
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public ActionResult ConsultaVentasCanceladas()
+        {
+            try
+            {              
+             
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+
+                Sesion usuario = Session["UsuarioActual"] as Sesion;              
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult _ObtenerVentasCanceladas(Ventas ventas)
+        {
+            try
+            {
+                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                ventas.tipoConsulta = 2;
+                ventas.estatusVenta = 2;
+                notificacion = new ReportesDAO().ObtenerVentas(ventas);
+                return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Herramientas
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///
@@ -705,7 +750,7 @@ namespace lluviaBackEnd.Controllers
                 suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
 
 
-                e.Graphics.DrawString("___________________________________________________" + " \n" , font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 datosfooter1.Y += espaciado;
 
                 e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -864,7 +909,7 @@ namespace lluviaBackEnd.Controllers
             Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta,estatusVenta=EnumEstatusVenta.Cancelada });
+                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, estatusVenta = EnumEstatusVenta.Cancelada });
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -902,8 +947,8 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("VENTA CANCELADA", Bold, drawBrush, datos, centrado);
 
                 e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 136, izquierda);
-                e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
-                e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 146, izquierda);
+                e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
+                e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 146, izquierda);
 
                 Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
                 Rectangle datosCantidad = new Rectangle(190, 240, 30, 82);
@@ -1016,7 +1061,7 @@ namespace lluviaBackEnd.Controllers
                 // para mas espaciado al final del ticket
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter1.Y, centrado);
                 datosfooter1.Y += espaciado;
-               // datosfooter2.Y += espaciado;
+                // datosfooter2.Y += espaciado;
 
             }
             catch (InvalidPrinterException ex)
@@ -1359,6 +1404,25 @@ namespace lluviaBackEnd.Controllers
                 ViewBag.pdfBase64 = pdfCodigos;
                 ViewBag.title = "Ticket: " + idVenta.ToString(); ;
                 return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ActionResult VerTicketVentaCancelada(int idVenta)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta,estatusVenta=EnumEstatusVenta.Cancelada });
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketCancelacionPDF(ticket.Modelo));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                return View("VerTicket");
             }
             catch (Exception ex)
             {

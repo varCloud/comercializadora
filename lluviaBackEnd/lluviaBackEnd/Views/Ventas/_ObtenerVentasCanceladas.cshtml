@@ -1,0 +1,73 @@
+﻿@using lluviaBackEnd.Models;
+@model Notificacion<List<Ventas>>
+@if (Model.Modelo==null)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>No existen ventas para el periodo seleccionado.</h2>
+    </div>
+
+}
+else
+{
+
+
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tblVentasCanceladas">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"> # Ticket </th>
+                                        <th>Cliente</th>
+                                        <th>Fecha Cancelacion</th>
+                                        <th>Cantidad</th>
+                                        <th>Usuario</th>
+                                        <th>Código de Barras</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Modelo)
+                                    {
+                                        <tr>
+                                            <td>@item.idVenta</td>
+                                            <td>@item.nombreCliente</td>
+                                            <td>@item.fechaCancelacion</td>
+                                            <td>@item.cantidad</td>
+                                            <td>@item.nombreUsuario</td>
+                                            <td>@item.codigoBarrasTicket</td>
+                                            <td>
+                                                <div class="buttons">
+                                                    <a href="@Url.Action("VerTicketVentaCancelada", "Ventas", new {idVenta=item.idVenta})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver Ticket" target="_blank"><i class="fas fa-eye"></i></a>
+                                                    <a href="javascript:ImprimeTicketVentaCancelada(@item.idVenta);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Imprimir Ticket"><i class="fas fa-print"></i></a>
+                                            
+                                                </div>                                               
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+}
+
+
+
+
