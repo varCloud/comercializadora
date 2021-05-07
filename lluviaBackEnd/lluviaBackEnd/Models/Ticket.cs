@@ -34,6 +34,8 @@ namespace lluviaBackEnd.Models
         public EnumTipoVenta tipoVenta { get; set; }
         public string codigoBarras { get; set; }
         public float montoPagado { get; set; }
+        public float montoPagadoAgregarProductos { get; set; }
+        public float montoAgregarProductos { get; set; }        
 
         public EnumEstatusVenta estatusVenta { get; set; }
 

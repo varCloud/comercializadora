@@ -673,6 +673,14 @@ namespace lluviaBackEnd.Controllers
                 float montoPagado = 0;
                 float suCambio = 0;
 
+                float montoPagadoAgregarProductos = 0;
+                float montoAgregarProductos = 0;
+                float suCambioAgregarProductos = 0;
+
+                montoPagadoAgregarProductos = notificacion.Modelo[0].montoPagadoAgregarProductos;
+                montoAgregarProductos = notificacion.Modelo[0].montoAgregarProductos;
+
+
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
@@ -720,6 +728,14 @@ namespace lluviaBackEnd.Controllers
                     //}
                 }
 
+                if (montoAgregarProductos > 0)
+                {
+                    monto -= montoAgregarProductos;
+                }
+
+                suCambioAgregarProductos = montoPagadoAgregarProductos - montoAgregarProductos;
+
+
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                 datosfooter1.Y += espaciado;
@@ -760,6 +776,27 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("  SU CAMBIO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 e.Graphics.DrawString((suCambio).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
+
+
+                if (montoAgregarProductos > 0)
+                {
+
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    datosfooter1.Y += espaciado;
+
+                    e.Graphics.DrawString("  COMPLEMENTOS:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    datosfooter1.Y += espaciado;
+
+                    e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoPagadoAgregarProductos).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+
+                    e.Graphics.DrawString("  SU CAMBIO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((suCambioAgregarProductos).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+
+
+                }
 
 
 

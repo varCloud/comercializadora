@@ -643,6 +643,13 @@ namespace lluviaBackEnd.Utilerias
                 float montoPagado = 0;
                 float suCambio = 0;
 
+                float montoPagadoAgregarProductos = 0;
+                float montoAgregarProductos = 0;
+                float suCambioAgregarProductos = 0;
+
+                montoPagadoAgregarProductos = tickets[0].montoPagadoAgregarProductos;
+                montoAgregarProductos = tickets[0].montoAgregarProductos;
+
                 html +=
                   @"<table  width='100%'>
                     <tr>
@@ -732,6 +739,10 @@ namespace lluviaBackEnd.Utilerias
 
                 }
 
+                if (montoAgregarProductos > 0)
+                {
+                    monto -= montoAgregarProductos;
+                }
 
                 html += @"
                                 <tr><td style='color:black; '>____________________________________________________</td></tr>
@@ -780,6 +791,8 @@ namespace lluviaBackEnd.Utilerias
 
                 montoPagado = tickets[0].montoPagado;
                 suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
+                suCambioAgregarProductos = montoPagadoAgregarProductos - montoAgregarProductos; 
+                
 
 
                 html += @" <tr>
@@ -819,6 +832,51 @@ namespace lluviaBackEnd.Utilerias
                                         </table>
                                     </td>
                                 </tr>";
+
+
+                if ( montoAgregarProductos > 0 ) {
+
+                    html += @" 
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>COMPLEMENTOS: </td>
+                                            <td width='25%' style='color:black; text-align:right;'></td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>RECIBIDO:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + montoPagadoAgregarProductos.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SU CAMBIO:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + suCambioAgregarProductos.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                }
+
 
                 if (montoAhorro > 0)
                 {
