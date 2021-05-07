@@ -2225,3 +2225,9 @@ function BuscarVentaCodigoBarras() {
         }
     });
 }
+
+$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});
+
+
