@@ -1005,19 +1005,7 @@ namespace lluviaBackEnd.Controllers
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
                         datosPrecio.Y += espaciado;
-                    }
-
-
-                    //// si hay descuentos por mayoreo o rango de precios
-                    //if (notificacion.Modelo[i].ahorro > 0)
-                    //{
-                    //    e.Graphics.DrawString("     -Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                    //    e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                    //    datosProducto.Y += espaciado;
-                    //    datosCantidad.Y += espaciado;
-                    //    datosPrecio.Y += espaciado;
-
-                    //}
+                    }             
                 }
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
@@ -1046,23 +1034,26 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
-                //if (montoAhorro > 0)
-                //{
-                //    Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
-                //    e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
-                //    datosfooter1.Y += espaciado;
-                //}
 
-                //Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                //e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
-                //datosfooter1.Y += espaciado;
-                //datosfooter2.Y += espaciado;               
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+                //Se pinta codigo de barras en ticket
+                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+
+                datosfooter1.Y += 40;
+                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
+                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
 
                 // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter1.Y, centrado);
+                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
-                // datosfooter2.Y += espaciado;
-
+                datosfooter2.Y += espaciado;
             }
             catch (InvalidPrinterException ex)
             {

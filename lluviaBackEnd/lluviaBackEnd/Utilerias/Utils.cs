@@ -63,7 +63,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.PureBarcode = false;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/","_") + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "barras_" + cadena.Replace("/", "_") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -78,7 +78,7 @@ namespace lluviaBackEnd.Utilerias
                 writer.Options.Width = 200;
                 img = writer.Write(cadena);
                 //img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Save(ObtnerFolderCodigos() + "QR_" + cadena.Replace("/","_") + "_.jpg");
+                img.Save(ObtnerFolderCodigos() + "QR_" + cadena.Replace("/", "_") + "_.jpg");
                 return ms.ToArray();
             }
         }
@@ -137,7 +137,7 @@ namespace lluviaBackEnd.Utilerias
                     images.AppendHorizontally().Quality = 0;
                     images.AppendHorizontally().Write(Path.Combine(path));
                 }*/
-                
+
             }
         }
 
@@ -184,7 +184,7 @@ namespace lluviaBackEnd.Utilerias
             try
             {
                 //ruta = HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
-                DateTime fecha = System.DateTime.Now;                
+                DateTime fecha = System.DateTime.Now;
                 DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
                 string nombreMes = formatoFecha.GetMonthName(fecha.Month).ToUpper();
                 ruta = Path.Combine(ruta, fecha.Year.ToString());
@@ -197,10 +197,10 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path ,string idVenta)
+        public static void GenerarFactura(Comprobante c, string path, string idVenta)
         {
             string TamañoLetra = "10px";
-            string cssTabla = @"style='text-align:center;font-size:"+ TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
             string titulosCabeceras = "style='font-weight:bold;  color:3b3b3b;text-align:center'";
             string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
             string color1 = "bgcolor='#edeceb' style='color:7b7b7b;text-align:center;font-size:7px;' ";
@@ -232,20 +232,20 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                         <tr " + centradas + @">
                                 <td>" + c.Folio + @"</td>
-                               <td>"  + c.Fecha+ @"</td>
+                               <td>" + c.Fecha + @"</td>
                         </tr>
                         </table>";
 
-               string DatosDelCliente = @"
+                string DatosDelCliente = @"
                        <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                             <tr " + cabeceraTablas + @">
                                 <td colspan='4'>Datos del cliente</td>    
                             </tr>
                             <tr>
-                                <td "+ tituloIndividual+@" >Cliente</td> <td colspan ='3'>" + c.Receptor.Nombre + @"</td>           
+                                <td " + tituloIndividual + @" >Cliente</td> <td colspan ='3'>" + c.Receptor.Nombre + @"</td>           
                             </tr>
                             <tr>
-                                 <td " + tituloIndividual + @" >R.F.C </td> <td>" + c.Receptor.Rfc + @"</td> <td " + tituloIndividual + @">Uso CFDI </td><td>" + c.Receptor.UsoCFDI+" - "+c.Addenda.descripcionUsoCFDI + @" </td>  
+                                 <td " + tituloIndividual + @" >R.F.C </td> <td>" + c.Receptor.Rfc + @"</td> <td " + tituloIndividual + @">Uso CFDI </td><td>" + c.Receptor.UsoCFDI + " - " + c.Addenda.descripcionUsoCFDI + @" </td>  
                             </tr>
                             <tr>
                                 <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
@@ -260,10 +260,10 @@ namespace lluviaBackEnd.Utilerias
 
 
                 string DatosDelEmisor = @"<table width='100%' " + cssTabla + @"  CELLPADDING='0' >
-                        <tr "+ cabeceraTablas + @">
+                        <tr " + cabeceraTablas + @">
                             <td colspan='3' >Datos del Emisor </td>    
                         </tr>
-                        <tr "+ titulosCabeceras + @">
+                        <tr " + titulosCabeceras + @">
                             <td>RFC </td> 
                             <td>Tipo de comprobante </td>
                             <td>Lugar de expedición </td>
@@ -271,7 +271,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                         <tr " + centradas + @">
                             <td>" + c.Emisor.Rfc + @" </td> 
-                            <td>" + c.TipoDeComprobante+" - "+c.Addenda.descripcionTipoComprobante + @" </td>   
+                            <td>" + c.TipoDeComprobante + " - " + c.Addenda.descripcionTipoComprobante + @" </td>   
                             <td>" + c.LugarExpedicion + @"</td>    
                         </tr>
                         </table>";
@@ -286,20 +286,20 @@ namespace lluviaBackEnd.Utilerias
                             <td>Moneda </td>
                         </tr>
                         <tr " + centradas + @">
-                                <td>" + c.FormaPago +" - "+c.Addenda.descripcionFormaPago+@" </td>   
+                                <td>" + c.FormaPago + " - " + c.Addenda.descripcionFormaPago + @" </td>   
                                 <td>" + c.MetodoPago + "-  Pago en una sola exhibición" + @" </td>  
                                 <td>" + c.Moneda + @"- Peso Mexicano</td>    
                         </tr>
                         </table>";
 
-  
+
 
                 string html4 = @" 
                         <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
                         <tr " + cabeceraTablas + @">
                             <td colspan='9'>Productos</td>    
                         </tr>
-                        <tr "+ titulosCabeceras + @">
+                        <tr " + titulosCabeceras + @">
                             <td>Cantidad </td>
                             <td>Unidad</td>
                             <td>Clave Unidad</td> 
@@ -313,16 +313,16 @@ namespace lluviaBackEnd.Utilerias
                 int i = 0;
                 foreach (var item in c.Addenda.conceptosAddenda)
                 {
-                    html4 += "<tr " + (i % 2 == 0 ? color1 : color2)+" >";
+                    html4 += "<tr " + (i % 2 == 0 ? color1 : color2) + " >";
                     html4 += "<td>" + item.Cantidad + "</td>";
-                    html4 += "<td>" + item.Unidad+"</td>";
+                    html4 += "<td>" + item.Unidad + "</td>";
                     html4 += "<td>" + item.ClaveUnidad + " - " + item.DescripcionClaveUnidad + " </td>";
-                    html4 += "<td>" + item.ClaveProdserv+" - "+item.DescripcionClaveProdServ + "</td>";
-                    html4 += "<td>" + item.Descripcion+"</td>";
+                    html4 += "<td>" + item.ClaveProdserv + " - " + item.DescripcionClaveProdServ + "</td>";
+                    html4 += "<td>" + item.Descripcion + "</td>";
                     html4 += "<td>" + item.ValorUnitario.ToString("c2") + "</td>";
                     html4 += "<td>$0.00</td>";
-                    html4 += "<td>"+item.IVA.ToString("C2")+"</td>";
-                    html4 += "<td>"+item.Importe.ToString("C2")+"</td>";
+                    html4 += "<td>" + item.IVA.ToString("C2") + "</td>";
+                    html4 += "<td>" + item.Importe.ToString("C2") + "</td>";
                     html4 += "</tr>";
                     i++;
                 }
@@ -330,7 +330,7 @@ namespace lluviaBackEnd.Utilerias
                     <tr> 
                         <td colspan='6'></td>
                         <td colspan='2' " + tituloIndividual + @">Subtotal:</td>
-                        <td>" + c.SubTotal.ToString("C2")+ @"</td>
+                        <td>" + c.SubTotal.ToString("C2") + @"</td>
                     </tr>
                     <tr> 
                         <td colspan='6'></td>
@@ -366,7 +366,7 @@ namespace lluviaBackEnd.Utilerias
                             <td>Lugar de Expedicion</td>
                         </tr>
                          <tr " + centradas + @">
-                            <td>" + c.Complemento.TimbreFiscalDigital.NoCertificadoSAT+ @" </td>
+                            <td>" + c.Complemento.TimbreFiscalDigital.NoCertificadoSAT + @" </td>
                             <td>MORELIA" + " " + "MICHOACÁN" + @"</td>
                         </tr>
                         <tr " + titulosCabecerasAbre + @">
@@ -375,7 +375,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + centradas + @">
                             <td>" + c.NoCertificado + @" </td>
-                            <td>"+c.Complemento.TimbreFiscalDigital.UUID+ @"</td>
+                            <td>" + c.Complemento.TimbreFiscalDigital.UUID + @"</td>
                         </tr>
                         <tr " + titulosCabecerasAbre + @">
                             <td>Fecha y hora de certificación </td>
@@ -383,11 +383,11 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + centradas + @">
                             <td>" + c.Complemento.TimbreFiscalDigital.FechaTimbrado + @" </td>
-                            <td>" + c.Emisor.RegimenFiscal+" Incorporación fiscal"+" "+ @"</td>
+                            <td>" + c.Emisor.RegimenFiscal + " Incorporación fiscal" + " " + @"</td>
                         </tr>
                     </table>";
 
-               string QR = @"<table  width='100%'>
+                string QR = @"<table  width='100%'>
                     <tr>
                         <td width='80%'>
                             <table width='100%' height='100%'   style='font-size:8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
@@ -395,7 +395,7 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black;' ><b>CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DIGITAL DEL SAT </b></td>
                                 </tr>
                                 <tr>
-                                    <td  style='white-space: nowrap'>"+ CadenaComplementos(c.Complemento.TimbreFiscalDigital) + @"</td>
+                                    <td  style='white-space: nowrap'>" + CadenaComplementos(c.Complemento.TimbreFiscalDigital) + @"</td>
                                 </tr>
                                 <tr>
                                     <td style='color:black;'><b>SELLO DIGITAL EMISOR</b></td>
@@ -412,13 +412,13 @@ namespace lluviaBackEnd.Utilerias
                             </table>
                         </td>
                         <td width='20%'>
-                                        <img src='" + Path.Combine(path, "Qr_"+idVenta+".jpg") + @"' width = '110' height = '110' align='right' />
+                                        <img src='" + Path.Combine(path, "Qr_" + idVenta + ".jpg") + @"' width = '110' height = '110' align='right' />
                         </td> 
                    </tr>
                 </table>";
 
 
-                html += DatosDelEmisor + informacionDelPago + DatosDelCliente + html4 + html5+QR;
+                html += DatosDelEmisor + informacionDelPago + DatosDelCliente + html4 + html5 + QR;
 
                 //html = "<h1>Formato para solicitar la Domiciliación</h1>";
                 document.Open();
@@ -437,7 +437,7 @@ namespace lluviaBackEnd.Utilerias
                 //PdfReader reader = new PdfReader(memStream.ToArray());
                 //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
                 byte[] content = memStream.ToArray();
-                using (FileStream fs = File.Create(Path.Combine(path,"Factura_"+idVenta+".pdf")))
+                using (FileStream fs = File.Create(Path.Combine(path, "Factura_" + idVenta + ".pdf")))
                 {
                     fs.Write(content, 0, (int)content.Length);
                 }
@@ -464,7 +464,7 @@ namespace lluviaBackEnd.Utilerias
             return x.Replace(" ", "").ToString().Insert(95, " &nbsp;");
 
         }
-               
+
         public static string ObtnerFolderCodigos()
         {
             string ruta = string.Empty;
@@ -664,7 +664,7 @@ namespace lluviaBackEnd.Utilerias
                                         <table>
                                           <tr>                                            
                                             <td style='color:black; text-align:center;'>Ticket: " + tickets[0].idVenta.ToString() + @"</td>
-                                            <td>" +  tickets[0].fechaAlta.ToString("dd-MM-yyyy") + @"</td>
+                                            <td>" + tickets[0].fechaAlta.ToString("dd-MM-yyyy") + @"</td>
                                           </tr>
                                           <tr>
                                             <td></td>
@@ -694,14 +694,14 @@ namespace lluviaBackEnd.Utilerias
                                 <tr><td style='color:black; '>____________________________________________________</td></tr>";
 
 
-                                for (int i = 0; i < tickets.Count(); i++)
-                                {
-                                    monto += tickets[i].monto;
-                                    montoIVA += tickets[i].montoIVA;
-                                    montoComisionBancaria += tickets[i].montoComisionBancaria;
-                                    montoAhorro += tickets[i].ahorro;
+                for (int i = 0; i < tickets.Count(); i++)
+                {
+                    monto += tickets[i].monto;
+                    montoIVA += tickets[i].montoIVA;
+                    montoComisionBancaria += tickets[i].montoComisionBancaria;
+                    montoAhorro += tickets[i].ahorro;
 
-                                    html+= @"   <tr>
+                    html += @"   <tr>
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
@@ -714,9 +714,9 @@ namespace lluviaBackEnd.Utilerias
                                                     </td>
                                                 </tr>";
 
-                                    if(tickets[i].ahorro > 0)
-                                    {
-                                        html += @"   <tr>
+                    if (tickets[i].ahorro > 0)
+                    {
+                        html += @"   <tr>
                                                         <td style='color:black; '> 
                                                             <table>
                                                               <tr>
@@ -728,9 +728,9 @@ namespace lluviaBackEnd.Utilerias
                                                             </table>
                                                         </td>
                                                     </tr>";
-                                    }
+                    }
 
-                                }
+                }
 
 
                 html += @"
@@ -765,7 +765,7 @@ namespace lluviaBackEnd.Utilerias
 
                 if (montoIVA > 0)
                 {
-                    html+= @"   <tr>
+                    html += @"   <tr>
                                     <td style='color:black; '> 
                                         <table>
                                             <tr>
@@ -782,7 +782,7 @@ namespace lluviaBackEnd.Utilerias
                 suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
 
 
-                        html+=@" <tr>
+                html += @" <tr>
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
@@ -820,19 +820,19 @@ namespace lluviaBackEnd.Utilerias
                                     </td>
                                 </tr>";
 
-                                if (montoAhorro > 0)
-                                {
-                                    html+= @"
+                if (montoAhorro > 0)
+                {
+                    html += @"
                                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                                 <tr><td style='color:black; text-align:center;'>******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @" ******* </td></tr>
                                                 <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
-                                }
-                                else
-                                {
-                                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                }
+                else
+                {
+                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
                                                 <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
 
-                                }
+                }
                 // se agrega el codigo de barras en el ticket 
                 nombreArchivo = tickets[0].codigoBarras.ToString();
                 Utilerias.Utils.GenerarCodigoBarras(tickets[0].codigoBarras.ToString(), nombreArchivo);
@@ -847,7 +847,7 @@ namespace lluviaBackEnd.Utilerias
                                 </div>
                             </td>
                          </tr>
-                         ";                
+                         ";
 
 
                 html += @"
@@ -1056,7 +1056,29 @@ namespace lluviaBackEnd.Utilerias
                                           </tr>
                                         </table>
                                     </td>
-                                </tr>";                              
+                                </tr>";
+
+
+
+                html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+
+
+                // se agrega el codigo de barras en el ticket 
+                nombreArchivo = tickets[0].codigoBarras.ToString();
+                Utilerias.Utils.GenerarCodigoBarras(tickets[0].codigoBarras.ToString(), nombreArchivo);
+
+
+                html += @"
+                          <tr>
+                            <td style='text-align:center;'  align='center' >
+                                <div  align='center' style='text-align:center;' >
+                                    <br>
+                                    <img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width = '90' height = '30' align='center' style='text-align:center;' />
+                                </div>
+                            </td>
+                         </tr>
+                         ";
 
 
                 html += @"
@@ -1289,7 +1311,7 @@ namespace lluviaBackEnd.Utilerias
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
                 string html = "";
                 float monto = 0;
-                float montoIVA = 0;  
+                float montoIVA = 0;
 
                 html +=
                   @"<table  width='100%'>
@@ -1340,7 +1362,7 @@ namespace lluviaBackEnd.Utilerias
                 for (int i = 0; i < tickets.Count(); i++)
                 {
                     monto += tickets[i].monto;
-                    montoIVA += tickets[i].montoIVA;                
+                    montoIVA += tickets[i].montoIVA;
 
                     html += @"   <tr>
                                                     <td style='color:black; '> 
@@ -1401,10 +1423,10 @@ namespace lluviaBackEnd.Utilerias
                                 </tr>";
 
 
-                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
                                                 <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
 
-        
+
 
 
                 html += @"
@@ -1441,7 +1463,7 @@ namespace lluviaBackEnd.Utilerias
 
 
 
-        public static Dictionary<string,object> GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
+        public static Dictionary<string, object> GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
         {
             byte[] content = null;
             string TamañoLetra = "10px";
@@ -1466,10 +1488,11 @@ namespace lluviaBackEnd.Utilerias
                 string html = "<br/>";
                 string tds = string.Empty;
                 html += @"<table width='100%' " + cssTabla + @"  CELLPADDING='1' border='0'>";
-                
+
                 int i = 0;
                 int renglones = (ubicaciones.Count / 4) + 1;
-                for (int c = 0; c < renglones; c++) {
+                for (int c = 0; c < renglones; c++)
+                {
                     if (i < ubicaciones.Count)
                     {
 
@@ -1487,7 +1510,8 @@ namespace lluviaBackEnd.Utilerias
                                 tds += @"</td>";
                                 i++;
                             }
-                            else {
+                            else
+                            {
                                 tds += @"<td>";
                                 tds += @"</td>";
                             }
@@ -1496,9 +1520,9 @@ namespace lluviaBackEnd.Utilerias
                         html += @" <tr>" + tds + "</tr>";
                         tds = string.Empty;
                     }
-                    
+
                 }
-                
+
                 //for (int i = 0; i < ubicaciones.Count(); i++)
                 //{
                 //    html += @"<tr>";
@@ -1511,14 +1535,14 @@ namespace lluviaBackEnd.Utilerias
                 //    //}
                 //}
                 html += "</table>";
-                        //if (i == ubicaciones.Count() - 1)
-                        //{
-                        //    html += "</table> <br><br><br><br><br> ";
-                        //}
-                        //else
-                        //{
-                        //    html += "</table> <br><br><br><br><br><br> ";
-                        //}
+                //if (i == ubicaciones.Count() - 1)
+                //{
+                //    html += "</table> <br><br><br><br><br> ";
+                //}
+                //else
+                //{
+                //    html += "</table> <br><br><br><br><br><br> ";
+                //}
 
 
 
@@ -1534,20 +1558,20 @@ namespace lluviaBackEnd.Utilerias
                 document.CloseDocument();
                 document.Close();
                 content = memStream.ToArray();
-                
+
                 for (int l = 0; l < ubicaciones.Count(); l++)
                 {
-                   // DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
+                    // DeleteFile(ObtnerFolderCodigos() + "QR_" + "A" + ubicaciones[l].idAlmacen.ToString() + "P" + ubicaciones[l].idPiso.ToString() + "P" + ubicaciones[l].descripcionPasillo.ToString() + "R" + ubicaciones[l].idRaq.ToString() + "" + "_.jpg");
                 }
 
                 memStream.Write(content, 0, content.Length);
                 memStream.Position = 0;
                 string nombreArchivoPDF = "Ubicaciones_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".pdf";
                 using (FileStream fs = File.Create(Path.Combine(path, nombreArchivoPDF)))
-                 {
+                {
                     fs.Write(content, 0, (int)content.Length);
                     fs.Flush();
-                 }
+                }
                 dic.Add("nombreArchivoPDF", nombreArchivoPDF);
                 dic.Add("content", content);
 
@@ -1598,7 +1622,7 @@ namespace lluviaBackEnd.Utilerias
                             if (i < productos.Count)
                             {
                                 //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
-                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", "").Replace("'",""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", "").Replace("'", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
                                 Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
 
                                 tds += @"<td style='text-align:center;'  align='center' >";
@@ -1606,7 +1630,7 @@ namespace lluviaBackEnd.Utilerias
                                 tds += @"<table width='100%' " + cssTabla + @"  CELLPADDING='5' border='0'> 
                                             <tr> 
                                                 <td style='text-align:center;' align='center' > <p style='color:black; text-align:center;' >" + productos[i].descripcion.ToString() + "</p> <br>  ";
-                                tds +=              @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='125' height='51' align='center' style='text-align:center;' /></div>" +
+                                tds += @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='125' height='51' align='center' style='text-align:center;' /></div>" +
 
                                                @"</td>  " +
                                                @"<td style='text-align:center;' align='center' >
@@ -1649,7 +1673,7 @@ namespace lluviaBackEnd.Utilerias
                 }
 
                 html += "</table>";
-              
+
                 document.Open();
                 foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
                 {
@@ -1681,7 +1705,7 @@ namespace lluviaBackEnd.Utilerias
             return dic;
         }
 
-        public static byte[] GeneraTicketPDFPedidoEspecial(PedidosEspeciales pedido )
+        public static byte[] GeneraTicketPDFPedidoEspecial(PedidosEspeciales pedido)
         {
             byte[] content = null;
 
@@ -1762,7 +1786,7 @@ namespace lluviaBackEnd.Utilerias
                                                           <tr>
                                                             <td width='60%'>" + pedido.lstPedidosInternosDetalle[i].descProducto.ToString() + @"</td>
                                                             <td width='15%'>" + pedido.lstPedidosInternosDetalle[i].cantidad.ToString() + @"</td>
-                                                            <td width='15%' style='color:black; text-align:right;'>" + ( pedido.lstPedidosInternosDetalle[i].monto + pedido.lstPedidosInternosDetalle[i].ahorro ).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + (pedido.lstPedidosInternosDetalle[i].monto + pedido.lstPedidosInternosDetalle[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
                                                           </tr>
                                                         </table>
