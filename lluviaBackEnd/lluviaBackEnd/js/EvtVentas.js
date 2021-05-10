@@ -539,10 +539,16 @@ function actualizaTicketVenta() {
         // si hay algun percio (caso infinito)
         var algunPrecio = parseFloat(0);
         if (arrayPreciosRangos.some(x => x.idProducto === cantidadTotalPorProducto[q].idProducto)) {
-            algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
+            algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max; // cantidad maxima de precio maximo
         }
 
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12)) {
+        if  (
+                (algunPrecio > 0) &&  // si hay un precio maximo en rago de precios
+                (cantidadTotalPorProducto[q].precioRango === 0) && // si no cayo en ningun rango
+                (cantidadTotalPorProducto[q].cantidad > 12) && // ocupa ser mayor a 12 para que se evalue un rango
+                (cantidadTotalPorProducto[q].cantidad > algunPrecio)  // si la cantidad de productos es mayor del maximo en la tabla de rangos 
+            )
+        {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__ && x.idProducto === cantidadTotalPorProducto[q].idProducto).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
