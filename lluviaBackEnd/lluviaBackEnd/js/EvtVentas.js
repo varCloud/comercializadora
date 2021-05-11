@@ -10,6 +10,7 @@ var producto_value = null;
 var esDecimal_ = parseInt(0);
 var idVentaComplemento = parseInt(0);
 var arrayProductosVentaComplemento = [];
+var ultimoCambio = parseFloat(0);
 
 //busqueda
 function onBeginSubmitVentas() {
@@ -120,8 +121,13 @@ $('#limpiar').click(function (e) {
     limpiarTicket();
 });
 
-$('#cancelar').click(function (e) {
+$('#cancelar').click(function (e) {    
+    document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(ultimoCambio).toFixed(2) + "</h4>";
     limpiaModalPrevio();
+});
+
+$("#ModalPrevioVenta").on("hidden.bs.modal", function () {
+    document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(ultimoCambio).toFixed(2) + "</h4>";
 });
 
 function limpiarTicket() {
@@ -236,6 +242,8 @@ function abrirModalPrevioVenta() {
 
     var total = parseFloat(0);
     var descuento = parseFloat(0);
+    ultimoCambio = parseFloat(document.getElementById("ultimoCambio").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
 
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
 
@@ -1022,6 +1030,8 @@ $('#btnGuardarVenta').click(function (e) {
                     window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                 }
 
+                ultimoCambio = parseFloat(document.getElementById("ultimoCambio").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
                 InitSelect2Productos();
                 limpiarTicket();
                 ConsultExcesoEfectivo();
@@ -1059,6 +1069,7 @@ $('#chkFacturar').click(function () {
 
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     var subTotal = parseFloat(document.getElementById("previoSubTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
     var iva = parseFloat(0).toFixed(2);
     var final = parseFloat(subTotal).toFixed(2);
@@ -1329,9 +1340,11 @@ $("#efectivo").on("keyup", function (event) {
         if (parseFloat(efectivo_) > parseFloat(total_)) {
             cambio_ = efectivo_ - total_;
             document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+            document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";            
         }
         else {
             document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+            document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
         }
     }
 
@@ -1411,6 +1424,7 @@ function calculaTotales() {
 
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    //document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";    
     document.getElementById("chkFacturar").checked = false;
     document.getElementById("divUsoCFDI").style.display = 'none';
     $('#usoCFDI').val("3").trigger('change');
