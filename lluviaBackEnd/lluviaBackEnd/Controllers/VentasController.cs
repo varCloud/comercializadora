@@ -1287,6 +1287,16 @@ namespace lluviaBackEnd.Controllers
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
 
+                    e.Graphics.DrawString("No. Productos Devueltos" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].ProductosDevueltos + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Devoluciones" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].MontoTotalDevoluciones.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
                     e.Graphics.DrawString("Monto Total Retiros" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[0].retirosExcesoEfectivo.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
