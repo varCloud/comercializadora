@@ -328,6 +328,8 @@ $('#btnAgregarEnvase').click(function (e) {
 
 function AgregarProducto(producto, cantidad) {
 
+    var esAgregarProductos = $('#esAgregarProductos').val();
+
     cantidad = parseFloat(cantidad) || 0.0;
 
     if (producto === null || producto === undefined) {
@@ -364,28 +366,48 @@ function AgregarProducto(producto, cantidad) {
     var precio = parseFloat(0).toFixed(2);
     var descuento = parseFloat(0).toFixed(2);
     var existeProducto = false;
+    var existeProductoAgregar = false;
 
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
-                var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
-                console.log(cantidad);
-                if (cantidad > producto.cantidad) {
-                    MuestraToast('warning', "No existe suficiente producto en inventario.");
-                    return false;
+            if ((esAgregarProductos == "true") || (esAgregarProductos == "True"))
+            {
+                if  (
+                        (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) &&
+                        (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))
+                    )
+                {
+                    var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
+                    
+                    if (cantidad > producto.cantidad) {
+                        MuestraToast('warning', "No existe suficiente producto en inventario.");
+                        return false;
+                    }
+                    tblVtas.rows[i].cells[4].children[0].value = cantidad;
+                    existeProductoAgregar = true;
                 }
-
-                tblVtas.rows[i].cells[4].children[0].value = cantidad;
-                existeProducto = true;
+            }
+            else
+            {
+                if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
+                    var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
+                    
+                    if (cantidad > producto.cantidad) {
+                        MuestraToast('warning', "No existe suficiente producto en inventario.");
+                        return false;
+                    }
+                    tblVtas.rows[i].cells[4].children[0].value = cantidad;
+                    existeProducto = true;
+                }
             }
         }
     }
 
-    if (!existeProducto) {
 
+    if ((!existeProducto) && (!existeProductoAgregar)) {
         // si todo bien    
         var row_ = "<tr>" +
             "  <td>1</td>" +
@@ -402,7 +424,6 @@ function AgregarProducto(producto, cantidad) {
             "</tr >";
 
         $("#tablaRepVentas tbody").append(row_);
-
     }
 
     return true;
@@ -871,6 +892,8 @@ function ObtenerCliente(idCliente) {
 
 $('#btnGuardarVenta').click(function (e) {
 
+    document.getElementById("btnGuardarVenta").disabled = true;
+
     var productos = [];
     var idCliente = $('#idCliente').val();
     var formaPago = $('#formaPago').val();
@@ -896,11 +919,13 @@ $('#btnGuardarVenta').click(function (e) {
         // validaciones
         if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+            document.getElementById("btnGuardarVenta").disabled = false;
             return;
         }
 
         if (parseFloat(efectivo_) < parseFloat(total_)) {
             MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
+            document.getElementById("btnGuardarVenta").disabled = false;
             return;
         }
 
@@ -912,6 +937,7 @@ $('#btnGuardarVenta').click(function (e) {
 
             if ($('#numClientesAtendidos').val() == "") {
                 MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
+                document.getElementById("btnGuardarVenta").disabled = false;
                 return;
             }
             else {
@@ -1037,15 +1063,18 @@ $('#btnGuardarVenta').click(function (e) {
                 ConsultExcesoEfectivo();
             }
             $('#ModalPrevioVenta').modal('hide');
+            document.getElementById("btnGuardarVenta").disabled = false;
 
         },
         error: function (xhr, status) {
             OcultarLoader();
+            document.getElementById("btnGuardarVenta").disabled = false;
             console.log('Hubo un problema al guardar la venta, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }
     });
+    document.getElementById("btnGuardarVenta").disabled = false;
 
 });
 
