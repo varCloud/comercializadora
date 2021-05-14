@@ -219,9 +219,9 @@
                                 <div class="col-lg-6 text-right">
 
                                     @*<div class="invoice-detail-item">
-                                            <div class="invoice-detail-name">I.V.A.</div>
-                                            <div class="invoice-detail-value" id="divIva">$15</div>
-                                        </div>*@
+                        <div class="invoice-detail-name">I.V.A.</div>
+                        <div class="invoice-detail-value" id="divIva">$15</div>
+                    </div>*@
                                     <hr class="mt-2 mb-2">
                                     <div class="invoice-detail-item">
 
@@ -240,9 +240,9 @@
 
 
                                     @*<div class="invoice-detail-item">
-                                            <div class="invoice-detail-name">Total</div>
-                                            <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
-                                        </div>*@
+                        <div class="invoice-detail-name">Total</div>
+                        <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
+                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -270,12 +270,20 @@
                             }
                             else
                             {
-                                <div class="text-md-right">
-                                    <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
-                                    <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
-                                        <i class="fas fa-credit-card"></i> Realizar Venta
-                                    </button>
+                                <div>
+                                    <div class="text-md-right">
+
+                                        <div class="invoice-detail-name  pull-left">Último Cambio:</div>
+                                        <br>
+                                        <div class="invoice-detail-value pull-left" id="ultimoCambio"><h4>$0.0</h4></div>
+
+                                        <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                                        <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                            <i class="fas fa-credit-card"></i> Realizar Venta
+                                        </button>
+                                    </div>
                                 </div>
+
                             }
                         }
 
