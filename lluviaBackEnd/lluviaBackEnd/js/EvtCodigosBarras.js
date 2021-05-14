@@ -143,8 +143,8 @@ $('#btnGenerarCodigos').click(function (e) {
                 idProducto: parseInt(tblCodigos.rows[i].cells[1].innerHTML),
                 descripcion: tblCodigos.rows[i].cells[2].innerHTML,
                 DescripcionLinea: tblCodigos.rows[i].cells[3].innerHTML,
-                precioIndividual: parseInt(tblCodigos.rows[i].cells[4].innerHTML),
-                precioMenudeo: parseInt(tblCodigos.rows[i].cells[5].innerHTML),
+                precioIndividual: parseFloat(tblCodigos.rows[i].cells[4].innerHTML),
+                precioMenudeo: parseFloat(tblCodigos.rows[i].cells[5].innerHTML),
                 codigoBarras: tblCodigos.rows[i].cells[6].innerHTML,
             };
             productos.push(row_);
@@ -154,7 +154,7 @@ $('#btnGenerarCodigos').click(function (e) {
         MuestraToast('warning', "Debe agregar al menos un código para generar el PDF.");
         return;
     }
-
+    console.log("productos", productos);
     dataToPost = JSON.stringify({ productos: productos });
     
     $.ajax({
