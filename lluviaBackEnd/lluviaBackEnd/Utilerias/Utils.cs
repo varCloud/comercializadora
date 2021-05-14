@@ -1692,16 +1692,16 @@ namespace lluviaBackEnd.Utilerias
                                                                     <td style='text-align:center;' align='center' colspan='2' > <span style='color:black; text-align:center;"+ tamNombreProducto+@" ' >" + productos[i].descripcion.ToString() + "</span>";
                                                     tds += @"</tr>
                                                             <tr>
-                                                                <td rowspan='2'> <div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='150' height='55' align='center' style='text-align:center;' /></div> </td>
-                                                                <td> <div align='center' style='text-align:center;font-size:10px;'>Menudeo: " + Convert.ToDecimal(productos[i].precioIndividual).ToString("C2") + @" </div></td>
+                                                                <td rowspan='2'> <div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='150' height='70' align='center' style='text-align:center;' /></div> </td>
+                                                                <td> <div align='center' style='text-align:center;font-size:12px;'>Menudeo: " + Convert.ToDecimal(productos[i].precioIndividual).ToString("C2") + @" </div></td>
                                                             </tr>
                                                             <tr>
-                                                                  <td><div align='center' style='text-align:center;font-size: 10px'>Mayoreo: " + Convert.ToDecimal(productos[i].precioMenudeo).ToString("C2") + @" <br/><br/></div></td>
+                                                                  <td><div align='center' style='text-align:center;font-size: 12px'>Mayoreo: " + Convert.ToDecimal(productos[i].precioMenudeo).ToString("C2") + @" <br/><br/></div></td>
                                                             </tr>";
                                                     tds += @"</tr>
                                                             <tr>
-                                                                <td width='60%'>&nbsp;</td>
-                                                                <td width='40%'>&nbsp;</td>
+                                                                <td width='65%'>&nbsp;</td>
+                                                                <td width='45%'>&nbsp;</td>
                                                             </tr>
                                                     </table>";
                                                                         //tds += @"<div align='center' style='text-align:center;'><img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width='125' height='51' align='center' style='text-align:center;' /></div>" +
