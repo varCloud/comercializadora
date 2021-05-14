@@ -691,8 +691,9 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='50%'>Descripcion</td>
-                                            <td width='25%' style='color:black; text-align:center;'>Cantidad</td>
+                                            <td width='43%'>Descripcion</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Cantidad</td>
+                                            <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
                                         </table>
@@ -712,8 +713,9 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='60%'>" + tickets[i].descProducto.ToString() + @"</td>
-                                                            <td width='15%'>" + tickets[i].cantidad.ToString() + @"</td>
+                                                            <td width='40%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + tickets[i].cantidad.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + tickets[i].precioVenta.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
                                                           </tr>
@@ -1232,8 +1234,9 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='50%'>Descripcion</td>
-                                            <td width='25%' style='color:black; text-align:center;'>Art. Devueltos</td>
+                                            <td width='43%'>Descripcion</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Art. Devueltos</td>
+                                            <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
                                         </table>
@@ -1250,8 +1253,9 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='60%'>" + tickets[i].descProducto.ToString() + @"</td>
-                                                            <td width='15%'>" + tickets[i].cantidad.ToString() + @"</td>
+                                                            <td width='40%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + tickets[i].cantidad.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + tickets[i].precioVenta.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
                                                           </tr>

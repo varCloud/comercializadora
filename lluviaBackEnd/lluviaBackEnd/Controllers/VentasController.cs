@@ -648,8 +648,9 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
                 e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
-                Rectangle datosProducto = new Rectangle(5, 285, 180, 82);
-                Rectangle datosCantidad = new Rectangle(190, 285, 30, 82);
+                Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
+                Rectangle datosCantidad = new Rectangle(152, 285, 30, 82);
+                Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
                 Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
 
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
@@ -661,8 +662,10 @@ namespace lluviaBackEnd.Controllers
 
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 8;
+                e.Graphics.DrawString("  Descripcion                              Cantidad     Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 9;
+                e.Graphics.DrawString("                                                                      Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 6;
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 //datosEnca.Y += 14;
 
@@ -685,6 +688,7 @@ namespace lluviaBackEnd.Controllers
                 {
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
@@ -692,16 +696,18 @@ namespace lluviaBackEnd.Controllers
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
                     montoAhorro += notificacion.Modelo[i].ahorro;
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
+                        datosPrecioU.Y += espaciado + 10;
                         datosPrecio.Y += espaciado + 10;
                     }
                     else
                     {
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
@@ -712,6 +718,7 @@ namespace lluviaBackEnd.Controllers
                         e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
@@ -1605,9 +1612,10 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("Fecha:" + DateTime.Now.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
                 e.Graphics.DrawString("Hora:" + DateTime.Now.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
-                Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
-                Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
-                Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
+                Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
+                Rectangle datosCantidad = new Rectangle(150, 285, 30, 82);
+                Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
+                Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
 
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
@@ -1616,8 +1624,10 @@ namespace lluviaBackEnd.Controllers
 
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                      Art. Devueltos       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 8;
+                e.Graphics.DrawString("  Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 9;
+                e.Graphics.DrawString("                                                 Devueltos    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 6;
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 //datosEnca.Y += 14;
 
@@ -1627,20 +1637,23 @@ namespace lluviaBackEnd.Controllers
                 {
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
+                        datosPrecioU.Y += espaciado + 10;
                         datosPrecio.Y += espaciado + 10;
                     }
                     else
                     {
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
