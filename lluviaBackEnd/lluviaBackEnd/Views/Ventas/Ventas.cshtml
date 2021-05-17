@@ -40,6 +40,9 @@
         .modal {
             overflow: auto !important;
         }
+        .ui-autocomplete {
+            z-index: 5000;
+        }
     </style>
 }
 
@@ -464,7 +467,10 @@
                                     <div class="col-12 col-sm-12 col-lg-5">
                                         <div class="form-group">
                                             <label>Producto:</label>
-                                            @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProductoExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                            @*@Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProductoExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
+                                            <input type="hidden" id="idProductoExistencia" />
+                                            <input type="text" class="form-control" id="listProductosExistencia" name="listProductosExistencia" placeholder="Escriba el nombre del producto">
+
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-5">

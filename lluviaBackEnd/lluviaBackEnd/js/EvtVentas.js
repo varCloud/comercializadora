@@ -121,7 +121,7 @@ $('#limpiar').click(function (e) {
     limpiarTicket();
 });
 
-$('#cancelar').click(function (e) {    
+$('#cancelar').click(function (e) {
     document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(ultimoCambio).toFixed(2) + "</h4>";
     limpiaModalPrevio();
 });
@@ -373,15 +373,13 @@ function AgregarProducto(producto, cantidad) {
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            if ((esAgregarProductos == "true") || (esAgregarProductos == "True"))
-            {
-                if  (
-                        (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) &&
-                        (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))
-                    )
-                {
+            if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
+                if (
+                    (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) &&
+                    (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))
+                ) {
                     var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
-                    
+
                     if (cantidad > producto.cantidad) {
                         MuestraToast('warning', "No existe suficiente producto en inventario.");
                         return false;
@@ -390,11 +388,10 @@ function AgregarProducto(producto, cantidad) {
                     existeProductoAgregar = true;
                 }
             }
-            else
-            {
+            else {
                 if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
                     var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
-                    
+
                     if (cantidad > producto.cantidad) {
                         MuestraToast('warning', "No existe suficiente producto en inventario.");
                         return false;
@@ -571,13 +568,12 @@ function actualizaTicketVenta() {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max; // cantidad maxima de precio maximo
         }
 
-        if  (
-                (algunPrecio > 0) &&  // si hay un precio maximo en rago de precios
-                (cantidadTotalPorProducto[q].precioRango === 0) && // si no cayo en ningun rango
-                (cantidadTotalPorProducto[q].cantidad > 12) && // ocupa ser mayor a 12 para que se evalue un rango
-                (cantidadTotalPorProducto[q].cantidad > algunPrecio)  // si la cantidad de productos es mayor del maximo en la tabla de rangos 
-            )
-        {
+        if (
+            (algunPrecio > 0) &&  // si hay un precio maximo en rago de precios
+            (cantidadTotalPorProducto[q].precioRango === 0) && // si no cayo en ningun rango
+            (cantidadTotalPorProducto[q].cantidad > 12) && // ocupa ser mayor a 12 para que se evalue un rango
+            (cantidadTotalPorProducto[q].cantidad > algunPrecio)  // si la cantidad de productos es mayor del maximo en la tabla de rangos 
+        ) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__ && x.idProducto === cantidadTotalPorProducto[q].idProducto).costo;
             cantidadTotalPorProducto[q].precioRango = costo;
@@ -1372,7 +1368,7 @@ $("#efectivo").on("keyup", function (event) {
         if (parseFloat(efectivo_) > parseFloat(total_)) {
             cambio_ = efectivo_ - total_;
             document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
-            document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";            
+            document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
         }
         else {
             document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
@@ -1503,14 +1499,13 @@ function calculaTotales() {
 
 }
 
-
-
-
-
 function AbrirModalConsultaExistencias() {
-    $('#existencias').html('');
+    $("#listProductosExistencia").val('');
+    $("#idProductoExistencia").val('');
+    $('#existencias').html(''); 
+    //$("#listProductosExistencia").focus();
     //para abrir el modal
-    $('#ModalExistencias').modal({ backdrop: 'static', keyboard: false, show: true });
+    $('#ModalExistencias').modal({ backdrop: 'static', keyboard: false, show: true }); 
 }
 
 function AbrirModalCierreCajaExcedentes() {
@@ -1912,6 +1907,46 @@ function InitSelect2Productos() {
             }
         }
     });
+
+
+    //existencias
+    var DataExistencias = $.map(result.Modelo, function (item) {
+
+        return {
+            label: item.descripcion,
+            producto: item
+        }
+
+    });
+
+    $("#listProductosExistencia").autocomplete({
+        //source take a list of data
+        source: DataExistencias,
+        minLength: 1,//min = 2 characters
+        select: function (event, ui) {
+            $("#listProductosExistencia").val(ui.item.label);
+            return false;
+        }
+    });
+
+    $("#listProductosExistencia").keypress(function (evt) { 
+        $("#idProductoExistencia").val('');
+        if (evt.which == 13) {
+            if (($("#listProductosExistencia").val()) !== "") {
+                let producto = arrayProductos.find(x => x.codigoBarras.toUpperCase() == $("#listProductosExistencia").val().toUpperCase() || x.descripcion.toUpperCase() == $("#listProductosExistencia").val().toUpperCase());
+                if (producto != null) {
+                    $("#listProductosExistencia").val(producto.descripcion);
+                    $("#idProductoExistencia").val(producto.idProducto);                  
+                    $("#btnBuscarExistencias").click();
+                }
+                else {
+                    MuestraToast("error", "El producto no existe");
+                    $("#listProductosExistencia").val("");
+                }
+            }
+        }
+    });
+
 
     //$("#idProducto").html('').select2();
     //$('#idProducto').select2({
