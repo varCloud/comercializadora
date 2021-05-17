@@ -835,6 +835,7 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
+                
 
             }
             catch (InvalidPrinterException ex)

@@ -1046,14 +1046,17 @@ $('#btnGuardarVenta').click(function (e) {
                         text: data.Mensaje,
                         type: data.Estatus == 200 ? 'success' : 'error'
                     }).then(function () {
-                        window.location.href = "http://" + window.location.host + "/Ventas/ConsultaVentas";
+                        window.location.href = rootUrl("/Ventas/ConsultaVentas")
+                        //"http://" + window.location.host + "/Ventas/ConsultaVentas";
                     });
 
                 }
 
                 if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
-                    window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
+                    //window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
+                    window.location.href = rootUrl("/Ventas/Ventas");
+                    
                 }
 
                 ultimoCambio = parseFloat(document.getElementById("ultimoCambio").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
