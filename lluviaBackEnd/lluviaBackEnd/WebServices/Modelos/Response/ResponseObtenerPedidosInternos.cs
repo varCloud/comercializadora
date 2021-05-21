@@ -10,6 +10,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
     {
         public int idEstatusPedidoInterno { get; set; }
         public string descripcionEstatus { get; set; }
+        public string descripcionPedidoEspecial { get; set; }
         public int idPedidoInterno { get; set; }
         public int cantidadAtendida { get; set; }
         public DateTime fechaAlta { get; set; }

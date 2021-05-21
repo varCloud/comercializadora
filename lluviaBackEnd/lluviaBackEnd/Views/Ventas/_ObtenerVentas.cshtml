@@ -55,6 +55,35 @@ else
                                 <tbody>
                                     @foreach (var item in lstVentas)
                                     {
+                                        string badge = string.Empty;
+                                        switch (item.idFactFormaPago)
+                                        {
+                                            case 1:
+                                                badge = "badge badge-primary badge-shadow";
+
+                                                break;
+                                            case 2:
+                                                badge = "badge badge-info badge-shadow";
+
+                                                break;
+                                            case 3:
+                                                badge = "badge badge-secondary badge-shadow";
+
+                                                break;
+                                            case 4:
+                                                badge = "badge badge-dark badge-shadow";
+
+                                                break;
+                                            case 18:
+                                                badge = "badge badge-blue badge-shadow";
+
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+
+
                                         <tr>
                                             <td>@item.idVenta</td>
                                             <td>@item.nombreCliente</td>
@@ -62,7 +91,7 @@ else
                                             <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@item.cantidad</td>
                                             <td>@item.nombreUsuario</td>
-                                            <td>@item.descripcionFactFormaPago</td>
+                                            <td><div class="@badge">@item.descripcionFactFormaPago</div></td>
                                             <td>@item.codigoBarrasTicket</td>
                                             <td>
 
