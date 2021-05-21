@@ -420,7 +420,7 @@ function AgregarProducto(producto, cantidad) {
             "  </td>" +
             "</tr >";
 
-        $("#tablaRepVentas tbody").append(row_);
+        $("#tablaRepVentas tbody").prepend(row_);
     }
 
     return true;
