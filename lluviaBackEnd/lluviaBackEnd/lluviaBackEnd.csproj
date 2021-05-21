@@ -319,6 +319,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestAprobarPedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestRechazarPedidoInternoEspecial.cs" />

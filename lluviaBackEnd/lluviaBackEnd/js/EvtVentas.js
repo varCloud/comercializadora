@@ -885,11 +885,19 @@ function ObtenerCliente(idCliente) {
     return result;
 }
 
+function initTimer(){
+    var timer = setTimeout(function () {
+        $("#btnGuardarVenta").removeClass('btn-progress disabled');
+        console.log('timer');
+        clearInterval(timer);
+    }, 100);
+}
+
 
 $('#btnGuardarVenta').click(function (e) {
-
-    document.getElementById("btnGuardarVenta").disabled = true;
-
+    console.log('#btnGuardarVenta');
+    $("#btnGuardarVenta").addClass('btn-progress disabled');
+   
     var productos = [];
     var idCliente = $('#idCliente').val();
     var formaPago = $('#formaPago').val();
@@ -915,13 +923,15 @@ $('#btnGuardarVenta').click(function (e) {
         // validaciones
         if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
             MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-            document.getElementById("btnGuardarVenta").disabled = false;
+            //document.getElementById("btnGuardarVenta").disabled = false;
+            $("#btnGuardarVenta").removeClass('btn-progress disabled');
             return;
         }
 
         if (parseFloat(efectivo_) < parseFloat(total_)) {
             MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
-            document.getElementById("btnGuardarVenta").disabled = false;
+            //document.getElementById("btnGuardarVenta").disabled = false;
+            $("#btnGuardarVenta").removeClass('btn-progress disabled');
             return;
         }
 
@@ -933,7 +943,8 @@ $('#btnGuardarVenta').click(function (e) {
 
             if ($('#numClientesAtendidos').val() == "") {
                 MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
-                document.getElementById("btnGuardarVenta").disabled = false;
+                //document.getElementById("btnGuardarVenta").disabled = false;
+                $("#btnGuardarVenta").removeClass('btn-progress disabled');
                 return;
             }
             else {
@@ -1009,6 +1020,7 @@ $('#btnGuardarVenta').click(function (e) {
         async: true,
         beforeSend: function (xhr) {
             ShowLoader("Guardando Venta.");
+            $("#btnGuardarVenta").addClass('btn-progress disabled');
         },
         success: function (data) {
             OcultarLoader();
@@ -1062,18 +1074,22 @@ $('#btnGuardarVenta').click(function (e) {
                 ConsultExcesoEfectivo();
             }
             $('#ModalPrevioVenta').modal('hide');
-            document.getElementById("btnGuardarVenta").disabled = false;
+            //document.getElementById("btnGuardarVenta").disabled = false;
+            //$("#btnGuardarVenta").removeClass('btn-progress disabled');
+            initTimer();
 
         },
         error: function (xhr, status) {
             OcultarLoader();
-            document.getElementById("btnGuardarVenta").disabled = false;
+            //document.getElementById("btnGuardarVenta").disabled = false;
+            $("#btnGuardarVenta").removeClass('btn-progress disabled');
             console.log('Hubo un problema al guardar la venta, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
         }
     });
-    document.getElementById("btnGuardarVenta").disabled = false;
+    //document.getElementById("btnGuardarVenta").disabled = false;
+    //console.log('#btnGuardarVenta boton habilitado');
 
 });
 

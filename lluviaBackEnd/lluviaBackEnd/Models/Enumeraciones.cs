@@ -97,7 +97,7 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region  Clientes
-        Puede_visualizar_Clientes,
+        Puede_visualizar_Clientes = 7,
         #endregion
 
         #region Productos
