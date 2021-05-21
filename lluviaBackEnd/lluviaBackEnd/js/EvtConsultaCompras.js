@@ -28,8 +28,12 @@ $(document).ready(function () {
         $('#fechaIni').val('');
         $('#fechaFin').val('');
         $("#frmBuscarCompras .select-multiple").trigger("change");
-
     });
+
+    $('#precio').focus();
+
+
+
 
 });
 
@@ -259,6 +263,8 @@ function InicializaElementosCompra() {
             $("#precio").val(producto.costo);
             $("#cantPorUnidadCompra").val(0);
             $("#cantidad").val(0);
+            $('#precio').focus();
+            console.log("focus");
         }
     });
 
@@ -326,14 +332,16 @@ function InicializaElementosCompra() {
 
                 $("#tblComprasDetalle tbody").append(row_);
             }
-            $('#cantidad').val('');
-            $('#precio').val('');
+
             $('#idProducto').val('').trigger('change');
+            $('#cantidad').val('0');
+            $('#precio').val('0');
             $("#unidadCompra").val('');
             $("#cantidadUnidadCompra").val('');
             $("#unidadVenta").val('');
             $("#cantPorUnidadCompra").val('');
             actualizaTicket();
+            $('#cantidad').focus();
 
 
         }
