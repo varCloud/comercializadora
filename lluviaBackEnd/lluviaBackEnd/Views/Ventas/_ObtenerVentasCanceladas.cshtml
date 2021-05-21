@@ -1,6 +1,7 @@
-﻿@using lluviaBackEnd.Models;
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
 @model Notificacion<List<Ventas>>
-@if (Model.Modelo==null)
+@if (Model.Modelo == null)
 {
 
     <div class="empty-state">
@@ -29,8 +30,10 @@ else
                                         <th class="text-center"> # Ticket </th>
                                         <th>Cliente</th>
                                         <th>Fecha Cancelacion</th>
+                                        <th>Monto</th>
                                         <th>Cantidad</th>
                                         <th>Usuario</th>
+                                        <th>Forma de pago</th>
                                         <th>Código de Barras</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -42,15 +45,17 @@ else
                                             <td>@item.idVenta</td>
                                             <td>@item.nombreCliente</td>
                                             <td>@item.fechaCancelacion</td>
+                                            <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@item.cantidad</td>
                                             <td>@item.nombreUsuario</td>
+                                            <td>@item.descripcionFactFormaPago</td>
                                             <td>@item.codigoBarrasTicket</td>
                                             <td>
                                                 <div class="buttons">
                                                     <a href="@Url.Action("VerTicketVentaCancelada", "Ventas", new {idVenta=item.idVenta})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver Ticket" target="_blank"><i class="fas fa-eye"></i></a>
                                                     <a href="javascript:ImprimeTicketVentaCancelada(@item.idVenta);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Imprimir Ticket"><i class="fas fa-print"></i></a>
-                                            
-                                                </div>                                               
+
+                                                </div>
                                             </td>
                                         </tr>
                                     }

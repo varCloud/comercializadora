@@ -4,22 +4,22 @@ var tablaConsultaVentas;
 
 //busqueda
 function onBeginSubmitConsultaVentas() {
-    console.log("onBeginSubmitConsultaVentas");
+    ShowLoader("Buscando...");
 }
 
 function onCompleteSubmitConsultaVentas() {
     console.log("onCompleteSubmitConsultaVentas");
 }
 
-function onSuccessResultConsultaVentas(data) {
-    console.log("onSuccessResultVentas", JSON.stringify(data));  
+function onSuccessResultConsultaVentas(data) {    
     $('#rowConsultaVentas').html(data);
     tablaConsultaVentas.destroy();    
     InitDataTableConsultaVentas();
+    OcultarLoader();
 }
 
 function onFailureResultConsultaVentas() {
-    console.log("onFailureResult___");
+    OcultarLoader();
 }
 
 function InitSelect2Multiple() {
@@ -260,14 +260,14 @@ function InitDataTableConsultaVentas() {
                         doc.defaultStyle.fontSize = 8;
                         doc.styles.tableHeader.fontSize = 10;
                         doc.defaultStyle.alignment = 'center';
-                        doc.content[1].table.widths = ['10%', '20%', '20%', '10%', '20%', '20%'];
+                        doc.content[1].table.widths = ['5%', '20%', '15%', '10%', '10%', '15%','10%','15%'];
                         doc.pageMargins = [30, 85, 20, 30];
                         doc.content.splice(0, 1);
                         doc['header'] = SetHeaderPDF("Ventas");
                         doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                     },
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5]
+                        columns: [0, 1, 2, 3, 4, 5,6,7]
                     },
                 },
                 {
@@ -276,7 +276,7 @@ function InitDataTableConsultaVentas() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5]
+                        columns: [0, 1, 2, 3, 4, 5,6,7]
                     },
                 },
             ],

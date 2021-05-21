@@ -96,6 +96,8 @@ namespace lluviaBackEnd.Models
         public int idPedidoEspecial { get; set; }
         public int estatusVenta { get; set; }
         public DateTime fechaCancelacion { get; set; }
+        public string descripcionFactFormaPago { get; set; }
+
 
     }
 }

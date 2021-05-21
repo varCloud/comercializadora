@@ -6,6 +6,7 @@
     List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
     List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
     List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    List<SelectListItem> listUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
 
 }
 @section Styles {
@@ -68,6 +69,22 @@
                                         </div>
                                         <input type="text" id="rangeConsultaVentas" class="form-control daterange-cus">
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Usuario: </label>
+                                    @Html.DropDownListFor(model => model.idUsuario, listUsuarios,"--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "" })
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Forma de pago: </label>
+                                    @Html.DropDownListFor(model => model.idFactFormaPago, new SelectList(lstFormasPago, "id", "descripcion"), "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "" })
+
                                 </div>
                             </div>
                         </div>

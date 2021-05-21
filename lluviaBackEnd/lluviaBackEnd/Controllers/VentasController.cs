@@ -140,6 +140,10 @@ namespace lluviaBackEnd.Controllers
                 ViewBag.lstVentas = notificacion.Modelo;
                 ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
+                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 3 }), "idUsuario", "nombreCompleto").ToList();
+                ViewBag.lstUsuarios = listUsuarios;
+               
+
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.devolucionesPermitidas = usuario.devolucionesPermitidas;
                 ViewBag.agregarProductosPermitidos = usuario.agregarProductosPermitidos;
