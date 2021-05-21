@@ -86,7 +86,7 @@ $(function () {
   });
 
     $(document).on("click", function (e) {
-        console.log("click");
+        //console.log("click");
     $(".nav-collapse .navbar-nav").removeClass("show");
   });
 
