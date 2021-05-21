@@ -30,9 +30,11 @@
                                     <th>Producto</th>
                                     <th>Cantidad</th>
                                     <th>Precio Venta</th>
+                                    <th>Monto total</th>
                                     <th>Costo Compra</th>
                                     <th>Utilidad</th>
                                     <th>Margen Bruto</th>
+                                    <th>Forma de Pago</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,9 +56,11 @@
                                     <td>@item.descripcionProducto</td>
                                     <td>@item.cantidad</td>
                                     <td>@item.precio.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@gananciaTotal.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@Decimal.Round(Convert.ToDecimal(margenBruto), 2) %</td>
+                                    <td>@item.descripcionFactFormaPago</td>
                                 </tr>
                                 }
                             </tbody>
