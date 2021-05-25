@@ -566,14 +566,27 @@ namespace lluviaBackEnd.DAO
                     {
                         lst.Estatus = rs1.Estatus;
                         lst.Mensaje = rs1.Mensaje;
-                        lst.Modelo = rs.Read<ResponseObtenerPedidosInternos, Producto, Almacen, Almacen, ResponseObtenerPedidosInternos>((responseObtenerPedidosInternos, producto, almacenO, almacenD) =>
+                        if (request.idTipoPedidoInterno == 1)
                         {
-                            responseObtenerPedidosInternos.almacenOrigen = almacenO;
-                            responseObtenerPedidosInternos.almacenDestino = almacenD;
-                            responseObtenerPedidosInternos.producto = producto;
-                            return responseObtenerPedidosInternos;
+                           lst.Modelo = rs.Read<ResponseObtenerPedidosInternos, Producto, Almacen, Almacen, ResponseObtenerPedidosInternos>((responseObtenerPedidosInternos, producto, almacenO, almacenD) =>
+                            {
+                                responseObtenerPedidosInternos.almacenOrigen = almacenO;
+                                responseObtenerPedidosInternos.almacenDestino = almacenD;
+                                responseObtenerPedidosInternos.producto = producto;
+                                return responseObtenerPedidosInternos;
 
-                        }, splitOn: "idProducto , idAlmacenOrigen,idAlmacenDestino").ToList();
+                            }, splitOn: "idProducto , idAlmacenOrigen,idAlmacenDestino").ToList();
+                        }
+                        else {
+                            lst.Modelo = rs.Read<ResponseObtenerPedidosInternos,  Almacen, Almacen, ResponseObtenerPedidosInternos>((responseObtenerPedidosInternos,  almacenO, almacenD) =>
+                            {
+                                responseObtenerPedidosInternos.almacenOrigen = almacenO;
+                                responseObtenerPedidosInternos.almacenDestino = almacenD;
+                               
+                                return responseObtenerPedidosInternos;
+
+                            }, splitOn: "idAlmacenOrigen,idAlmacenDestino").ToList();
+                        }
                     }
                     else
                     {

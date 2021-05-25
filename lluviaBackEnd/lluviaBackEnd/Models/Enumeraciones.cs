@@ -93,7 +93,7 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region PedidosEspeciales
-        Puede_visualizar_PedidosEspeciales,
+        Puede_visualizar_PedidosEspeciales=12,
         #endregion
 
         #region  Clientes
