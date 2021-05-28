@@ -1494,8 +1494,8 @@ function calculaTotales() {
     }
 
     var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
-    var comisionBancaria = parseFloat((subTotal) * (porcentajeComisionBancaria / 100)).toFixed(2);
-    subTotal = parseFloat(subTotal) + parseFloat(comisionBancaria);
+    var comisionBancaria = (parseFloat((subTotal) * (porcentajeComisionBancaria / 100))).toFixed(2);
+    subTotal = (parseFloat(subTotal) + parseFloat(comisionBancaria)).toFixed(2);
     var iva = parseFloat(0).toFixed(2);
 
     // si lleva iva
