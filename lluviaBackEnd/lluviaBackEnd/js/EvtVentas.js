@@ -302,9 +302,9 @@ $('#btnAgregarProducto').click(function (e) {
     if (AgregarProducto(producto_value, $('#cantidad').val())) {
 
         //Agregar envase
-        if (parseInt(producto_value.idLineaProducto) === 20) {
-            $('#ModalAgregarEnvase').modal({ backdrop: 'static', keyboard: false, show: true });
-        }
+        //if (parseInt(producto_value.idLineaProducto) === 20) {
+        //    $('#ModalAgregarEnvase').modal({ backdrop: 'static', keyboard: false, show: true });
+        //}
 
         $('#cantidad').val('1');
         $("#listProductos").val('');
@@ -817,7 +817,8 @@ function actualizarSubTotal() {
         subTotal = 0;
     }
 
-    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
+    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(subTotal).toFixed(2) + "</h4>";
+    $(".divSubTotal").html("$" + parseFloat(subTotal).toFixed(2));
 }
 
 function actualizarSubTotalDevoluciones() {
@@ -832,7 +833,8 @@ function actualizarSubTotalDevoluciones() {
         }
     }
 
-    document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
+    //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
+    $(".divSubTotal").html("$" + parseFloat(cantidadDevelta).toFixed(2));
     document.getElementById("divTotalDevolver").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
 }
 

@@ -40,6 +40,7 @@
         .modal {
             overflow: auto !important;
         }
+
         .ui-autocomplete {
             z-index: 5000;
         }
@@ -57,7 +58,7 @@
                     <div class="card-header">
                         <h4>Productos</h4>
                         <div class="card-header-action" id="actionVenta">
-                            
+
                         </div>
                     </div>
 
@@ -148,107 +149,122 @@
 
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="padding-20">
-                        <div class="col-md-12">
-                            <div class="section-title">Resumen de la venta</div>
-                            @*<div class="section-title" id="descuentoCliente">Resumen de la venta</div>*@
+                    <div class="card-header">
+                        <h4>Resumen de la venta</h4>
+                        <div class="card-header-action">
+                            @if (esDevolucion)
+                            {
+                                <div class="badge-outline col-red"><h3>Total a Devolver: <span class="divSubTotal">$0.0</span></h3></div>
+                                
+                            }
+                            else
+                            {
+                        <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
+                               
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
 
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="tablaRepVentas">
-                                    <thead>
-                                        <tr>
-                                            <th data-width="40" style="width: 40px;">#</th>
-                                            <th>Id Producto</th>
-                                            <th>Producto</th>
-                                            <th class="text-center">Precio</th>
-                                            <th class="text-center">Cantidad</th>
-                                            <th class="text-center">Total</th>
-                                            <th class="text-center">Descuento</th>
-                                            <th class="text-center"> @(esDevolucion == true ? "Devolver Artículos" : "Acciones") </th>
-                                            <th class="text-center" style="display: none;">idVentaDetalle</th>
-                                        </tr>
-                                    </thead>
-                                    @if (notificacion.Modelo != null)
+
+                        @*<div class="section-title" id="descuentoCliente">Resumen de la venta</div>*@
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tablaRepVentas">
+                                <thead>
+                                    <tr>
+                                        <th data-width="40" style="width: 40px;">#</th>
+                                        <th>Id Producto</th>
+                                        <th>Producto</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Total</th>
+                                        <th class="text-center">Descuento</th>
+                                        <th class="text-center"> @(esDevolucion == true ? "Devolver Artículos" : "Acciones") </th>
+                                        <th class="text-center" style="display: none;">idVentaDetalle</th>
+                                    </tr>
+                                </thead>
+                                @if (notificacion.Modelo != null)
+                                {
+                                    if (notificacion.Modelo.Count() > 0)
                                     {
-                                        if (notificacion.Modelo.Count() > 0)
-                                        {
 
-                                            <tbody>
-                                                @foreach (var item in notificacion.Modelo)
-                                                {
-                                                    <tr>
-                                                        <td>@item.contador</td>
-                                                        <td>@item.idProducto</td>
-                                                        <td>@item.descProducto</td>
-                                                        <td class="text-center">$@item.precioVenta</td>
-                                                        <td class="text-center"><input disabled type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
-                                                        <td class="text-center">$@Convert.ToInt32(@item.cantidad * item.precioVenta)</td>
-                                                        <td class="text-center">$@Convert.ToInt32(@item.ahorro)</td>
-                                                        @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
+                                        <tbody>
+                                            @foreach (var item in notificacion.Modelo)
+                                            {
+                                                <tr>
+                                                    <td>@item.contador</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descProducto</td>
+                                                    <td class="text-center">$@item.precioVenta</td>
+                                                    <td class="text-center"><input disabled type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$@Convert.ToInt32(@item.cantidad * item.precioVenta)</td>
+                                                    <td class="text-center">$@Convert.ToInt32(@item.ahorro)</td>
+                                                    @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
 
 
-                                                        @if (esAgregarProductos)
-                                                        {
-                                                            <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                                                    @if (esAgregarProductos)
+                                                    {
+                                                        <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
 
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
 
-                                                        }
+                                                    }
 
-                                                        <td style="display: none;">@item.idVentaDetalle</td>
+                                                    <td style="display: none;">@item.idVentaDetalle</td>
 
-                                                    </tr>
+                                                </tr>
 
-                                                }
+                                            }
 
-                                            </tbody>
-                                        }
+                                        </tbody>
+                                    }
+                                }
+                                else
+                                {
+                                    <tbody></tbody>
+                                }
+
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-6">
+
+                            </div>
+                            <div class="col-lg-6 text-right">
+
+                                @*<div class="invoice-detail-item">
+                                        <div class="invoice-detail-name">I.V.A.</div>
+                                        <div class="invoice-detail-value" id="divIva">$15</div>
+                                    </div>*@
+                                <hr class="mt-2 mb-2">
+                                <div class="invoice-detail-item">
+
+                                    @if (esDevolucion)
+                                    {
+                                        <div class="invoice-detail-name">Total a Devolver</div>
                                     }
                                     else
                                     {
-                                        <tbody></tbody>
+                                        <div class="invoice-detail-name">Subtotal</div>
                                     }
-
-                                </table>
-                            </div>
-
-                            <div class="row mt-4">
-                                <div class="col-lg-6">
-
+                                    <div class="invoice-detail-value divSubTotal">$0.0</div>
                                 </div>
-                                <div class="col-lg-6 text-right">
-
-                                    @*<div class="invoice-detail-item">
-                        <div class="invoice-detail-name">I.V.A.</div>
-                        <div class="invoice-detail-value" id="divIva">$15</div>
-                    </div>*@
-                                    <hr class="mt-2 mb-2">
-                                    <div class="invoice-detail-item">
-
-                                        @if (esDevolucion)
-                                        {
-                                            <div class="invoice-detail-name">Total a Devolver</div>
-                                        }
-                                        else
-                                        {
-                                            <div class="invoice-detail-name">Subtotal</div>
-                                        }
-                                        <div class="invoice-detail-value" id="divSubTotal">$0.0</div>
-                                    </div>
 
 
 
 
-                                    @*<div class="invoice-detail-item">
-                        <div class="invoice-detail-name">Total</div>
-                        <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
-                    </div>*@
-                                </div>
+                                @*<div class="invoice-detail-item">
+                                        <div class="invoice-detail-name">Total</div>
+                                        <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
+                                    </div>*@
                             </div>
                         </div>
+
                         <hr>
 
                         @if (esDevolucion)
@@ -656,9 +672,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">               
+            <div class="modal-body">
                 <div class="row" id="PartialViewCierreDia">
-                    
+
                 </div>
 
                 <div class="row">
@@ -856,7 +872,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-4">
-                        <div class="form-group">                           
+                        <div class="form-group">
                             <div class="input-group mb-3">
                                 <input id="codigoBarrasTicketVenta" type="text" class="form-control">
                                 <div class="input-group-append">
@@ -865,7 +881,7 @@
                             </div>
                         </div>
                     </div>
-                </div>             
+                </div>
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
