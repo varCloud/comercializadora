@@ -748,5 +748,42 @@ namespace lluviaBackEnd.DAO
         }
 
 
+
+        public Notificacion<List<Ticket>> ObtenerTicketsDevolucionComplemento ( int idVenta, TipoTicket idTipoTicket)
+        {
+            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", idVenta);
+                    parameters.Add("@idTipoTicket", idTipoTicket);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_TICKETS_DEVOLUCIONES_COMPLEMENTOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ticket>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo.Clear();// [0] = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
     }
 }

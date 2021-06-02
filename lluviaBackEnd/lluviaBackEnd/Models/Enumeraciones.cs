@@ -151,4 +151,11 @@ namespace lluviaBackEnd.Models
         Activa = 1,
         Cancelada = 2
     }
+
+    public enum TipoTicket
+    { 
+        Devolucion = 1,
+        Complemento = 2
+    }
+
 }
