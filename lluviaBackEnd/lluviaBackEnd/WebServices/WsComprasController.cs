@@ -24,7 +24,7 @@ namespace lluviaBackEnd.WebServices
                 var mapper = config.CreateMapper();
                 Compras compra = mapper.Map<Compras>(request);
 
-                return new ComprasDAO().ObtenerCompras(compra, false);
+                return new ComprasDAO().ObtenerComprasApp(compra, false);
             }
             catch (Exception ex)
             {
