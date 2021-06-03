@@ -88,10 +88,10 @@ function ImprimeTicketVentaCancelada(idVenta) {
 }
 
 
-function ImprimeTicketDevolucion(idVenta) {
+function ImprimeTicketDevolucion(idVenta, idDevolucion) {
     $.ajax({
         url: rootUrl("/Ventas/ImprimeTicketDevolucion"),
-        data: { idVenta: idVenta },
+        data: { idVenta: idVenta, idDevolucion: idDevolucion },
         method: 'post',
         dataType: 'html',
         async: true,

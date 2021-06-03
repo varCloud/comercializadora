@@ -99,6 +99,7 @@ namespace lluviaBackEnd.Models
         public string descripcionFactFormaPago { get; set; }
         public List<lluviaBackEnd.Models.Ticket> lstTicketsDevolucion { get; set; }
         public List<lluviaBackEnd.Models.Ticket> lstTicketsComplementos { get; set; }
-
+        public int idDevolucion { get; set; }
+        public int idComplemento { get; set; }
     }
 }

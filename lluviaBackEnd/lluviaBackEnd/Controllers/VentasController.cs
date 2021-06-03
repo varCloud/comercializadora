@@ -25,9 +25,10 @@ namespace lluviaBackEnd.Controllers
     public class VentasController : Controller
     {
         int idVenta = 0;
+        int idDevolucion = 0;
         Retiros retiro = new Retiros();
         int idIngresoEfectivo = 0;
-
+        
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //  Nueva Venta
@@ -1480,12 +1481,12 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult VerTicketDevolucion(int idVenta)
+        public ActionResult VerTicketDevolucion(int idVenta, int idDevolucion)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
-                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, tipoVenta = EnumTipoVenta.Devolucion });
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
                 string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDevolucion(ticket.Modelo));
@@ -1537,9 +1538,10 @@ namespace lluviaBackEnd.Controllers
                 notificacion.Estatus = 200;
 
                 this.idVenta = venta.idVenta;
+                this.idDevolucion = venta.idDevolucion;
 
                 PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                //pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
 
                 PaperSize ps = new PaperSize("", 285, 540);
                 pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDevoluciones);
@@ -1576,7 +1578,7 @@ namespace lluviaBackEnd.Controllers
             Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, tipoVenta = EnumTipoVenta.Devolucion });
+                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");

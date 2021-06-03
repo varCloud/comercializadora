@@ -250,6 +250,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idVenta", ticket.idVenta);
                     parameters.Add("@tipoVenta", ticket.tipoVenta);
                     parameters.Add("@idStatusVenta", ticket.estatusVenta==0 ? EnumEstatusVenta.Activa : ticket.estatusVenta);
+                    parameters.Add("@idDevolucion", ticket.idDevolucion);
                     var result = db.QueryMultiple("SP_CONSULTA_TICKET", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

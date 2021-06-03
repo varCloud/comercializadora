@@ -141,11 +141,11 @@ else
                                                             <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDespachadores", "Ventas", new {idVenta=item.idVenta})" target="_blank"><i class="fas fa-eye"></i>Ticket Despachadores</a>
                                                         }
 
-                                                        @if (item.productosDevueltos > 0)
+                                                        @*@if (item.productosDevueltos > 0)
                                                         {
                                                             <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta);"><i class="fas fa-print"></i>Imprimir Ticket Devolución</a>
                                                             <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta=item.idVenta})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket de Devolución  </a>
-                                                        }
+                                                        }*@
 
 
                                                         @if (item.productosDevueltos > 0)
@@ -153,21 +153,8 @@ else
                                                             foreach (var item_ in item.lstTicketsDevolucion)
 
                                                             {
-                                                                @*<a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item_.idDevolucion);"><i class="fas fa-print"></i>Imprimir Ticket Devolución - @item_.idDevolucion</a>
-                                                                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta=item_.idDevolucion})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket de Devolución - @item_.idDevolucion  </a>*@
-
-
-                                                                <div class="dropdown d-inline mr-2">
-                                                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Easy Dropdown
-                                                                    </button>
-                                                                    <div class="dropdown-menu" style="will-change: transform;">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-
+                                                                <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta, @item_.idDevolucion);"><i class="fas fa-print"></i>Ticket Devolución - @item_.idDevolucion</a>
+                                                                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta = item.idVenta, idDevolucion=item_.idDevolucion})" target="_blank"><i class="fas fa-eye"></i>Ticket de Devolución - @item_.idDevolucion  </a>
 
                                                             }
                                                         }
