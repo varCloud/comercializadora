@@ -39,5 +39,8 @@ namespace lluviaBackEnd.Models
 
         public EnumEstatusVenta estatusVenta { get; set; }
 
+        public int idDevolucion { get; set; }
+        public int idComplemento { get; set; }
+
     }
 }
