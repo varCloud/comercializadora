@@ -181,6 +181,53 @@ namespace lluviaBackEnd.DAO
 
 
         #region Funciones para la app
+
+        public Notificacion<List<Compras>> ObtenerComprasApp(Compras compra, bool detalleCompra = false)
+        {
+            Notificacion<List<Compras>> compras = new Notificacion<List<Compras>>();
+            int idLineaProducto = string.IsNullOrEmpty(compra.producto.idLineaProducto) ? 0 : Convert.ToInt32(compra.producto.idLineaProducto);
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idCompra", compra.idCompra == 0 ? (object)null : compra.idCompra);
+                    parameters.Add("@idProveedor", compra.proveedor.idProveedor == 0 ? (object)null : compra.proveedor.idProveedor);
+                    parameters.Add("@idStatusCompra", compra.statusCompra.idStatus == 0 ? (object)null : compra.statusCompra.idStatus);
+                    parameters.Add("@idUsuario", compra.usuario.idUsuario == 0 ? (object)null : compra.usuario.idUsuario);
+                    parameters.Add("@idAlmacen", compra.usuario.idAlmacen == 0 ? (object)null : compra.usuario.idAlmacen);
+                    parameters.Add("@fechaInicio", compra.fechaIni == DateTime.MinValue ? (object)null : compra.fechaIni);
+                    parameters.Add("@fechaFin", compra.fechaFin == DateTime.MinValue ? (object)null : compra.fechaFin);
+                    parameters.Add("@idProducto", compra.producto.idProducto == 0 ? (object)null : compra.producto.idProducto);
+                    parameters.Add("@descripcionProducto", string.IsNullOrEmpty(compra.producto.descripcion) ? (object)null : compra.producto.descripcion);
+                    parameters.Add("@idLineaProducto", idLineaProducto == 0 ? (object)null : idLineaProducto);
+                    parameters.Add("@detalleCompra", detalleCompra);
+                    parameters.Add("@idEstatusProducto", compra.producto.estatusProducto.idEstatusProducto == 0 ? (object)null : compra.producto.estatusProducto.idEstatusProducto);
+
+                    var rs = db.QueryMultiple("SP_APP_CONSULTA_COMPRAS", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        compras.Estatus = rs1.status;
+                        compras.Mensaje = rs1.mensaje;
+                        compras.Modelo = rs.Read<Compras, Proveedor, Status, Usuario, Producto, EstatusProducto, Compras>(MapCompras, splitOn: "idProveedor,idStatus,idUsuario,idProducto,idEstatusProducto").ToList();
+
+                    }
+                    else
+                    {
+                        compras.Estatus = rs1.status;
+                        compras.Mensaje = rs1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return compras;
+        }
         public Notificacion<List<CompraDetalle>> ObtenerDetalleCompra(RequestObtenerDetalleCompra request)
         {
             Notificacion<List<CompraDetalle>> notificacion = new Notificacion<List<CompraDetalle>>();
@@ -243,10 +290,6 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
-
-       
-
- 
 
         public string SerializeProductos(List<ProductosCompra> precios)
         {
