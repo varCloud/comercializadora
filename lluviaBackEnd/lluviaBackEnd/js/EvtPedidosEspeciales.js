@@ -376,7 +376,7 @@ function actualizaTicketPedidoEspecial() {
                 idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
                 cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
                 min: 1,
-                max: 11,
+                max: 5,
                 maxCantidad: 0,
                 precioIndividual: 0,
                 precioVenta: 0,
@@ -434,9 +434,9 @@ function actualizaTicketPedidoEspecial() {
     }
 
 
-    //  si se ejecuta precio de mayoreo cuando el ticket tiene 12 o + articulos
+    //  si se ejecuta precio de mayoreo cuando el ticket tiene 6 o + articulos
     for (var o = 0; o < productos.length; o++) {
-        if (cantidadDeProductos >= 12) {
+        if (cantidadDeProductos >= 6) {
             productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
         }
         else {
@@ -469,7 +469,7 @@ function actualizaTicketPedidoEspecial() {
             algunPrecio = arrayPreciosRangos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
         }
 
-        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 12 )) {
+        if ((algunPrecio > 0) && (cantidadTotalPorProducto[q].precioRango === 0) && (cantidadTotalPorProducto[q].cantidad > 6 )) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
             var costo = arrayPreciosRangos.find(x => x.max === max__ && x.idProducto === cantidadTotalPorProducto[q].idProducto).costo;
             cantidadTotalPorProducto[q].precioRango = costo;

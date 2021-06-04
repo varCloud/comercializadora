@@ -471,16 +471,16 @@ $('#btnAgregarPrecio').click(function (e) {
     else {
 
         if (
-            (parseFloat($('#min_').val()) >= parseFloat(0) && parseFloat($('#min_').val()) <= parseFloat(11)) ||
-            (parseFloat($('#max_').val()) >= parseFloat(0) && parseFloat($('#max_').val()) <= parseFloat(11))
+            (parseFloat($('#min_').val()) >= parseFloat(0) && parseFloat($('#min_').val()) <= parseFloat(5)) ||
+            (parseFloat($('#max_').val()) >= parseFloat(0) && parseFloat($('#max_').val()) <= parseFloat(5))
 
         ) {
-            MuestraToast('warning', "Para precios de productos entre 1 y 11 artículos debe asignar el Precio Individual.");
+            MuestraToast('warning', "Para precios de productos entre 1 y 5 artículos debe asignar el Precio Individual.");
         }
         else {
 
-            if ((parseFloat($('#min_').val()) == parseFloat(12)) || (parseFloat($('#max_').val()) == parseFloat(12))) {
-                MuestraToast('warning', "Para precios de productos de 12 artículos debe asignar el Precio Menudeo.");
+            if ((parseFloat($('#min_').val()) == parseFloat(6)) || (parseFloat($('#max_').val()) == parseFloat(6))) {
+                MuestraToast('warning', "Para precios de productos de 6 artículos debe asignar el Precio Menudeo.");
             }
             else {
 

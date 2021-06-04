@@ -533,9 +533,9 @@ function actualizaTicketVenta() {
     }
 
 
-    //  si se ejecuta precio de mayoreo cuando el ticket tiene 12 o + articulos
+    //  si se ejecuta precio de mayoreo cuando el ticket tiene 6 o + articulos
     for (var o = 0; o < productos.length; o++) {
-        if (cantidadDeProductos >= 12) {
+        if (cantidadDeProductos >= 6) {
             productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
         }
         else {
@@ -571,7 +571,7 @@ function actualizaTicketVenta() {
         if (
             (algunPrecio > 0) &&  // si hay un precio maximo en rago de precios
             (cantidadTotalPorProducto[q].precioRango === 0) && // si no cayo en ningun rango
-            (cantidadTotalPorProducto[q].cantidad > 12) && // ocupa ser mayor a 12 para que se evalue un rango
+            (cantidadTotalPorProducto[q].cantidad > 6) && // ocupa ser mayor a 6 para que se evalue un rango
             (cantidadTotalPorProducto[q].cantidad > algunPrecio)  // si la cantidad de productos es mayor del maximo en la tabla de rangos 
         ) {
             var max__ = productos.find(x => x.idProducto === cantidadTotalPorProducto[q].idProducto).max;
