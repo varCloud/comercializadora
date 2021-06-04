@@ -909,6 +909,7 @@ $('#btnGuardarVenta').click(function (e) {
     var numClientesAtendidos = parseInt(0);
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+    //var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
     var esDevolucion = $('#esDevolucion').val();
     var esAgregarProductos = $('#esAgregarProductos').val();
     var esVentaNormal = "true";
