@@ -134,13 +134,14 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-                notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2 });
-                ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0 });
+                notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2, idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen });
+                ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0,idUsuario= UsuarioActual.idUsuario });
                 ViewBag.lstVentas = notificacion.Modelo;
                 ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
-                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 3 }), "idUsuario", "nombreCompleto").ToList();
+                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 3,idAlmacen= UsuarioActual.idRol==1 ? 0 : UsuarioActual.idAlmacen }), "idUsuario", "nombreCompleto").ToList();
                 ViewBag.lstUsuarios = listUsuarios;
                
 
@@ -278,9 +279,11 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
                 ventas.tipoConsulta = 2;
                 ventas.estatusVenta = 2;
+                ventas.idAlmacen = usuario.idRol == 1 ? 0 : usuario.idAlmacen;                
                 notificacion = new ReportesDAO().ObtenerVentas(ventas);
                 return PartialView(notificacion);
             }

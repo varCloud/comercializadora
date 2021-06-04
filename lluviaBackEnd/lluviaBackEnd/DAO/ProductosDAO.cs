@@ -388,6 +388,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
                     parameters.Add("@claveProdServ", producto.idClaveProdServ);
+                    parameters.Add("@idUsuario", producto.idUsuario);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
