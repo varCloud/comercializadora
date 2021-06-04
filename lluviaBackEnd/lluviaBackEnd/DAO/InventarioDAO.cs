@@ -53,6 +53,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idAlmacen", (request.idAlmacen == 0 ? (object)null : request.idAlmacen));
                     parameters.Add("@idProducto", request.idProducto);
                     parameters.Add("@EstatusProducto", request.EstatusProducto);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    
                     var result = this.db.QueryMultiple("SP_APP_OBTENER_UBICACION_PRODUCTO_INVENTARIO", param: parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.Estatus == 200)

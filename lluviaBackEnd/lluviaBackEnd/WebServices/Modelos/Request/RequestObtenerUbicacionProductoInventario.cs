@@ -12,6 +12,8 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
 
         /* 1.- sin acomodar , 2.- Acomodado  , 3 Todo*/
         public int EstatusProducto { get; set; }
+
+        public int idUsuario { get; set; }
     }
 
 
