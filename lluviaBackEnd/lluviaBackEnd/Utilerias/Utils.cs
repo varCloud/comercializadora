@@ -1174,7 +1174,7 @@ namespace lluviaBackEnd.Utilerias
 
 
 
-        public static byte[] GeneraTicketDevolucion(List<Ticket> tickets)
+        public static byte[] GeneraTicketDevolucionComplemento(List<Ticket> tickets)
         {
             byte[] content = null;
 
@@ -1189,6 +1189,8 @@ namespace lluviaBackEnd.Utilerias
             eventos.TituloCabecera = "Ticket de Devolución: ";
             string nombreArchivo = string.Empty;
             string path = Utils.ObtnerFolderCodigos() + @"/";
+            string tipo_cabecera = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVOLUCIÓN" : "COMPLEMENTO";
+            string tipo_totales = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTO" : "COMPLEMENTO";
 
             try
             {
@@ -1208,7 +1210,7 @@ namespace lluviaBackEnd.Utilerias
                                 </tr>                                
                                 
                                 <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
-                                <tr><td style='color:black; text-align:center;'>*************** TICKET DE DEVOLUCIÓN ***************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>*************** TICKET DE " + tipo_cabecera + @" ***************</td></tr>
                                 <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 
@@ -1272,7 +1274,7 @@ namespace lluviaBackEnd.Utilerias
                                                         </table>
                                                         <table>
                                                           <tr>
-                                                            <td width='60%'>TOTAL DEVUELTO:</td>
+                                                            <td width='60%'>TOTAL " + tipo_totales + @":</td>
                                                             <td width='15%'> </td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>

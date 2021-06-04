@@ -1261,6 +1261,7 @@
     <Content Include="Views\SesionExpirada\SesionExpirada.cshtml" />
     <Content Include="Views\Ventas\ConsultaVentasCanceladas.cshtml" />
     <Content Include="Views\Ventas\_ObtenerVentasCanceladas.cshtml" />
+    <Content Include="Views\Ventas\VerTicketComplemento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

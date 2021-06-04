@@ -190,7 +190,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta, cantProductosLiq = r1.cantProductosLiq };
+                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta, cantProductosLiq = r1.cantProductosLiq , idDevolucion = r1.idDevolucion, idComplemento = r1.idComplemento };
                         //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
                     }
                     else
@@ -251,6 +251,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@tipoVenta", ticket.tipoVenta);
                     parameters.Add("@idStatusVenta", ticket.estatusVenta==0 ? EnumEstatusVenta.Activa : ticket.estatusVenta);
                     parameters.Add("@idDevolucion", ticket.idDevolucion);
+                    parameters.Add("@idComplemento", ticket.idComplemento);
                     var result = db.QueryMultiple("SP_CONSULTA_TICKET", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

@@ -1048,7 +1048,7 @@ $('#btnGuardarVenta').click(function (e) {
                 }
 
                 if ((esDevolucion == "true") || (esDevolucion == "True")) {
-                    ImprimeTicketDevolucion(data.Modelo.idVenta);
+                    ImprimeTicketDevolucion(data.Modelo.idVenta, data.Modelo.idDevolucion);
                     ImprimeTicket(data.Modelo.idVenta);
 
                     swal({
@@ -1064,6 +1064,7 @@ $('#btnGuardarVenta').click(function (e) {
 
                 if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
                     ImprimeTicket(data.Modelo.idVenta);
+                    ImprimeTicketComplemento(data.Modelo.idVenta, data.Modelo.idComplemento);
                     //window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                     window.location.href = rootUrl("/Ventas/Ventas");
                     
@@ -1181,10 +1182,35 @@ function ImprimeTicketDespachadores(idVenta) {
     });
 }
 
-function ImprimeTicketDevolucion(idVenta) {
+function ImprimeTicketDevolucion(idVenta, idDevolucion) {
     $.ajax({
         url: rootUrl("/Ventas/ImprimeTicketDevolucion"),
-        data: { idVenta: idVenta },
+        data: { idVenta: idVenta, idDevolucion: idDevolucion },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+function ImprimeTicketComplemento(idVenta, idComplemento) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketComplemento"),
+        data: { idVenta: idVenta, idComplemento: idComplemento },
         method: 'post',
         dataType: 'html',
         async: true,
