@@ -24,10 +24,11 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
                 LineaProductoDAO dao = new LineaProductoDAO();
-                notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
-                ViewBag.lstLineasDeProductos = dao.ObtenerLineaProductos();
+                notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0, idUsuario = UsuarioActual.idUsuario });
+                ViewBag.lstLineasDeProductos = dao.ObtenerLineaProductos(UsuarioActual.idUsuario);
                 ViewBag.lstClaveProdServ = dao.ObtenerClavesProductos();
                 ViewBag.lstClavesUnidad = dao.ObtenerClavesUnidad();
                 ViewBag.lstUnidadMedida = dao.ObtenerUnidadesMedidas();
@@ -48,7 +49,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Dictionary<string, object> codigos = new Dictionary<string, object>();
-                codigos.Add("barra",Convert.ToBase64String(Utilerias.Utils.GenerarCodigoBarras(cadena)));
+                codigos.Add("barra", Convert.ToBase64String(Utilerias.Utils.GenerarCodigoBarras(cadena)));
                 codigos.Add("qr", Convert.ToBase64String(Utilerias.Utils.GenerarQR(cadena)));
                 return Json(codigos, JsonRequestBehavior.AllowGet);
             }
@@ -62,7 +63,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                producto.idUsuario = UsuarioActual.idUsuario;
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
                 Producto p = new Producto();
                 p = notificacion.Modelo[0];
@@ -141,7 +144,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                producto.idUsuario = UsuarioActual.idUsuario;
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
                 ViewBag.lstProductos = notificacion.Modelo;
                 return PartialView("_ObtenerProductos");
@@ -156,8 +161,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                producto.idUsuario = UsuarioActual.idUsuario;
                 notificacion = new ProductosDAO().ObtenerProductos(producto);
 
                 if (notificacion.Modelo != null)
@@ -275,7 +281,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Precio>> notificacion = new Notificacion<List<Precio>>();
-                notificacion = new ProductosDAO().ObtenerPrecios(new Precio() { idProducto=producto.idProducto });
+                notificacion = new ProductosDAO().ObtenerPrecios(new Precio() { idProducto = producto.idProducto });
                 //return Json(notificacion, JsonRequestBehavior.AllowGet);
 
                 //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
@@ -288,7 +294,7 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        
+
         public ActionResult ImprimirCodigos(string articulo, string descProducto)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
@@ -314,11 +320,18 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Ubicacion ubicacion = new Ubicacion();
+                ubicacion.idAlmacen = usuario.idAlmacen;
                 ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-                ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+                if (usuario.idRol == 1)
+                    ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);
+                else
+                    ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0).Where(x => x.Value == usuario.idAlmacen.ToString()).ToList();
+
                 ViewBag.lstPisos = new ProductosDAO().ObtenerPisos();
                 ViewBag.lstPasillos = new ProductosDAO().ObtenerPasillos();
                 ViewBag.lstRacks = new ProductosDAO().ObtenerRacks();
+
                 return View();
 
             }
@@ -373,8 +386,8 @@ namespace lluviaBackEnd.Controllers
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ubicaciones generadas correctamente.";
                 string pathPdfCodigos = Utils.ObtnerFolderCodigos() + @"/";
-                notificacion.Modelo  =  Utilerias.Utils.GenerarUbicaciones(ubicaciones, pathPdfCodigos);
-                
+                notificacion.Modelo = Utilerias.Utils.GenerarUbicaciones(ubicaciones, pathPdfCodigos);
+
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -402,15 +415,15 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public void EliminaArchivo(string rutaArchivo) 
+        public void EliminaArchivo(string rutaArchivo)
         {
             try
             {
                 Utilerias.Utils.DeleteFile(Utilerias.Utils.ObtnerFolderCodigos() + rutaArchivo);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
-                throw ex ;
+                throw ex;
             }
         }
 
@@ -420,11 +433,20 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
-                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                LimiteInvetario limiteInventario = new LimiteInvetario();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuarioSesion.idUsuario).Where(x => x.Value != "").ToList();
+
+                if (usuarioSesion.idRol == 1)
+                    ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                else
+                {
+                    limiteInventario.idAlmacen = usuarioSesion.idAlmacen;
+                    ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0).Where(x => x.Value == usuarioSesion.idAlmacen.ToString()).ToList();
+                }
+
                 //List<SelectListItem> selectLists = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList();
                 ViewBag.listEstatusLimitesInventario = new SelectList(new LimiteInventarioDAO().ObtenerEstatusLimitesInventario(), "idStatus", "descripcion").ToList(); ;
-                return View(new LimiteInvetario());
+                return View(limiteInventario);
             }
             catch (Exception ex)
             {
@@ -437,6 +459,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                limiteInvetario.idAlmacen = usuarioSesion.idRol != 1 && limiteInvetario.idAlmacen == 0 ? usuarioSesion.idAlmacen : limiteInvetario.idAlmacen;
                 return PartialView("_LimitesInventario", new LimiteInventarioDAO().ObtenerLimitesInventario(limiteInvetario));
             }
             catch (Exception ex)
@@ -450,8 +474,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;              
-                Notificacion<string> result = new LimiteInventarioDAO().InsertaActualizaLimiteInventario(limiteInvetario,usuarioSesion.idUsuario);
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                Notificacion<string> result = new LimiteInventarioDAO().InsertaActualizaLimiteInventario(limiteInvetario, usuarioSesion.idUsuario);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -529,16 +553,16 @@ namespace lluviaBackEnd.Controllers
                             result = limiteInventarioDAO.InsertaActualizaLimiteInventarioMasivo(listProducts, usuarioSesion.idUsuario);
                         }
                         catch (Exception ex)
-                        {                            
+                        {
                             result.Mensaje = "Ocurrio un error al importar el archivo: " + ex.Message;
                         }
                         workbook.Save();
                         application.Workbooks.Close();
                         application.Quit();
-                                             
+
                         if (System.IO.File.Exists(path))
                         { System.IO.File.Delete(path); }
-                       
+
 
                     }
                     else
@@ -566,7 +590,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<List<Producto>> p = new Notificacion<List<Producto>>();
                 p = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0 });
                 ViewBag.lstProductos = p.Modelo;
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuario.idUsuario);
 
                 //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
                 //ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);

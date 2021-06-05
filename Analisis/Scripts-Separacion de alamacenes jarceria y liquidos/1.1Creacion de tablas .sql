@@ -73,15 +73,25 @@ RETURNS  @lineasProducto TABLE
 AS
 begin
 
+	   if(coalesce(@idAlmacen,0)=0)
+		  select @idAlmacen=idAlmacen from Usuarios where idUsuario=coalesce(@idUsuario,0)
 
+      --si es administrador y almacen es null, regresamos todas las lineas de productos
+	   if exists(select 1 from Usuarios where idUsuario=coalesce(@idUsuario,0) and idRol=1 and coalesce(@idAlmacen,0)=0)
+	   begin	   
 		insert into @lineasProducto (idLineaProducto , idAlmacen,descripcion )
-		select distinct A.idLineaProducto, U.idAlmacen , LP.descripcion from 
-		Usuarios U join AlmacenesXLineaProducto A on U.idAlmacen = A.idAlmacen  and A.activo =1 
-		join LineaProducto LP on LP.idLineaProducto = A.idLineaProducto and LP.activo=1
-		where
-		U.idUsuario =  coalesce(@idUsuario , U.idUsuario) 
-		and A.idAlmacen = coalesce(@idAlmacen , A.idAlmacen)
-		and U.activo=1 and A.activo=1;
+		select idLineaProducto,0 idAlmacen,descripcion from LineaProducto where activo=1
+	   end
+	   else
+	   begin
+			insert into @lineasProducto (idLineaProducto , idAlmacen,descripcion )
+			select distinct A.idLineaProducto, coalesce(@idAlmacen , 0) , LP.descripcion from 
+			AlmacenesXLineaProducto A  
+			join LineaProducto LP on LP.idLineaProducto = A.idLineaProducto and LP.activo=1
+			where
+			 A.idAlmacen = coalesce(@idAlmacen , A.idAlmacen)
+			and A.activo=1 and A.activo=1;
+	  end
 
 return;
 end
@@ -287,3 +297,4 @@ REFERENCES [dbo].[Almacenes] ([idAlmacen])
 GO
 ALTER TABLE [dbo].[TiendasXAlmacen] CHECK CONSTRAINT [FK_TiendasXAlmacen_Almacenes1]
 GO
+Alter table Compras add idAlmacen int null

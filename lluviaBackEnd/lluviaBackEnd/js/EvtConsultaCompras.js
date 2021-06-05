@@ -4,7 +4,7 @@ $(document).ready(function () {
     if ($("#tblCompras").length > 0) {
         InitTableCompras();
     }
-    ConsultaProductos();
+    //ConsultaProductos();
     InitRangePicker('rangeCompras', 'fechaIni', 'fechaFin');
     //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
@@ -26,7 +26,7 @@ $(document).ready(function () {
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarCompras").trigger("reset");
         $('#fechaIni').val('');
-        $('#fechaFin').val('');
+        $('#fechaFin').val('');        
         $("#frmBuscarCompras .select-multiple").trigger("change");
     });
 
@@ -42,7 +42,7 @@ function ConsultaProductos() {
     var result = '';
     $.ajax({
         url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
-        data: { activo: true },
+        data: { activo: true, idAlmacen: $("#idAlmacen").val() },
         method: 'post',
         dataType: 'json',
         async: false,
@@ -214,14 +214,25 @@ function NuevaCompra(idCompra) {
             ShowLoader();
         },
         success: function (data) {
-            OcultarLoader();
-
-            if (idCompra > 0)
-                $("#titleModalCompra").html("Editar Compra");
-            else
-                $("#titleModalCompra").html("Nueva Compra");
+            OcultarLoader();                
             $("#NuevaCompra").html(data);
             InicializaElementosCompra();
+
+
+            if (idCompra > 0) {
+                $("#idAlmacen").attr("readonly", "readonly");
+                $("#idAlmacen").addClass("readonly");
+                $('#idAlmacen').trigger('change').prop('disabled', true);
+                $("#titleModalCompra").html("Editar Compra");
+            }
+
+            else {
+                $("#idAlmacen").removeAttr("readonly");
+                $("#idAlmacen").removeClass("readonly");
+                $('#idAlmacen').prop('disabled', false);
+                $("#titleModalCompra").html("Nueva Compra");
+            }
+
             $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });
 
 
@@ -253,6 +264,16 @@ function InicializaElementosCompra() {
         },
 
     });
+
+    $("#idAlmacen").change(function (evt) {
+        evt.preventDefault();
+        arrayProductos = [];        
+        if ($("#idAlmacen").val() > 0) {            
+            ConsultaProductos();
+        }
+        InitSelect2Productos();
+
+    });  
     $("#idProducto").change(function (evt) {
         evt.preventDefault();
         var producto = $('#idProducto').select2('data')[0];
@@ -263,8 +284,7 @@ function InicializaElementosCompra() {
             $("#precio").val(producto.costo);
             $("#cantPorUnidadCompra").val(0);
             $("#cantidad").val(0);
-            $('#precio').focus();
-            console.log("focus");
+            $('#precio').focus();            
         }
     });
 
@@ -285,12 +305,19 @@ function InicializaElementosCompra() {
         $('#tblComprasDetalle tbody').html("");
         $('#idProveedor').val("").trigger('change');
         $('#idStatusCompra').val("").trigger('change');
+        $("#idAlmacen").removeAttr("readonly");
+        $("#idAlmacen").removeClass("readonly");
+        $('#idAlmacen').val('').trigger('change').prop('disabled', false);
         actualizaTicket();
     });
 
     $('#btnAgregarProducto').click(function (e) {
 
-        if ($('#idProducto').val() <= 0) {
+        if ($('#idAlmacen').val() <= 0) {
+            MuestraToast('warning', "Debe seleccionar un almacen.");
+        }
+        
+        else if ($('#idProducto').val() <= 0) {
             MuestraToast('warning', "Debe seleccionar un producto.");
         } else if (Number($('#precio').val()) == 0) {
             MuestraToast('warning', "El costo del producto que desea agregar debe de ser mayor que 0.");
@@ -333,6 +360,11 @@ function InicializaElementosCompra() {
                 $("#tblComprasDetalle tbody").append(row_);
             }
 
+            //deshabilitamos almacen
+
+            $("#idAlmacen").attr("readonly", "readonly");
+            $("#idAlmacen").addClass("readonly");
+            $('#idAlmacen').prop('disabled', true);
             $('#idProducto').val('').trigger('change');
             $('#cantidad').val('0');
             $('#precio').val('0');
@@ -414,6 +446,7 @@ function InicializaElementosCompra() {
                     compra.listProductos = productos;
                     compra.statusCompra = StatusCompra;
                     compra.observaciones = $("#ObservacionesCompra").val();
+                    compra.idAlmacen = $("#idAlmacen").val();
 
                     dataToPost = JSON.stringify({ compra: compra });
 

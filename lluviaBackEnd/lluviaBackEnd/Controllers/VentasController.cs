@@ -172,8 +172,10 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
                 ventas.tipoConsulta = 2;
+                ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
                 notificacion = new ReportesDAO().ObtenerVentas(ventas);
 
                 if (notificacion.Modelo != null)

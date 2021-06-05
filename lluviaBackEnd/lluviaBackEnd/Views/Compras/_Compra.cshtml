@@ -34,12 +34,17 @@
         {
         <div class="row">
 
-            <div class="form-group col-lg-4">
+            <div class="form-group col-lg-3">
+                <label>Almacen</label>
+                @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes,"--SELECCIONA--", new { id = "idAlmacen", style = "width:100%", @class = "select-multiple select-multipleCompra", data_val = "true", data_val_required = "Seleccione un almacen" })
+            </div>
+
+            <div class="form-group col-lg-3">
                 <label>Producto</label>
                 <select id="idProducto"></select>
                 @*@Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
             </div>
-            <div class="form-group col-lg-3">
+            <div class="form-group col-lg-2">
                 <label>Unidad de Compra</label>
                 <input id="unidadCompra" type="text" class="form-control" disabled>
             </div>
@@ -47,13 +52,13 @@
                 <label>Cantidad Unitaria</label>
                 <input id="cantidadUnidadCompra" type="text" class="form-control" disabled>
             </div>
-            <div class="form-group col-lg-3">
+            <div class="form-group col-lg-2">
                 <label>Unidad de Venta</label>
                 <input id="unidadVenta" type="text" class="form-control" disabled>
             </div>
             <div class="form-group col-lg-2">
                 <label>Último Costo</label>
-                <input id="precio" type="text" class="form-control" onkeypress="return esDecimal(this, event);" >
+                <input id="precio" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
             </div>
             <div class="form-group col-lg-3">
                 <label>Cantidad</label>

@@ -69,7 +69,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", limite.idProducto == 0 ? (object)null : limite.idProducto);
                     parameters.Add("@idAlmacen", limite.idAlmacen == 0 ? (object)null : limite.idAlmacen);
                     parameters.Add("@idEstatusLimiteInv", limite.estatusInventario.idStatus == 0 ? (object)null : limite.estatusInventario.idStatus);
-                    parameters.Add("@idLineaProducto", limite.idLineaProducto == 0 ? (object)null : limite.idLineaProducto);
+                    parameters.Add("@idLineaProducto", limite.idLineaProducto == 0 ? (object)null : limite.idLineaProducto);                    
                     var result = db.QueryMultiple("SP_OBTENER_LIMITES_INVENTARIO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

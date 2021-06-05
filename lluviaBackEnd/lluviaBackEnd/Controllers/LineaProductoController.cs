@@ -18,7 +18,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                ViewBag.lstLineaProducto = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = 0 });
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineaProducto = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = 0 },usuarioSesion.idUsuario);
                 return View();
             }
             catch (Exception ex)
@@ -35,7 +36,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Models.LineaProducto p = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = idLineaProducto })[0];
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                Models.LineaProducto p = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = idLineaProducto },usuarioSesion.idUsuario)[0];
                 return Json(p, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -49,7 +51,8 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 //List<Models.Socio> Lstsocio = new SocioDAO().ObtenerSocios(new Models.Socio() { IdSocio = 0 });
-                ViewBag.lstLineaProducto = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = 0 });
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineaProducto = new LineaProductoDAO().ObtenerLineaProductos(new Models.LineaProducto() { idLineaProducto = 0 },usuarioSesion.idUsuario);
                 return PartialView("_ObtenerLineaProducto");
             }
             catch (Exception ex)

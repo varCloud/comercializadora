@@ -17,7 +17,7 @@ namespace lluviaBackEnd.DAO
 
         private DBManager db = null;
 
-        public List<LineaProducto> ObtenerLineaProductos(LineaProducto lineaProducto)
+        public List<LineaProducto> ObtenerLineaProductos(LineaProducto lineaProducto,int idUsuario)
         {
 
             List<LineaProducto> lstLineaProductos = new List<LineaProducto>();
@@ -26,8 +26,9 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.CreateParameters(1);
+                    db.CreateParameters(2);
                     db.AddParameters(0, "@idLineaProducto", lineaProducto.idLineaProducto);
+                    db.AddParameters(1, "@idUsuario", idUsuario == 0 ? (object)DBNull.Value : idUsuario);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_LINEAS_PRODUCTO]");
 
                     while (db.DataReader.Read())
@@ -120,7 +121,7 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public List<SelectListItem> ObtenerLineaProductos()
+        public List<SelectListItem> ObtenerLineaProductos(int idUsuario)
         {
             List<SelectListItem> lstLineasDeProductos = new List<SelectListItem>();
             try
@@ -128,8 +129,9 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.CreateParameters(1);
+                    db.CreateParameters(2);
                     db.AddParameters(0, "@idLineaProducto", 0);
+                    db.AddParameters(1, "@idUsuario", idUsuario==0 ? (object)DBNull.Value : idUsuario);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_LINEAS_PRODUCTO]");
                     while (db.DataReader.Read())
                     {

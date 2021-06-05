@@ -19,7 +19,7 @@ namespace lluviaBackEnd.WebServices
         {
             try
             {
-                List<LineaProducto> list = new LineaProductoDAO().ObtenerLineaProductos( new LineaProducto() { idLineaProducto = request.idLineaProducto });
+                List<LineaProducto> list = new LineaProductoDAO().ObtenerLineaProductos( new LineaProducto() { idLineaProducto = request.idLineaProducto },0);
                 return new Notificacion<List<LineaProducto>>()
                 {
                     Estatus = list.Count > 0 ?  200 : -1,

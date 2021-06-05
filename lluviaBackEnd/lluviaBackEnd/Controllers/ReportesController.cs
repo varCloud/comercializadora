@@ -20,7 +20,8 @@ namespace lluviaBackEnd.Controllers
             {
                 //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
                 //notificacion = new ReportesDAO().ObtenerInventario(new Models.Producto() { idProducto = 0 });
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(UsuarioActual.idUsuario);
                 //ViewBag.lstUnidadMedida = new LineaProductoDAO().ObtenerUnidadesMedidas();
                 ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
                 //ViewBag.lstProductos = notificacion.Modelo;
@@ -68,9 +69,10 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Compras>> notificacion = new Notificacion<List<Compras>>();
                 notificacion = new ComprasDAO().ObtenerCompras(new Models.Compras() { idCompra = 0 }, true);
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(UsuarioActual.idUsuario);
                 ViewBag.lstProveedores = new ProveedorDAO().ObtenerProveedores(0); // todos los proovedores en formato select list
                 ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0); // todos los usuarios en formato select list
                 ViewBag.lstEstatusProducto = new ProductosDAO().ObtenerEstatusProductoCompra(); // todos los estatus en formato select list
@@ -123,9 +125,10 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
                 notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0 });
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(UsuarioActual.idUsuario);
                 ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
                 ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
                 ViewBag.lstVentas = notificacion.Modelo;
@@ -291,7 +294,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos().Where(x => x.Value != "").ToList();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuarioSesion.idUsuario).Where(x => x.Value != "").ToList();
                 ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
                 ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
 

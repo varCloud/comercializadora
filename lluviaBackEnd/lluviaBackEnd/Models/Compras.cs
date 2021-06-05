@@ -40,6 +40,7 @@ namespace lluviaBackEnd.Models
 
 
         public EnumEstadoCompras estadoCompra { get; set; }
+        public int idAlmacen { get; set; }
 
         public Compras()
         {

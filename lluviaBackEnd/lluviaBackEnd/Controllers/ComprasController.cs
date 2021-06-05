@@ -26,7 +26,8 @@ namespace lluviaBackEnd.Controllers
                 List<SelectListItem> listProveedores = new ProveedorDAO().ObtenerProveedores(0).Where(x => x.Value != "0").ToList();
                 ViewBag.listProveedores = listProveedores;
                 List<SelectListItem> listEstatus = new SelectList(new ComprasDAO().ObtenerStatusCompra().Modelo, "idStatus", "descripcion").ToList();
-                ViewBag.listStatusCompra = listEstatus;
+                ViewBag.listStatusCompra = listEstatus;                
+                ViewBag.Almacenes = new UsuarioDAO().ObtenerAlmacenes(1, 0);                
 
                 if (compras.idCompra > 0)
                 {

@@ -40,40 +40,40 @@
                                 @Html.DropDownListFor(x => x.idSucursal, lstSucursales, "--SELECCIONA--", new { id = "idSucursal", @class = "form-control readonly", data_val = "true", @readonly = "readonly" })
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="col-12 col-sm-12 col-lg-3">
                                 <div class="form-group">
                                     <label>Almacen</label>
-                                    <select id="idAlmacen"></select>
+                                    @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes, new { @class = "select-multiple", data_val = "false" })
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-1">
+                            <div class="col-12 col-sm-12 col-lg-2">
                                 <div class="form-group">
                                     <label>Pasillo</label>
-                                    @Html.DropDownListFor(x => x.idPasillo, lstPasillos, "--SELECCIONA--", new { id = "idPasillo", @class = "form-control", data_val = "true" })
+                                    @Html.DropDownListFor(x => x.idPasillo, lstPasillos, "--SELECCIONA--", new { id = "idPasillo", @class = "select-multiple", data_val = "true" })
                                     @*<select id="idPasillo"></select>*@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-1">
+                            <div class="col-12 col-sm-12 col-lg-2">
                                 <div class="form-group">
                                     <label>Rack</label>
-                                    @Html.DropDownListFor(x => x.idRaq, lstRacks, "--SELECCIONA--", new { id = "idRaq", @class = "form-control", data_val = "true" })
+                                    @Html.DropDownListFor(x => x.idRaq, lstRacks, "--SELECCIONA--", new { id = "idRaq", @class = "select-multiple", data_val = "true" })
                                     @*<select id="idRaq"></select>*@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-12 col-lg-1">
+                            <div class="col-12 col-sm-12 col-lg-2">
                                 <div class="form-group">
                                     <label>Piso</label>
-                                    @Html.DropDownListFor(x => x.idPiso, lstPisos, "--SELECCIONA--", new { id = "idPiso", @class = "form-control", data_val = "true" })
+                                    @Html.DropDownListFor(x => x.idPiso, lstPisos, "--SELECCIONA--", new { id = "idPiso", @class = "select-multiple", data_val = "true" })
                                     @*<select id="idPiso"></select>*@
                                 </div>
                             </div>
 
 
 
-                            <div class="col-12 col-sm-12 col-lg-2">
+                            <div class="col-12 col-sm-12 col-lg-12 text-right ">
                                 <div class="form-group">
                                     <label></label>
                                     <br>

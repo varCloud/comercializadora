@@ -338,7 +338,8 @@ function cargaSelect2Almacenes(idSucursal) {
 $(document).ready(function () {
 
     $('#idSucursal').val(1);
-    $("#idSucursal").change();
+    InitSelect2();
+    //$("#idSucursal").change();
 
 });
 

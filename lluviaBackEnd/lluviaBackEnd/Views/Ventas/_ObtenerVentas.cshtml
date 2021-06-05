@@ -87,7 +87,7 @@ else
 
                                             lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
                                             notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(item.idVenta, lluviaBackEnd.Models.TipoTicket.Devolucion);
-                                            item.lstTicketsDevolucion = notificacion.Modelo;
+                                            item.lstTicketsDevolucion = notificacion.Modelo==null ? new List<lluviaBackEnd.Models.Ticket>() : notificacion.Modelo;
 
                                         }
 
@@ -97,7 +97,7 @@ else
 
                                             lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
                                             notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(item.idVenta, lluviaBackEnd.Models.TipoTicket.Complemento);
-                                            item.lstTicketsComplementos = notificacion.Modelo;
+                                            item.lstTicketsComplementos = notificacion.Modelo == null ? new List<lluviaBackEnd.Models.Ticket>() : notificacion.Modelo;
 
                                         }
 

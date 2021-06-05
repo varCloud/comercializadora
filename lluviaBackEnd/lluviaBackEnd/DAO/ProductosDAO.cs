@@ -45,7 +45,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@activo", producto.activo);
                     parameters.Add("@articulo", producto.articulo);
                     parameters.Add("@claveProdServ", producto.idClaveProdServ);
-                    //parameters.Add("@claveUnidad", producto.claveUnidad);
+                    parameters.Add("@idUsuario", producto.idUsuario==0? (object)null : producto.idUsuario);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -106,6 +106,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@fechaFin", producto.fechaFin == DateTime.MinValue ? (object)null : producto.fechaFin);
                     parameters.Add("@idUsuario", producto.idUsuario);
                     parameters.Add("@idPedidoEspecial", idPedidoEspecial==0 ? (object)null : idPedidoEspecial);
+                    parameters.Add("@idAlmacen", producto.idAlmacen == 0 ? (object)null : producto.idAlmacen);
 
                     var result = db.QueryMultiple("SP_CONSULTA_PRODUCTOS", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

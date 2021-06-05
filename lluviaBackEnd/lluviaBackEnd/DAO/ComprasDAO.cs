@@ -42,6 +42,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idStatusCompra", compra.statusCompra.idStatus);
                     parameters.Add("@productos", stringBuilder.ToString());
                     parameters.Add("@observaciones", compra.observaciones);
+                    parameters.Add("@idAlmacen", compra.idAlmacen);
 
                     var result = db.QueryMultiple("SP_REGISTRA_COMPRA", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
