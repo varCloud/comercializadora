@@ -73,10 +73,7 @@ RETURNS  @lineasProducto TABLE
 AS
 begin
 
-	   if(coalesce(@idAlmacen,0)=0)
-		  select @idAlmacen=idAlmacen from Usuarios where idUsuario=coalesce(@idUsuario,0)
-
-      --si es administrador y almacen es null, regresamos todas las lineas de productos
+	    --si es administrador y almacen es null, regresamos todas las lineas de productos
 	   if exists(select 1 from Usuarios where idUsuario=coalesce(@idUsuario,0) and idRol=1 and coalesce(@idAlmacen,0)=0)
 	   begin	   
 		insert into @lineasProducto (idLineaProducto , idAlmacen,descripcion )
@@ -84,6 +81,9 @@ begin
 	   end
 	   else
 	   begin
+	        if(coalesce(@idAlmacen,0)=0)
+				select @idAlmacen=idAlmacen from Usuarios where idUsuario=coalesce(@idUsuario,0)
+
 			insert into @lineasProducto (idLineaProducto , idAlmacen,descripcion )
 			select distinct A.idLineaProducto, coalesce(@idAlmacen , 0) , LP.descripcion from 
 			AlmacenesXLineaProducto A  
