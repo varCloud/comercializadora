@@ -1770,6 +1770,12 @@ function ConsultaInfoCierreDia() {
 $('#btnBuscarExistencias').click(function (e) {
     var idProducto = $('#idProductoExistencia').val();
     var idSucursal = $('#idSucursalExistencia').val();
+
+    if (idProducto === "" || parseInt(idProducto) <= 0) {
+        MuestraToast('warning', "Seleccione el producto");
+        return;
+    }
+       
     $.ajax({
         url: rootUrl("/Productos/_UbicacionesProductoPrecio"),
         data: { idProducto: idProducto, idSucursal: idSucursal },
@@ -1969,19 +1975,21 @@ function InitSelect2Productos() {
         source: DataExistencias,
         minLength: 1,//min = 2 characters
         select: function (event, ui) {
+            $("#idProductoExistencia").val("");
             $("#listProductosExistencia").val(ui.item.label);
+            $("#idProductoExistencia").val(ui.item.producto.idProducto);
             return false;
         }
     });
 
-    $("#listProductosExistencia").keypress(function (evt) { 
+    $("#listProductosExistencia").keypress(function (evt) {
         $("#idProductoExistencia").val('');
         if (evt.which == 13) {
             if (($("#listProductosExistencia").val()) !== "") {
                 let producto = arrayProductos.find(x => x.codigoBarras.toUpperCase() == $("#listProductosExistencia").val().toUpperCase() || x.descripcion.toUpperCase() == $("#listProductosExistencia").val().toUpperCase());
                 if (producto != null) {
                     $("#listProductosExistencia").val(producto.descripcion);
-                    $("#idProductoExistencia").val(producto.idProducto);                  
+                    $("#idProductoExistencia").val(producto.idProducto);
                     $("#btnBuscarExistencias").click();
                 }
                 else {
