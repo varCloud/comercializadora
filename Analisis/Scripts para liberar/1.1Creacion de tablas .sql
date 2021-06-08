@@ -1,4 +1,4 @@
-USE [DB_A57E86_lluviadesarrollo]
+--USE [DB_A57E86_lluviadesarrollo]
 GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TiendasXAlmacen]') AND type in (N'U'))
 ALTER TABLE [dbo].[TiendasXAlmacen] DROP CONSTRAINT IF EXISTS [FK_TiendasXAlmacen_Almacenes1]
