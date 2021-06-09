@@ -8,9 +8,8 @@ go
 alter table complementos add montoAgregarProductos money
 go
 
+alter table DevolucionesDetalle add montoDevueltoComisionBancaria money default 0
+go
 
-
-
---select * from Ventas
---select * from Complementos
---select * from ComplementosDetalle
+update DevolucionesDetalle set montoDevueltoComisionBancaria = 0
+go
