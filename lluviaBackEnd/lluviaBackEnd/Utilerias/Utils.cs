@@ -1191,7 +1191,7 @@ namespace lluviaBackEnd.Utilerias
             string path = Utils.ObtnerFolderCodigos() + @"/";
             string tipo_cabecera = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVOLUCIÓN" : "COMPLEMENTO";
             string tipo_totales = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTO" : "COMPLEMENTO";
-
+            string tipo_desripcion = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "Devueltos" : "Agregados";
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -1237,7 +1237,7 @@ namespace lluviaBackEnd.Utilerias
                                         <table>
                                           <tr>
                                             <td width='43%'>Descripcion</td>
-                                            <td width='15%' style='color:black; text-align:center;'>Art. Devueltos</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
                                             <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>

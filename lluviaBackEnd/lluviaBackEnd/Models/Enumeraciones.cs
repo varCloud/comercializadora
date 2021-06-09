@@ -143,7 +143,8 @@ namespace lluviaBackEnd.Models
         Normal = 1,
         Devolucion = 2,
         AgregarProductosVenta = 3,
-        ProductosLiquidos=4
+        ProductosLiquidos=4,
+        ConsultaDevolucion = 5
     }
 
     public enum EnumEstatusVenta
