@@ -20,7 +20,7 @@
 
     if (idVenta > 0)
     {
-        notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta });
+        notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta, tipoVenta = lluviaBackEnd.Models.EnumTipoVenta.ConsultaDevolucion });
         idClienteDevolucion = notificacion.Modelo[0].idCliente;
     }
 

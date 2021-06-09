@@ -76,7 +76,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Usuario: </label>
-                                    @Html.DropDownListFor(model => model.idUsuario, listUsuarios,"--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
+                                    @Html.DropDownListFor(model => model.idUsuario, listUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
 
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
 
 
 <div id="rowConsultaVentas">
-    @Html.Action("_ObtenerVentas","Ventas")
+    @Html.Action("_ObtenerVentas", "Ventas")
 </div>
 
 
@@ -212,6 +212,33 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@*Modal Detalle de Tickets *@
+<div class="modal fade bd-example-modal-lg" id="modalVerDetalleTickets" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Detalle de Tickets - Venta: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="detallesTickets">  </div>
             </div>
         </div>
     </div>

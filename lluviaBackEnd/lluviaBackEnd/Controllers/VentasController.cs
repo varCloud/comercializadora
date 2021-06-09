@@ -2494,6 +2494,44 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        public ActionResult _ObtenerDetalleTickets(Ventas ventas)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+
+                Notificacion<List<Ticket>> devoluciones = new Notificacion<List<Ticket>>();
+                Notificacion<List<Ticket>> complementos = new Notificacion<List<Ticket>>();
+
+                devoluciones = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Devolucion);
+                complementos = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Complemento);
+
+                ViewBag.devoluciones = devoluciones;
+                ViewBag.complementos = complementos;
+            
+
+                //if (notificacion.Modelo != null)
+                //{
+                //    ViewBag.lstVentas = notificacion.Modelo;
+                //}
+                //else
+                //{
+                //    ViewBag.titulo = "Mensaje: ";
+                //    ViewBag.mensaje = notificacion.Mensaje;
+                //    //return PartialView("_SinResultados");
+                //}
+
+            return PartialView("_ObtenerDetalleTickets");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
 
 
     }

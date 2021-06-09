@@ -673,6 +673,38 @@ $("#idClienteIVA").on("change", function () {
 
 
 
+function modalVerDetalleTickets(idVenta) {
+
+   
+    $.ajax({
+        url: rootUrl("/Ventas/_ObtenerDetalleTickets"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'html',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            $('#detallesTickets').html(data);
+            //feather.replace();
+               
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+    
+
+
+    $('#modalVerDetalleTickets').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
 
 
 

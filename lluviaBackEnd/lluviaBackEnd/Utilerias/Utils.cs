@@ -1191,7 +1191,7 @@ namespace lluviaBackEnd.Utilerias
             string path = Utils.ObtnerFolderCodigos() + @"/";
             string tipo_cabecera = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVOLUCIÓN" : "COMPLEMENTO";
             string tipo_totales = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTO" : "COMPLEMENTO";
-
+            string tipo_desripcion = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "Devueltos" : "Agregados";
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -1237,7 +1237,7 @@ namespace lluviaBackEnd.Utilerias
                                         <table>
                                           <tr>
                                             <td width='43%'>Descripcion</td>
-                                            <td width='15%' style='color:black; text-align:center;'>Art. Devueltos</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
                                             <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
@@ -1686,7 +1686,7 @@ namespace lluviaBackEnd.Utilerias
                             if (i < productos.Count)
                             {
                                 //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
-                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace("/", "").Replace("'", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
+                                nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace('&','-').Replace("/", "").Replace("'", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
                                 Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
                             int len = productos[i].descripcion.Count();
                             string tamNombreProducto = len > 35 ? ";font-size:8px;" : ";font-size:10px;";
