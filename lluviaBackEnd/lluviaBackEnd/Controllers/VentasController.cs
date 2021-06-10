@@ -1672,6 +1672,7 @@ namespace lluviaBackEnd.Controllers
                 //datosEnca.Y += 14;
 
                 float monto = 0;
+                float montoComisionBancaria = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
@@ -1681,6 +1682,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
+                    montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
@@ -1699,12 +1701,26 @@ namespace lluviaBackEnd.Controllers
 
                 }
 
+
+
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                 datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("TOTAL DEVUELTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                if (montoComisionBancaria > 0)
+                {
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
+
+
+                e.Graphics.DrawString("  TOTAL DEVUELTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado * 2;
 
 
@@ -1861,12 +1877,13 @@ namespace lluviaBackEnd.Controllers
                 datosEnca.Y += 14;
                 e.Graphics.DrawString("  Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 9;
-                e.Graphics.DrawString("                                                 Devueltos    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                e.Graphics.DrawString("                                                 Agregados    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 6;
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 //datosEnca.Y += 14;
 
                 float monto = 0;
+                float montoComisionBancaria = 0;
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
@@ -1876,6 +1893,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
+                    montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
@@ -1894,15 +1912,29 @@ namespace lluviaBackEnd.Controllers
 
                 }
 
+
+
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                 datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("TOTAL COMPLEMENTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                if (montoComisionBancaria > 0)
+                {
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                }
+
+
+                e.Graphics.DrawString("  TOTAL COMPLEMENTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado * 2;
 
-
+                
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
                 e.Graphics.DrawString("___________________________________________________", font, drawBrush, datosfooter2, centrado);
                 datosfooter1.Y += espaciado;
