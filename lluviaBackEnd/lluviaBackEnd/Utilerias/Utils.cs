@@ -1192,6 +1192,8 @@ namespace lluviaBackEnd.Utilerias
             string tipo_cabecera = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVOLUCIÓN" : "COMPLEMENTO";
             string tipo_totales = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTO" : "COMPLEMENTO";
             string tipo_desripcion = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "Devueltos" : "Agregados";
+            float montoComisionBancaria = 0;
+
             try
             {
                 DateTime fechaActual = System.DateTime.Now;
@@ -1209,9 +1211,9 @@ namespace lluviaBackEnd.Utilerias
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
                                 </tr>                                
                                 
-                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>****************************************************************</td></tr>
                                 <tr><td style='color:black; text-align:center;'>*************** TICKET DE " + tipo_cabecera + @" ***************</td></tr>
-                                <tr><td style='color:black; text-align:center;'>**************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>****************************************************************</td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 
                                 <tr>
@@ -1237,8 +1239,8 @@ namespace lluviaBackEnd.Utilerias
                                         <table>
                                           <tr>
                                             <td width='43%'>Descripcion</td>
-                                            <td width='15%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
-                                            <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
+                                            <td width='17%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
                                         </table>
@@ -1265,23 +1267,58 @@ namespace lluviaBackEnd.Utilerias
                                                     </td>
                                                 </tr>";
 
+
+
+                montoComisionBancaria += tickets[i].montoComisionBancaria;
+                }
+
+
+
+                html += @"
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SUBTOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                if (montoComisionBancaria > 0)
+                {
+                    html += @"   <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                            <tr>
+                                            <td width='65%'>COMISIÓN BANCARIA:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
                 }
 
                 html += @"   <tr>
-                                                    <td style='color:black; '> 
-                                                        <table>
-                                                          <tr><td style='color:black;'>____________________________________________________</td></tr>
-                                                        </table>
-                                                        <table>
-                                                          <tr>
-                                                            <td width='60%'>TOTAL " + tipo_totales + @":</td>
-                                                            <td width='15%'> </td>
-                                                            <td width='15%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
-                                                            <td width='10%' style='color:black; text-align:left;'></td>
-                                                          </tr>
-                                                        </table>
-                                                    </td>
-                                                </tr>";
+                                <td style='color:black; '> 
+                                    <table>
+                                        <tr><td style='color:black;'>____________________________________________________</td></tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                        <td width='60%'>TOTAL " + tipo_totales + @":</td>
+                                        <td width='15%'> </td>
+                                        <td width='15%' style='color:black; text-align:right;'>" + (monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                        <td width='10%' style='color:black; text-align:left;'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>";
 
                 //html += @" <tr>
                 //                    <td style='color:black; '> 
