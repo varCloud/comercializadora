@@ -138,9 +138,9 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-                notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, tipoConsulta = 2, idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen });
+                //notificacion = new ReportesDAO().ObtenerVentas(new Models.Ventas() { idVenta = 0, fechaFin = DateTime.Now, fechaIni =DateTime.Now ,tipoConsulta = 2, idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen });
                 ViewBag.lstProductos = new ProductosDAO().ObtenerListaProductos(new Producto() { idProducto = 0,idUsuario= UsuarioActual.idUsuario });
-                ViewBag.lstVentas = notificacion.Modelo;
+                //ViewBag.lstVentas = notificacion.Modelo;
                 ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
 
                 List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 3,idAlmacen= UsuarioActual.idRol==1 ? 0 : UsuarioActual.idAlmacen }), "idUsuario", "nombreCompleto").ToList();
@@ -176,6 +176,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
                 ventas.tipoConsulta = 2;
                 ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
+                
                 notificacion = new ReportesDAO().ObtenerVentas(ventas);
 
                 if (notificacion.Modelo != null)
