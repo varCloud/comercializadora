@@ -101,7 +101,7 @@
 
 
 <div id="rowConsultaVentas">
-    @Html.Action("_ObtenerVentas", "Ventas")
+    @Html.Action("_ObtenerVentas", "Ventas" , new { fechaIni = DateTime.Now , fechaFin = DateTime.Now })
 </div>
 
 

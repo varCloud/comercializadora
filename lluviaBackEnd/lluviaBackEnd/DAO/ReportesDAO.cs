@@ -83,8 +83,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idLineaProducto", ventas.idLineaProducto);
                     parameters.Add("@idCliente", ventas.idCliente);
                     parameters.Add("@idUsuario", ventas.idUsuario);
-                    parameters.Add("@fechaIni", ventas.fechaIni);
-                    parameters.Add("@fechaFin", ventas.fechaFin);
+                    parameters.Add("@fechaIni", ventas.fechaIni.ToString("yyyyMMdd"));
+                    parameters.Add("@fechaFin", ventas.fechaFin.ToString("yyyyMMdd"));
                     parameters.Add("@tipoConsulta", ventas.tipoConsulta);
                     parameters.Add("@idStatusVenta", ventas.estatusVenta == 0 ? 1: ventas.estatusVenta);
                     parameters.Add("@idFactFormaPago", ventas.idFactFormaPago == 0 ? (object)null : ventas.idFactFormaPago);
