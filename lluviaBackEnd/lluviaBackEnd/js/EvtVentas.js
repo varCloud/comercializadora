@@ -1075,6 +1075,7 @@ $('#btnGuardarVenta').click(function (e) {
 
                 InitSelect2Productos();
                 limpiarTicket();
+                $("#listProductos").focus();
                 ConsultExcesoEfectivo();
             }
             $('#ModalPrevioVenta').modal('hide');
