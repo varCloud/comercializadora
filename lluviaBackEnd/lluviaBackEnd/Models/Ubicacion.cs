@@ -29,6 +29,8 @@ namespace lluviaBackEnd.Models
         public int idPisoRaq { get; set; }
         public string descripcionAlmacen { get; set; }
 
+        public bool fraccion { get; set; }
+
         /// <summary>
         /// solo se usa para cuando existe un inventario fisico
         /// </summary>
