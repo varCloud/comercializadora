@@ -1475,14 +1475,35 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
-                Notificacion<List<Ticket>> ticketDevolucion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
-                Notificacion<List<Ticket>> ticketComplemento = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                Notificacion<List<Ticket>> numeroDevoluciones = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Devolucion);
+                Notificacion<List<Ticket>> numeroComplementos = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Complemento);
+                List<Ticket> devoluciones = new List<Ticket>();
+                List<Ticket> complementos = new List<Ticket>();
+
+                if ( numeroDevoluciones.Modelo != null ) 
+                { 
+                    foreach (Ticket dev in numeroDevoluciones.Modelo) { 
+                        Notificacion<List<Ticket>> d = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = dev.idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
+                        d.Modelo[0].tipoVenta = EnumTipoVenta.Devolucion;
+                        devoluciones.Add(d.Modelo[0]);
+                    }
+                }
+
+                if ( numeroComplementos.Modelo != null )  
+                {
+                    foreach (Ticket com in numeroComplementos.Modelo)
+                    {
+                        Notificacion<List<Ticket>> c = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = com.idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                        c.Modelo[0].tipoVenta = EnumTipoVenta.AgregarProductosVenta;
+                        complementos.Add(c.Modelo[0]);
+                    }
+                }
 
                 notificacion.Estatus = 200;
-                notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, ticketDevolucion.Modelo, ticketComplemento.Modelo));
+                notificacion.Mensaje = "Ticket generado correctamente.";                
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, devoluciones, complementos));                
                 ViewBag.pdfBase64 = pdfCodigos;
-                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                ViewBag.title = "Ticket: " + idVenta.ToString();
                 return View();
             }
             catch (Exception ex)

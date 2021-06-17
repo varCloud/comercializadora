@@ -941,6 +941,66 @@ namespace lluviaBackEnd.Utilerias
             return content;
         }
 
+
+
+
+        public static byte[] GeneraTodosTicketsPDF(List<Ticket> tickets, List<Ticket> ticketsDevolucion, List<Ticket> ticketsComplemento)
+        {
+            try
+            {
+                byte[] content = null;
+
+                MemoryStream pdfCompleto = new MemoryStream();
+                PdfCopyFields copy = new PdfCopyFields(pdfCompleto);
+                content = Utilerias.Utils.GeneraTicketPDF(tickets);
+
+                // ticket principal
+                var msPrincipal = new MemoryStream(Utilerias.Utils.GeneraTicketPDF(tickets));
+                msPrincipal.Position = 0;
+                copy.AddDocument(new PdfReader(msPrincipal));
+                msPrincipal.Dispose();
+
+                // tickets de devolucion
+                if ( ticketsDevolucion.Count > 0 ) 
+                {
+                    foreach (Ticket ticket in ticketsDevolucion)
+                    {
+                        List<Ticket> ticket_ = new List<Ticket>();
+                        ticket_.Add(ticket);
+                        var msDevolucion = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket_));
+                        msDevolucion.Position = 0;
+                        copy.AddDocument(new PdfReader(msDevolucion));
+                        msDevolucion.Dispose();
+                    }
+                }
+
+                // tickets de complementos
+                if (ticketsComplemento.Count > 0)
+                {
+                    foreach (Ticket ticket in ticketsComplemento)
+                    {
+                        List<Ticket> ticket_ = new List<Ticket>();
+                        ticket_.Add(ticket);
+                        var msComplemento = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket_));
+                        msComplemento.Position = 0;
+                        copy.AddDocument(new PdfReader(msComplemento));
+                        msComplemento.Dispose();
+                    }
+                }
+
+                copy.Close();
+                content = pdfCompleto.ToArray();
+                return content;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+
+
         public static byte[] GeneraTicketCancelacionPDF(List<Ticket> tickets)
         {
             byte[] content = null;
