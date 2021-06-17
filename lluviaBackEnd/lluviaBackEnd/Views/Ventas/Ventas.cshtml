@@ -159,7 +159,7 @@
                             }
                             else
                             {
-                        <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
+                                <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
                                
                             }
                         </div>
@@ -182,6 +182,7 @@
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center"> @(esDevolucion == true ? "Devolver Artículos" : "Acciones") </th>
                                         <th class="text-center" style="display: none;">idVentaDetalle</th>
+                                        <th class="text-center" style="display: none;">montoComisionBancaria</th>
                                     </tr>
                                 </thead>
                                 @if (notificacion.Modelo != null)
@@ -215,6 +216,7 @@
                                                     }
 
                                                     <td style="display: none;">@item.idVentaDetalle</td>
+                                                    <td style="display: none;">@item.montoComisionBancaria</td>
 
                                                 </tr>
 

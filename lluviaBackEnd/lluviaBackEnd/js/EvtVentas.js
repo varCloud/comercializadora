@@ -826,16 +826,20 @@ function actualizarSubTotalDevoluciones() {
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
     var cantidadDevelta = parseInt(0);
+    var comisionBancariaDevuelta = parseInt(0);
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
             cantidadDevelta += parseFloat(tblVtas.rows[i].cells[7].children[0].value) * parseFloat(tblVtas.rows[i].cells[3].innerHTML.replace('$', '')); //parseFloat(fila.children[5].innerHTML.replace('$', ''));
+            //                                              cantidad devuelta                                   monto comision                              cantidad restante
+            comisionBancariaDevuelta += (parseFloat(tblVtas.rows[i].cells[7].children[0].value)) * ((parseFloat(tblVtas.rows[i].cells[9].innerHTML)) / (parseFloat(tblVtas.rows[i].cells[4].children[0].value)))
+            console.log(comisionBancariaDevuelta);
         }
     }
 
     //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
-    $(".divSubTotal").html("$" + parseFloat(cantidadDevelta).toFixed(2));
-    document.getElementById("divTotalDevolver").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
+    $(".divSubTotal").html("$" + parseFloat(cantidadDevelta + comisionBancariaDevuelta).toFixed(2));
+    document.getElementById("divTotalDevolver").innerHTML = "<h4>$" + parseFloat(cantidadDevelta + comisionBancariaDevuelta).toFixed(2) + "</h4>";
 }
 
 

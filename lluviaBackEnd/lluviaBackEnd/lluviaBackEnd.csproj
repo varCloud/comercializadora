@@ -1263,6 +1263,7 @@
     <Content Include="Views\Ventas\_ObtenerVentasCanceladas.cshtml" />
     <Content Include="Views\Ventas\VerTicketComplemento.cshtml" />
     <Content Include="Views\Ventas\_ObtenerDetalleTickets.cshtml" />
+    <Content Include="Views\Ventas\VerTodosTickets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

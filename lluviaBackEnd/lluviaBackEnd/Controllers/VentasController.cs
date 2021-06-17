@@ -1469,6 +1469,28 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult VerTodosTickets(int idVenta)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                Notificacion<List<Ticket>> ticketDevolucion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
+                Notificacion<List<Ticket>> ticketComplemento = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, ticketDevolucion.Modelo, ticketComplemento.Modelo));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public ActionResult VerTicketVentaCancelada(int idVenta)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
@@ -2535,26 +2557,16 @@ namespace lluviaBackEnd.Controllers
 
                 Notificacion<List<Ticket>> devoluciones = new Notificacion<List<Ticket>>();
                 Notificacion<List<Ticket>> complementos = new Notificacion<List<Ticket>>();
+                int idVenta = ventas.idVenta;
 
                 devoluciones = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Devolucion);
                 complementos = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Complemento);
 
                 ViewBag.devoluciones = devoluciones;
                 ViewBag.complementos = complementos;
-            
+                ViewBag.idVenta = idVenta;
 
-                //if (notificacion.Modelo != null)
-                //{
-                //    ViewBag.lstVentas = notificacion.Modelo;
-                //}
-                //else
-                //{
-                //    ViewBag.titulo = "Mensaje: ";
-                //    ViewBag.mensaje = notificacion.Mensaje;
-                //    //return PartialView("_SinResultados");
-                //}
-
-            return PartialView("_ObtenerDetalleTickets");
+                return PartialView("_ObtenerDetalleTickets");
 
             }
             catch (Exception ex)
