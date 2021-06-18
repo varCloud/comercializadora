@@ -66,9 +66,10 @@ $(document).ready(function () {
 
     InitDataTableInventario();
     InitSelect2();
-    InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
+    //InitRangePicker('rangeInventario', 'fechaIni', 'fechaFin');
     ////$('#idLineaProductoBusqueda').val('0');
-    $('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaIni').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeInventario').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });
+
