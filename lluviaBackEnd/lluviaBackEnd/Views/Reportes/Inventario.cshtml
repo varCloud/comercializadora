@@ -41,9 +41,9 @@
                     },
                     new { id = "frmBuscarProductos" }))
                     {
-                        @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
-                        @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
-
+                        //@Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                        //@Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
+                        //@Html.HiddenFor(x => x.fechaAlta, new { @id = "fechaAlta" })
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
@@ -59,44 +59,37 @@
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
-                                    <label>Rango de Fechas</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" id="rangeInventario" class="form-control daterange-cus">
-                                    </div>
+                                    <label>Fechas:</label>
+                                    <input type="date" class="form-control" id="fechaAlta" name="fechaAlta">                                    
                                 </div>
                             </div>
                         </div>
 
                         @*<div class="row">
 
-                                <div class="col-12 col-sm-12 col-lg-4">
-                                    <div class="form-group">
-                                        <label>Rango de Fechas</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    <i class="fas fa-calendar"></i>
-                                                </div>
-                                            </div>
-                                            <input type="text" id="rangeInventario" class="form-control daterange-cus">
-                                        </div>
-                                    </div>
+                <div class="col-12 col-sm-12 col-lg-4">
+                    <div class="form-group">
+                        <label>Rango de Fechas</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="fas fa-calendar"></i>
                                 </div>
+                            </div>
+                            <input type="text" id="rangeInventario" class="form-control daterange-cus">
+                        </div>
+                    </div>
+                </div>
 
-                                <div class="col-12 col-sm-12 col-lg-4">
+                <div class="col-12 col-sm-12 col-lg-4">
 
-                                </div>
+                </div>
 
-                                <div class="col-12 col-sm-12 col-lg-4">
+                <div class="col-12 col-sm-12 col-lg-4">
 
-                                </div>
+                </div>
 
-                            </div>*@
+            </div>*@
 
                         <div class="text-right" style="margin-top:15px;">
                             @*<button type="reset" id="btnLimpiarFiltro" class="btn btn-danger">Limpiar</button>*@
