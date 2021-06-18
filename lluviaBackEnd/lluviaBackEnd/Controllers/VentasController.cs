@@ -1469,6 +1469,49 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult VerTodosTickets(int idVenta)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                Notificacion<List<Ticket>> numeroDevoluciones = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Devolucion);
+                Notificacion<List<Ticket>> numeroComplementos = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Complemento);
+                List<Ticket> devoluciones = new List<Ticket>();
+                List<Ticket> complementos = new List<Ticket>();
+
+                if ( numeroDevoluciones.Modelo != null ) 
+                { 
+                    foreach (Ticket dev in numeroDevoluciones.Modelo) { 
+                        Notificacion<List<Ticket>> d = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = dev.idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
+                        d.Modelo[0].tipoVenta = EnumTipoVenta.Devolucion;
+                        devoluciones.Add(d.Modelo[0]);
+                    }
+                }
+
+                if ( numeroComplementos.Modelo != null )  
+                {
+                    foreach (Ticket com in numeroComplementos.Modelo)
+                    {
+                        Notificacion<List<Ticket>> c = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = com.idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                        c.Modelo[0].tipoVenta = EnumTipoVenta.AgregarProductosVenta;
+                        complementos.Add(c.Modelo[0]);
+                    }
+                }
+
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";                
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, devoluciones, complementos));                
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public ActionResult VerTicketVentaCancelada(int idVenta)
         {
             Notificacion<String> notificacion = new Notificacion<string>();
@@ -2535,26 +2578,16 @@ namespace lluviaBackEnd.Controllers
 
                 Notificacion<List<Ticket>> devoluciones = new Notificacion<List<Ticket>>();
                 Notificacion<List<Ticket>> complementos = new Notificacion<List<Ticket>>();
+                int idVenta = ventas.idVenta;
 
                 devoluciones = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Devolucion);
                 complementos = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(ventas.idVenta, TipoTicket.Complemento);
 
                 ViewBag.devoluciones = devoluciones;
                 ViewBag.complementos = complementos;
-            
+                ViewBag.idVenta = idVenta;
 
-                //if (notificacion.Modelo != null)
-                //{
-                //    ViewBag.lstVentas = notificacion.Modelo;
-                //}
-                //else
-                //{
-                //    ViewBag.titulo = "Mensaje: ";
-                //    ViewBag.mensaje = notificacion.Mensaje;
-                //    //return PartialView("_SinResultados");
-                //}
-
-            return PartialView("_ObtenerDetalleTickets");
+                return PartialView("_ObtenerDetalleTickets");
 
             }
             catch (Exception ex)

@@ -706,6 +706,12 @@ function modalVerDetalleTickets(idVenta) {
 }
 
 
+function ImrimirTodosTickets(idVenta) {
+
+    alert(idVenta);
+
+}
+
 
 
 $(document).ready(function () {

@@ -92,6 +92,8 @@ namespace lluviaBackEnd.Models
 
         public UnidadCompra unidadCompra { get; set; }
 
+        public bool fraccion { get; set; }
+
         public Producto()
         {
             estatusProducto = new EstatusProducto();
