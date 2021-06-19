@@ -107,7 +107,7 @@ function VerCliente(idCliente, accion) {
         $('#apellidoMaterno').val(data.Modelo.apellidoMaterno);
         $('#telefono').val(data.Modelo.telefono);
         $('#correo').val(data.Modelo.correo);
-        $('#rfc').val(data.Modelo.correo);
+        $('#rfc').val(data.Modelo.rfc);
         $('#calle').val(data.Modelo.calle);
         $('#colonia').val(data.Modelo.colonia);
         $('#municipio').val(data.Modelo.municipio);

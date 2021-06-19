@@ -101,7 +101,7 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region Productos
-        Puede_visualizar_Productos,
+        Puede_visualizar_Productos=8,
         #endregion
 
         #region Bitacoras

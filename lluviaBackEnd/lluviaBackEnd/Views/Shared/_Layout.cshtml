@@ -145,9 +145,16 @@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
+                                    string abrir = string.Empty;
+                                       if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
+                                       {
+                                           abrir = "display: block;";
+                                       }
+                                   
+
                             <li class="dropdown">
-                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
-                                <ul class="dropdown-menu">
+                                <a href="#" class="menu-toggle nav-link has-dropdown @abrir"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
+                                <ul class="dropdown-menu" style="@abrir">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas Canceladas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentasCanceladas", "Ventas")">Ventas Canceladas</a></li>
@@ -171,11 +178,18 @@
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Clientes && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
+                            string disponible = string.Empty;
+                            string abrir = string.Empty;
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
+                            {
+                                disponible = "display: none;";
+                                abrir = "display: block;";
+                            }
                             <li class="dropdown">
                                 <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="briefcase"></i><span>Clientes</span></a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" style="@abrir">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Clientes" ? "dropdown active" : "")" href="@Url.Action("Clientes", "Clientes")">Administrar Clientes</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Descuentos" ? "dropdown active" : "")" href="@Url.Action("Descuentos", "Clientes")">Descuentos</a></li>
+                                    <li style="@disponible"><a class="nav-link @(ViewBag.Title.ToString() == "Descuentos" ? "dropdown active" : "")" href="@Url.Action("Descuentos", "Clientes")">Descuentos</a></li>
                                 </ul>
                             </li>
                         }
