@@ -10,7 +10,7 @@ GO
 -- Create date: <Create Date, ,>
 -- Description:	esta funcion determina si un producto o un linea de producto necesita decimales en el front -end 
 -- =============================================
-alter FUNCTION [dbo].[LineaProductoFraccion]
+create FUNCTION [dbo].[LineaProductoFraccion]
 (
  @idLineaProducto int = null
 ,@idProducto int = null
