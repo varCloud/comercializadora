@@ -1048,7 +1048,7 @@
     <Content Include="js\EvtEstaciones.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
     <Content Include="js\EvtFacturas.js" />
-    <Content Include="js\evtReporteDiasPromedioInventario.js" />
+    <Content Include="js\evtReportePromedio.js" />
     <Content Include="js\evtReporteMargenBruto.js" />
     <Content Include="js\evtReporteMerma.js" />
     <Content Include="js\evtReporteNivelServicioProveedor.js" />
