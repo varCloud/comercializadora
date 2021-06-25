@@ -11,7 +11,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         public int idProducto { get; set; }
         public int idUsuario { get; set; }
 
-        public double cantidad { get; set; }
+        public float cantidad { get; set; }
         public int idAlmacen { get; set; }
         /// <summary>
         /// especifica el medio por el cual se esta afectando el inventario

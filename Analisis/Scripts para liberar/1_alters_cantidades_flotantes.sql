@@ -1,4 +1,4 @@
-use DB_A57E86_lluviadesarrollo
+--use DB_A57E86_lluviadesarrollo
 go
 
 alter table InventarioDetalle alter column cantidad float 
@@ -43,6 +43,10 @@ go
 alter table PedidosInternosDetalle alter column cantidadAtendida float
 go
 
+alter table PedidosInternosDetalle alter column cantidad float
+go
+
+
 alter table MovimientosDeMercancia alter column cantidad float
 go
 
@@ -74,3 +78,7 @@ go
 alter table AjusteInventarioFisico alter column cantidadAAjustar float
 go
 
+alter table InventarioGeneralLog alter column cantidad float
+go
+alter table InventarioGeneralLog alter column cantidadDespuesDeOperacion float
+go

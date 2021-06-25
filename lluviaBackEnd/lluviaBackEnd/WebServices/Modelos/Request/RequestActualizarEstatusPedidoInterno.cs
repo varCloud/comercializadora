@@ -27,6 +27,6 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
 
         public string observacion { get; set; }
 
-        public int cantidad { get; set; }
+        public float cantidad { get; set; }
     }
 }

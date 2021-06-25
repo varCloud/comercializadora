@@ -18,10 +18,10 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
 
         public int idCompraDetalle { get; set; }
 
-        public int cantidad { get; set; }
+        public float cantidad { get; set; }
         public int precio { get; set; }
-        public int cantidadRecibida { get; set; }
-        public int cantidadDevuelta { get; set; }
+        public float cantidadRecibida { get; set; }
+        public float cantidadDevuelta { get; set; }
         public string observaciones { get; set; }
 
         public int idProducto { get; set; }

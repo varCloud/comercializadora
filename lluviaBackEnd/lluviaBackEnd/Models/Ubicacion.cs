@@ -10,7 +10,7 @@ namespace lluviaBackEnd.Models
         public int idProducto { get; set; }
         public string descripcionProducto { get; set; }
         public string codigoBarras { get; set; }
-        public Int64 cantidad { get; set; }
+        public float cantidad { get; set; }
         public DateTime fechaAlta { get; set; }
         public int idUbicacion { get; set; }
         public int idSucursal { get; set; }
@@ -36,6 +36,6 @@ namespace lluviaBackEnd.Models
         /// </summary>
         public int ajustado { get; set; }
 
-        public int cantidadEnFisico { get; set; }
+        public float cantidadEnFisico { get; set; }
     }
 }

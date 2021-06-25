@@ -12,7 +12,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
         public string descripcionEstatus { get; set; }
         public string descripcionPedidoEspecial { get; set; }
         public int idPedidoInterno { get; set; }
-        public int cantidadAtendida { get; set; }
+        public float cantidadAtendida { get; set; }
         public DateTime fechaAlta { get; set; }
         public DateTime fechaAtendido { get; set; }
 

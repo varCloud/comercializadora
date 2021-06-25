@@ -48,7 +48,7 @@ namespace lluviaBackEnd.Models
 
         public string[] idLineaProductoConsulta { get; set; }
 
-        public int cantidad { get; set; }
+        public float cantidad { get; set; }
 
         public DateTime fechaAlta { get; set; }
         public DateTime fechaIni { get; set; }

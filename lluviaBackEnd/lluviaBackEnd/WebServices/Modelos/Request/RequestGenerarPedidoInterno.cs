@@ -11,6 +11,6 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         public int idUsuario { get; set; }
         public int idAlmacenOrigen { get; set; }
         public int idAlmacenDestino { get; set; }
-        public int cantidad { get; set; }
+        public float cantidad { get; set; }
     }
 }
