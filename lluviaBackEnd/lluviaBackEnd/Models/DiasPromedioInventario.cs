@@ -20,6 +20,8 @@ namespace lluviaBackEnd.Models
         public float diasPromedioInventario { get; set; }        
         public float rotacionInventario { get; set; }
         public float TotalVentas { get; set; }
+        public string codigoBarras { get; set; }
+
 
     }
 }
