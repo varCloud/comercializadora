@@ -101,5 +101,6 @@ namespace lluviaBackEnd.Models
         public List<lluviaBackEnd.Models.Ticket> lstTicketsComplementos { get; set; }
         public int idDevolucion { get; set; }
         public int idComplemento { get; set; }
+        public Boolean puedeHacerComplementos { get; set; }
     }
 }
