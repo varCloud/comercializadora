@@ -198,9 +198,9 @@
                                                     <td>@item.idProducto</td>
                                                     <td>@item.descProducto</td>
                                                     <td class="text-center">$@item.precioVenta</td>
-                                                    <td class="text-center"><input disabled type='text' onkeypress="return numerico(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
-                                                    <td class="text-center">$@Convert.ToInt32(@item.cantidad * item.precioVenta)</td>
-                                                    <td class="text-center">$@Convert.ToInt32(@item.ahorro)</td>
+                                                    <td class="text-center"><input disabled type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$@Convert.ToDecimal(@item.cantidad * item.precioVenta)</td>
+                                                    <td class="text-center">$@Convert.ToDecimal(@item.ahorro)</td>
                                                     @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
 
 

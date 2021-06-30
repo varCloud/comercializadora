@@ -412,7 +412,7 @@ function AgregarProducto(producto, cantidad) {
             "  <td> " + producto.idProducto + "</td>" +
             "  <td> " + producto.descripcion + "</td>" +
             "  <td class=\"text-center\">$" + precio + "</td>" +
-            "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+            "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
             "  <td class=\"text-center\">$" + precio + "</td>" +
             "  <td class=\"text-center\">$" + descuento + "</td>" +
             "  <td class=\"text-center\">" +
