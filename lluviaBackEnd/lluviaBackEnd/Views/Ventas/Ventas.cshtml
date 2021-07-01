@@ -211,8 +211,14 @@
                                                     }
                                                     else
                                                     {
-                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
-
+                                                        if (item.necesitaDecimal)
+                                                        {
+                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                        }
                                                     }
 
                                                     <td style="display: none;">@item.idVentaDetalle</td>
