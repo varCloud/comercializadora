@@ -94,9 +94,9 @@ else
                                                 }
 
                                             </td>
-                                            <td>@c.totalCantProductos</td>
-                                            <td>@c.totalCantProductosRecibidos</td>
-                                            <td>@c.totalCantProductosDevueltos</td>
+                                            <td>@c.totalCantProductos.ToString().Replace(",", ".")</td>
+                                            <td>@c.totalCantProductosRecibidos.ToString().Replace(",", ".")</td>
+                                            <td>@c.totalCantProductosDevueltos.ToString().Replace(",", ".")</td>
                                             <td>@Html.Raw((c.statusCompra.idStatus == 3) || (c.statusCompra.idStatus == 2) ? c.montoTotalRecibido.ToString("C", new CultureInfo("en-US")) : c.montoTotal.ToString("C", new CultureInfo("en-US")))</td>
                                             <td>@c.observaciones</td>
                                             <td>

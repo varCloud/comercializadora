@@ -26,7 +26,7 @@ $(document).ready(function () {
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarCompras").trigger("reset");
         $('#fechaIni').val('');
-        $('#fechaFin').val('');        
+        $('#fechaFin').val('');
         $("#frmBuscarCompras .select-multiple").trigger("change");
     });
 
@@ -214,7 +214,7 @@ function NuevaCompra(idCompra) {
             ShowLoader();
         },
         success: function (data) {
-            OcultarLoader();                
+            OcultarLoader();
             $("#NuevaCompra").html(data);
             InicializaElementosCompra();
 
@@ -267,36 +267,50 @@ function InicializaElementosCompra() {
 
     $("#idAlmacen").change(function (evt) {
         evt.preventDefault();
-        arrayProductos = [];        
-        if ($("#idAlmacen").val() > 0) {            
+        arrayProductos = [];
+        if ($("#idAlmacen").val() > 0) {
             ConsultaProductos();
         }
         InitSelect2Productos();
 
-    });  
+    });
     $("#idProducto").change(function (evt) {
         evt.preventDefault();
         var producto = $('#idProducto').select2('data')[0];
-        if (producto != null && producto != undefined) {
+        if (producto != null && producto != undefined) {            
             $("#unidadCompra").val(producto.unidadCompra.descripcionUnidadCompra);
             $("#cantidadUnidadCompra").val(producto.unidadCompra.cantidadUnidadCompra);
             $("#unidadVenta").val(producto.DescripcionUnidadMedida);
             $("#precio").val(producto.costo);
             $("#cantPorUnidadCompra").val(0);
             $("#cantidad").val(0);
-            $('#precio').focus();            
+            $('#precio').focus();
         }
     });
 
-    $("#cantPorUnidadCompra").blur(function (evt) {
+    $("#cantPorUnidadCompra").blur(function (evt) {       
         var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
         var cantidadPorUnidadCompra = parseFloat($("#cantPorUnidadCompra").val());
-        $("#cantidad").val(Math.round(cantidadUnidadCompra * cantidadPorUnidadCompra));
+
+        var cantidad=0;
+        var producto = $('#idProducto').select2('data')[0];
+        if (producto != null && producto != undefined) {
+            if (producto.fraccion)
+                cantidad = roundToTwo(cantidadUnidadCompra * cantidadPorUnidadCompra);
+            else
+                cantidad = Math.round(cantidadUnidadCompra * cantidadPorUnidadCompra);
+        } 
+        $("#cantidad").val(cantidad);
     });
 
     $("#cantidad").blur(function (evt) {
         var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
         var cantidadComprada = parseInt($("#cantidad").val());
+        var producto = $('#idProducto').select2('data')[0];
+        if (producto != null && producto != undefined) {
+            if (producto.fraccion)
+                var cantidadComprada = parseFloat($("#cantidad").val());
+        }
         var cantidadPorUnidadCompra = (cantidadUnidadCompra > 0 ? roundToTwo(cantidadComprada / cantidadUnidadCompra) : cantidadComprada);
         $("#cantPorUnidadCompra").val(cantidadPorUnidadCompra);
     });
@@ -316,7 +330,7 @@ function InicializaElementosCompra() {
         if ($('#idAlmacen').val() <= 0) {
             MuestraToast('warning', "Debe seleccionar un almacen.");
         }
-        
+
         else if ($('#idProducto').val() <= 0) {
             MuestraToast('warning', "Debe seleccionar un producto.");
         } else if (Number($('#precio').val()) == 0) {
@@ -339,7 +353,8 @@ function InicializaElementosCompra() {
                     return;
                 }
             });
-
+            var producto = $('#idProducto').select2('data')[0];
+            
             if (existeProducto == false) {
                 var row_ = "<tr id=" + idProducto + ">" +
                     //"  <td>1</td>" +
@@ -348,9 +363,13 @@ function InicializaElementosCompra() {
                     "  <td><div class='badge badge-light badge-shadow'>Pendiente</div></td>" +
                     "  <td></td>" +
                     "  <td>0</td>" +
-                    "  <td>0</td>" +
-                    "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>" +
-                    "  <td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + precio + "\" ></td>" +
+                    "  <td>0</td>";
+                if (producto.fraccion)
+                    row_ = row_ + "<td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esDecimal(this,event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>";
+                else
+                    row_ = row_ + "<td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\" ></td>";
+
+                row_ = row_ + "<td class=\"text-center\"><input type='text' onfocusout=\"actualizaTicket()\" onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + precio + "\" ></td>" +
                     "  <td class=\"text-center\">$" + roundToTwo(cantidad * precio) + "</td>" +
                     "  <td class=\"text-center\">" +
                     "      <a href=\"javascript:eliminaFila(" + idProducto + ",0)\"  data-toggle=\"tooltip\" title=\"\" data-original-title=\"Eliminar\"><i class=\"far fa-trash-alt\"></i></a>" +
@@ -416,7 +435,7 @@ function InicializaElementosCompra() {
             };
             productos.push(row_);
         });
-
+      
         if (error > 0)
             return;
 
@@ -522,12 +541,12 @@ function actualizaTicket() {
             Cantidad = Number(fila.children[4].innerHTML);
         else
             Cantidad = Number($(fila.children[6].children[0]).val());
-       
+
         fila.children[8].innerHTML = "$" + roundToTwo(Precio * Cantidad)
         total += parseFloat(fila.children[8].innerHTML.replace('$', ''));
     });
 
-
+    console.log("total" + total);
     document.getElementById("divTotal").innerHTML = "<h4>$" + roundToTwo(total) + "</h4>";
 }
 
@@ -565,5 +584,17 @@ function onSuccessResultGuardarProveedor(data) {
 }
 function onFailureResultGuardarProveedor() {
     OcultarLoader();
+}
+
+function TipoCampo(input, evt) {
+    var producto = $('#idProducto').select2('data')[0];  
+    if (producto != null && producto != undefined) 
+    {
+        if (producto.fraccion)
+            return esDecimal(input, evt);
+    }
+    return esNumero(evt);
+
+    
 }
 

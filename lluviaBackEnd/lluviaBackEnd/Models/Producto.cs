@@ -36,7 +36,7 @@ namespace lluviaBackEnd.Models
 
         [Display(Name = "cantidadUnidadMedida")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        public int cantidadUnidadMedida { get; set; }
+        public float cantidadUnidadMedida { get; set; }
 
         public string codigoBarras { get; set; }
 
@@ -84,8 +84,8 @@ namespace lluviaBackEnd.Models
         public string observaciones { get; set; }
         public string usuarioRecibio { get; set; }
         public EstatusProducto estatusProducto { get; set; }
-        public int cantidadRecibida { get; set; }
-        public int cantidadDevuelta { get; set; }
+        public float cantidadRecibida { get; set; }
+        public float cantidadDevuelta { get; set; }
 
         public float porcUtilidadIndividual { get; set; }
         public float porcUtilidadMayoreo { get; set; }
