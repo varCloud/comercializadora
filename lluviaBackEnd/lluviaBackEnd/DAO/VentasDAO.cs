@@ -190,7 +190,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta, cantProductosLiq = r1.cantProductosLiq , idDevolucion = r1.idDevolucion, idComplemento = r1.idComplemento };
+                        notificacion.Modelo = new Ventas() { idVenta = r1.idVenta, cantProductosLiq = (float)r1.cantProductosLiq , idDevolucion = r1.idDevolucion, idComplemento = r1.idComplemento };
                         //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
                     }
                     else

@@ -66,7 +66,7 @@
             </div>
             <div class="form-group col-lg-2">
                 <label>Cantidad Comprada</label>
-                <input id="cantidad" type="text" class="form-control" onkeypress="return esNumero(event);">
+                <input id="cantidad" type="text" class="form-control" onkeypress="return TipoCampo(this, event);">
             </div>
             <div class="form-group col-lg-3">
                 <div class="text-left" style="margin-top:30px;">
@@ -145,13 +145,22 @@
 
                                 </td>
                                 <th>@prod.observaciones</th>
-                                <td>@prod.cantidadRecibida</td>
-                                <td>@prod.cantidadDevuelta</td>
+                                <td>@prod.cantidadRecibida.ToString().Replace(",", ".")</td>
+                                <td>@prod.cantidadDevuelta.ToString().Replace(",", ".")</td>
                                 @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
-                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+                                @if (prod.fraccion)
+                                {
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+
+                                }
+                                else
+                                {
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+
+                                }
                                 <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
                                 <td class="text-center">$@Html.Raw((Model.statusCompra.idStatus == 3 || Model.statusCompra.idStatus == 2) ? Convert.ToSingle(prod.cantidadRecibida * prod.precio) : Convert.ToSingle(prod.cantidad * prod.precio)) </td>
-                               
+
                                 @if (puedeEditar)
                                 {
                                     <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>

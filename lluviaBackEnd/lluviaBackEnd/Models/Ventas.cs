@@ -50,22 +50,18 @@ namespace lluviaBackEnd.Models
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public int idProducto { get; set; }
 
-
         [Display(Name = "idLineaProducto")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
+
         public int idLineaProducto { get; set; }
-
         public DateTime fechaIni { get; set; }
-
         public DateTime fechaFin { get; set; }
-
         public int contador { get; set; }
         public float precio { get; set; }
         public float costo { get; set; }
         public float ganancia { get; set; }
         public int formaPago { get; set; }
         public int tipoConsulta { get; set; }
-
         public int idFactura { get; set; }
         public int idEstatusFactura { get; set; }
         public string descripcionEstatusFactura { get; set; }
@@ -86,13 +82,13 @@ namespace lluviaBackEnd.Models
         public string descripcionLineaProducto { get; set; }
         public Boolean esDevolucion { get; set; }
         public Boolean esAgregarProductos { get; set; }
-        public int productosDevueltos { get; set; }
-        public int productosAgregados { get; set; }
+        public float productosDevueltos { get; set; }
+        public float productosAgregados { get; set; }
         public int idVentaDetalle { get; set; }
         public int idAlmacen { get; set; }
         public string descAlmacen { get; set; }
         public float precioVenta { get; set; }
-        public int cantProductosLiq { get; set; }
+        public float cantProductosLiq { get; set; }
         public int idPedidoEspecial { get; set; }
         public int estatusVenta { get; set; }
         public DateTime fechaCancelacion { get; set; }
@@ -101,5 +97,6 @@ namespace lluviaBackEnd.Models
         public List<lluviaBackEnd.Models.Ticket> lstTicketsComplementos { get; set; }
         public int idDevolucion { get; set; }
         public int idComplemento { get; set; }
+        public Boolean puedeHacerComplementos { get; set; }
     }
 }

@@ -203,12 +203,14 @@ else
 
 
 
-                                                        @if ((item.productosDevueltos < ViewBag.devolucionesPermitidas) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))
+                                                        @*@if ((item.productosDevueltos < ViewBag.devolucionesPermitidas) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
+                                                        @if ( (item.puedeHacerComplementos) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))
                                                         {
                                                             <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })"><i class="far fa-minus-square"></i>Devolver Productos</a>
                                                         }
 
-                                                        @if ((item.productosAgregados < ViewBag.agregarProductosPermitidos) && (item.cantidad >= 6) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))
+                                                        @*@if ((item.productosAgregados < ViewBag.agregarProductosPermitidos) && (item.cantidad >= 6) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
+                                                        @if ( (item.puedeHacerComplementos)  && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))
                                                         {
                                                             <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esAgregarProductos = "true", esDevolucion = "false" })"><i class="far fa-plus-square"></i>Agregar Productos</a>
                                                         }

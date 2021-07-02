@@ -24,6 +24,7 @@ else
                 <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
+                    <th>Codigo de Barras</th>
                     <th>Costo Producto</th>
                     <th>Inventario Promedio Periodo</th>
                     <th>Costo Inventario Promedio</th>
@@ -40,6 +41,7 @@ else
                 <tr>
                     <td>@c.id</td>
                     <td>@c.descripcion</td>
+                    <td>@c.codigoBarras</td>
                     <td>@c.CostoProducto.ToString("C", new CultureInfo("en-US"))</td>
                     <td>@c.InventarioPromedioPeriodo</td>
                     <td>@c.CostoInvPromedio.ToString("C", new CultureInfo("en-US"))</td>

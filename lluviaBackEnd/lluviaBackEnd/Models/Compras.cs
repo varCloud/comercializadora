@@ -20,7 +20,7 @@ namespace lluviaBackEnd.Models
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
 
-        public int totalCantProductos { get; set; }
+        public float totalCantProductos { get; set; }
         public float montoTotal { get; set; }
 
         public string observaciones { get; set; }
@@ -34,9 +34,9 @@ namespace lluviaBackEnd.Models
 
         public Producto producto { get; set; }
 
-        public int totalCantProductosRecibidos { get; set; }
+        public float totalCantProductosRecibidos { get; set; }
         public float montoTotalRecibido { get; set; }
-        public int totalCantProductosDevueltos { get; set; }
+        public float totalCantProductosDevueltos { get; set; }
 
 
         public EnumEstadoCompras estadoCompra { get; set; }

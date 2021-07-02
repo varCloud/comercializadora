@@ -1,5 +1,5 @@
 --use DB_A57E86_lluviadesarrollo
-go
+--go
 
 alter table InventarioDetalle alter column cantidad float 
 go
@@ -80,5 +80,24 @@ go
 
 alter table InventarioGeneralLog alter column cantidad float
 go
+
 alter table InventarioGeneralLog alter column cantidadDespuesDeOperacion float
+go
+
+if exists (SELECT * FROM sys.objects WHERE type = 'D' AND name = 'DF__VentasDet__produ__6BF9DE81')
+begin 
+	ALTER TABLE VentasDetalle DROP CONSTRAINT DF__VentasDet__produ__6BF9DE81;
+end
+go
+alter table VentasDetalle alter column productosDevueltos float
+go
+
+-- columna para verificar si a una venta se le puede agregar un complemento o devolucion
+if not exists (select 1 from sys.columns where name = N'puedeHacerComplementos' and Object_ID = Object_ID(N'dbo.Ventas'))
+BEGIN
+	alter table Ventas add puedeHacerComplementos bit default 0
+END
+go
+
+update Ventas set puedeHacerComplementos = cast(0 as bit)
 go

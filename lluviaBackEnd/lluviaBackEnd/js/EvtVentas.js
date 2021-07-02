@@ -208,13 +208,13 @@ $('#previoVenta').click(function (e) {
         // validamos que al menos exista devolucion de un item
         var tblVtas = document.getElementById('tablaRepVentas');
         var rCount = tblVtas.rows.length;
-        var productosOriginales = parseInt(0);
-        var productosDevueltos = parseInt(0);
+        var productosOriginales = parseFloat(0);
+        var productosDevueltos = parseFloat(0);
 
         if (rCount >= 2) {
             for (var i = 1; i < rCount; i++) {
-                productosDevueltos += parseInt(tblVtas.rows[i].cells[7].children[0].value);
-                productosOriginales += parseInt(tblVtas.rows[i].cells[4].children[0].value);
+                productosDevueltos += parseFloat(tblVtas.rows[i].cells[7].children[0].value);
+                productosOriginales += parseFloat(tblVtas.rows[i].cells[4].children[0].value);
             }
         }
 
@@ -328,7 +328,7 @@ $('#btnAgregarEnvase').click(function (e) {
 });
 
 function AgregarProducto(producto, cantidad) {
-
+    
     var esAgregarProductos = $('#esAgregarProductos').val();
 
     cantidad = parseFloat(cantidad) || 0.0;
@@ -376,7 +376,7 @@ function AgregarProducto(producto, cantidad) {
         for (var i = 1; i < rCount; i++) {
             if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
                 if (
-                    (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) &&
+                    (producto.idProducto === parseFloat(tblVtas.rows[i].cells[1].innerHTML)) &&
                     (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))
                 ) {
                     var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
@@ -390,7 +390,7 @@ function AgregarProducto(producto, cantidad) {
                 }
             }
             else {
-                if (producto.idProducto === parseInt(tblVtas.rows[i].cells[1].innerHTML)) {
+                if (producto.idProducto === parseFloat(tblVtas.rows[i].cells[1].innerHTML)) {
                     var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
 
                     if (cantidad > producto.cantidad) {
@@ -411,8 +411,23 @@ function AgregarProducto(producto, cantidad) {
             "  <td>1</td>" +
             "  <td> " + producto.idProducto + "</td>" +
             "  <td> " + producto.descripcion + "</td>" +
-            "  <td class=\"text-center\">$" + precio + "</td>" +
-            "  <td class=\"text-center\"><input type='text' onkeypress=\"return numerico(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>";
+
+        if  (
+                (producto.idLineaProducto == 12) ||  // si son liquidos
+                (producto.idLineaProducto == 20) ||
+                (producto.idLineaProducto == 22) ||
+                (producto.idLineaProducto == 25) 
+            )
+        {
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+        }
+        else
+        {
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+        }
+        
+        row_ +=
             "  <td class=\"text-center\">$" + precio + "</td>" +
             "  <td class=\"text-center\">$" + descuento + "</td>" +
             "  <td class=\"text-center\">" +
@@ -449,7 +464,7 @@ function actualizaTicketVenta() {
         for (var i = 1; i < rCount; i++) {
             var row_ = {
                 idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                cantidad: parseInt(tblVtas.rows[i].cells[4].children[0].value),
+                cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
                 min: 1,
                 max: 11,
                 maxCantidad: 0,
@@ -471,7 +486,7 @@ function actualizaTicketVenta() {
                 else {
                     var row_ = {
                         idProducto: parseInt(arrayProductosVentaComplemento[c].idProducto),
-                        cantidad: parseInt(arrayProductosVentaComplemento[c].cantidad),
+                        cantidad: parseFloat(arrayProductosVentaComplemento[c].cantidad),
                         min: 1,
                         max: 11,
                         maxCantidad: 0,
@@ -488,12 +503,12 @@ function actualizaTicketVenta() {
     }
 
     var cantidadTotalPorProducto = [];
-    var cantidadDeProductos = parseInt(0);
+    var cantidadDeProductos = parseFloat(0);
     //console.log(arrayPreciosRangos);
 
     // actualizamos el contador del max_cantidad para el caso de infinito
     for (var m = 0; m < productos.length; m++) {
-        var max_precio = parseInt(0);
+        var max_precio = parseFloat(0);
 
         /////////////////////////////////////////////// cantidadTotalPorProducto
         if (typeof cantidadTotalPorProducto !== 'undefined' && cantidadTotalPorProducto.length > 0) {
@@ -504,7 +519,7 @@ function actualizaTicketVenta() {
             else {
                 var row_ = {
                     idProducto: parseInt(productos[m].idProducto),
-                    cantidad: parseInt(productos[m].cantidad),
+                    cantidad: parseFloat(productos[m].cantidad),
                     precioRango: parseFloat(0)
                 };
                 cantidadTotalPorProducto.push(row_);
@@ -513,17 +528,17 @@ function actualizaTicketVenta() {
         else {
             var row_ = {
                 idProducto: parseInt(productos[m].idProducto),
-                cantidad: parseInt(productos[m].cantidad),
+                cantidad: parseFloat(productos[m].cantidad),
                 precioRango: parseFloat(0)
             };
             cantidadTotalPorProducto.push(row_);
         }
         ////////////////////////////////////////////////
 
-        cantidadDeProductos += parseInt(productos[m].cantidad);
+        cantidadDeProductos += parseFloat(productos[m].cantidad);
 
         for (var n = 0; n < arrayPreciosRangos.length; n++) {
-            var max_actual = parseInt(arrayPreciosRangos[n]['max']);
+            var max_actual = parseFloat(arrayPreciosRangos[n]['max']);
             if (arrayPreciosRangos[n]['idProducto'] == productos[m].idProducto) {
                 if (max_actual > max_precio) {
                     max_precio = max_actual;
@@ -726,10 +741,10 @@ function initInputsTabla() {
         var idProducto = parseInt(tblVtas.rows[rowIndex].cells[1].innerHTML);
         var producto = arrayProductos.find(x => x.idProducto == idProducto);
 
-        console.log(producto);
-        console.log(parseInt(thisInput.val()));
+        //console.log(producto);
+        //console.log(parseInt(thisInput.val()));
 
-        if ((parseInt(thisInput.val())) > (parseInt(producto.cantidad))) {
+        if ((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) {
             MuestraToast('warning', "No existe suficiente producto en inventario.");
             document.execCommand('undo');
             return;
@@ -746,7 +761,7 @@ function initInputsTabla() {
 
         if (thisInput.hasClass("esDevolucion")) {
 
-            if ((parseInt(thisInput.val())) > (parseInt(tblVtas.rows[rowIndex].cells[4].children[0].value))) {
+            if ((parseFloat(thisInput.val())) > (parseFloat(tblVtas.rows[rowIndex].cells[4].children[0].value))) {
                 MuestraToast('warning', "No puede regresar mas de lo que compro.");
                 document.execCommand('undo');
                 return;
@@ -826,8 +841,8 @@ function actualizarSubTotalDevoluciones() {
 
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
-    var cantidadDevelta = parseInt(0);
-    var comisionBancariaDevuelta = parseInt(0);
+    var cantidadDevelta = parseFloat(0);
+    var comisionBancariaDevuelta = parseFloat(0);
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
@@ -907,7 +922,7 @@ $('#btnGuardarVenta').click(function (e) {
     if (PuedeRealizarVenta)
     {
         PuedeRealizarVenta = false;
-        console.log('#btnGuardarVenta');
+        //console.log('#btnGuardarVenta');
         $("#btnGuardarVenta").addClass('btn-progress disabled');
 
         var productos = [];
@@ -1003,7 +1018,7 @@ $('#btnGuardarVenta').click(function (e) {
                     var row_ = {
                         idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
                         cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
-                        productosDevueltos: parseInt(tblVtas.rows[i].cells[7].children[0].value),
+                        productosDevueltos: parseFloat(tblVtas.rows[i].cells[7].children[0].value),
                         idVentaDetalle: parseInt(tblVtas.rows[i].cells[8].innerHTML),
                     };
                     productos.push(row_);
@@ -2195,7 +2210,7 @@ function BuscarPedidoEspecial() {
                         productosPedidoEspecial.Modelo[i].activo = false;
                         html += '<td><div class="badge badge-danger badge-shadow">Debe configurar el precio Mayoreo del producto.</div></td>';
                     }
-                    else if (parseInt(productosPedidoEspecial.Modelo[i].cantidad) === 0) {
+                    else if (parseFloat(productosPedidoEspecial.Modelo[i].cantidad) === 0) {
                         productosPedidoEspecial.Modelo[i].activo = false;
                         html += '<td><div class="badge badge-danger badge-shadow">Sin existencias en el inventario</div></td>';
                     }
