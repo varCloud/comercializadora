@@ -328,7 +328,7 @@ $('#btnAgregarEnvase').click(function (e) {
 });
 
 function AgregarProducto(producto, cantidad) {
-
+    
     var esAgregarProductos = $('#esAgregarProductos').val();
 
     cantidad = parseFloat(cantidad) || 0.0;
@@ -411,8 +411,23 @@ function AgregarProducto(producto, cantidad) {
             "  <td>1</td>" +
             "  <td> " + producto.idProducto + "</td>" +
             "  <td> " + producto.descripcion + "</td>" +
-            "  <td class=\"text-center\">$" + precio + "</td>" +
-            "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>" +
+            "  <td class=\"text-center\">$" + precio + "</td>";
+
+        if  (
+                (producto.idLineaProducto == 12) ||  // si son liquidos
+                (producto.idLineaProducto == 20) ||
+                (producto.idLineaProducto == 22) ||
+                (producto.idLineaProducto == 25) 
+            )
+        {
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+        }
+        else
+        {
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+        }
+        
+        row_ +=
             "  <td class=\"text-center\">$" + precio + "</td>" +
             "  <td class=\"text-center\">$" + descuento + "</td>" +
             "  <td class=\"text-center\">" +
