@@ -998,9 +998,7 @@ namespace lluviaBackEnd.Utilerias
             }
 
         }
-
-
-
+                
         public static byte[] GeneraTicketCancelacionPDF(List<Ticket> tickets)
         {
             byte[] content = null;
@@ -1231,9 +1229,7 @@ namespace lluviaBackEnd.Utilerias
             }
             return content;
         }
-
-
-
+                
         public static byte[] GeneraTicketDevolucionComplemento(List<Ticket> tickets)
         {
             byte[] content = null;
@@ -1620,10 +1616,7 @@ namespace lluviaBackEnd.Utilerias
             }
             return content;
         }
-
-
-
-
+               
         public static Dictionary<string, object> GenerarUbicaciones(List<Ubicacion> ubicaciones, string path)
         {
             byte[] content = null;
