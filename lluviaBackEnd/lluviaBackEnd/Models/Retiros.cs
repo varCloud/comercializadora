@@ -35,7 +35,7 @@ namespace lluviaBackEnd.Models
         public float montoApertura { get; set; }
         public float montoIngresosEfectivo { get; set; }    
         public float montoCierre { get; set; }
-        public int ProductosDevueltos { get; set; }
+        public float ProductosDevueltos { get; set; }
         public float MontoTotalDevoluciones { get; set; }
 
         public Retiros()

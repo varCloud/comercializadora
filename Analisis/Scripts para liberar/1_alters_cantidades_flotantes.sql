@@ -92,6 +92,9 @@ go
 alter table VentasDetalle alter column productosDevueltos float
 go
 
+alter table RetirosCierreDia alter column ProductosDevueltos float
+go
+
 -- columna para verificar si a una venta se le puede agregar un complemento o devolucion
 if not exists (select 1 from sys.columns where name = N'puedeHacerComplementos' and Object_ID = Object_ID(N'dbo.Ventas'))
 BEGIN
