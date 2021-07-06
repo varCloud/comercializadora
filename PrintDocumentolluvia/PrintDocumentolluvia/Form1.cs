@@ -31,7 +31,7 @@ namespace PrintDocumentolluvia
         //7022
         //int idVenta = 1948;
 
-        int idVenta = 7022;
+        int idVenta = 11642;
         int indiceProducto = 0;
         int paginaActual = 0;
         int productosporPagina = 30;
@@ -55,8 +55,8 @@ namespace PrintDocumentolluvia
                 using (PrintDocument pd = new PrintDocument())
                 {
 
-                    //pd.PrinterSettings.PrinterName = "Microsoft Print to PDF"; // @"\\DESKTOP-M7HANDH\EPSON";
-                    pd.PrinterSettings.PrinterName = "EPSON TM-T20III Receipt";
+                    pd.PrinterSettings.PrinterName = "Microsoft Print to PDF"; // @"\\DESKTOP-M7HANDH\EPSON";
+                    //pd.PrinterSettings.PrinterName = "EPSON TM-T20III Receipt";
                     //pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
                     Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
                     List<List<Ticket>> listadoTickets = new List<List<Ticket>>();
@@ -552,7 +552,7 @@ namespace PrintDocumentolluvia
                     }
 
                 }
-                indexProducto++;
+               
                 monto += notificacion.Modelo.Sum(x => x.monto);
                 montoIVA += notificacion.Modelo.Sum(x => x.montoIVA);
                 montoComisionBancaria += notificacion.Modelo.Sum(x => x.montoComisionBancaria);
@@ -688,6 +688,9 @@ namespace PrintDocumentolluvia
                         datosfooter1.Y += espaciado;
                         indexProducto++;
                         pintaFooterIndice++;
+                    }
+                    else {
+                        indexProducto++;
                     }
                 }
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
