@@ -39,6 +39,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.cajaAbierta = new VentasDAO().ValidaAperturaCajas(usuario.idUsuario).status == 200 ? true : false;
                 ViewBag.cierreCaja = new VentasDAO().ValidaCierreCajas(usuario.idUsuario).status != 200 ? true : false;
@@ -1477,15 +1478,15 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
                 Notificacion<List<Ticket>> numeroDevoluciones = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Devolucion);
                 Notificacion<List<Ticket>> numeroComplementos = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Complemento);
-                List<Ticket> devoluciones = new List<Ticket>();
-                List<Ticket> complementos = new List<Ticket>();
+                List<List<Ticket>> devoluciones = new List<List<Ticket>>();
+                List<List<Ticket>> complementos = new List<List<Ticket>>();                
 
                 if ( numeroDevoluciones.Modelo != null ) 
                 { 
                     foreach (Ticket dev in numeroDevoluciones.Modelo) { 
                         Notificacion<List<Ticket>> d = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = dev.idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
                         d.Modelo[0].tipoVenta = EnumTipoVenta.Devolucion;
-                        devoluciones.Add(d.Modelo[0]);
+                        devoluciones.Add(d.Modelo);
                     }
                 }
 
@@ -1495,7 +1496,7 @@ namespace lluviaBackEnd.Controllers
                     {
                         Notificacion<List<Ticket>> c = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = com.idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
                         c.Modelo[0].tipoVenta = EnumTipoVenta.AgregarProductosVenta;
-                        complementos.Add(c.Modelo[0]);
+                        complementos.Add(c.Modelo);
                     }
                 }
 

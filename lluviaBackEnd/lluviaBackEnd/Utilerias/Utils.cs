@@ -944,7 +944,7 @@ namespace lluviaBackEnd.Utilerias
 
 
 
-        public static byte[] GeneraTodosTicketsPDF(List<Ticket> tickets, List<Ticket> ticketsDevolucion, List<Ticket> ticketsComplemento)
+        public static byte[] GeneraTodosTicketsPDF(List<Ticket> tickets, List<List<Ticket>> ticketsDevolucion, List<List<Ticket>> ticketsComplemento)
         {
             try
             {
@@ -963,11 +963,11 @@ namespace lluviaBackEnd.Utilerias
                 // tickets de devolucion
                 if ( ticketsDevolucion.Count > 0 ) 
                 {
-                    foreach (Ticket ticket in ticketsDevolucion)
+                    foreach (List<Ticket> ticket in ticketsDevolucion)
                     {
-                        List<Ticket> ticket_ = new List<Ticket>();
-                        ticket_.Add(ticket);
-                        var msDevolucion = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket_));
+                        //List<Ticket> ticket_ = new List<Ticket>();
+                        //ticket_.Add(ticket);
+                        var msDevolucion = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket));
                         msDevolucion.Position = 0;
                         copy.AddDocument(new PdfReader(msDevolucion));
                         msDevolucion.Dispose();
@@ -977,11 +977,11 @@ namespace lluviaBackEnd.Utilerias
                 // tickets de complementos
                 if (ticketsComplemento.Count > 0)
                 {
-                    foreach (Ticket ticket in ticketsComplemento)
+                    foreach (List<Ticket> ticket in ticketsComplemento)
                     {
-                        List<Ticket> ticket_ = new List<Ticket>();
-                        ticket_.Add(ticket);
-                        var msComplemento = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket_));
+                        //List<Ticket> ticket_ = new List<Ticket>();
+                        //ticket_.Add(ticket);
+                        var msComplemento = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionComplemento(ticket));
                         msComplemento.Position = 0;
                         copy.AddDocument(new PdfReader(msComplemento));
                         msComplemento.Dispose();
