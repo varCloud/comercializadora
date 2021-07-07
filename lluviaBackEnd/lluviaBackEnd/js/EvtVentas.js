@@ -1078,7 +1078,7 @@ $('#btnGuardarVenta').click(function (e) {
 
                     if ((esDevolucion == "true") || (esDevolucion == "True")) {
                         ImprimeTicketDevolucion(data.Modelo.idVenta, data.Modelo.idDevolucion);
-                        ImprimeTicket(data.Modelo.idVenta);
+                        //ImprimeTicket(data.Modelo.idVenta);
 
                         swal({
                             title: "Mensaje",
@@ -1092,7 +1092,7 @@ $('#btnGuardarVenta').click(function (e) {
                     }
 
                     if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
-                        ImprimeTicket(data.Modelo.idVenta);
+                        //ImprimeTicket(data.Modelo.idVenta);
                         ImprimeTicketComplemento(data.Modelo.idVenta, data.Modelo.idComplemento);
                         //window.location.href = "http://" + window.location.host + "/Ventas/Ventas";
                         window.location.href = rootUrl("/Ventas/Ventas");
@@ -2056,7 +2056,6 @@ function InitSelect2Productos() {
         width: "100%",
         placeholder: "--SELECCIONA--",
         data: (result.Modelo).filter(x => x.idLineaProducto == 19),
-
         language: {
             noResults: function () {
                 return "No hay resultado";
@@ -2064,7 +2063,8 @@ function InitSelect2Productos() {
             searching: function () {
                 return "Buscando..";
             }
-        }
+        },
+        dropdownParent: $('#modalNuevaCompra')
     });
 
     $('#idProductoEnvase').val("0").trigger('change');

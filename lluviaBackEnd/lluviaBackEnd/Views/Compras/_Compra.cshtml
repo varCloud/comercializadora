@@ -13,14 +13,14 @@
         estatusCompra = estatusCompra.Where(x => x.Value == "4" || x.Value == "1").ToList();
     }
 
-    if (Model.statusCompra.idStatus==2)
+    if (Model.statusCompra.idStatus == 2)
     {
         estatusCompra = estatusCompra.Where(x => x.Value == "2" || x.Value == "3").ToList();
     }
 
     if (Model.statusCompra.idStatus > 2)
     {
-        puedeEditar=false;
+        puedeEditar = false;
     }
 
 }
@@ -30,50 +30,50 @@
 
     <div class="section-body">
 
-        @if (Model.statusCompra.idStatus <=1)
+        @if (Model.statusCompra.idStatus <= 1)
         {
-        <div class="row">
+            <div class="row">
 
-            <div class="form-group col-lg-3">
-                <label>Almacen</label>
-                @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes,"--SELECCIONA--", new { id = "idAlmacen", style = "width:100%", @class = "select-multiple select-multipleCompra", data_val = "true", data_val_required = "Seleccione un almacen" })
-            </div>
+                <div class="form-group col-lg-3">
+                    <label>Almacen</label>
+                    @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes, "--SELECCIONA--", new { id = "idAlmacen", style = "width:100%", @class = "select-multiple select-multipleCompra", data_val = "true", data_val_required = "Seleccione un almacen" })
+                </div>
 
-            <div class="form-group col-lg-3">
-                <label>Producto</label>
-                <select id="idProducto"></select>
-                @*@Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Unidad de Compra</label>
-                <input id="unidadCompra" type="text" class="form-control" disabled>
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Cantidad Unitaria</label>
-                <input id="cantidadUnidadCompra" type="text" class="form-control" disabled>
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Unidad de Venta</label>
-                <input id="unidadVenta" type="text" class="form-control" disabled>
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Último Costo</label>
-                <input id="precio" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Cantidad</label>
-                <input id="cantPorUnidadCompra" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
-            </div>
-            <div class="form-group col-lg-2">
-                <label>Cantidad Comprada</label>
-                <input id="cantidad" type="text" class="form-control" onkeypress="return TipoCampo(this, event);">
-            </div>
-            <div class="form-group col-lg-3">
-                <div class="text-left" style="margin-top:30px;">
-                    <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar Producto &nbsp;</button>
+                <div class="form-group col-lg-3">
+                    <label>Producto</label>
+                    <select id="idProducto"></select>
+                    @*@Html.DropDownListFor(model => producto.idProducto, new SelectList(listProductos, "idProducto", "descripcion"), "--SELECCIONA--", new { id = "idProducto", style = "width:100%", @class = "select-multiple select-multipleCompra", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Unidad de Compra</label>
+                    <input id="unidadCompra" type="text" class="form-control" disabled>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Cantidad Unitaria</label>
+                    <input id="cantidadUnidadCompra" type="text" class="form-control" disabled>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Unidad de Venta</label>
+                    <input id="unidadVenta" type="text" class="form-control" disabled>
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Último Costo</label>
+                    <input id="precio" type="text" class="form-control " onkeypress="return esDecimal(this, event);" >
+                </div>
+                <div class="form-group col-lg-3">
+                    <label>Cantidad</label>
+                    <input id="cantPorUnidadCompra" type="text" class="form-control EntTab" onkeypress="return esDecimal(this, event);">
+                </div>
+                <div class="form-group col-lg-2">
+                    <label>Cantidad Comprada</label>
+                    <input id="cantidad" type="text" class="form-control EntTab" onkeypress="return TipoCampo(this, event);">
+                </div>
+                <div class="form-group col-lg-3">
+                    <div class="text-left" style="margin-top:30px;">
+                        <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar Producto &nbsp;</button>
+                    </div>
                 </div>
             </div>
-        </div>
         }
 
         <div class="row">
@@ -102,71 +102,71 @@
                             @foreach (lluviaBackEnd.Models.Producto prod in Model.listProductos)
                             {
 
-                            <tr id="@prod.idProducto">
-                                <td>@prod.idProducto</td>
-                                <td>@prod.descripcion</td>
-                                <td>
-                                    @{
-                                        switch (prod.estatusProducto.idEstatusProducto)
-                                        {
-                                            case 0:
-                                                {
-                                                    <div class="badge badge-light badge-shadow">Pendiente</div>
-                                                }
-                                                break;
+                                <tr id="@prod.idProducto">
+                                    <td>@prod.idProducto</td>
+                                    <td>@prod.descripcion</td>
+                                    <td>
+                                        @{
+                                            switch (prod.estatusProducto.idEstatusProducto)
+                                            {
+                                                case 0:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">Pendiente</div>
+                                                    }
+                                                    break;
 
-                                            case 1:
-                                                {
-                                                    <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                case 1:
+                                                    {
+                                                        <div class="badge badge-success badge-shadow">@prod.estatusProducto.estatusProducto</div>
 
-                                                }
-                                                break;
+                                                    }
+                                                    break;
 
-                                            case 2:
-                                                {
-                                                    <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
+                                                case 2:
+                                                    {
+                                                        <div class="badge badge-warning badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
 
-                                            case 3:
-                                            case 4:
-                                            case 5:
-                                                {
-                                                    <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
-                                            default:
-                                                {
-                                                    <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
-                                                }
-                                                break;
+                                                case 3:
+                                                case 4:
+                                                case 5:
+                                                    {
+                                                        <div class="badge badge-danger badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        <div class="badge badge-light badge-shadow">@prod.estatusProducto.estatusProducto</div>
+                                                    }
+                                                    break;
+                                            }
                                         }
+
+                                    </td>
+                                    <th>@prod.observaciones</th>
+                                    <td>@prod.cantidadRecibida.ToString().Replace(",", ".")</td>
+                                    <td>@prod.cantidadDevuelta.ToString().Replace(",", ".")</td>
+                                    @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
+                                    @if (prod.fraccion)
+                                    {
+                                        <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
+
+                                    }
+                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
+                                    <td class="text-center">$@Html.Raw((Model.statusCompra.idStatus == 3 || Model.statusCompra.idStatus == 2) ? Convert.ToSingle(prod.cantidadRecibida * prod.precio) : Convert.ToSingle(prod.cantidad * prod.precio)) </td>
+
+                                    @if (puedeEditar)
+                                    {
+                                        <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
                                     }
 
-                                </td>
-                                <th>@prod.observaciones</th>
-                                <td>@prod.cantidadRecibida.ToString().Replace(",", ".")</td>
-                                <td>@prod.cantidadDevuelta.ToString().Replace(",", ".")</td>
-                                @*no se puede editar la cantidad del producto si este ya se encuentra en un estatus*@
-                                @if (prod.fraccion)
-                                {
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-
-                                }
-                                else
-                                {
-                                    <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.cantidad.ToString().Replace(",",".")" @Html.Raw(prod.estatusProducto.idEstatusProducto > 0 ? "readonly" : "") class="@Html.Raw(prod.estatusProducto.idEstatusProducto>0 ? "readonly" : "")"></td>
-
-                                }
-                                <td class="text-center"><input type="text" onfocusout="actualizaTicket()" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@prod.precio.ToString().Replace(",",".")" @Html.Raw(!puedeEditar ? "readonly" : "") class="@Html.Raw(!puedeEditar ? "readonly" : "")"></td>
-                                <td class="text-center">$@Html.Raw((Model.statusCompra.idStatus == 3 || Model.statusCompra.idStatus == 2) ? Convert.ToSingle(prod.cantidadRecibida * prod.precio) : Convert.ToSingle(prod.cantidad * prod.precio)) </td>
-
-                                @if (puedeEditar)
-                                {
-                                    <td class="text-center"><a href="javascript:eliminaFila(@prod.idProducto,@prod.estatusProducto.idEstatusProducto)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-                                }
-
-                            </tr>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -240,17 +240,19 @@
 
 @Html.Action("_NuevoProveedor", "Proveedores")
 
-@*<script>
-    $("#precio").keypress(function (e) {
-        console.log("keypress", esDecimal($(this), event), $(this))
-        if (!esDecimal(this, event)) {
-            if (e.which == 13) {
-                console.log("cantPorUnidadCompra")
-                $('#cantPorUnidadCompra').focus();
+@section scripts{
+    <script>
+        $("#precio").keypress(function (e) {
+            console.log("keypress", esDecimal($(this), event), $(this))
+            if (!esDecimal(this, event)) {
+                if (e.which == 13) {
+                    console.log("cantPorUnidadCompra")
+                    $('#cantPorUnidadCompra').focus();
+                }
             }
-        }
-    });
+        });
 
-</script>*@
+    </script>
+    }
 
 

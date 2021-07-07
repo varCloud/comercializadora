@@ -232,8 +232,9 @@ function NuevaCompra(idCompra) {
                 $('#idAlmacen').prop('disabled', false);
                 $("#titleModalCompra").html("Nueva Compra");
             }
-
+            initEnterModalNuevaCompra();
             $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });
+           
 
 
         },
@@ -244,6 +245,73 @@ function NuevaCompra(idCompra) {
             console.log(status);
         }
     });
+}
+
+function initEnterModalNuevaCompra() {
+
+    $('#modalNuevaCompra').on('shown.bs.modal', function () {
+        console.log("shown.bs.modal")
+        $('#idAlmacen').select2('open');
+    })
+
+    $('#idProducto').on('select2:close', event => {
+        console.log("idProducto blur")
+        $('#precio').focus()
+    });
+
+    $('#idAlmacen').on('select2:close', event => {
+        console.log("idAlmacen close")
+        $('#idProducto').select2('open');
+    });
+
+    //$('#idAlmacen').select2('open');
+    //$('#precio').focus();
+    $("#precio").keypress(function (e) {
+        console.log("keypress", esDecimal($(this), event), $(this))
+            if (e.which == 13) {
+                console.log("cantPorUnidadCompra")
+                $('#cantPorUnidadCompra').val('');
+                $('#cantPorUnidadCompra').focus();
+            }
+        
+    });
+
+    $("#cantPorUnidadCompra").keypress(function (e) {
+        console.log("keypress", esDecimal($(this), event), $(this))
+        if (e.which == 13) {
+            console.log("cantidad")
+            $('#cantidad').focus();
+            //$('#cantidad').val('');
+        }
+    });
+
+    $("#cantidad").keypress(function (e) {
+        console.log("keypress", esDecimal($(this), event), $(this))
+        if (e.which == 13) {
+            console.log("btnAgregarProducto")
+            $('#btnAgregarProducto').focus();
+        }
+    });
+
+    //    $('input').on("keypress", function (e) {
+    //    /* ENTER PRESSED*/
+    //    if (e.keyCode == 13) {
+    //        /* FOCUS ELEMENT */
+    //        var inputs = $(this).parents("form").eq(0).find(":input");
+    //        var idx = inputs.index(this);
+
+    //        if (idx == inputs.length - 1) {
+    //            inputs[0].select()
+    //        } else {
+    //            inputs[idx + 1].focus(); //  handles submit buttons
+    //            inputs[idx + 1].select();
+    //        }
+    //        return false;
+    //    }
+    //});
+
+
+    
 }
 
 
@@ -262,10 +330,26 @@ function InicializaElementosCompra() {
                 return "Buscando..";
             }
         },
+        dropdownParent: $('#modalNuevaCompra'),
+        dropdownCssClass: 'custom-dropdown'
+        
 
     });
+    $('#idAlmacen').select2({
+
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        },
+    });
+
 
     $("#idAlmacen").change(function (evt) {
+       
         evt.preventDefault();
         arrayProductos = [];
         if ($("#idAlmacen").val() > 0) {
@@ -275,7 +359,6 @@ function InicializaElementosCompra() {
 
     });
     $("#idProducto").change(function (evt) {
-        evt.preventDefault();
         var producto = $('#idProducto').select2('data')[0];
         if (producto != null && producto != undefined) {            
             $("#unidadCompra").val(producto.unidadCompra.descripcionUnidadCompra);
@@ -284,9 +367,11 @@ function InicializaElementosCompra() {
             $("#precio").val(producto.costo);
             $("#cantPorUnidadCompra").val(0);
             $("#cantidad").val(0);
-            $('#precio').focus();
+           
         }
+
     });
+    
 
     $("#cantPorUnidadCompra").blur(function (evt) {       
         var cantidadUnidadCompra = parseInt($("#cantidadUnidadCompra").val());
@@ -385,6 +470,7 @@ function InicializaElementosCompra() {
             $("#idAlmacen").addClass("readonly");
             $('#idAlmacen').prop('disabled', true);
             $('#idProducto').val('').trigger('change');
+            $('#idProducto').select2('open');
             $('#cantidad').val('0');
             $('#precio').val('0');
             $("#unidadCompra").val('');
@@ -392,7 +478,7 @@ function InicializaElementosCompra() {
             $("#unidadVenta").val('');
             $("#cantPorUnidadCompra").val('');
             actualizaTicket();
-            $('#cantidad').focus();
+           
 
 
         }

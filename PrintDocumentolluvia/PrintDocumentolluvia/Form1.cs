@@ -432,8 +432,8 @@ namespace PrintDocumentolluvia
                 derecha.Alignment = StringAlignment.Far; //Izquierda
 
                 //Tipo y tamaño de letra
-                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
-                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font font = new Font("Arial", 7.5F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 7.5F, FontStyle.Bold, GraphicsUnit.Point);
                 Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
 
                 //Color de texto
@@ -640,7 +640,6 @@ namespace PrintDocumentolluvia
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 6)
                 {
                     e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -659,8 +658,8 @@ namespace PrintDocumentolluvia
                     indexProducto++;
                     pintaFooterIndice++;
                 }
-                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
 
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (montoAgregarProductos > 0)
                 {
 
@@ -679,7 +678,19 @@ namespace PrintDocumentolluvia
                     datosfooter1.Y += espaciado;
                     if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto == lstTickets.Count() + 8)
+                {
+                    Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: 130", font, drawBrush, totalArt, centrado);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+
+                if (indexProducto == lstTickets.Count() + 9)
                 {
                     if (montoAhorro > 0)
                     {
@@ -687,15 +698,18 @@ namespace PrintDocumentolluvia
                         e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
                         datosfooter1.Y += espaciado;
                         indexProducto++;
-                        pintaFooterIndice++;
+
                     }
-                    else {
+                    else
+                    {
                         indexProducto++;
                     }
                 }
+
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                if (indexProducto >= lstTickets.Count() + 9)
+
+                if (indexProducto >= lstTickets.Count() + 10)
                 {
                     datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
                     e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
@@ -761,110 +775,7 @@ namespace PrintDocumentolluvia
             return imag;
         }
 
-        public void pintaTablaProductos(object sender, ref PrintPageEventArgs e, Notificacion<List<Ticket>> notificacion)
-        {
-
-            float monto = 0;
-            float montoIVA = 0;
-            float montoComisionBancaria = 0;
-            float montoAhorro = 0;
-            float montoPagado = 0;
-            float suCambio = 0;
-
-            float montoPagadoAgregarProductos = 0;
-            float montoAgregarProductos = 0;
-            float suCambioAgregarProductos = 0;
-
-            int ancho = 258;
-            int espaciado = 14;
-
-            //Configuración Global
-            GraphicsUnit units = GraphicsUnit.Pixel;
-            e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
-            e.Graphics.InterpolationMode = InterpolationMode.High;
-            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
-
-            //Configuración Texto
-            StringFormat centrado = new StringFormat();
-            centrado.Alignment = StringAlignment.Center;//Cetrado
-            StringFormat izquierda = new StringFormat();
-            izquierda.Alignment = StringAlignment.Near; //Izquierda
-            StringFormat derecha = new StringFormat();
-            derecha.Alignment = StringAlignment.Far; //Izquierda
-
-            //Tipo y tamaño de letra
-            Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
-            Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
-            Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
-
-            //Color de texto
-            SolidBrush drawBrush = new SolidBrush(Color.Black);
-
-            //Se pinta logo 
-            Rectangle logo = new Rectangle(80, 15, 280, 81);
-
-            Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
-            Rectangle datosCantidad = new Rectangle(152, 285, 30, 82);
-            Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
-            Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
-
-            Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
-            int itemperpage = 1;
-            for (int i = 0; i < notificacion.Modelo.Count(); i++)
-            {
-                e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-
-                monto += notificacion.Modelo[i].monto;
-                montoIVA += notificacion.Modelo[i].montoIVA;
-                montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
-                montoAhorro += notificacion.Modelo[i].ahorro;
-
-                if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
-                {
-                    datosProducto.Y += espaciado + 10;
-                    datosCantidad.Y += espaciado + 10;
-                    datosPrecioU.Y += espaciado + 10;
-                    datosPrecio.Y += espaciado + 10;
-                }
-                else
-                {
-                    datosProducto.Y += espaciado;
-                    datosCantidad.Y += espaciado;
-                    datosPrecioU.Y += espaciado;
-                    datosPrecio.Y += espaciado;
-                }
-
-                // si hay descuentos por mayoreo o rango de precios
-                if (notificacion.Modelo[i].ahorro > 0)
-                {
-                    e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                    datosProducto.Y += espaciado;
-                    datosCantidad.Y += espaciado;
-                    datosPrecioU.Y += espaciado;
-                    datosPrecio.Y += espaciado;
-                }
-
-                if (itemperpage < 20) // check whether  the number of item(per page) is more than 20 or not
-                {
-                    itemperpage += 1; // increment itemperpage by 1
-                    e.HasMorePages = false; // set the HasMorePages property to false , so that no other page will not be added
-
-                }
-
-                else // if the number of item(per page) is more than 20 then add one page
-                {
-                    itemperpage = 0; //initiate itemperpage to 0 .
-                    e.HasMorePages = true; //e.HasMorePages raised the PrintPage event once per page .
-                    return;//It will call PrintPage event again
-                }
-            }
-
-        }
-
+     
         private void button2_Click(object sender, EventArgs e)
         {
             try

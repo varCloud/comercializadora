@@ -637,6 +637,8 @@ namespace lluviaBackEnd.Controllers
                 float montoPagadoAgregarProductos = 0;
                 float montoAgregarProductos = 0;
                 float suCambioAgregarProductos = 0;
+                float cantidadTotalDeArticulos = 0;
+
                 int ancho = 258;
                 int espaciado = 14;
                 Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
@@ -788,7 +790,7 @@ namespace lluviaBackEnd.Controllers
                 montoIVA += notificacion.Modelo.Sum(x => x.montoIVA);
                 montoComisionBancaria += notificacion.Modelo.Sum(x => x.montoComisionBancaria);
                 montoAhorro += notificacion.Modelo.Sum(x => x.ahorro);
-
+                cantidadTotalDeArticulos += notificacion.Modelo.Sum(x => x.cantidad);
                 int posXFooter = 285;
                 if (montoAgregarProductos > 0)
                 {
@@ -811,7 +813,6 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 1)
                 {
                     e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -822,7 +823,6 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 2)
                 {
                     //if (montoComisionBancaria > 0)
@@ -836,7 +836,6 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 3)
                 //if (montoIVA > 0)
                 {
@@ -849,7 +848,6 @@ namespace lluviaBackEnd.Controllers
 
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 4)
                 {
                     e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -860,8 +858,6 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
-
                 if (indexProducto == lstTickets.Count() + 5)
                 {
                     e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -871,7 +867,6 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-
                 if (indexProducto == lstTickets.Count() + 6)
                 {
                     e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -910,11 +905,23 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 }
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto == lstTickets.Count() + 8)
+                {
+                    datosfooter1.Y += espaciado;
+                    Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: "+cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
+
+                if (indexProducto == lstTickets.Count() + 9)
                 {
                     if (montoAhorro > 0)
                     {
-                        Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y + 20, 280, 82);
+                        datosfooter1.Y += espaciado;
+                        Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y, 280, 82);
                         e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
                         datosfooter1.Y += espaciado;
                         indexProducto++;
@@ -926,9 +933,10 @@ namespace lluviaBackEnd.Controllers
                 }
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                if (indexProducto >= lstTickets.Count() + 9)
+                if (indexProducto >= lstTickets.Count() + 10)
                 {
-                    datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2 = new Rectangle(0, datosfooter1.Y , 280, 82);
                     e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
