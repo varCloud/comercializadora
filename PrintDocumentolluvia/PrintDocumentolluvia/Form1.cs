@@ -432,8 +432,8 @@ namespace PrintDocumentolluvia
                 derecha.Alignment = StringAlignment.Far; //Izquierda
 
                 //Tipo y tamaño de letra
-                Font font = new Font("Arial", 7.5F, FontStyle.Regular, GraphicsUnit.Point);
-                Font Bold = new Font("Arial", 7.5F, FontStyle.Bold, GraphicsUnit.Point);
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
                 Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
 
                 //Color de texto
@@ -683,7 +683,7 @@ namespace PrintDocumentolluvia
                 if (indexProducto == lstTickets.Count() + 8)
                 {
                     Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
-                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: 130", font, drawBrush, totalArt, centrado);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADO: 130", font, drawBrush, totalArt, centrado);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
                 }
