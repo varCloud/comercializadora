@@ -786,6 +786,50 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<Ventas>> ObtenerVentasEditar(Ventas ventas)
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+
+            try
+            {
+                
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idCliente", ventas.idCliente==0 ? (object)null : ventas.idCliente);
+                    parameters.Add("@idUsuario", ventas.idUsuario==0 ? (object)null : ventas.idUsuario);
+                    parameters.Add("@fechaIni", ventas.fechaIni==DateTime.MinValue ? (object)null  : ventas.fechaIni);
+                    parameters.Add("@fechaFin", ventas.fechaFin == DateTime.MinValue ? (object)null :ventas.fechaFin);                   
+                    parameters.Add("@idFactFormaPago", ventas.idFactFormaPago == 0 ? (object)null : ventas.idFactFormaPago);
+                    parameters.Add("@idAlmacen", ventas.idAlmacen == 0 ? (object)null : ventas.idAlmacen);
+                    parameters.Add("@codigoBarrasTicket", ventas.codigoBarrasTicket == string.Empty ? (object)null : ventas.codigoBarrasTicket);
+                    
+                    var result = db.QueryMultiple("SP_CONSULTA_VENTAS_EDITAR", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ventas>().ToList();
+                        notificacion.Modelo.ForEach(p => p.rutaFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + "/" + p.rutaFactura);
+
+
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

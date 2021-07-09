@@ -178,7 +178,7 @@ namespace lluviaBackEnd.Controllers
                 ventas.tipoConsulta = 2;
                 ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
                 
-                notificacion = new ReportesDAO().ObtenerVentas(ventas);
+                notificacion = new VentasDAO().ObtenerVentasEditar(ventas);
 
                 if (notificacion.Modelo != null)
                 {
