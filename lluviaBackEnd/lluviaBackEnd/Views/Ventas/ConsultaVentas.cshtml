@@ -45,13 +45,21 @@
                         @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
 
                         <div class="row">
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="form-group">
-                                    <label>Producto: </label>
-                                    @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
 
+
+                            <div class="col-12 col-sm-12 col-lg-4">
+
+                                <div class="form-group">
+                                    <label>Codigo de Barras: </label>
+                                    @Html.TextBoxFor(model => model.codigoBarrasTicket, null, new { @class = "form-control", @id = "codigoBarrasTicket"})
+
+                                    @*
+        @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                    *@
                                 </div>
                             </div>
+
+
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Cliente: </label>
@@ -101,7 +109,7 @@
 
 
 <div id="rowConsultaVentas">
-    @Html.Action("_ObtenerVentas", "Ventas" , new { fechaIni = DateTime.Now , fechaFin = DateTime.Now })
+    @Html.Action("_ObtenerVentas", "Ventas", new { fechaIni = DateTime.Now, fechaFin = DateTime.Now })
 </div>
 
 
@@ -244,7 +252,7 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
-                            <button type="button" id="btnCancelarDetalleTickets" class="btn btn-danger" data-dismiss="modal">Cancelar</button>                            
+                            <button type="button" id="btnCancelarDetalleTickets" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>

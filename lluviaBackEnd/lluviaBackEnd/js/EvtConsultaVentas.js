@@ -719,7 +719,9 @@ $(document).ready(function () {
     InitSelect2Multiple();
     InitDataTableConsultaVentas();
     InitRangePicker('rangeConsultaVentas', 'fechaIni', 'fechaFin');
-    $('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    $('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#rangeConsultaVentas').val('');
+    $('#codigoBarrasTicket').focus();
+    //$('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });
