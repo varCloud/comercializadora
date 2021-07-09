@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -133,8 +134,11 @@ namespace lluviaBackEnd.Controllers
         {
             Notificacion<String> notificacion = new Notificacion<string>();
             Dictionary<string, object> items = null;
+
             try
             {
+                
+                
                 string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\","/");
                 string pathServer = Utils.ObtnerFolder() + @"/";
                 
@@ -194,6 +198,11 @@ namespace lluviaBackEnd.Controllers
                         factura.mensajeError = "OK";
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
+                       
+                        Task.Factory.StartNew(() => {
+                            Email.NotificacionPagoReferencia("var901106@gmail.com", pathServer + "Timbre_" + factura.idVenta + ".xml");
+                        });
+
 
                     }
                     else
@@ -202,6 +211,7 @@ namespace lluviaBackEnd.Controllers
                         factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
                         System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + ".xml"), xmlSerealizado);
                         Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
 
                     notificacion = new FacturaDAO().GuardarFactura(factura);
