@@ -31,7 +31,7 @@ namespace PrintDocumentolluvia
         //7022
         //int idVenta = 1948;
 
-        int idVenta = 11642;
+        int idVenta = 7022;
         int indiceProducto = 0;
         int paginaActual = 0;
         int productosporPagina = 30;
@@ -55,7 +55,7 @@ namespace PrintDocumentolluvia
                 using (PrintDocument pd = new PrintDocument())
                 {
 
-                    pd.PrinterSettings.PrinterName = "Microsoft Print to PDF"; // @"\\DESKTOP-M7HANDH\EPSON";
+                    pd.PrinterSettings.PrinterName = "EPSON"; // @"\\DESKTOP-M7HANDH\EPSON";
                     //pd.PrinterSettings.PrinterName = "EPSON TM-T20III Receipt";
                     //pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
                     Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
