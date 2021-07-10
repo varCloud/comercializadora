@@ -309,6 +309,7 @@
     <Compile Include="Utilerias\BitacoraException.cs" />
     <Compile Include="Utilerias\BitacoraRequest.cs" />
     <Compile Include="Utilerias\BitacoraResponse.cs" />
+    <Compile Include="Utilerias\Email.cs" />
     <Compile Include="Utilerias\ItextEvents.cs" />
     <Compile Include="Utilerias\ManagerSerealization.cs" />
     <Compile Include="Utilerias\ProcesaCfdi.cs" />

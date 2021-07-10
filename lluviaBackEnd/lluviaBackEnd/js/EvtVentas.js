@@ -1177,14 +1177,14 @@ function ImprimeTicket(idVenta) {
             console.log(data);
             OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
-            setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
+            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);
-            console.log(data);
+            //console.log(data);
         }
     });
 }
