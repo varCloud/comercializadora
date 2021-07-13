@@ -583,14 +583,14 @@ namespace lluviaBackEnd.Controllers
                         pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
                     Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
-                    PaperSize ps = new PaperSize("", 285, 540);
+                    //PaperSize ps = new PaperSize("", 285, 540);
                     pd.PrintPage +=  (_sender, args) => pd_PrintPage(null, args, _notificacion );
                     pd.PrintController = new StandardPrintController();
                     pd.DefaultPageSettings.Margins.Left = 10;
                     pd.DefaultPageSettings.Margins.Right = 0;
                     pd.DefaultPageSettings.Margins.Top = 0;
                     pd.DefaultPageSettings.Margins.Bottom = 0;
-                    pd.DefaultPageSettings.PaperSize = ps;
+                    //pd.DefaultPageSettings.PaperSize = ps;
                     pd.Print();
                     pd.Dispose();
                 }
@@ -739,11 +739,11 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
 
-                    monto += lstTickets[i].monto;
+                    /*monto += lstTickets[i].monto;
                     montoIVA += lstTickets[i].montoIVA;
                     montoComisionBancaria += lstTickets[i].montoComisionBancaria;
                     montoAhorro += lstTickets[i].ahorro;
-
+                    */
                     if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
                         datosIndex.Y += espaciado + 10;
@@ -786,11 +786,11 @@ namespace lluviaBackEnd.Controllers
 
                 }
                
-                monto += notificacion.Modelo.Sum(x => x.monto);
-                montoIVA += notificacion.Modelo.Sum(x => x.montoIVA);
-                montoComisionBancaria += notificacion.Modelo.Sum(x => x.montoComisionBancaria);
-                montoAhorro += notificacion.Modelo.Sum(x => x.ahorro);
-                cantidadTotalDeArticulos += notificacion.Modelo.Sum(x => x.cantidad);
+                monto = notificacion.Modelo.Sum(x => x.monto);
+                montoIVA = notificacion.Modelo.Sum(x => x.montoIVA);
+                montoComisionBancaria = notificacion.Modelo.Sum(x => x.montoComisionBancaria);
+                montoAhorro = notificacion.Modelo.Sum(x => x.ahorro);
+                cantidadTotalDeArticulos = notificacion.Modelo.Sum(x => x.cantidad);
                 int posXFooter = 285;
                 if (montoAgregarProductos > 0)
                 {

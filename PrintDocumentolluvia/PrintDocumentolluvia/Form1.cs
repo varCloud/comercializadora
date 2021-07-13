@@ -44,6 +44,12 @@ namespace PrintDocumentolluvia
             Notificacion<Ventas> notificacion;
             try
             {
+                indiceProducto = 0;
+                paginaActual = 0;
+                productosporPagina = 30;
+                paginas = 0;
+                indexProducto = 0;
+                pintaFooterIndice = 0;
                 paginaActual = 0;
                 productosporPagina = 30;
                 paginas = 0;
@@ -54,8 +60,8 @@ namespace PrintDocumentolluvia
 
                 using (PrintDocument pd = new PrintDocument())
                 {
-
-                    pd.PrinterSettings.PrinterName = "EPSON"; // @"\\DESKTOP-M7HANDH\EPSON";
+                    this.idVenta = string.IsNullOrEmpty(this.txtVenta.Text) ? 7022 : Convert.ToInt16(this.txtVenta.Text);
+                    pd.PrinterSettings.PrinterName = this.txtImpresora.Text; // @"\\DESKTOP-M7HANDH\EPSON";
                     //pd.PrinterSettings.PrinterName = "EPSON TM-T20III Receipt";
                     //pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
                     Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
@@ -101,10 +107,10 @@ namespace PrintDocumentolluvia
                     pd.DefaultPageSettings.Margins.Right = 0;
                     pd.DefaultPageSettings.Margins.Top = 0;
                     pd.DefaultPageSettings.Margins.Bottom = 0;
-                    PaperSize psize = new PaperSize("Custom", 100, 200);
-                    pd.DefaultPageSettings.PaperSize = psize;
-                    pd.DefaultPageSettings.PaperSize.Height = 820;
-                    pd.DefaultPageSettings.PaperSize.Width = 520;
+                    //PaperSize psize = new PaperSize("Custom", 100, 200);
+                    //pd.DefaultPageSettings.PaperSize = psize;
+                    //pd.DefaultPageSettings.PaperSize.Height = 820;
+                    //pd.DefaultPageSettings.PaperSize.Width = 520;
                     pd.PrintPage += (_sender, args) => pd_PrintPage(sender, args, _notificacion, listadoTickets, esSoloUnTicket);
                     pd.Print();
                     pd.Dispose();
@@ -506,10 +512,10 @@ namespace PrintDocumentolluvia
                     e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
 
-                    monto += lstTickets[i].monto;
-                    montoIVA += lstTickets[i].montoIVA;
-                    montoComisionBancaria += lstTickets[i].montoComisionBancaria;
-                    montoAhorro += lstTickets[i].ahorro;
+                    //monto += lstTickets[i].monto;
+                    //montoIVA += lstTickets[i].montoIVA;
+                    //montoComisionBancaria += lstTickets[i].montoComisionBancaria;
+                    //montoAhorro += lstTickets[i].ahorro;
 
                     if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
@@ -544,10 +550,13 @@ namespace PrintDocumentolluvia
                     
                     Console.WriteLine("indexProducto: " + indexProducto);
                     indexProducto++;
+                    this.txtLog.Text += " Y:" + datosProducto.Y.ToString();
+                       
                     if (datosProducto.Y >= 1092)
                     {
                         this.paginaActual++;
                         e.HasMorePages = true;
+                        this.txtLog.Text += " Nueva Pagina" + datosProducto.Y.ToString();
                         return;
                     }
 

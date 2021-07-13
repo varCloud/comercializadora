@@ -33,21 +33,24 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.txtImpresora = new System.Windows.Forms.TextBox();
+            this.txtLog = new System.Windows.Forms.TextBox();
+            this.txtVenta = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(84, 40);
+            this.button1.Location = new System.Drawing.Point(84, 65);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "imprimir Ticket";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(211, 40);
+            this.button2.Location = new System.Drawing.Point(84, 143);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 1;
@@ -57,7 +60,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(331, 40);
+            this.button3.Location = new System.Drawing.Point(84, 181);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
@@ -67,7 +70,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(494, 39);
+            this.button4.Location = new System.Drawing.Point(84, 210);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 3;
@@ -85,11 +88,38 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // txtImpresora
+            // 
+            this.txtImpresora.Location = new System.Drawing.Point(84, 13);
+            this.txtImpresora.Name = "txtImpresora";
+            this.txtImpresora.Size = new System.Drawing.Size(143, 20);
+            this.txtImpresora.TabIndex = 5;
+            this.txtImpresora.Text = "CutePDF Writer";
+            // 
+            // txtLog
+            // 
+            this.txtLog.Location = new System.Drawing.Point(309, 42);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "txtLog";
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtLog.Size = new System.Drawing.Size(465, 319);
+            this.txtLog.TabIndex = 6;
+            // 
+            // txtVenta
+            // 
+            this.txtVenta.Location = new System.Drawing.Point(84, 39);
+            this.txtVenta.Name = "txtVenta";
+            this.txtVenta.Size = new System.Drawing.Size(143, 20);
+            this.txtVenta.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 370);
+            this.Controls.Add(this.txtVenta);
+            this.Controls.Add(this.txtLog);
+            this.Controls.Add(this.txtImpresora);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -98,6 +128,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -108,6 +139,9 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox txtImpresora;
+        private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.TextBox txtVenta;
     }
 }
 
