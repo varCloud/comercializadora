@@ -1137,14 +1137,6 @@ $('#chkFacturar').click(function () {
     var iva = parseFloat(0).toFixed(2);
     var porcentajeIva = parseFloat(0.16).toFixed(2);
 
-    // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
-    if (
-        ((parseInt(formaPago) == parseInt(4)) ||  //Tarjeta de crédito
-         (parseInt(formaPago) == parseInt(18))) //&&  //Tarjeta de débito
-    ) {
-        porcentajeIva = parseFloat(0.0);
-    }
-
     if ((esDevolucion == "true") || (esDevolucion == "True")) {
         MuestraToast('warning', "No es posible facturar una Devolución.");
         document.getElementById("chkFacturar").checked = false;
@@ -1174,6 +1166,8 @@ $('#chkFacturar').click(function () {
     }
     document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
+
+    calculaTotales('false');
 
 });
 
@@ -1529,23 +1523,26 @@ $("#idCliente").on("change", function () {
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;
-    calculaTotales();
+    calculaTotales('true');
 });
 
 
 $("#formaPago").on("change", function (value) {
     this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
-    calculaTotales();
+    calculaTotales('true');
 });
 
-function calculaTotales() {
+function calculaTotales(conReseteoCampos) {
 
-    $('#efectivo').val('');
-    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-    //document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";    
-    document.getElementById("chkFacturar").checked = false;
-    document.getElementById("divUsoCFDI").style.display = 'none';
-    $('#usoCFDI').val("3").trigger('change');
+    if (conReseteoCampos === 'true') {
+        $('#efectivo').val('');
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+        //document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";    
+        document.getElementById("chkFacturar").checked = false;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+        $('#usoCFDI').val("3").trigger('change');
+    }
+
     var formaPago = $('#formaPago').val();
     var porcentajeComisionBancaria = parseFloat(0);
     var descuento = parseFloat(0);
@@ -1572,7 +1569,7 @@ function calculaTotales() {
     if (descuento > 0.0) {
         cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
     }
-    console.log(porcentajeComisionBancaria);
+    //console.log(porcentajeComisionBancaria);
     var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
     var comisionBancaria = (parseFloat((subTotal) * (porcentajeComisionBancaria / 100))).toFixed(2);
     subTotal = (parseFloat(subTotal) + parseFloat(comisionBancaria)).toFixed(2);
