@@ -433,9 +433,13 @@ function limpiaModalIVA() {
 function modalFacturar(idVenta) {
 
     limpiaModalIVA();
-
     var data = ConsultaVenta(idVenta);
     //console.log(data);
+
+    if (data.Modelo.idFactFormaPago == 4 || data.Modelo.idFactFormaPago == 18) {
+        MuestraToast('warning', "Debe primero cancelar esta venta para posteriormente facturarla desde el modulo de ventas.");
+        return;
+    }
 
     var montoTotal = parseFloat(data.Modelo.montoTotal).toFixed(2);
     var montoIVA = parseFloat(data.Modelo.montoTotal * 0.16).toFixed(2);

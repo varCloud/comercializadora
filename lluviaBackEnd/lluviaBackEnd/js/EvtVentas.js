@@ -1133,6 +1133,9 @@ $('#chkFacturar').click(function () {
 
     var idCliente = $('#idCliente').val();
     var esDevolucion = $('#esDevolucion').val();
+    var formaPago = $('#formaPago').val();
+    var iva = parseFloat(0).toFixed(2);
+    var porcentajeIva = parseFloat(0.16).toFixed(2);
 
     if ((esDevolucion == "true") || (esDevolucion == "True")) {
         MuestraToast('warning', "No es posible facturar una Devolución.");
@@ -1147,20 +1150,25 @@ $('#chkFacturar').click(function () {
     }
 
     $('#efectivo').val('');
+
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
     document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
     var subTotal = parseFloat(document.getElementById("previoSubTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
-    var iva = parseFloat(0).toFixed(2);
     var final = parseFloat(subTotal).toFixed(2);
+
     if ($(this).is(':checked')) {
         document.getElementById("divUsoCFDI").style.display = 'block';
-        iva = parseFloat(subTotal * 0.16).toFixed(2);
+        iva = parseFloat(subTotal * porcentajeIva).toFixed(2);
         final = (parseFloat(subTotal) + parseFloat(iva)).toFixed(2);
     } else {
         document.getElementById("divUsoCFDI").style.display = 'none';
     }
     document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
+
+    calculaTotales('false');
+
 });
 
 function ImprimeTicket(idVenta) {
@@ -1515,29 +1523,38 @@ $("#idCliente").on("change", function () {
     }
 
     document.getElementById("nombreCliente").innerHTML = row_;
-    calculaTotales();
+    calculaTotales('true');
 });
 
 
 $("#formaPago").on("change", function (value) {
     this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
-    calculaTotales();
+    calculaTotales('true');
 });
 
-function calculaTotales() {
+function calculaTotales(conReseteoCampos) {
 
-    $('#efectivo').val('');
-    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-    //document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";    
-    document.getElementById("chkFacturar").checked = false;
-    document.getElementById("divUsoCFDI").style.display = 'none';
-    $('#usoCFDI').val("3").trigger('change');
+    if (conReseteoCampos === 'true') {
+        $('#efectivo').val('');
+        document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+        //document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";    
+        document.getElementById("chkFacturar").checked = false;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+        $('#usoCFDI').val("3").trigger('change');
+    }
+
     var formaPago = $('#formaPago').val();
     var porcentajeComisionBancaria = parseFloat(0);
     var descuento = parseFloat(0);
 
     // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
-    if ((parseInt(formaPago) == parseInt(4)) || (parseInt(formaPago) == parseInt(18))) {
+    
+    if  (
+           ( (parseInt(formaPago) == parseInt(4))   ||  //Tarjeta de crédito
+            (parseInt(formaPago) == parseInt(18)) ) &&  //Tarjeta de débito
+            ( !$("#chkFacturar").is(":checked") )       // y si la venta no es facturada
+        )
+    {
         porcentajeComisionBancaria = $('#comisionBancaria').val();
     }
 
@@ -1552,7 +1569,7 @@ function calculaTotales() {
     if (descuento > 0.0) {
         cantidadDescontada = parseFloat((total - descuentoMenudeo) * (descuento / 100)).toFixed(2);
     }
-
+    //console.log(porcentajeComisionBancaria);
     var subTotal = parseFloat(total - descuentoMenudeo - cantidadDescontada).toFixed(2);
     var comisionBancaria = (parseFloat((subTotal) * (porcentajeComisionBancaria / 100))).toFixed(2);
     subTotal = (parseFloat(subTotal) + parseFloat(comisionBancaria)).toFixed(2);
@@ -1570,8 +1587,6 @@ function calculaTotales() {
     document.getElementById("previoSubTotal").innerHTML = "<h4>$" + subTotal + "</h4>";
     document.getElementById("previoIVA").innerHTML = "<h4>$" + iva + "</h4>";
     document.getElementById("previoFinal").innerHTML = "<h4>$" + final + "</h4>";
-
-
 
 }
 

@@ -82,26 +82,6 @@ else
                                                 break;
                                         }
 
-
-                                        //if ( item.productosDevueltos > 0) {
-
-                                        //    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
-                                        //    notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(item.idVenta, lluviaBackEnd.Models.TipoTicket.Devolucion);
-                                        //    item.lstTicketsDevolucion = notificacion.Modelo==null ? new List<lluviaBackEnd.Models.Ticket>() : notificacion.Modelo;
-
-                                        //}
-
-
-                                        //if ( item.productosAgregados > 0 )
-                                        //{
-
-                                        //    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
-                                        //    notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTicketsDevolucionComplemento(item.idVenta, lluviaBackEnd.Models.TipoTicket.Complemento);
-                                        //    item.lstTicketsComplementos = notificacion.Modelo == null ? new List<lluviaBackEnd.Models.Ticket>() : notificacion.Modelo;
-
-                                        //}
-
-
                                         <tr>
                                             <td>@item.idVenta</td>
                                             <td>@item.nombreCliente</td>
@@ -142,76 +122,18 @@ else
                                                         }
 
 
-                                                        @*@if (item.productosAgregados > 0)
-        {
-            foreach (var item_ in item.lstTicketsComplementos)
-
-            {
-                <a class="dropdown-item has-icon" href="javascript:ImprimeTicketComplemento(@item.idVenta, @item_.idComplemento);"><i class="fas fa-print"></i>Imp. Ticket Comp. - @item_.idComplemento</a>
-                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketComplemento", "Ventas", new {idVenta = item.idVenta, idComplemento=item_.idComplemento})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Comp. - @item_.idComplemento  </a>
-
-            }
-        }*@
-
-
-
-                                                        @*@if (item.productosDevueltos > 0)
-        {
-            <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta);"><i class="fas fa-print"></i>Imprimir Ticket Devolución</a>
-            <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta=item.idVenta})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket de Devolución  </a>
-        }*@
-
                                                         @if (item.productosDevueltos > 0 || item.productosAgregados > 0)
                                                         {
-
                                                             <a class="dropdown-item has-icon" href="javascript:modalVerDetalleTickets(@item.idVenta);"><i class="fas fa-eye"></i>Ver Detalle Tickets</a>
-
-
-
-                                                            @*foreach (var item_ in item.lstTicketsDevolucion)
-            {
-                <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta, @item_.idDevolucion);"><i class="fas fa-print"></i>Imp. Ticket Dev. - @item_.idDevolucion</a>
-                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta = item.idVenta, idDevolucion=item_.idDevolucion})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Dev. - @item_.idDevolucion  </a>
-
-            }*@
                                                         }
 
-                                                        @*@if (item.productosDevueltos > 0)
-        {
-            foreach (var item_ in item.lstTicketsDevolucion)
 
-            {
-                <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta, @item_.idDevolucion);"><i class="fas fa-print"></i>Imp. Ticket Dev. - @item_.idDevolucion</a>
-                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta = item.idVenta, idDevolucion=item_.idDevolucion})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Dev. - @item_.idDevolucion  </a>
-
-            }
-        }*@
-
-
-                                                        @*@if (item.productosDevueltos > 0)
-        {
-            foreach (var item_ in item.lstTicketsDevolucion)
-
-            {
-                <a class="dropdown-item has-icon" href="javascript:ImprimeTicketDevolucion(@item.idVenta, @item_.idDevolucion);"><i class="fas fa-print"></i>Ticket Devolución - @item_.idDevolucion</a>
-                <a class="dropdown-item has-icon" href="@Url.Action("VerTicketDevolucion", "Ventas", new {idVenta = item.idVenta, idDevolucion=item_.idDevolucion})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket de Dev. - @item_.idDevolucion  </a>
-
-            }
-        }*@
-
-
-
-
-
-                                                        @*@if ((item.productosDevueltos < ViewBag.devolucionesPermitidas) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
-                                                        @*@if ( (item.puedeHacerComplementos) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
                                                         @if ((item.puedeHacerComplementos) && (item.diasPasadosVentaInicial <= usuario.diasParaHacerComplementos) && (item.idEstatusFactura != 1))
                                                         {
                                                             <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })"><i class="far fa-minus-square"></i>Devolver Productos</a>
                                                         }
 
-                                                        @*@if ((item.productosAgregados < ViewBag.agregarProductosPermitidos) && (item.cantidad >= 6) && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
-                                                        @*@if ( (item.puedeHacerComplementos)  && (item.fechaAlta.Date == hoy.Date) && (item.idEstatusFactura != 1))*@
+
                                                         @if ((item.puedeHacerComplementos) && (item.diasPasadosVentaInicial <= usuario.diasParaHacerComplementos) && (item.idEstatusFactura != 1))
                                                         {
                                                             <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esAgregarProductos = "true", esDevolucion = "false" })"><i class="far fa-plus-square"></i>Agregar Productos</a>
