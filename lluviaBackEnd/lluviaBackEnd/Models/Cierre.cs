@@ -8,6 +8,7 @@ namespace lluviaBackEnd.Models
 {
     public class Cierre
     {
+        public int idCierre { get; set; }
         public int idEstacion { get; set; }
         public int idUsuario { get; set; }
         public int totalVentas { get; set; }       
@@ -24,5 +25,12 @@ namespace lluviaBackEnd.Models
         public float montoCierre { get; set; }
         public float ProductosDevueltos { get; set; }
         public float MontoTotalDevoluciones { get; set; }
+        public DateTime fechaCierre { get; set; }
+        public string descAlmacen { get; set; }
+        public string nombreUsuario { get; set; }   
+        public DateTime fechaIni { get; set; }
+        public DateTime fechaFin { get; set; }
+
+
     }
 }

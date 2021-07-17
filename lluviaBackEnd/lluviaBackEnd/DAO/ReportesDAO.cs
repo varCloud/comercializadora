@@ -300,6 +300,50 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<Ventas>> ObtenerDevolucionesyComplementos(Ventas ventas,int tipoTicket)
+        {
+            Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+
+            try
+            {               
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idVenta", ventas.idVenta==0 ? (object) null : ventas.idVenta);
+                    parameters.Add("@idAlmacen", ventas.idAlmacen == 0 ? (object)null : ventas.idAlmacen);
+                    parameters.Add("@idUsuario", ventas.idUsuario == 0 ? (object)null : ventas.idUsuario);
+                    parameters.Add("@fechaIni", ventas.fechaIni == DateTime.MinValue ? (object)null : ventas.fechaIni);
+                    parameters.Add("@fechaFin", ventas.fechaFin == DateTime.MinValue ? (object)null : ventas.fechaFin);
+                    parameters.Add("@idTipoConsulta", tipoTicket == 0 ? (object)null : tipoTicket);
+                    
+
+                    var result = db.QueryMultiple("SP_CONSULTA_DEVOLUCIONES_Y_COMPLEMENTOS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ventas>().ToList();
+                        //notificacion.Modelo.ForEach(p => p.rutaFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + "/" + p.rutaFactura);
+
+
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
 
         public DevolucionProveedor MapDevolucionProveedor(DevolucionProveedor d,Producto p,Usuario u,Proveedor pr)
         {
@@ -349,6 +393,42 @@ namespace lluviaBackEnd.DAO
             i.producto = p;
             return i;
         }
+
+        public Notificacion<List<Cierre>> ConsultaCierresCaja(Cierre cierre)
+        {
+            Notificacion<List<Cierre>> notificacion = new Notificacion<List<Cierre>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", cierre.idUsuario==0 ? (object)null : cierre.idUsuario);
+                    parameters.Add("@idAlmacen", cierre.idAlmacen == 0 ? (object)null : cierre.idAlmacen);
+                    parameters.Add("@fechaIni", cierre.fechaIni==DateTime.MinValue? (object)null : cierre.fechaIni);
+                    parameters.Add("@fechaFin", cierre.fechaFin == DateTime.MinValue ? (object)null : cierre.fechaFin);
+                    var result = db.QueryMultiple("SP_CONSULTA_CIERRES_DIA", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Cierre>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Cierre>();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
 
     }

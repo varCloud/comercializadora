@@ -329,14 +329,14 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-                notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
+                //Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
+                //notificacion = new ReportesDAO().ObtenerDevoluciones(new Models.Ventas() { idVenta = 0 });
                 ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
                 List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
                 lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
                 lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
                 ViewBag.lstAlmacenes = lstAlmacenes;
-                ViewBag.lstVentas = notificacion.Modelo;
+                //ViewBag.lstVentas = notificacion.Modelo;
                 return View();
             }
             catch (Exception ex)
@@ -347,12 +347,12 @@ namespace lluviaBackEnd.Controllers
         }
 
 
-        public ActionResult BuscarDevoluciones(Ventas ventas)
+        public ActionResult BuscarDevoluciones(Ventas ventas,int tipoTicket=0)
         {
             try
             {
                 Notificacion<List<Ventas>> notificacion = new Notificacion<List<Ventas>>();
-                notificacion = new ReportesDAO().ObtenerDevoluciones(ventas);
+                notificacion = new ReportesDAO().ObtenerDevolucionesyComplementos(ventas, tipoTicket);
 
                 if (notificacion.Modelo != null)
                 {
@@ -372,6 +372,45 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+        // DEOLUCIONES DE VENTAS
+
+        public ActionResult Cierres()
+        {
+            try
+            {
+               
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
+                lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });                
+                ViewBag.lstAlmacenes = lstAlmacenes;
+                List<Cierre> cierres = new ReportesDAO().ConsultaCierresCaja(new Cierre()).Modelo; 
+                ViewBag.lstCierres = cierres;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult BuscarCierres(Cierre cierre)
+        {
+            try
+            {
+                List<Cierre> cierres = new ReportesDAO().ConsultaCierresCaja(cierre).Modelo;
+                return Json(cierres, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 

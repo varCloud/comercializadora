@@ -100,5 +100,6 @@ namespace lluviaBackEnd.Models
         public Boolean puedeHacerComplementos { get; set; }
         public int diasPasadosVentaInicial { get; set; }
         public string descripcionAlmacen { get; set; }
+        public string descripcion { get; set; }
     }
 }

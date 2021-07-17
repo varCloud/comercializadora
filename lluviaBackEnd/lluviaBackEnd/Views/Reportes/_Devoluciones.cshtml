@@ -25,23 +25,29 @@
                                     <th>Folio</th>
                                     <th>Cliente</th>
                                     <th>Producto</th>
-                                    <th>Unidades Devueltas</th>
+                                    <th>Unidades</th>
                                     <th>Precio Venta</th>
+                                    <th>Monto Total</th>
+                                    <th>Codigo Barras</th>
+                                    <th>Tipo</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in lstVentas)
                                 {
-                                    <tr>
-                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
-                                        <td>@item.descAlmacen</td>
-                                        <td>@item.nombreUsuario</td>
-                                        <td>@item.idVenta</td>
-                                        <td>@item.nombreCliente</td>
-                                        <td>@item.descripcionProducto</td>
-                                        <td>@item.productosDevueltos</td>
-                                        <td>@item.precioVenta.ToString("C", new CultureInfo("en-US"))</td>
-                                    </tr>
+                                <tr>
+                                    <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                    <td>@item.descAlmacen</td>
+                                    <td>@item.nombreUsuario</td>
+                                    <td>@item.idVenta</td>
+                                    <td>@item.nombreCliente</td>
+                                    <td>@item.descripcionProducto</td>
+                                    <td>@item.cantidad</td>
+                                    <td>@item.precioVenta.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.codigoBarras</td>
+                                    <td>@item.descripcion</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

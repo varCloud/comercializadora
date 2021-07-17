@@ -1043,6 +1043,7 @@
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
+    <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
@@ -1265,6 +1266,7 @@
     <Content Include="Views\Ventas\VerTicketComplemento.cshtml" />
     <Content Include="Views\Ventas\_ObtenerDetalleTickets.cshtml" />
     <Content Include="Views\Ventas\VerTodosTickets.cshtml" />
+    <Content Include="Views\Reportes\Cierres.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
