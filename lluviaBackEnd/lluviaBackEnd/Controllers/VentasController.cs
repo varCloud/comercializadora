@@ -682,14 +682,10 @@ namespace lluviaBackEnd.Controllers
                     Rectangle logo = new Rectangle(80, poslogoY, 280, 81);
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
-                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
-
                     postTicketY = (logo.Y + logo.Height + espaciado);
-                    //Rectangle posImgCodigoTicket = new Rectangle(0, postTicketY, 1000, 65);
-                    //e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 10.0F, .10F, units);
-                    e.Graphics.DrawImage(imagenCodigoTicket, 0, postTicketY, 300, 60);
+                    
 
-                    postTicketY = postTicketY + 100 + espaciado;
+                    //postTicketY = postTicketY + 100 + espaciado;
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
                     e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
@@ -931,9 +927,21 @@ namespace lluviaBackEnd.Controllers
                         indexProducto++;
                     }
                 }
+                datosfooter1.Y += espaciado;
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+
                 if (indexProducto >= lstTickets.Count() + 10)
+                {
+                  
+                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                    e.Graphics.DrawImage(imagenCodigoTicket, -50, datosfooter1.Y, 400, 60);
+                    datosfooter1.Y += espaciado+30+espaciado;
+                    indexProducto++;
+                }
+                
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y, 280, 82);
+                if (indexProducto >= lstTickets.Count() + 11)
                 {
                     datosfooter1.Y += espaciado;
                     datosfooter2 = new Rectangle(0, datosfooter1.Y , 280, 82);
@@ -957,6 +965,7 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
+                //e.Graphics.DrawImage
                 //}
 
 
@@ -1818,6 +1827,7 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("Fecha:" +  notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
                 e.Graphics.DrawString("Hora:" +   notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
+                Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
                 Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
                 Rectangle datosCantidad = new Rectangle(150, 285, 30, 82);
                 Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
@@ -1830,7 +1840,7 @@ namespace lluviaBackEnd.Controllers
 
                 e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                e.Graphics.DrawString("#     Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 9;
                 e.Graphics.DrawString("                                                 Devueltos    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
                 datosEnca.Y += 6;
@@ -1842,6 +1852,7 @@ namespace lluviaBackEnd.Controllers
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
+                    e.Graphics.DrawString((i+1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
@@ -1852,6 +1863,7 @@ namespace lluviaBackEnd.Controllers
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
+                        datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
                         datosPrecioU.Y += espaciado + 10;
@@ -1859,6 +1871,7 @@ namespace lluviaBackEnd.Controllers
                     }
                     else
                     {
+                        datosIndex.Y += espaciado;
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
                         datosPrecioU.Y += espaciado;

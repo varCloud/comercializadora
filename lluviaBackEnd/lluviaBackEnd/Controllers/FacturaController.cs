@@ -190,7 +190,7 @@ namespace lluviaBackEnd.Controllers
 
 
                         Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta);
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items);
                         System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
 
                         factura.pathArchivoFactura = pathFactura;
@@ -200,7 +200,7 @@ namespace lluviaBackEnd.Controllers
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
                        
                         Task.Factory.StartNew(() => {
-                            Email.NotificacionPagoReferencia("var901106@gmail.com", pathServer + "Timbre_" + factura.idVenta + ".xml");
+                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml");
                         });
 
 
@@ -215,6 +215,7 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     notificacion = new FacturaDAO().GuardarFactura(factura);
+                    notificacion.Mensaje += " " + factura.mensajeError;
                     return Json(notificacion, JsonRequestBehavior.AllowGet);
                 }
                 else {

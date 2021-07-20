@@ -197,7 +197,7 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path, string idVenta)
+        public static void GenerarFactura(Comprobante c, string path, string idVenta, Dictionary<string, object> items )
         {
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -248,7 +248,7 @@ namespace lluviaBackEnd.Utilerias
                                  <td " + tituloIndividual + @" >R.F.C </td> <td>" + c.Receptor.Rfc + @"</td> <td " + tituloIndividual + @">Uso CFDI </td><td>" + c.Receptor.UsoCFDI + " - " + c.Addenda.descripcionUsoCFDI + @" </td>  
                             </tr>
                             <tr>
-                                <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>CALLE GALEANA No. 59, COLONIA LA MAGDALENA, C.P. 60080, URUAPAN, MICHOACAN, MEXICO </td> 
+                                <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>"+ items["domicilioCliente"].ToString() + @" </td> 
                             </tr>
                             <tr>
                                 <td  width='15%'></td>

