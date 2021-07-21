@@ -113,6 +113,9 @@ function VerCliente(idCliente, accion) {
         $('#municipio').val(data.Modelo.municipio);
         $('#cp').val(data.Modelo.cp);
         $('#estado').val(data.Modelo.estado);
+        $('#numeroInterior').val(data.Modelo.numeroInterior);
+        $('#localidad').val(data.Modelo.localidad);
+        $('#numeroExterior').val(data.Modelo.numeroExterior);
         $('#cbTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente);
         $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true })
 

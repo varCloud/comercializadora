@@ -38,6 +38,8 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@municipio",c.municipio);
                 parameters.Add("@cp" ,c.cp);
                 parameters.Add("@estado",c.estado);
+                parameters.Add("@numeroInterior", c.numeroInterior);
+                parameters.Add("@localidad", c.localidad);
                 //parameters.Add("@fechaAlta",c.FechaAlta.ToString("yyyyMMdd"));
                 //parameters.Add("@activo",c.activo);
                 parameters.Add("@idTipoCliente",c.tipoCliente.idTipoCliente);

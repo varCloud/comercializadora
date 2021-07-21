@@ -97,6 +97,30 @@
                                 @Html.ValidationMessageFor(x => x.colonia, null, new { @class = "text-danger was" })
                             </div>
                         </div>
+
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Numero Exterior</label>
+                                @Html.TextBoxFor(x => x.numeroExterior, null, new { @class = "form-control", @id = "numeroExterior" })
+                                @Html.ValidationMessageFor(x => x.numeroExterior, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Numero Interior</label>
+                                @Html.TextBoxFor(x => x.numeroInterior, null, new { @class = "form-control", @id = "numeroInterior" })
+                                @Html.ValidationMessageFor(x => x.numeroInterior, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Localidad</label>
+                                @Html.TextBoxFor(x => x.localidad, null, new { @class = "form-control", @id = "localidad" })
+                                @Html.ValidationMessageFor(x => x.localidad, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Municipio</label>
@@ -105,41 +129,41 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Codigo Postal</label>
-                                @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "cp", onkeypress = "return esNumero(event)" })
-                                @Html.ValidationMessageFor(x => x.cp, null, new { @class = "text-danger was" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Codigo Postal</label>
+                                    @Html.TextBoxFor(x => x.cp, null, new { @class = "form-control", @id = "cp", onkeypress = "return esNumero(event)" })
+                                    @Html.ValidationMessageFor(x => x.cp, null, new { @class = "text-danger was" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    @Html.TextBoxFor(x => x.estado, null, new { @class = "form-control", @id = "estado" })
+                                    @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Tipo Cliente</label>
+                                    @Html.DropDownListFor(m => m.tipoCliente.idTipoCliente, new SelectList(LstTipoClientes, "idTipoCliente", "descripcion"), null, new { @class = "form-control", @id = "cbTipoCliente" })
+                                    @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Estado</label>
-                                @Html.TextBoxFor(x => x.estado,  null, new { @class = "form-control", @id = "estado" })
-                                @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <div class="text-right" style="margin-top:15px;">
+                                    <button type="reset" class="btn btn-danger" id="btnResetGuardarUsuario">Reset</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" id="btnGuardarCliente" class="btn btn-success">Guardar</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Tipo Cliente</label>
-                                @Html.DropDownListFor( m => m.tipoCliente.idTipoCliente, new SelectList(LstTipoClientes, "idTipoCliente", "descripcion"),null , new { @class = "form-control", @id = "cbTipoCliente" } )
-                                @Html.ValidationMessageFor(x => x.estado, null, new { @class = "text-danger was" })
-                            </div>
-                        </div>
+                        }
+                        @*</form>*@
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="text-right" style="margin-top:15px;">
-                                <button type="reset" class="btn btn-danger" id="btnResetGuardarUsuario">Reset</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="btnGuardarCliente" class="btn btn-success">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                }
-                @*</form>*@
-            </div>
         </div>
     </div>
 </div>
