@@ -1027,6 +1027,8 @@ namespace lluviaBackEnd.Controllers
                 //PrintDocument pd = new PrintDocument();
                 using (PrintDocument pd = new PrintDocument())
                 {
+                    this.paginaActual = 0;
+                    this.indexProducto = 0;
                     if (venta.ticketVistaPrevia)
                     {
                         notificacion.Mensaje = "Abriendo Ticket.";
@@ -1060,14 +1062,18 @@ namespace lluviaBackEnd.Controllers
                         pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
 
-                    PaperSize ps = new PaperSize("", 285, 540);
-                    pd.PrintPage += new PrintPageEventHandler(pd_PrintPageVentaCancelada);
+                    //PaperSize ps = new PaperSize("", 285, 540);
+                    //pd.PrintPage += new PrintPageEventHandler(pd_PrintPageVentaCancelada);
+                    Notificacion<List<Ticket>>  _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, estatusVenta = EnumEstatusVenta.Cancelada });
+ 
+                    pd.PrintPage += (_sender, args) => pd_PrintPage(null, args, _notificacion);
+
                     pd.PrintController = new StandardPrintController();
                     pd.DefaultPageSettings.Margins.Left = 10;
                     pd.DefaultPageSettings.Margins.Right = 0;
                     pd.DefaultPageSettings.Margins.Top = 0;
                     pd.DefaultPageSettings.Margins.Bottom = 0;
-                    pd.DefaultPageSettings.PaperSize = ps;
+                    //pd.DefaultPageSettings.PaperSize = ps;
                     pd.Print();
                     pd.Dispose();
                 }
@@ -1092,12 +1098,13 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        void pd_PrintPageVentaCancelada(object sender, PrintPageEventArgs e)
+        void pd_PrintPageVentaCancelada(object sender, PrintPageEventArgs e, Notificacion<List<Ticket>> notificacion)
         {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            //Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, estatusVenta = EnumEstatusVenta.Cancelada });
+                //notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, estatusVenta = EnumEstatusVenta.Cancelada });
+                List<Ticket> lstTickets = notificacion.Modelo;
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -1129,32 +1136,55 @@ namespace lluviaBackEnd.Controllers
 
                 //Se pinta logo 
                 Rectangle logo = new Rectangle(80, 15, 280, 81);
-                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
-
-                Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                e.Graphics.DrawString("VENTA CANCELADA", Bold, drawBrush, datos, centrado);
-
-                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 136, izquierda);
-                e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
-                e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 146, izquierda);
-
+                Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
                 Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
                 Rectangle datosCantidad = new Rectangle(190, 240, 30, 82);
+                Rectangle datosPrecioU = new Rectangle(205, 285, 30, 82);
                 Rectangle datosPrecio = new Rectangle(220, 240, 48, 82);
-
                 Rectangle datosEnca = new Rectangle(0, 170, 280, 82);
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
 
-                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
-                e.Graphics.DrawString("  Forma de Pago: " + notificacion.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
+                if (paginaActual == 0)
+                {
 
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 8;
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                //datosEnca.Y += 14;
+                    e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                    //e.Graphics.DrawString("VENTA CANCELADA", Bold, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("*******************************************************************" + "\n" + "*****************   VENTA CANCELADA   *****************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
+
+                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 136, izquierda);
+                    e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
+                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 146, izquierda);
+
+
+
+                    e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("  Forma de Pago: " + notificacion.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 8;
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    //datosEnca.Y += 14;
+                    datosEnca.Y += 14;
+                    datosIndex = new Rectangle(2, datosEnca.Y, 15, 82);
+                    datosProducto = new Rectangle(20, datosEnca.Y, 145, 82);
+                    datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
+                    datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
+                    datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
+                }
+                else
+                {
+                    datosIndex = new Rectangle(2, 15, 15, 82);
+                    datosProducto = new Rectangle(20, 15, 145, 82);
+                    datosCantidad = new Rectangle(177, 15, 30, 82);
+                    datosPrecioU = new Rectangle(205, 15, 30, 82);
+                    datosPrecio = new Rectangle(235, 15, 48, 82);
+                }
+
 
                 float monto = 0;
                 float montoIVA = 0;
@@ -1163,8 +1193,10 @@ namespace lluviaBackEnd.Controllers
 
                 for (int i = 0; i < notificacion.Modelo.Count(); i++)
                 {
+                    e.Graphics.DrawString((indexProducto+1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
@@ -1172,16 +1204,21 @@ namespace lluviaBackEnd.Controllers
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
                     montoAhorro += notificacion.Modelo[i].ahorro;
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
+                        datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
+                        datosPrecioU.Y += espaciado + 10;
                         datosPrecio.Y += espaciado + 10;
                     }
                     else
                     {
+
+                        datosIndex.Y += espaciado;
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
@@ -1192,56 +1229,113 @@ namespace lluviaBackEnd.Controllers
                         e.Graphics.DrawString("-" + (notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
-                    }             
+                        datosIndex.Y += espaciado;
+                    }
+
+
+                    indexProducto++;
+                    if (datosProducto.Y >= 1092)
+                    {
+                        this.paginaActual++;
+                        e.HasMorePages = true;
+                        return;
+                    }
+
                 }
 
+
+                int posXFooter = 285;
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
-                datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
-
-                if (montoComisionBancaria > 0)
+                if (indexProducto == lstTickets.Count())
                 {
-                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
+                    e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                     datosfooter1.Y += espaciado;
+                    indexProducto++;
                 }
 
-                if (montoIVA > 0)
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 1)
                 {
-                    e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
+                    indexProducto++;
                 }
 
-                e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 2)
+                {
+                    //if (montoComisionBancaria > 0)
+                    //{
+                        e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                        e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                        datosfooter1.Y += espaciado;
+                        indexProducto++;
+                    //}
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 3)
+                {
+                    //if (montoIVA > 0)
+                    //{
+                        e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                        e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                        datosfooter1.Y += espaciado;
+                        indexProducto++;
+                    //}
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 4)
+                {
+                    e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
 
 
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
 
-                //Se pinta codigo de barras en ticket
-                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 5)
+                {
+                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
-                datosfooter1.Y += 40;
-                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
 
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 6)
+                {
+                    //Se pinta codigo de barras en ticket
+                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                    datosfooter1.Y += 40;
+                    Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
+                    e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
-                // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 7)
+                {
+                    // para mas espaciado al final del ticket
+                    e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
+
+
             }
             catch (InvalidPrinterException ex)
             {
@@ -1748,18 +1842,26 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
                 this.idDevolucion = venta.idDevolucion;
 
-                PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
+                {
+                    this.paginaActual = 0;
+                    this.indexProducto = 0;
+                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    PaperSize ps = new PaperSize("", 285, 540);
+                    //pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDevoluciones);
+                    Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
+                    pd.PrintPage += (_sender, args) => pd_PrintPageDevoluciones(null, args, _notificacion);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    //pd.DefaultPageSettings.PaperSize = ps;
+                    pd.Print();
+                    pd.Dispose();
 
-                PaperSize ps = new PaperSize("", 285, 540);
-                pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDevoluciones);
-                pd.PrintController = new StandardPrintController();
-                pd.DefaultPageSettings.Margins.Left = 10;
-                pd.DefaultPageSettings.Margins.Right = 0;
-                pd.DefaultPageSettings.Margins.Top = 0;
-                pd.DefaultPageSettings.Margins.Bottom = 0;
-                pd.DefaultPageSettings.PaperSize = ps;
-                pd.Print();
+                }
 
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
@@ -1781,12 +1883,12 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        void pd_PrintPageDevoluciones(object sender, PrintPageEventArgs e)
+        void pd_PrintPageDevoluciones(object sender, PrintPageEventArgs e, Notificacion<List<Ticket>> notificacion)
         {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            //Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idDevolucion = idDevolucion, tipoVenta = EnumTipoVenta.Devolucion });
+                List<Ticket> lstTickets = notificacion.Modelo;
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -1816,52 +1918,74 @@ namespace lluviaBackEnd.Controllers
                 //Color de texto
                 SolidBrush drawBrush = new SolidBrush(Color.Black);
 
-                //Se pinta logo 
-                Rectangle logo = new Rectangle(80, 15, 280, 81);
-                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
-
-                Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                e.Graphics.DrawString("*******************************************************************" + "\n" + "***************** TICKET DE DEVOLUCIÓN *****************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
-
-                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                e.Graphics.DrawString("Fecha:" +  notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                e.Graphics.DrawString("Hora:" +   notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
-
                 Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
                 Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
                 Rectangle datosCantidad = new Rectangle(150, 285, 30, 82);
                 Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
                 Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
-
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
-                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
+                float cantidadTotalDeArticulos = notificacion.Modelo.Sum(x => x.cantidad);
 
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
-                e.Graphics.DrawString("#     Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 9;
-                e.Graphics.DrawString("                                                 Devueltos    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 6;
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                //datosEnca.Y += 14;
+                if (paginaActual == 0)
+                {
+
+                    //Se pinta logo 
+                    Rectangle logo = new Rectangle(80, 15, 280, 81);
+                    e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                    Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                    e.Graphics.DrawString("*******************************************************************" + "\n" + "***************** TICKET DE DEVOLUCIÓN *****************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
+
+                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
+                    e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+
+
+                    e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("#     Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 9;
+                    e.Graphics.DrawString("                                                 Devueltos    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 6;
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+
+                    datosEnca.Y += 14;
+                    datosIndex = new Rectangle(2, datosEnca.Y, 15, 82);
+                    datosProducto = new Rectangle(20, datosEnca.Y, 145, 82);
+                    datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
+                    datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
+                    datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
+
+                }
+                else
+                {
+                    datosIndex = new Rectangle(2, 15, 15, 82);
+                    datosProducto = new Rectangle(20, 15, 145, 82);
+                    datosCantidad = new Rectangle(177, 15, 30, 82);
+                    datosPrecioU = new Rectangle(205, 15, 30, 82);
+                    datosPrecio = new Rectangle(235, 15, 48, 82);
+                }
+
 
                 float monto = 0;
                 float montoComisionBancaria = 0;
 
-                for (int i = 0; i < notificacion.Modelo.Count(); i++)
+                for (int i = indexProducto; i < notificacion.Modelo.Count(); i++)
                 {
-                    e.Graphics.DrawString((i+1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((i + 1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
+                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
+                    if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
                         datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado + 10;
@@ -1878,52 +2002,115 @@ namespace lluviaBackEnd.Controllers
                         datosPrecio.Y += espaciado;
                     }
 
+                    indexProducto++;
+                    if (datosProducto.Y >= 1092)
+                    {
+                        this.paginaActual++;
+                        e.HasMorePages = true;
+                        return;
+                    }
                 }
 
-
+                int posXFooter = 285;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
-                datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
-
-                if (montoComisionBancaria > 0)
+                if (indexProducto == lstTickets.Count())
                 {
-                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
+                    e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                     datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 1)
+                {
+                    e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 2)
+                {
+                    //if (montoComisionBancaria > 0)
+                    //{
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+
+                    //}
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 3)
+                {
+                    e.Graphics.DrawString("  TOTAL DEVUELTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado * 2;
+                    indexProducto++;
+                }
+
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 4)
+                {
+                    e.Graphics.DrawString("___________________________________________________", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
                 }
 
 
-                e.Graphics.DrawString("  TOTAL DEVUELTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado * 2;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 5)
+                {
+                    e.Graphics.DrawString("FIRMA DEL CLIENTE", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado * 2;
+                    datosfooter2.Y += espaciado * 2;
+                    indexProducto++;
+                }
 
 
-                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                e.Graphics.DrawString("___________________________________________________", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
-                e.Graphics.DrawString("FIRMA DEL CLIENTE", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado * 2;
-                datosfooter2.Y += espaciado * 2;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 6)
+                {
+                    datosfooter1.Y += espaciado;
+                    datosfooter1.Y += espaciado;
+                    Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS DEVUELTOS: " + cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
 
-                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
 
-                datosfooter1.Y += 40;
-                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto >= lstTickets.Count() + 7)
+                {
+                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                    datosfooter1.Y += 40;
+                    Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
+                    e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
 
-                // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto >= lstTickets.Count() + 8)
+                {
+                    // para mas espaciado al final del ticket
+                    e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
             }
             catch (InvalidPrinterException ex)
@@ -1962,18 +2149,25 @@ namespace lluviaBackEnd.Controllers
                 this.idVenta = venta.idVenta;
                 this.idComplemento = venta.idComplemento;
 
-                PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
-
-                PaperSize ps = new PaperSize("", 285, 540);
-                pd.PrintPage += new PrintPageEventHandler(pd_PrintPageComplementos);
-                pd.PrintController = new StandardPrintController();
-                pd.DefaultPageSettings.Margins.Left = 10;
-                pd.DefaultPageSettings.Margins.Right = 0;
-                pd.DefaultPageSettings.Margins.Top = 0;
-                pd.DefaultPageSettings.Margins.Bottom = 0;
-                pd.DefaultPageSettings.PaperSize = ps;
-                pd.Print();
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
+                {
+                    this.paginaActual = 0;
+                    this.indexProducto = 0;
+                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                    //PaperSize ps = new PaperSize("", 285, 540);
+                    //pd.PrintPage += new PrintPageEventHandler(pd_PrintPageComplementos);
+                    pd.PrintPage += (_sender, args) => pd_PrintPageComplementos(null, args, _notificacion);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    //pd.DefaultPageSettings.PaperSize = ps;
+                    pd.Print();
+                    pd.Dispose();
+                }
 
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
@@ -1995,12 +2189,13 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        void pd_PrintPageComplementos(object sender, PrintPageEventArgs e)
+        void pd_PrintPageComplementos(object sender, PrintPageEventArgs e, Notificacion<List<Ticket>> notificacion)
         {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            //Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                //notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta, idComplemento = idComplemento, tipoVenta = EnumTipoVenta.AgregarProductosVenta });
+                List<Ticket> lstTickets = notificacion.Modelo;
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -2036,46 +2231,71 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
                 Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                e.Graphics.DrawString("*******************************************************************" + "\n" + "*************** TICKET DE COMPLEMENTO ***************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
-
-                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                e.Graphics.DrawString("Fecha:" +  notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                e.Graphics.DrawString("Hora:" +   notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
-
+                Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
                 Rectangle datosProducto = new Rectangle(5, 285, 145, 82);
                 Rectangle datosCantidad = new Rectangle(150, 285, 30, 82);
                 Rectangle datosPrecioU = new Rectangle(190, 285, 30, 82);
                 Rectangle datosPrecio = new Rectangle(220, 285, 48, 82);
 
-                Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
+                float cantidadTotalDeArticulos = notificacion.Modelo.Sum(x => x.cantidad);
 
-                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
+                if (paginaActual == 0)
+                {
 
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 9;
-                e.Graphics.DrawString("                                                 Agregados    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 6;
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                //datosEnca.Y += 14;
+                    e.Graphics.DrawString("*******************************************************************" + "\n" + "*************** TICKET DE COMPLEMENTO ***************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
+                    e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+
+                    Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
+
+                    e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("  Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 9;
+                    e.Graphics.DrawString("                                                 Agregados    Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 6;
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    //datosEnca.Y += 14;
+
+                    datosEnca.Y += 14;
+                    datosIndex = new Rectangle(2, datosEnca.Y, 15, 82);
+                    datosProducto = new Rectangle(20, datosEnca.Y, 145, 82);
+                    datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
+                    datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
+                    datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
+
+                }
+                else
+                {
+                    datosIndex = new Rectangle(2, 15, 15, 82);
+                    datosProducto = new Rectangle(20, 15, 145, 82);
+                    datosCantidad = new Rectangle(177, 15, 30, 82);
+                    datosPrecioU = new Rectangle(205, 15, 30, 82);
+                    datosPrecio = new Rectangle(235, 15, 48, 82);
+                }
+
 
                 float monto = 0;
                 float montoComisionBancaria = 0;
 
-                for (int i = 0; i < notificacion.Modelo.Count(); i++)
+                for (int i = indexProducto; i < notificacion.Modelo.Count(); i++)
                 {
-                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((i + 1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
+                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
 
                     if (notificacion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
+                        datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
                         datosPrecioU.Y += espaciado + 10;
@@ -2083,58 +2303,124 @@ namespace lluviaBackEnd.Controllers
                     }
                     else
                     {
+                        datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
                         datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
 
+                    indexProducto++;
+                    if (datosProducto.Y >= 1092)
+                    {
+                        this.paginaActual++;
+                        e.HasMorePages = true;
+                        return;
+                    }
                 }
 
+                int posXFooter = 285;
 
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
-                datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
-
-                if (montoComisionBancaria > 0)
+                if (indexProducto == lstTickets.Count())
                 {
-                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
+                    e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                     datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 1)
+                {
+                    e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 2)
+                {
+                    //if (montoComisionBancaria > 0)
+                    //{
+                    e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+
+                    //}
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 3)
+                {
+                    e.Graphics.DrawString("  TOTAL AGREGADO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado * 2;
+                    indexProducto++;
+                }
+
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 4)
+                {
+                    e.Graphics.DrawString("___________________________________________________", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
                 }
 
 
-                e.Graphics.DrawString("  TOTAL COMPLEMENTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado * 2;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 5)
+                {
+                    e.Graphics.DrawString("FIRMA DEL CLIENTE", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado * 2;
+                    datosfooter2.Y += espaciado * 2;
+                    indexProducto++;
+                }
 
-                
-                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                e.Graphics.DrawString("___________________________________________________", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
-                e.Graphics.DrawString("FIRMA DEL CLIENTE", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado * 2;
-                datosfooter2.Y += espaciado * 2;
 
-                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 6)
+                {
+                    datosfooter1.Y += espaciado;
+                    datosfooter1.Y += espaciado;
+                    Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: " + cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
 
-                datosfooter1.Y += 40;
-                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
 
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto >= lstTickets.Count() + 7)
+                {
+                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                    datosfooter1.Y += 40;
+                    Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
+                    e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
-                // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto >= lstTickets.Count() + 8)
+                {
+                    // para mas espaciado al final del ticket
+                    e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
+
 
             }
             catch (InvalidPrinterException ex)
@@ -2172,50 +2458,59 @@ namespace lluviaBackEnd.Controllers
 
                 this.idVenta = venta.idVenta;
 
-                PrintDocument pd = new PrintDocument();
+                //PrintDocument pd = new PrintDocument();
 
-                if (venta.ticketVistaPrevia)
+                using (PrintDocument pd = new PrintDocument())
                 {
-                    notificacion.Mensaje = "Abriendo Ticket.";
-                    string nombreImpresora = string.Empty;
-                    foreach (String strPrinter in PrinterSettings.InstalledPrinters)
-                    {
-                        if (strPrinter.Contains("PDF"))
-                        {
-                            nombreImpresora = strPrinter;
-                        }
-                    }
+                    this.paginaActual = 0;
+                    this.indexProducto = 0;
 
-                    if (nombreImpresora == string.Empty)
+                    if (venta.ticketVistaPrevia)
                     {
-                        notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
-                        notificacion.Estatus = -1;
-                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        notificacion.Mensaje = "Abriendo Ticket.";
+                        string nombreImpresora = string.Empty;
+                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                        {
+                            if (strPrinter.Contains("PDF"))
+                            {
+                                nombreImpresora = strPrinter;
+                            }
+                        }
+
+                        if (nombreImpresora == string.Empty)
+                        {
+                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                            notificacion.Estatus = -1;
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        }
+                        else
+                        {
+                            pd.PrinterSettings = new PrinterSettings
+                            {
+                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                                PrintToFile = true,
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
+                            };
+                        }
                     }
                     else
                     {
-                        pd.PrinterSettings = new PrinterSettings
-                        {
-                            PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
-                            PrintToFile = true,
-                            PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + venta.idVenta.ToString() + "_preview.pdf"
-                        };
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
-                }
-                else
-                {
-                    pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
-                }
+                    Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, tipoVenta = EnumTipoVenta.ProductosLiquidos });
 
-                PaperSize ps = new PaperSize("", 285, 540);
-                pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDespachadores);
-                pd.PrintController = new StandardPrintController();
-                pd.DefaultPageSettings.Margins.Left = 10;
-                pd.DefaultPageSettings.Margins.Right = 0;
-                pd.DefaultPageSettings.Margins.Top = 0;
-                pd.DefaultPageSettings.Margins.Bottom = 0;
-                pd.DefaultPageSettings.PaperSize = ps;
-                pd.Print();
+                    //PaperSize ps = new PaperSize("", 285, 540);
+                    //pd.PrintPage += new PrintPageEventHandler(pd_PrintPageDespachadores);
+                    pd.PrintPage +=  (_sender, args) => pd_PrintPageDespachadores(null, args, _notificacion );
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    //pd.DefaultPageSettings.PaperSize = ps;
+                    pd.Print();
+                    pd.Dispose();
+                }
 
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
@@ -2237,12 +2532,13 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        void pd_PrintPageDespachadores(object sender, PrintPageEventArgs e)
+        void pd_PrintPageDespachadores(object sender, PrintPageEventArgs e, Notificacion<List<Ticket>> notificacion)
         {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            //Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
             try
             {
-                notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, tipoVenta = EnumTipoVenta.ProductosLiquidos });
+                //notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, tipoVenta = EnumTipoVenta.ProductosLiquidos });
+                List<Ticket> lstTickets = notificacion.Modelo;
 
                 //Logos
                 Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -2272,98 +2568,184 @@ namespace lluviaBackEnd.Controllers
                 //Color de texto
                 SolidBrush drawBrush = new SolidBrush(Color.Black);
 
-                //Se pinta logo 
-                Rectangle logo = new Rectangle(80, 15, 280, 81);
-                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
-
-                Rectangle datos = new Rectangle(5, 110, ancho, 82);
-                e.Graphics.DrawString("*******************************************************************" + "\n" + "TICKET PARA DESPACHADORES" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
-
-                e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
-
+                Rectangle datosIndex = new Rectangle(2, 285, 15, 82);
                 Rectangle datosProducto = new Rectangle(5, 270, 180, 82);
                 Rectangle datosCantidad = new Rectangle(190, 270, 30, 82);
                 Rectangle datosPrecio = new Rectangle(220, 270, 48, 82);
-
+                Rectangle datosPrecioU = new Rectangle(205, 285, 30, 82);
                 Rectangle datosEnca = new Rectangle(0, 215, 280, 82);
 
-                e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
 
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 14;
-                e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
-                datosEnca.Y += 8;
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                //datosEnca.Y += 14;
+                if (paginaActual == 0)
+                {
+
+                    //Se pinta logo 
+                    Rectangle logo = new Rectangle(80, 15, 280, 81);
+                    e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                    Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                    e.Graphics.DrawString("*******************************************************************" + "\n" + "TICKET PARA DESPACHADORES" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("Ticket:" + lstTickets[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
+                    e.Graphics.DrawString("Fecha:" + lstTickets[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
+                    e.Graphics.DrawString("Hora:" + lstTickets[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+                    e.Graphics.DrawString("  Cliente: " + lstTickets[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+                    e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 8;
+                    e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
+                    //datosEnca.Y += 14;
+
+                    datosEnca.Y += 14;
+                    datosIndex = new Rectangle(2, datosEnca.Y, 15, 82);
+                    datosProducto = new Rectangle(20, datosEnca.Y, 145, 82);
+                    datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
+                    datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
+                    datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
+
+                }
+                else
+                {
+                    datosIndex = new Rectangle(2, 15, 15, 82);
+                    datosProducto = new Rectangle(20, 15, 145, 82);
+                    datosCantidad = new Rectangle(177, 15, 30, 82);
+                    datosPrecioU = new Rectangle(205, 15, 30, 82);
+                    datosPrecio = new Rectangle(235, 15, 48, 82);
+                }
 
                 float monto = 0;
                 float montoIVA = 0;
 
-                for (int i = 0; i < notificacion.Modelo.Count(); i++)
+                for (int i = 0; i < lstTickets.Count(); i++)
                 {
-                    e.Graphics.DrawString(notificacion.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                    e.Graphics.DrawString(notificacion.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString((notificacion.Modelo[i].monto + notificacion.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((indexProducto+1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
+                    e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
+                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-                    monto += notificacion.Modelo[i].monto;
-                    montoIVA += notificacion.Modelo[i].montoIVA;
+                    monto += lstTickets[i].monto;
+                    montoIVA += lstTickets[i].montoIVA;
 
 
-                    if (notificacion.Modelo[i].descProducto.ToString().Length >= 27)
+                    if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
+                        datosIndex.Y += espaciado + 10;
                         datosProducto.Y += espaciado + 10;
                         datosCantidad.Y += espaciado + 10;
+                        datosPrecioU.Y += espaciado + 10;
                         datosPrecio.Y += espaciado + 10;
                     }
                     else
                     {
+
+                        datosIndex.Y += espaciado;
                         datosProducto.Y += espaciado;
                         datosCantidad.Y += espaciado;
+                        datosPrecioU.Y += espaciado;
                         datosPrecio.Y += espaciado;
                     }
+
+
+                    indexProducto++;
+                    if (datosProducto.Y >= 1092)
+                    {
+                        this.paginaActual++;
+                        e.HasMorePages = true;
+                        return;
+                    }
+
                 }
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
-                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
-                datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
-
-                if (montoIVA > 0)
+                if (indexProducto == lstTickets.Count())
                 {
-                    e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
+                    e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
                     datosfooter1.Y += espaciado;
+                    indexProducto++;
+
                 }
 
-                e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
-                datosfooter1.Y += espaciado;
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 1)
+                {
+                    e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 2)
+                {
+                    //if (montoIVA > 0)
+                    //{
+                        e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                        e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                        datosfooter1.Y += espaciado;
+                    //}
+                    indexProducto++;
+                }
+
+
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 3)
+                {
+                    e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                    e.Graphics.DrawString((monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
+
 
                 Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 4)
+                {
+                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado*2;
+                    datosfooter2.Y += espaciado*2;
+                    indexProducto++;
+                }
 
-                //Se pinta codigo de barras en ticket
-                Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                float cantidadTotalDeArticulos = notificacion.Modelo.Sum(x => x.cantidad);
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 5)
+                {
+                    datosfooter1.Y += espaciado;
+                    Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: " + cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    datosfooter1.Y += espaciado;
+                    indexProducto++;
+                }
 
-                datosfooter1.Y += 40;
-                Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 6)
+                {
+                    //Se pinta codigo de barras en ticket
+                    Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
+                    datosfooter1.Y += 40;
+                    Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
+                    e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
 
-                // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 7)
+                {
+                    // para mas espaciado al final del ticket
+                    e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
+                    datosfooter1.Y += espaciado;
+                    datosfooter2.Y += espaciado;
+                    indexProducto++;
+                }
 
             }
             catch (InvalidPrinterException ex)
