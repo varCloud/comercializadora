@@ -2702,19 +2702,10 @@ namespace lluviaBackEnd.Controllers
                 }
 
 
-                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
-                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-                if (indexProducto == lstTickets.Count() + 4)
-                {
-                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
-                    datosfooter1.Y += espaciado*2;
-                    datosfooter2.Y += espaciado*2;
-                    indexProducto++;
-                }
 
                 float cantidadTotalDeArticulos = notificacion.Modelo.Sum(x => x.cantidad);
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
-                if (indexProducto == lstTickets.Count() + 5)
+                if (indexProducto == lstTickets.Count() + 4)
                 {
                     datosfooter1.Y += espaciado;
                     Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
@@ -2722,6 +2713,18 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     indexProducto++;
                 }
+
+
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 30, 280, 82);
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
+                if (indexProducto == lstTickets.Count() + 5)
+                {
+                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                    datosfooter1.Y += espaciado*2;
+                    datosfooter2.Y += espaciado*2;
+                    indexProducto++;
+                }
+
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto == lstTickets.Count() + 6)

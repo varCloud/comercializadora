@@ -691,7 +691,8 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='43%'>Descripcion</td>
+                                            <td width='7%'>#</td>
+                                            <td width='36%'>Descripcion</td>
                                             <td width='15%' style='color:black; text-align:center;'>Cantidad</td>
                                             <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
@@ -713,7 +714,8 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='40%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='7%'>" + (i+1).ToString() + @"</td>
+                                                            <td width='33%'>" + tickets[i].descProducto.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].cantidad.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].precioVenta.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
@@ -880,19 +882,21 @@ namespace lluviaBackEnd.Utilerias
                 }
 
 
+                float cantidadTotalDeArticulos = tickets.Sum(x => x.cantidad);
+
+                html += @"      <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>  CANTIDAD DE ARTICULOS COMPRADOS:  " + (cantidadTotalDeArticulos).ToString() + @"          </td></tr>";
+
+
                 if (montoAhorro > 0)
                 {
                     html += @"
-                                                <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                                <tr><td style='color:black; text-align:center;'>******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @" ******* </td></tr>
-                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @" ******* </td></tr>";
                 }
-                else
-                {
-                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
 
-                }
+
+
                 // se agrega el codigo de barras en el ticket 
                 nombreArchivo = tickets[0].codigoBarras.ToString();
                 Utilerias.Utils.GenerarCodigoBarras(tickets[0].codigoBarras.ToString(), nombreArchivo);
@@ -908,6 +912,12 @@ namespace lluviaBackEnd.Utilerias
                             </td>
                          </tr>
                          ";
+
+
+
+                html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+
 
 
                 html += @"
@@ -1066,7 +1076,8 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='50%'>Descripcion</td>
+                                            <td width='7%'>#</td>
+                                            <td width='43%'>Descripcion</td>
                                             <td width='25%' style='color:black; text-align:center;'>Cantidad</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
@@ -1087,7 +1098,8 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='60%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='7%'>" + (i+1).ToString() + @"</td>
+                                                            <td width='53%'>" + tickets[i].descProducto.ToString() + @"</td>
                                                             <td width='15%'>" + tickets[i].cantidad.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
@@ -1178,6 +1190,13 @@ namespace lluviaBackEnd.Utilerias
 
 
 
+
+                float cantidadTotalDeArticulos = tickets.Sum(x => x.cantidad);
+
+                html += @"      <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>  CANTIDAD DE ARTICULOS CANCELADOS:  " + (cantidadTotalDeArticulos).ToString() + @"          </td></tr>";
+
+
                 html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
                                                 <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
 
@@ -1229,7 +1248,7 @@ namespace lluviaBackEnd.Utilerias
             }
             return content;
         }
-                
+
         public static byte[] GeneraTicketDevolucionComplemento(List<Ticket> tickets)
         {
             byte[] content = null;
@@ -1248,6 +1267,7 @@ namespace lluviaBackEnd.Utilerias
             string tipo_cabecera = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVOLUCIÓN" : "COMPLEMENTO";
             string tipo_totales = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTO" : "COMPLEMENTO";
             string tipo_desripcion = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "Devueltos" : "Agregados";
+            string tipo_descripcion_articulos = tickets[0].tipoVenta == EnumTipoVenta.Devolucion ? "DEVUELTOS" : "COMPRADOS";
             float montoComisionBancaria = 0;
 
             try
@@ -1294,7 +1314,8 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='43%'>Descripcion</td>
+                                            <td width='7%'>#</td>
+                                            <td width='36%'>Descripcion</td>
                                             <td width='17%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
                                             <td width='15%' style='color:black; text-align:center;'>Precio Unitario</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
@@ -1313,7 +1334,8 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='40%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='7%'>" + (i+1).ToString() + @"</td>
+                                                            <td width='33%'>" + tickets[i].descProducto.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].cantidad.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].precioVenta.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
@@ -1388,6 +1410,14 @@ namespace lluviaBackEnd.Utilerias
                 //                        </table>
                 //                    </td>
                 //                </tr>";
+
+
+                float cantidadTotalDeArticulos = tickets.Sum(x => x.cantidad);
+
+                html += @"      <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>  CANTIDAD DE ARTICULOS " + tipo_descripcion_articulos + @":  " + (cantidadTotalDeArticulos).ToString() + @"          </td></tr>";
+
+
 
 
                 html += @"
@@ -1506,7 +1536,8 @@ namespace lluviaBackEnd.Utilerias
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>
-                                            <td width='50%'>Descripcion</td>
+                                            <td width='7%'>#</td>
+                                            <td width='43%'>Descripcion</td>
                                             <td width='25%' style='color:black; text-align:center;'>Cantidad</td>
                                             <td width='25%' style='color:black; text-align:center;'>Precio</td>
                                           </tr>
@@ -1525,7 +1556,8 @@ namespace lluviaBackEnd.Utilerias
                                                     <td style='color:black; '> 
                                                         <table>
                                                           <tr>
-                                                            <td width='60%'>" + tickets[i].descProducto.ToString() + @"</td>
+                                                            <td width='10%'>" + (i+1).ToString() + @"</td>
+                                                            <td width='50%'>" + tickets[i].descProducto.ToString() + @"</td>
                                                             <td width='15%'>" + tickets[i].cantidad.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
@@ -1578,6 +1610,14 @@ namespace lluviaBackEnd.Utilerias
                                         </table>
                                     </td>
                                 </tr>";
+
+
+
+                float cantidadTotalDeArticulos = tickets.Sum(x => x.cantidad);
+
+                html += @"      <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>  CANTIDAD DE ARTICULOS COMPRADOS:"  + (cantidadTotalDeArticulos).ToString() + @"          </td></tr>";
+
 
 
                 html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
