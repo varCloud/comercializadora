@@ -24,6 +24,7 @@ else
                 <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
+                    <th>Codigo de Barras</th>
                     <th>Total de Clientes</th>
                     <th>Total de Ventas</th>
                     <th>Total de Productos</th>
@@ -35,15 +36,16 @@ else
 
                 @foreach (lluviaBackEnd.Models.DropSize c in dropSizes)
                 {
-                    <tr>
-                        <td>@c.id</td>
-                        <td>@c.descripcion</td>
-                        <td>@c.TotalClientes</td>
-                        <td>@c.TotalVentas.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.TotalProductos</td>                    
-                        <td>@c.dropSizeVentas.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.dropSizeCantidad</td>                 
-                    </tr>
+                <tr>
+                    <td>@c.id</td>
+                    <td>@c.descripcion</td>
+                    <td>@c.codigoBarras</td>
+                    <td>@c.TotalClientes</td>
+                    <td>@c.TotalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.TotalProductos</td>
+                    <td>@c.dropSizeVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.dropSizeCantidad</td>
+                </tr>
                 }
             </tbody>
 

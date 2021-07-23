@@ -17,6 +17,7 @@ namespace lluviaBackEnd.Models
         public int TotalProductos { get; set; }
         public float dropSizeVentas { get; set; }
         public float dropSizeCantidad { get; set; }
+        public string codigoBarras { get; set; }
 
 
     }

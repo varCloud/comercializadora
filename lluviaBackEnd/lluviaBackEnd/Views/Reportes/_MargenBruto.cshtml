@@ -24,6 +24,7 @@ else
                 <tr>
                     <th>Id</th>
                     <th>Descripcion</th>
+                    <th>Codigo de Barras</th>
                     <th>Total de Ventas</th>
                     <th>Costo de Ventas</th>
                     <th>Contribuciòn Marginal</th>
@@ -34,14 +35,15 @@ else
 
                 @foreach (lluviaBackEnd.Models.MargenBruto c in margenBrutos)
                 {
-                    <tr>
-                        <td>@c.id</td>
-                        <td>@c.descripcion</td>
-                        <td>@c.totalVentas.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.CostoVentas.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.ContribucionMarginal.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.margenBruto %</td>                
-                    </tr>
+                <tr>
+                    <td>@c.id</td>
+                    <td>@c.descripcion</td>
+                    <td>@c.codigoBarras</td>
+                    <td>@c.totalVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.CostoVentas.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.ContribucionMarginal.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.margenBruto %</td>
+                </tr>
                 }
             </tbody>
 

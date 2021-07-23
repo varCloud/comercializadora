@@ -49,14 +49,14 @@ function InitDataTableMargenBruto() {
                     doc.defaultStyle.fontSize = 8;
                     doc.styles.tableHeader.fontSize = 10;
                     doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '25%', '15%', '15%', '20%', '15%'];
+                    doc.content[1].table.widths = ['5%', '20%', '15%', '15%', '15%', '15%', '15%'];
                     doc.pageMargins = [30, 85, 20, 30];
                     doc.content.splice(0, 1);
                     doc['header'] = SetHeaderPDF("Margen Bruto");
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4, 5,6]
                 },
             },
             {
@@ -65,7 +65,7 @@ function InitDataTableMargenBruto() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4, 5,6]
                 },
             },
         ],

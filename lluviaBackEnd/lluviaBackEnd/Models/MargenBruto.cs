@@ -16,5 +16,7 @@ namespace lluviaBackEnd.Models
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
         public float margenBruto { get; set; }
+        public string codigoBarras { get; set; }
+
     }
 }
