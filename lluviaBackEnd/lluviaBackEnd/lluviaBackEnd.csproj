@@ -265,6 +265,7 @@
     <Compile Include="Models\InventarioFisico.cs" />
     <Compile Include="Models\LimiteInvetario.cs" />
     <Compile Include="Models\MargenBruto.cs" />
+    <Compile Include="Models\ConfiguracionVenta.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />
     <Compile Include="Models\Sucursal.cs" />

@@ -3118,6 +3118,37 @@ namespace lluviaBackEnd.Controllers
 
 
 
+        [HttpPost]
+        public ActionResult ValidarContrasena(string usuario, string contrasena)
+        {
+            try
+            {
+                Notificacion<Sesion> n = new VentasDAO().ValidaUsuario(usuario, contrasena, EnumTipoValidaUsr.AutorizarCierre );
+                return Json(n, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ActionResult ObtenerConfiguracionVentas(EnumTipoConfig tipoConfigVentas)
+        {
+            try
+            {
+                Notificacion<ConfiguracionVenta> notificacion = new Notificacion<ConfiguracionVenta>();
+                notificacion = new VentasDAO().ObtenerConfiguracionVentas(tipoConfigVentas);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
 
 
     }

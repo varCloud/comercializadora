@@ -1639,15 +1639,6 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 });
 
 $('#btnCierreDia').click(function (e) {
-    //var monto = parseFloat($('#totalCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad para Cierre:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    //var totEfe = parseFloat($('#totalEfectivoCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Total Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    //var totRet = parseFloat($('#retirosDelDiaCierre').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Retiros del Día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    //var monto = totEfe - totRet;
-
-    //if ((monto) <= 0.0) {
-    //    MuestraToast('warning', "No cuenta con saldo para hacer el cierre de esta Estación.");
-    //    return
-    //}
 
     swal({
         title: 'Mensaje',
@@ -1659,36 +1650,145 @@ $('#btnCierreDia').click(function (e) {
         .then((willDelete) => {
             if (willDelete) {
 
-                $.ajax({
-                    url: rootUrl("/Ventas/RealizaCierreEstacion"),
-                    data: { monto: 0 },
-                    method: 'post',
-                    dataType: 'json',
-                    async: true,
-                    beforeSend: function (xhr) {
-                        ShowLoader();
-                    },
-                    success: function (data) {
-                        MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-                        $('#ModalCierre').modal('hide');
-                        OcultarLoader();
-                        ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
-                        location.href = rootUrl("Ventas/Ventas/");
-                        //ConsultExcesoEfectivo();
-                    },
-                    error: function (xhr, status) {
-                        console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
-                        console.log(xhr);
-                        console.log(status);
-                        OcultarLoader();
-                    }
-                });
+                if ( RequiereAutorizacion() )
+                {
+                    ModalAutorizarCierre();
+                }
+                else
+                {
+                    HacerCierre();
+                }
 
             } else {
                 console.log("cancelar");
             }
         });
+
 });
+
+function RequiereAutorizacion() {
+
+    var requiereAutorizacion = true;
+
+    $.ajax({
+        url: rootUrl("/Ventas/ObtenerConfiguracionVentas"),
+        data: { tipoConfigVentas: 2 },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            //console.log(data);
+            if ( parseInt(data.Modelo.valor) !== parseInt(1) )
+            {
+                requiereAutorizacion = false;
+            }
+
+            OcultarLoader();
+            
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+    return requiereAutorizacion;
+}
+
+function HacerCierre() {
+
+    $.ajax({
+        url: rootUrl("/Ventas/RealizaCierreEstacion"),
+        data: { monto: 0 },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            $('#ModalCierre').modal('hide');
+            OcultarLoader();
+            ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
+            location.href = rootUrl("Ventas/Ventas/");
+            //ConsultExcesoEfectivo();
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un problema al intentar hacer el cierre de esta estación, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+
+function ModalAutorizarCierre() {
+    $("#usuarioAutoriza").val("");
+    $("#contrasenaAutoriza").val("");
+    $('#ModalAutorizarCierre').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+$('#btnAutorizarCierre').click(function (e) {
+
+    var usuario = $('#usuarioAutoriza').val();
+    var contrasena = $('#contrasenaAutoriza').val();
+
+    if ((usuario === '') || (contrasena === '')) {
+        MuestraToast("error", "Debe ingresar Usuario y Contraseña para autorizar el cierre .");
+        return;
+    }
+
+    $.ajax({
+        url: rootUrl("/Ventas/ValidarContrasena"),
+        data: { usuario: usuario, contrasena: contrasena },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Validando");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            
+            if (data.Estatus === 200)
+            {
+                $('#ModalAutorizarCierre').modal('hide');
+                HacerCierre();
+            }
+
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+});
+
+$("#usuarioAutoriza").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnAutorizarCierre").click();
+    }
+});
+
+$("#contrasenaAutoriza").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnAutorizarCierre").click();
+    }
+});
+
 
 function retirarExcesoEfectivo(montoRetiro) {
 

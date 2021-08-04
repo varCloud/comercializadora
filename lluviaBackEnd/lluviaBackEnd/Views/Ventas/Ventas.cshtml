@@ -155,12 +155,12 @@
                             @if (esDevolucion)
                             {
                                 <div class="badge-outline col-red"><h3>Total a Devolver: <span class="divSubTotal">$0.0</span></h3></div>
-                                
+
                             }
                             else
                             {
                                 <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
-                               
+
                             }
                         </div>
                     </div>
@@ -902,6 +902,89 @@
     </div>
 </div>
 
+
+@*Modal Autorizar Cierre *@
+<div class="modal fade bd-example-modal-lg" id="ModalAutorizarCierre" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Autorizar Cierre de Caja</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        
+                        <div class="form-group">
+                            <label>Usuario: </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                                <input id="usuarioAutoriza" name="usuarioAutoriza" class="form-control pwstrength" data-indicator="pwindicator">
+                            </div>
+                            <div id="pwindicator" class="pwindicator">
+                                <div class="bar"></div>
+                                <div class="label"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Contraseña: </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                </div>
+                                <input id="contrasenaAutoriza" name="contrasenaAutoriza" type="password" class="form-control pwstrength" data-indicator="pwindicator">
+                            </div>
+                            <div id="pwindicator" class="pwindicator">
+                                <div class="bar"></div>
+                                <div class="label"></div>
+                            </div>
+                        </div>
+                        
+                        
+                        @*<div class="form-group">
+                            <div class="input-group mb-3">
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Usuario: </span>
+                                </div>
+                                <input id="usuarioAutoriza" name="usuarioAutoriza" type="text" class="form-control" required>
+
+                                <br>
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Contraseña: </span>
+                                </div>
+                                <input id="contrasenaAutoriza" name="contrasenaAutoriza" type="text" class="form-control" required>
+
+                            </div>
+                        </div>*@
+
+
+
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" id="btnAutorizarCierre" type="button">Autorizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts {
