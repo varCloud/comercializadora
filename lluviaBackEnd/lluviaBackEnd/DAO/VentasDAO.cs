@@ -577,6 +577,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", retiros.idUsuario);
                     parameters.Add("@monto", retiros.montoRetiro);
                     parameters.Add("@caso", 2);
+                    parameters.Add("@efectivoEntregadoEnCierre", retiros.EfectivoEntregadoEnCierre);
                     var result = db.QueryMultiple("SP_RETIRA_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

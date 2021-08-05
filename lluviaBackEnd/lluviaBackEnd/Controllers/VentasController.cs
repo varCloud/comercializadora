@@ -494,7 +494,7 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult RealizaCierreEstacion(float monto)
+        public ActionResult RealizaCierreEstacion(float monto, float efectivoEntregadoEnCierre)
         {
             try
             {
@@ -504,6 +504,7 @@ namespace lluviaBackEnd.Controllers
                 retiros.idEstacion = usuario.idEstacion;
                 retiros.idUsuario = usuario.idUsuario;
                 retiros.montoRetiro = monto;
+                retiros.EfectivoEntregadoEnCierre = efectivoEntregadoEnCierre;
                 notificacion = new VentasDAO().RealizaCierreEstacion(retiros);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
