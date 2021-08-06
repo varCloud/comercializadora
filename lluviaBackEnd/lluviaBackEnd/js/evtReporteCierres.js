@@ -41,6 +41,7 @@ function onSuccessResultCierres(data) {
             '         <th>Monto Total Retiros</th>' +
             '         <th>Saldo Total</th>' +
             '         <th>Saldo en Caja</th>' +
+            '         <th>Efectivo Entregado En Cierre</th>' +
             '     </tr>' +
             ' </thead>' +
             ' <tbody>';
@@ -62,6 +63,7 @@ function onSuccessResultCierres(data) {
                 '             <td>' + data[i].retirosExcesoEfectivo + '</td>' +
                 '             <td>' + data[i].montoCierre + '</td>' +
                 '             <td>' + data[i].efectivoDisponible + '</td>' +
+                '             <td>' + data[i].EfectivoEntregadoEnCierre + '</td>' +
                 '</tr>';
         }
         html += ' </tbody>' +

@@ -30,7 +30,6 @@ namespace lluviaBackEnd.Models
         public string nombreUsuario { get; set; }   
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
-
-
+        public float EfectivoEntregadoEnCierre { get; set; }
     }
 }
