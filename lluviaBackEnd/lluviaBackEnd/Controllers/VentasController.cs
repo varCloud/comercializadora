@@ -1528,6 +1528,16 @@ namespace lluviaBackEnd.Controllers
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
 
+                    e.Graphics.DrawString("Monto Total Ventas Transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasTransferencias.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Otros" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasOtros.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
                     e.Graphics.DrawString("Monto Total Ventas Canceladas" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[0].montoVentasCanceladas.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;

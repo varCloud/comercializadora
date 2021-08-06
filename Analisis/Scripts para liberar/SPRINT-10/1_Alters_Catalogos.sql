@@ -26,6 +26,19 @@ begin
 end
 go
 
+-- agregar MontoTotalVentasTransferencias en el cierre de caja
+if not exists ( select 1 from sys.columns where name = N'MontoTotalVentasTransferencias' and Object_ID = Object_ID(N'RetirosCierreDia') )
+begin
+    alter table RetirosCierreDia add MontoTotalVentasTransferencias money default (0);
+end
+go
+
+-- agregar  en el cierre de caja
+if not exists ( select 1 from sys.columns where name = N'MontoTotalVentasOtros' and Object_ID = Object_ID(N'RetirosCierreDia') )
+begin
+    alter table RetirosCierreDia add MontoTotalVentasOtros money default (0);
+end
+go
 
 
 
