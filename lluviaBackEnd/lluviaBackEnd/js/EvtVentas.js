@@ -1640,6 +1640,14 @@ $('#btnRetirarExcesoEfectivo').click(function (e) {
 
 $('#btnCierreDia').click(function (e) {
 
+    // validar si ingreso el efectivo entregado en el cierre
+
+    if ($('#efectivoEntregadoEnCierre').val() === '' )
+    {
+        MuestraToast('warning', "Debe seleccionar el monto entregado en el cierre.");
+        return;
+    }
+
     swal({
         title: 'Mensaje',
         text: '¿Estas seguro que desea hacer el cierre para esta Estación?',
@@ -1702,9 +1710,17 @@ function RequiereAutorizacion() {
 
 function HacerCierre() {
 
+    var efectivoEntregadoEnCierre = parseFloat($('#efectivoEntregadoEnCierre').val()).toFixed(2);
+    
+    if (efectivoEntregadoEnCierre  <= 0)
+    {
+        MuestraToast('warning', "Debe seleccionar el monto entregado en el cierre.");
+        return;
+    }
+
     $.ajax({
         url: rootUrl("/Ventas/RealizaCierreEstacion"),
-        data: { monto: 0 },
+        data: { monto: 0, efectivoEntregadoEnCierre: efectivoEntregadoEnCierre },
         method: 'post',
         dataType: 'json',
         async: true,

@@ -19,4 +19,28 @@ update Usuarios set puedeAutorizarCierre = cast(0 as bit)
 update Usuarios set puedeAutorizarCierre = cast(1 as bit) where idUsuario = 2
 
 
+-- agregar monto en el cierre de caja
+if not exists ( select 1 from sys.columns where name = N'EfectivoEntregadoEnCierre' and Object_ID = Object_ID(N'RetirosCierreDia') )
+begin
+    alter table RetirosCierreDia add EfectivoEntregadoEnCierre money default (0);
+end
+go
+
+-- agregar MontoTotalVentasTransferencias en el cierre de caja
+if not exists ( select 1 from sys.columns where name = N'MontoTotalVentasTransferencias' and Object_ID = Object_ID(N'RetirosCierreDia') )
+begin
+    alter table RetirosCierreDia add MontoTotalVentasTransferencias money default (0);
+end
+go
+
+-- agregar  en el cierre de caja
+if not exists ( select 1 from sys.columns where name = N'MontoTotalVentasOtros' and Object_ID = Object_ID(N'RetirosCierreDia') )
+begin
+    alter table RetirosCierreDia add MontoTotalVentasOtros money default (0);
+end
+go
+
+
+
+
 	

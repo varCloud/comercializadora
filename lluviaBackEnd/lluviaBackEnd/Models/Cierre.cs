@@ -17,6 +17,8 @@ namespace lluviaBackEnd.Models
         public float montoVentasDelDia { get; set; }
         public float montoVentasContado { get; set; }
         public float montoVentasTarjeta { get; set; }
+        public float montoVentasTransferencias { get; set; }
+        public float montoVentasOtros { get; set; }
         public float montoVentasCanceladas { get; set; }
         public float montoApertura { get; set; }
         public float montoIngresosEfectivo { get; set; }
@@ -30,7 +32,6 @@ namespace lluviaBackEnd.Models
         public string nombreUsuario { get; set; }   
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
-
-
+        public float EfectivoEntregadoEnCierre { get; set; }
     }
 }

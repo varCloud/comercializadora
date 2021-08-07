@@ -122,6 +122,7 @@
                                             <th>Monto Total Retiros</th>
                                             <th>Saldo Total</th>
                                             <th>Saldo en Caja</th>
+                                            <th>Efectivo Entregado En Cierre</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -142,6 +143,7 @@
                                                 <td>@item.retirosExcesoEfectivo.ToString("C", new CultureInfo("en-US"))</td>
                                                 <td>@item.montoCierre.ToString("C", new CultureInfo("en-US"))</td>
                                                 <td>@item.efectivoDisponible.ToString("C", new CultureInfo("en-US"))</td>
+                                                <td>@item.EfectivoEntregadoEnCierre.ToString("C", new CultureInfo("en-US"))</td>                                                
                                             </tr>
                                         }
                                     </tbody>
