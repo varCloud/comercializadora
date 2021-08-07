@@ -296,7 +296,10 @@ namespace lluviaBackEnd.Controllers
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
                 ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuarioSesion.idUsuario).Where(x => x.Value != "").ToList();
                 ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 3), "idInventarioFisico", "Nombre").ToList();
+                InventarioFisico inventarioFisico = new InventarioFisico();
+                inventarioFisico.Sucursal.idSucursal = usuarioSesion.idSucursal;
+                inventarioFisico.EstatusInventarioFisico.idStatus = 3;
+                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico), "idInventarioFisico", "Nombre").ToList();
 
                 return View(new AjusteInventarioFisico());
             }

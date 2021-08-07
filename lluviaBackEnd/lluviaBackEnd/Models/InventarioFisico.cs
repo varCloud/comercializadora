@@ -16,6 +16,7 @@ namespace lluviaBackEnd.Models
         public Usuario Usuario { get; set; }
         public DateTime FechaAlta { get; set; }
         public Status EstatusInventarioFisico { get; set; }
+        public EnumTipoInventarioFisico TipoInventario { get; set; }
 
         public List<AjusteInventarioFisico> ajusteInventarioFisicos { get; set; }
 

@@ -170,4 +170,9 @@ namespace lluviaBackEnd.Models
         RequiereAutCierre = 2
     }
 
+    public enum EnumTipoInventarioFisico { 
+        General=1,
+        Individual=2    
+    }
+
 }

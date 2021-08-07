@@ -67,7 +67,7 @@ namespace lluviaBackEnd.Models
         public int idRaq { get; set; }
         public string Raq { get; set; }
         public int idPiso { get; set; }
-        public string Piso { get; set; }
+        public string Piso { get; set; }     
         public int idAlmacen { get; set; }
         public string Almacen { get; set; }
 
@@ -93,6 +93,7 @@ namespace lluviaBackEnd.Models
         public UnidadCompra unidadCompra { get; set; }
 
         public bool fraccion { get; set; }
+        public int idUbicacion { get; set; }
 
         public Producto()
         {

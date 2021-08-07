@@ -24,34 +24,44 @@
                 <h4>Inventario Fisico</h4>
             </div>
             <div class="card-body">
-                @using (Ajax.BeginForm("GuardarInventarioFisico", "InventarioFisico",
-                  new AjaxOptions
-                  {
-                      HttpMethod = "Post",
-                      OnBegin = "onBeginSubmitInventarioFisico",
-                      OnFailure = "onFailureResultInventarioFisico",
-                      OnSuccess = "onSuccessResultInventarioFisico",
-                  },
-                  new { id = "frmNuevoInventarioFisico" }))
+                @using (Ajax.BeginForm("_ObtenerInventarioFisico", "InventarioFisico",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        OnBegin = "onBeginSubmitObtenerInventarioFisico",
+                        OnFailure = "onFailureResultObtenerInventarioFisico",
+                        OnSuccess = "onSuccessResultObtenerInventarioFisico",
+                    },
+                    new { id = "frmInventarioFisico" }))
                 {
                     <div class="row">
-
-                        <div class="form-group col-lg-4">
-                            <label>Nombre</label>
-                            @Html.TextBoxFor(x => x.Nombre, null, new { id = "nombreInventarioFisico", @class = "form-control", data_val_required = "El nombre no puede ir vacio", data_val = "true" })
-                            @Html.ValidationMessageFor(x => x.Nombre, null, new { @class = "text-danger was" })
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Tipo Inventario</label>
+                                @Html.EnumDropDownListFor(x => x.TipoInventario, new { @class = "select-multiple", data_val = "false" })
+                            </div>
                         </div>
-
-
-                        <div class="text-left col-lg-4" style="margin-top:30px;">
-                            <button type="submit" class="btn btn-success">Crear Inventario Fisico</button>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="text" id="rangeInventarioFisico" class="form-control daterange-cus" autocomplete="off" />
+                                @Html.HiddenFor(x => x.FechaInicio)
+                                @Html.HiddenFor(x => x.FechaFin)
+                            </div>
                         </div>
-
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" id="btnLimpiarFormInventarioFisico" class="btn btn-danger btn-icon icon-left">Limpiar</button>
+                                <button type="submit" id="btnBuscarInventarioFisico" class="btn btn-success">Buscar</button>
+                            </div>
+                        </div>
                     </div>
+
                 }
+
                 <hr style="margin-top:0" />
                 <div id="ViewInventarioFisico">
-                    @Html.Action("_ObtenerInventarioFisico", "InventarioFisico");
+                    @Html.Action("_ObtenerInventarioFisico", "InventarioFisico", new { TipoInventario = EnumTipoInventarioFisico.General });
                 </div>
             </div>
         </div>
@@ -69,6 +79,47 @@
             </div>
             <div class="modal-body" id="_ViewInventarioFisico">
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalNuevoInventarioFisico" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Inventario Fisico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("GuardarInventarioFisico", "InventarioFisico",
+new AjaxOptions
+{
+HttpMethod = "Post",
+OnBegin = "onBeginSubmitInventarioFisico",
+OnFailure = "onFailureResultInventarioFisico",
+OnSuccess = "onSuccessResultInventarioFisico",
+},
+new { id = "frmNuevoInventarioFisico" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <label>Nombre</label>
+                            @Html.TextBoxFor(x => x.Nombre, null, new { id = "nombreInventarioFisico", @class = "form-control", data_val_required = "El nombre no puede ir vacio", data_val = "true" })
+                            @Html.ValidationMessageFor(x => x.Nombre, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">                                
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>

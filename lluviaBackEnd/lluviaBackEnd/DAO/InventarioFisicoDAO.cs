@@ -109,7 +109,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
         
-        public List<InventarioFisico> ObtenerInventarioFisico(int idSucursal,int idInventarioFisico,int idEstatus)
+        public List<InventarioFisico> ObtenerInventarioFisico(InventarioFisico inventario)
         {
             List<InventarioFisico> inventarioFisicos = new List<InventarioFisico>();
             try
@@ -117,9 +117,13 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@idSucursal", idSucursal==0 ? (object)null : idSucursal);
-                    parameters.Add("@idInventarioFisico", idInventarioFisico == 0 ? (object)null : idInventarioFisico);
-                    parameters.Add("@idEstatus", idEstatus == 0 ? (object)null : idEstatus);
+                    parameters.Add("@idSucursal", inventario.Sucursal.idSucursal == 0 ? (object)null : inventario.Sucursal.idSucursal);
+                    parameters.Add("@idInventarioFisico", inventario.idInventarioFisico == 0 ? (object)null : inventario.idInventarioFisico);
+                    parameters.Add("@idEstatus", inventario.EstatusInventarioFisico.idStatus == 0 ? (object)null : inventario.EstatusInventarioFisico.idStatus);
+                    parameters.Add("@fechaIni", inventario.FechaInicio == DateTime.MinValue ? (object)null : inventario.FechaInicio);
+                    parameters.Add("@fechaFin", inventario.FechaFin == DateTime.MinValue ? (object)null : inventario.FechaFin);
+                    parameters.Add("@idTipoInventario", Convert.ToInt32(inventario.TipoInventario) == 0 ? (object)null : inventario.TipoInventario);
+
                     var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_FISICO", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = result.ReadFirst();
                     if (rs1.status == 200)
@@ -240,5 +244,27 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<string> AjustaInventarioProductoUbicacion(Ubicacion ubicacion,int idUsuario)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", ubicacion.idProducto);
+                    parameters.Add("@idUbicacion", ubicacion.idUbicacion);
+                    parameters.Add("@idUsuario", idUsuario);
+                    parameters.Add("@cantidadEnFisico", ubicacion.cantidadEnFisico);
+                    notificacion = db.QuerySingle<Notificacion<string>>("SP_AJUSTA_PRODUCTO_INVENTARIO_FISICO_INDIVIDUAL", parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+        
     }
 }

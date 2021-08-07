@@ -253,7 +253,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ProductosDAO().ObtenerUbicacionProducto(producto);
+                notificacion = new ProductosDAO().ObtenerUbicacionProducto(producto);               
                 return PartialView(notificacion);
             }
             catch (Exception ex)
@@ -261,6 +261,22 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+        public ActionResult AjustaInventarioProductoUbicacion(Ubicacion ubicacion)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<string> notificacion = new Notificacion<string>();
+                notificacion = new InventarioFisicoDAO().AjustaInventarioProductoUbicacion(ubicacion, UsuarioActual.idUsuario);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public ActionResult _UbicacionesProductoPrecio(Producto producto)
         {
