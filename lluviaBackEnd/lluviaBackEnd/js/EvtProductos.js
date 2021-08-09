@@ -137,7 +137,7 @@ function InitTableProductos() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4]
+                    columns: ':visible'
                 },
             },
             {
@@ -146,7 +146,7 @@ function InitTableProductos() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4]
+                    columns: ':visible'
                 },
             },
         ],
