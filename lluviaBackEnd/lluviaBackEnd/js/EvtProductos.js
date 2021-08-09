@@ -7,7 +7,7 @@ var preciosProductos;
 function VerUbicacionesProducto(idProducto) {
     $.ajax({
         url: rootUrl("/Productos/_UbicacionesProducto"),
-        data: { idProducto: idProducto },
+        data: { idProducto: idProducto},
         method: 'post',
         dataType: 'html',
         async: true,
@@ -708,6 +708,59 @@ function initSelect(item) {
     });
 
     $('#' + item).val("0").trigger('change');
+}
+
+function AjustarInventarioProducto(idProducto,idUbicacion,cantidadActual,fraccion) {
+   
+    var cantidadEnFisico = parseFloat($("#cantidadFisico_" + idUbicacion).val());
+    if (cantidadEnFisico <= 0) {
+        MuestraToast("error", "Capture la cantidad en fisico");
+        return;
+    }
+
+    if (cantidadEnFisico == cantidadActual) {
+        MuestraToast("error", "No hay nada que ajustar");
+        return;
+    }
+    swal({
+        title: '',
+        text: 'Estas seguro que deseas ajustar el inventario de este producto?',
+        icon: '',
+        buttons: ["Cancelar", "Aceptar"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+   
+    $.ajax({
+        url: rootUrl("/Productos/AjustaInventarioProductoUbicacion"),
+        data: { idProducto: idProducto, idUbicacion: idUbicacion, cantidadEnFisico: cantidadEnFisico },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            if (data.Estatus == 200) {
+                MuestraToast('success', data.Mensaje);
+                VerUbicacionesProducto(idProducto);               
+            } else {
+                MuestraToast("error", data.Mensaje);
+            }           
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+            } else {
+                console.log("cancelar");
+            }
+        });
 }
 
 $(document).ready(function () {

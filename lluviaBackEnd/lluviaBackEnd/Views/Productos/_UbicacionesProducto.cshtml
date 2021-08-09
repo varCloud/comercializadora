@@ -4,6 +4,7 @@
 @{
     List<lluviaBackEnd.Models.Producto> ubicaciones = Model.Modelo;
     int contador = 1;
+   
 }
 
 @if (Model.Estatus != 200)
@@ -29,6 +30,8 @@ else
                     <th>Pasillo</th>
                     <th>Raq</th>
                     <th>Cantidad</th>
+                    <th>Cantidad en fisico</th>
+                    <th>Ajustar</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +54,20 @@ else
                     }
 
                     <td>@u.cantidad</td>
+                    @if (u.fraccion)
+                    {
+                        <td class="text-center"><input type="text" onfocusout="actualizaTicket()" id="cantidadFisico_@u.idUbicacion" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@u.cantidad.ToString().Replace(",",".")"></td>
+
+                    }
+                    else
+                    {
+                        <td class="text-center"><input type="text" onfocusout="actualizaTicket()" id="cantidadFisico_@u.idUbicacion" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent;  background: transparent;" value="@u.cantidad.ToString().Replace(",",".")"></td>
+
+                    }
+                    <td>
+                        <a href="javascript:AjustarInventarioProducto(@u.idProducto,@u.idUbicacion,@u.cantidad);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Ajustar a inventario"><i class="fas fa-cogs"></i></a>
+
+                    </td>
                 </tr>
                     contador = contador + 1;
                 }

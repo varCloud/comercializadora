@@ -494,7 +494,7 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult RealizaCierreEstacion(float monto)
+        public ActionResult RealizaCierreEstacion(float monto, float efectivoEntregadoEnCierre)
         {
             try
             {
@@ -504,6 +504,7 @@ namespace lluviaBackEnd.Controllers
                 retiros.idEstacion = usuario.idEstacion;
                 retiros.idUsuario = usuario.idUsuario;
                 retiros.montoRetiro = monto;
+                retiros.EfectivoEntregadoEnCierre = efectivoEntregadoEnCierre;
                 notificacion = new VentasDAO().RealizaCierreEstacion(retiros);
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
@@ -1524,6 +1525,16 @@ namespace lluviaBackEnd.Controllers
 
                     e.Graphics.DrawString("Monto Total Ventas Tarjeta" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion.Modelo[0].montoVentasTarjeta.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasTransferencias.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("Monto Total Ventas Otros" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(notificacion.Modelo[0].montoVentasOtros.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
 
@@ -3109,6 +3120,37 @@ namespace lluviaBackEnd.Controllers
 
                 return PartialView("_ObtenerDetalleTickets");
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult ValidarContrasena(string usuario, string contrasena)
+        {
+            try
+            {
+                Notificacion<Sesion> n = new VentasDAO().ValidaUsuario(usuario, contrasena, EnumTipoValidaUsr.AutorizarCierre );
+                return Json(n, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ActionResult ObtenerConfiguracionVentas(EnumTipoConfig tipoConfigVentas)
+        {
+            try
+            {
+                Notificacion<ConfiguracionVenta> notificacion = new Notificacion<ConfiguracionVenta>();
+                notificacion = new VentasDAO().ObtenerConfiguracionVentas(tipoConfigVentas);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

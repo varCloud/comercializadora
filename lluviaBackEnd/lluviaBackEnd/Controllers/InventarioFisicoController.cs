@@ -18,8 +18,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-
-                return View();
+                InventarioFisico inventarioFisico = new InventarioFisico();
+                inventarioFisico.TipoInventario = EnumTipoInventarioFisico.General;
+                return View(inventarioFisico);
             }
             catch (Exception ex)
             {
@@ -65,12 +66,13 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        public ActionResult _ObtenerInventarioFisico()
+        public ActionResult _ObtenerInventarioFisico(InventarioFisico inventarioFisico)
         {
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, 0, 0));
+                inventarioFisico.Sucursal.idSucursal = usuarioSesion.idSucursal;
+                return PartialView(new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico));
             }
             catch (Exception ex)
             {
@@ -87,9 +89,10 @@ namespace lluviaBackEnd.Controllers
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
                 ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuarioSesion.idUsuario).Where(x => x.Value != "").ToList();
                 ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(usuarioSesion.idSucursal, inventarioFisico.idInventarioFisico, 0), "idInventarioFisico", "Nombre").ToList();
-
-                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(0, inventarioFisico.idInventarioFisico, 0).First();
+                inventarioFisico.Sucursal.idSucursal = usuarioSesion.idSucursal;
+                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico), "idInventarioFisico", "Nombre").ToList();
+                inventarioFisico.Sucursal.idSucursal = 0;
+                inventarioFisico = new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico).First();
                 return PartialView(inventarioFisico);
             }
             catch (Exception ex)

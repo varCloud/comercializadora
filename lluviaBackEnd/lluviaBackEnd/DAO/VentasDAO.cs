@@ -577,6 +577,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", retiros.idUsuario);
                     parameters.Add("@monto", retiros.montoRetiro);
                     parameters.Add("@caso", 2);
+                    parameters.Add("@efectivoEntregadoEnCierre", retiros.EfectivoEntregadoEnCierre);
                     var result = db.QueryMultiple("SP_RETIRA_EFECTIVO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
@@ -820,6 +821,74 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+        public Notificacion<Sesion> ValidaUsuario(string usuario, string contrasena, EnumTipoValidaUsr tipoValidacion)
+        {
+            Notificacion<Sesion> n = new Notificacion<Sesion>(); ;
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@usuario", usuario);
+                    parameters.Add("@contrasena", contrasena);
+                    parameters.Add("@caso", tipoValidacion);
+                    var result = db.QueryMultiple("SP_VALIDA_USUARIO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        n.Estatus = r1.status;
+                        n.Mensaje = r1.mensaje;
+                        n.Modelo = result.ReadSingle<Sesion>();
+                    }
+                    else
+                    {
+                        n.Estatus = -1;
+                        n.Mensaje = r1.mensaje;                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return n;
+        }
+
+        public Notificacion<ConfiguracionVenta> ObtenerConfiguracionVentas(EnumTipoConfig tipoConfigVentas)
+        {
+            Notificacion<ConfiguracionVenta> notificacion = new Notificacion<ConfiguracionVenta>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@id_config", tipoConfigVentas);
+                    var result = db.QueryMultiple("SP_CONSULTA_CONFIGURACION_VENTAS", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.ReadSingle<ConfiguracionVenta>(); ;
+
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = new ConfiguracionVenta() { };
                     }
                 }
             }

@@ -1229,7 +1229,7 @@ $('#btnCierreDia').click(function (e) {
 
                 $.ajax({
                     url: rootUrl("/PedidosEspeciales/RealizaCierreEstacion"),
-                    data: { monto: monto },
+                    data: { monto: monto, efectivoEntregadoEnCierre : 0 },
                     method: 'post',
                     dataType: 'json',
                     async: true,

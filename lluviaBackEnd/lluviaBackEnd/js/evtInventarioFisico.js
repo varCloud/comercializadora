@@ -1,19 +1,46 @@
 ﻿var tblInventarioFisico;
 var tblAjusteInventarioFisico;
 $(document).ready(function () {
+    InitRangePicker('rangeInventarioFisico', 'FechaInicio', 'FechaFin');
+    //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
+    $('#rangeInventarioFisico').val('');
+    $('.select-multiple').select2({
+        width: "100%",
+        language: {
+            noResults: function () {
+                return "No hay resultado";
+            },
+            searching: function () {
+                return "Buscando..";
+            }
+        },
+
+    });
+
+    $("#btnLimpiarFormInventarioFisico").click(function (evt) {
+        $("#frmInventarioFisico").trigger("reset");
+        $('#FechaInicio').val('');
+        $('#FechaFin').val('');
+        $("#frmInventarioFisico .select-multiple").trigger("change");
+    });
     if ($("#tblInventarioFisico").length > 0)
         InitDataTableInventarioFisico();
+    
 });
 
 //busqueda
-function onBeginSubmitInventarioFisico() {
+function onBeginSubmitInventarioFisico() {    
     ShowLoader("Guardando...");
 }
 function onSuccessResultInventarioFisico(data) {
+    $('#modalNuevoInventarioFisico').modal('hide');
     if (data.Estatus == 200) {
-        MuestraToast('success', data.Mensaje);
-        $("nombreInventarioFisico").val("");
-        PintarTabla();
+        MuestraToast('success', data.Mensaje);        
+        // $("nombreInventarioFisico").val("");
+        $("#btnLimpiarFormInventarioFisico").click();
+        $("#frmInventarioFisico").submit();
     } else {
         MuestraToast("error", data.Mensaje);
     }
@@ -57,34 +84,14 @@ function InitDataTableInventarioFisico() {
     tblInventarioFisico = initDataTable(NombreTabla);
 
     new $.fn.dataTable.Buttons(tblInventarioFisico, {
-        buttons: [
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fas fa-file-pdf" style="font-size:20px;"></i>',
-                className: '',
-                titleAttr: 'Exportar a PDF',
-                title: "Inventario Fisico",
-                customize: function (doc) {
-                    doc.defaultStyle.fontSize = 8;
-                    doc.styles.tableHeader.fontSize = 10;
-                    doc.defaultStyle.alignment = 'center';
-                    doc.content[1].table.widths = ['10%', '20%', '15%', '15%', '15%', '15%', '10%'];
-                    doc.pageMargins = [30, 85, 20, 30];
-                    doc.content.splice(0, 1);
-                    doc['header'] = SetHeaderPDF("Inventario Fisico");
-                    doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
-                },
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
-                },
-            },
+        buttons: [            
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel" style="font-size:20px;"></i>',
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8]
                 },
             },
         ],
@@ -94,6 +101,9 @@ function InitDataTableInventarioFisico() {
     tblInventarioFisico.buttons(0, null).container().prependTo(
         tblInventarioFisico.table().container()
     );
+
+    $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a onclick="NuevoInventarioFisico()" class="btn btn-icon btn-success" name="" id="btnNuevoInventarioFisico" data-toggle="tooltip" title="Crear Inventario Fisico"><i class="fas fa-plus"></i></a>');
+
 }
 
 function InitDataTableAjusteInventarioFisico(NameFile) {
@@ -202,9 +212,6 @@ function actualizarInventarioFisico(idInventarioFisico, ValorAnt, ValorNew) {
             }
         });
 
-    console.log(idTipoActualizacion);
-    console.log(ValorAnt);
-    console.log(ValorNew);
 
 }
 
@@ -318,12 +325,34 @@ function ActualizarEstatusInventarioFisico(idInventarioFisico,idStatusInventario
         });
 }
 
+function onBeginSubmitObtenerInventarioFisico() {
+    ShowLoader("Buscando...");
+}
+function onSuccessResultObtenerInventarioFisico(data) {
+    $("#ViewInventarioFisico").html(data);
+    if ($("#tblInventarioFisico").length > 0) {
+        tblInventarioFisico.destroy();
+        InitDataTableInventarioFisico();
+    }
+
+    OcultarLoader();
+}
+function onFailureResultObtenerInventarioFisico() {
+    OcultarLoader();
+}
+
+function NuevoInventarioFisico() {
+    $("#frmNuevoInventarioFisico").trigger("reset");
+    $('#modalNuevoInventarioFisico').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+
 ////////// MODAL AJUSTE DE INVENTARIO ////////////////////
 
 function onBeginSubmitAjusteInventario() {
     ShowLoader("Buscando...");
 }
-function onSuccessResultAjusteInventario(data) {
+function onSuccessResultAjusteInventario(data) {    
     if (tblAjusteInventarioFisico != null)
         tblAjusteInventarioFisico.destroy();
     $("#ViewAjusteInventario").html(data);

@@ -159,4 +159,20 @@ namespace lluviaBackEnd.Models
         Complemento = 2
     }
 
+    public enum EnumTipoValidaUsr
+    {
+        AutorizarCierre = 1
+    }
+
+    public enum EnumTipoConfig
+    {
+        DiasParaHacerComplementos = 1,
+        RequiereAutCierre = 2
+    }
+
+    public enum EnumTipoInventarioFisico { 
+        General=1,
+        Individual=2    
+    }
+
 }
