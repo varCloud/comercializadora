@@ -1067,7 +1067,7 @@ namespace lluviaBackEnd.Controllers
                     //pd.PrintPage += new PrintPageEventHandler(pd_PrintPageVentaCancelada);
                     Notificacion<List<Ticket>>  _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta, estatusVenta = EnumEstatusVenta.Cancelada });
  
-                    pd.PrintPage += (_sender, args) => pd_PrintPage(null, args, _notificacion);
+                    pd.PrintPage += (_sender, args) => pd_PrintPageVentaCancelada(null, args, _notificacion);
 
                     pd.PrintController = new StandardPrintController();
                     pd.DefaultPageSettings.Margins.Left = 10;
@@ -1151,7 +1151,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
                     //e.Graphics.DrawString("VENTA CANCELADA", Bold, drawBrush, datos, centrado);
-                    e.Graphics.DrawString("*******************************************************************" + "\n" + "*****************   VENTA CANCELADA   *****************" + '\n' + "*******************************************************************", font, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("\n" +  "           VENTA CANCELADA                " + "\n\n", font, drawBrush, datos, centrado);
 
                     e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 136, izquierda);
                     e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 136, izquierda);
