@@ -89,6 +89,7 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.mostrarEfectivoEntregado = false;
                 return View();
             }
             catch (Exception ex)
@@ -305,7 +306,7 @@ namespace lluviaBackEnd.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///
 
-        public ActionResult _CierreDia()
+        public ActionResult _CierreDia(Boolean mostrarEfectivoEntregado)
         {
             try
             {
@@ -313,6 +314,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<Cierre> cierre = new VentasDAO().ConsultaInfoCierre(new Cierre() { idEstacion = usuario.idEstacion, idUsuario = usuario.idUsuario, idAlmacen = usuario.idAlmacen });
                 Notificacion<List<Retiros>> retirosExcesoEfectivo = new VentasDAO().ConsultaRetirosEfectivo(new Retiros() { idEstacion = usuario.idEstacion, idAlmacen = usuario.idAlmacen, idUsuario = usuario.idUsuario });
                 Notificacion<List<Retiros>> retirosDia = new VentasDAO().ConsultaRetiros(new Retiros() { idEstacion = usuario.idEstacion, idAlmacen = usuario.idAlmacen, idUsuario = usuario.idUsuario });
+                ViewBag.mostrarEfectivoEntregado = mostrarEfectivoEntregado;
 
                 List<Retiros> retiros = new List<Retiros>();
                 if (retirosExcesoEfectivo.Estatus == 200)

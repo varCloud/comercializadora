@@ -1910,6 +1910,7 @@ function ConsultaInfoCierre() {
 function ConsultaInfoCierreDia() {
     $.ajax({
         url: rootUrl("/Ventas/_CierreDia"),
+        data: { mostrarEfectivoEntregado: true },
         method: 'post',
         dataType: 'html',
         async: true,

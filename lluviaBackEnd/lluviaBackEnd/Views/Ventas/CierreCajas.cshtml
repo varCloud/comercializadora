@@ -1,7 +1,7 @@
 ﻿
 @using lluviaBackEnd.Models
 @{
-    ViewBag.Title = "Ventas";
+    ViewBag.Title = "Ventas";    
 }
 
 <section class="section">
@@ -14,7 +14,7 @@
                             <div class="section-title">Caja Cerrada</div>
                             <hr />
                         <div class="row">
-                            @Html.Action("_CierreDia","Ventas")
+                            @Html.Action("_CierreDia","Ventas",new { mostrarEfectivoEntregado = ViewBag.mostrarEfectivoEntregado })
                             </div>
                            
                         </div>
