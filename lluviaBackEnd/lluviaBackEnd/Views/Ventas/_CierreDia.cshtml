@@ -2,7 +2,9 @@
 @using lluviaBackEnd.Models
 
 @model Tuple<Notificacion<Cierre>, List<Retiros>>
-
+@{
+    Boolean mostrarEfectivoEntregado = ViewBag.mostrarEfectivoEntregado == null ? true : ViewBag.mostrarEfectivoEntregado;
+}
 
 
 <div class="col-12 col-sm-12 col-lg-6">
@@ -140,12 +142,15 @@
                 </p>
             </div>
 
-            <di>
+            <div>
                 <p class="clearfix">
                     <span class="float-left"><strong>Saldo en Caja:</strong></span>
                     <span class="float-right text-muted"><strong>@Model.Item1.Modelo.efectivoDisponible.ToString("C", new CultureInfo("en-US"))</strong></span>
                 </p>
+            </div>
 
+            @if (mostrarEfectivoEntregado)
+            {
                 <div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -154,9 +159,22 @@
                         <input id="efectivoEntregadoEnCierre" name="efectivoEntregadoEnCierre" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
                     </div>
                 </div>
+            }
+            else
+            {
+                <div>
+                    <p class="clearfix">
+                        <span class="float-left"><strong>Efectivo entregado en cierre: </strong></span>
+                        <span class="float-right text-muted"><strong>@Model.Item1.Modelo.EfectivoEntregadoEnCierre.ToString("C", new CultureInfo("en-US"))</strong></span>
+                    </p>
+                </div>
+            }
+
+
+
+
 
         </div>
-
     </div>
 </div>
 
