@@ -2020,10 +2020,11 @@ function ObtenerIndividualMenudeo(idProducto) {
 //        }
 //    });
 //}
-
+ 
 
 function InitSelect2Productos() {
-
+    MuestraToast('info', "Actualizando productos del almacen");
+    $("#listProductos").val('');
     var result = '';
     $.ajax({
         url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
