@@ -35,6 +35,8 @@ function onSuccessResultCierres(data) {
             '         <th>No. Ventas</th>' +
             '         <th>Monto Total Ventas Contado</th>' +
             '         <th>Monto Total Ventas Tarjeta</th>' +
+            '         <th>Monto Total Ventas Transferencias</th>' +
+            '         <th>Monto Total Ventas Otros</th>' +
             '         <th>Monto Total Ventas Canceladas</th>' +
             '         <th>No. Productos Devueltos</th>' +
             '         <th>Monto Total Devoluciones</th>' +
@@ -57,6 +59,8 @@ function onSuccessResultCierres(data) {
                 '             <td>' + data[i].totalVentas + '</td>' +
                 '             <td>' + data[i].montoVentasContado + '</td>' +
                 '             <td>' + data[i].montoVentasTarjeta + '</td>' +
+                '             <td>' + data[i].montoVentasTransferencias + '</td>' +
+                '             <td>' + data[i].montoVentasOtros + '</td>' +
                 '             <td>' + data[i].montoVentasCanceladas + '</td>' +
                 '             <td>' + data[i].ProductosDevueltos + '</td>' +
                 '             <td>' + data[i].MontoTotalDevoluciones + '</td>' +

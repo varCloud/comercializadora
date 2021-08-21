@@ -128,10 +128,10 @@ else
                                                         }
 
 
-                                                        @if ((item.puedeHacerComplementos) && (item.diasPasadosVentaInicial <= usuario.diasParaHacerComplementos) && (item.idEstatusFactura != 1))
-                                                        {
-                                                            <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })"><i class="far fa-minus-square"></i>Devolver Productos</a>
-                                                        }
+                                                        @if (@*(item.puedeHacerComplementos) &&*@ (item.diasPasadosVentaInicial <= usuario.diasParaHacerComplementos) && (item.idEstatusFactura != 1))
+               {
+                                                    <a class="dropdown-item has-icon" href="@Url.Action("Ventas", "Ventas", new { idVenta = item.idVenta, esDevolucion = "true", esAgregarProductos = "false" })"><i class="far fa-minus-square"></i>Devolver Productos</a>
+                                                }
 
 
                                                         @if ((item.puedeHacerComplementos) && (item.diasPasadosVentaInicial <= usuario.diasParaHacerComplementos) && (item.idEstatusFactura != 1))

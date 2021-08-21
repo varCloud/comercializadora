@@ -116,6 +116,8 @@
                                             <th>No. Ventas</th>
                                             <th>Monto Total Ventas Contado</th>
                                             <th>Monto Total Ventas Tarjeta</th>
+                                            <th>Monto Total Ventas Transferencias</th>
+                                            <th>Monto Total Ventas Otros</th>
                                             <th>Monto Total Ventas Canceladas</th>
                                             <th>No. Productos Devueltos</th>
                                             <th>Monto Total Devoluciones</th>
@@ -137,6 +139,8 @@
                                                 <td>@item.totalVentas</td>
                                                 <td>@item.montoVentasContado.ToString("C", new CultureInfo("en-US"))</td>
                                                 <td>@item.montoVentasTarjeta.ToString("C", new CultureInfo("en-US"))</td>
+                                                <td>@item.montoVentasTransferencias.ToString("C", new CultureInfo("en-US"))</td>
+                                                <td>@item.montoVentasOtros.ToString("C", new CultureInfo("en-US"))</td>
                                                 <td>@item.montoVentasCanceladas</td>
                                                 <td>@item.ProductosDevueltos.ToString("C", new CultureInfo("en-US"))</td>
                                                 <td>@item.MontoTotalDevoluciones.ToString("C", new CultureInfo("en-US"))</td>
