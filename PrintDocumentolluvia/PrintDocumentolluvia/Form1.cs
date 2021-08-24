@@ -2,6 +2,7 @@
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Utilerias;
 using PdfiumViewer;
+using PrintDocumentolluvia.Utilerias.lluviaBackEnd.Utilerias;
 using RawPrint;
 
 using System;
@@ -937,5 +938,11 @@ namespace PrintDocumentolluvia
             }
         }
 
+        private void btnCantToText_Click(object sender, EventArgs e)
+        {
+
+            this.txtLog.Text = Moneda.Convertir(this.txtVenta.Text, true);
+
+        }
     }
 }

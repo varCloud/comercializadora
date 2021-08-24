@@ -36,6 +36,7 @@
             this.txtImpresora = new System.Windows.Forms.TextBox();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.txtVenta = new System.Windows.Forms.TextBox();
+            this.btnCantToText = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -112,11 +113,22 @@
             this.txtVenta.Size = new System.Drawing.Size(143, 20);
             this.txtVenta.TabIndex = 7;
             // 
+            // btnCantToText
+            // 
+            this.btnCantToText.Location = new System.Drawing.Point(84, 240);
+            this.btnCantToText.Name = "btnCantToText";
+            this.btnCantToText.Size = new System.Drawing.Size(107, 23);
+            this.btnCantToText.TabIndex = 8;
+            this.btnCantToText.Text = "Cantidad a Texto";
+            this.btnCantToText.UseVisualStyleBackColor = true;
+            this.btnCantToText.Click += new System.EventHandler(this.btnCantToText_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 370);
+            this.Controls.Add(this.btnCantToText);
             this.Controls.Add(this.txtVenta);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.txtImpresora);
@@ -142,6 +154,7 @@
         private System.Windows.Forms.TextBox txtImpresora;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.TextBox txtVenta;
+        private System.Windows.Forms.Button btnCantToText;
     }
 }
 

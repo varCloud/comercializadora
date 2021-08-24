@@ -136,12 +136,10 @@ namespace lluviaBackEnd.Controllers
             Dictionary<string, object> items = null;
 
             try
-            {
-                
+            {             
                 
                 string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\","/");
-                string pathServer = Utils.ObtnerFolder() + @"/";
-                
+                string pathServer = Utils.ObtnerFolder() + @"/";   
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = null;
                 if (Session != null)

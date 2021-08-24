@@ -342,6 +342,9 @@ namespace lluviaBackEnd.Utilerias
                         <td colspan='2' " + tituloIndividual + @">Total:</td>
                         <td>" + c.Total.ToString("C2") + @"</td>
                     </tr>
+                     <tr> 
+                     <td colspan='8'>"+Moneda.Convertir(c.Total.ToString(),true)+@"</td>
+                    </tr>
                     <tr>
                         <td  width='10%'></td>
                         <td  width='10%'></td>

@@ -193,6 +193,7 @@
     <Compile Include="Utilerias\BitacoraResponse.cs" />
     <Compile Include="Utilerias\ItextEvents.cs" />
     <Compile Include="Utilerias\ManagerSerealization.cs" />
+    <Compile Include="Utilerias\Moneda.cs" />
     <Compile Include="Utilerias\SerializerManager.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
