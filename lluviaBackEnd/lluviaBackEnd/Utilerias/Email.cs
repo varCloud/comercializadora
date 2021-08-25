@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lluviaBackEnd.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -10,7 +11,10 @@ namespace lluviaBackEnd.Utilerias
 {
     public class Email
     {
+
+        private  static Factura factura;
         #region Notificación recuperar contraseña
+
         public static void NotificacionRecuperarContrasena(string emailDestino, string contrasena)
         {
             try
@@ -26,10 +30,11 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
-        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo)
+        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo , Factura f)
         {
             try
             {
+                factura = f;
                 string cuerpo = Cabecera();
                 cuerpo += CuerpoNotificacionPagoReferencia();
                 cuerpo += PiePagina();
@@ -154,7 +159,7 @@ namespace lluviaBackEnd.Utilerias
 															            <table border='0' cellpadding='0' cellspacing='0' width='100%'>
 															            <tr>
 																            <td>
-                                                                                <b># Ticket: </b>" + DateTime.Now.ToString("MM/dd/yyyy h:mm tt") + @"
+                                                                                <b># Ticket: </b>" + factura.idVenta+ @"
 																            </td>
 															            </tr>
                                                                         <tr>

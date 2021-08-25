@@ -1136,8 +1136,11 @@
     <None Include="Properties\PublishProfiles\DeployLocal.pubxml" />
     <None Include="Properties\PublishProfiles\DeployProductivo.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Resources\archivoLLuvia2021.pfx" />
     <None Include="Resources\archivopfx.pfx" />
+    <None Include="Resources\cerLLuvia2021.cer" />
     <None Include="Resources\CerProductivo.cer" />
+    <None Include="Resources\keyLLuvia2021.key" />
     <None Include="Resources\keyProductivo.key" />
     <None Include="Resources\lluvia.cer" />
     <None Include="Resources\lluvia.key" />

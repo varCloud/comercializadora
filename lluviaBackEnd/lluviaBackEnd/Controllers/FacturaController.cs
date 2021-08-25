@@ -198,7 +198,7 @@ namespace lluviaBackEnd.Controllers
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
                        
                         Task.Factory.StartNew(() => {
-                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml");
+                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml" , factura);
                         });
 
 

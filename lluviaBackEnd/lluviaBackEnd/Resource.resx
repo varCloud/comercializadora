@@ -136,4 +136,13 @@
   <data name="lluviakey" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\lluviakey.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="archivoLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\archivoLLuvia2021.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cerLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cerLLuvia2021.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="keyLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\keyLLuvia2021.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

@@ -343,7 +343,7 @@ namespace lluviaBackEnd.Utilerias
                         <td>" + c.Total.ToString("C2") + @"</td>
                     </tr>
                      <tr> 
-                     <td colspan='8'>"+Moneda.Convertir(c.Total.ToString(),true)+@"</td>
+                     <td colspan='9' style='text-align:right' >" + Moneda.Convertir(c.Total.ToString(),true)+@"</td>
                     </tr>
                     <tr>
                         <td  width='10%'></td>
