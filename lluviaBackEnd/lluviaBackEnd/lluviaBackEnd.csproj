@@ -51,7 +51,7 @@
       <HintPath>DLL\AccesoDatos.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.10.0.0\lib\net461\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
@@ -205,6 +205,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Connected Services\servicioTimbradoProductivo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\servicioTimbrarPruebas\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1018,8 +1023,18 @@
     <Content Include="assets\limitesInventario.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Connected Services\servicioTimbradoProductivo\lluviaBackEnd.servicioTimbradoProductivo.respuestaTimbrado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\servicioTimbradoProductivo\timbraCFDI.wsdl" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration91.svcinfo" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration.svcinfo" />
+    <None Include="Connected Services\servicioTimbradoProductivo\configuration91.svcinfo" />
+    <None Include="Connected Services\servicioTimbradoProductivo\configuration.svcinfo" />
+    <None Include="Connected Services\servicioTimbradoProductivo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Connected Services\servicioTimbrarPruebas\lluviaBackEnd.servicioTimbrarPruebas.respuestaTimbrado.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -1311,6 +1326,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivo\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
   </ItemGroup>
   <PropertyGroup>

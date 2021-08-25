@@ -19,11 +19,13 @@ namespace lluviaBackEnd.Utilerias
         private string derecha = "style='text-align:right;'";
 
         public string pathLogo { get; set; }
+        public string pathLogoCancelado { get; set; }
         public string pathMarcaAgua { get { return _pathMarcaAgua; } set { _pathMarcaAgua = value; } }
         private string cssTabla = @"style='text-align:center;font-size:8px;font-family:Arial'";
         private int tamaño = 8;
         string _pathMarcaAgua = "";
         public string TituloCabecera { get; set; }
+        public bool esCancelado { get; set; }
 
 
 
@@ -57,6 +59,7 @@ namespace lluviaBackEnd.Utilerias
         {
            this.pathLogo=  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets","img", "logo_lluvia.png");
            this.pathMarcaAgua = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "img", "marcaAgua.png");
+           this.pathLogoCancelado = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "img", "cancelada.png");
         }
 
         public override void OnOpenDocument(PdfWriter writer, Document document)
@@ -126,9 +129,13 @@ namespace lluviaBackEnd.Utilerias
                         <td "+ Titulo + @">
                                 Articulos de limpieza lluvia
                         </td>
+                        <td> 
+                            "+ (this.esCancelado ? @"<img src='" + this.pathLogoCancelado + @"' width = '100' height = '70' />" : "<span></span>") +@"
+                        </td>
                     <tr>
                         <td   width='40%' " + derecha + @"></td>
-                        <td   width='60%' " + derecha + @"></td>
+                        <td   width='40%' " + derecha + @"></td>
+                        <td   width='20%' " + derecha + @"></td>
                     </tr>
                     </tr>
                 </table>";

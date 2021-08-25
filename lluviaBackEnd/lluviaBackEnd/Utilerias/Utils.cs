@@ -197,7 +197,7 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path, string idVenta, Dictionary<string, object> items )
+        public static void GenerarFactura(Comprobante c, string path, string idVenta, Dictionary<string, object> items , bool esCancelacion = false )
         {
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -213,6 +213,7 @@ namespace lluviaBackEnd.Utilerias
             MemoryStream memStreamReader = new MemoryStream();
             PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
             ItextEvents eventos = new ItextEvents();
+            eventos.esCancelado = esCancelacion;
             eventos.TituloCabecera = "Articulos de limpieza lluvia";
             PDFWriter.PageEvent = eventos;
             try

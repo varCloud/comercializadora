@@ -12,7 +12,7 @@ using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
-using lluviaBackEnd.servicioTimbrarPruebas;
+using lluviaBackEnd.servicioTimbradoProductivo;
 
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
@@ -115,11 +115,12 @@ namespace lluviaBackEnd.Controllers
                     }
                     notificacion = new FacturaDAO().CancelarFactura(factura);
                 }
-                else {
+                else
+                {
                     notificacion.Estatus = -1;
                     notificacion.Mensaje = "Ocurrio un error al intentar cancelar la factura";
                 }
-                
+
                 return Json(notificacion, JsonRequestBehavior.AllowGet); ;
 
             }
@@ -129,6 +130,56 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+        [HttpPost]
+        public JsonResult RegenerarFactura(Factura factura)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            Dictionary<string, object> items = null;
+            try
+            {
+                string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
+                string pathServer = Utils.ObtnerFolder() + @"/";
+                FacturaDAO facturacionDAO = new FacturaDAO();
+                Sesion UsuarioActual = null;
+                if (Session != null)
+                    UsuarioActual = (Sesion)Session["UsuarioActual"];
+  
+                factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;          
+                Comprobante comprobanteTimbrado = SerializerManager<Comprobante>.DeseralizarXML(pathServer + "Timbre_" + factura.idVenta + ".xml");
+                comprobanteTimbrado.Addenda = new ComprobanteAddenda();
+                comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
+                comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
+                comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
+                comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
+                Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
+                Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items);
+                factura.pathArchivoFactura = pathFactura;
+                factura.estatusFactura = EnumEstatusFactura.Facturada;
+                factura.mensajeError = "OK";
+                factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
+                factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
+                Task.Factory.StartNew(() =>
+                {
+                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura);
+                });
+                
+                notificacion = new Notificacion<string>()
+                {
+                    Estatus = 200,
+                    Mensaje = "Factura Generada y enviada"
+                };
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpPost]
         public JsonResult GenerarFactura(Factura factura)
         {
@@ -136,10 +187,9 @@ namespace lluviaBackEnd.Controllers
             Dictionary<string, object> items = null;
 
             try
-            {             
-                
-                string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\","/");
-                string pathServer = Utils.ObtnerFolder() + @"/";   
+            {
+                string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
+                string pathServer = Utils.ObtnerFolder() + @"/";
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = null;
                 if (Session != null)
@@ -153,8 +203,7 @@ namespace lluviaBackEnd.Controllers
                 comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
                 comprobante.Emisor.RegimenFiscal = 621;                
                 */
-
-                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
                     comprobante = (items["comprobante"] as Comprobante);
@@ -172,6 +221,8 @@ namespace lluviaBackEnd.Controllers
                     string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                     comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
                     xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+
+                    //TIMBRAR CON EDI-FACT
                     respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
 
                     if (respuesta.codigoResultado.Equals("100"))
@@ -188,7 +239,7 @@ namespace lluviaBackEnd.Controllers
 
 
                         Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items);
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items );
                         System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
 
                         factura.pathArchivoFactura = pathFactura;
@@ -196,9 +247,10 @@ namespace lluviaBackEnd.Controllers
                         factura.mensajeError = "OK";
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
-                       
-                        Task.Factory.StartNew(() => {
-                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml" , factura);
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura);
                         });
 
 
@@ -216,7 +268,8 @@ namespace lluviaBackEnd.Controllers
                     notificacion.Mensaje += " " + factura.mensajeError;
                     return Json(notificacion, JsonRequestBehavior.AllowGet);
                 }
-                else {
+                else
+                {
                     notificacion.Estatus = Convert.ToInt16(items["estatus"]);
                     notificacion.Mensaje = items["mensaje"].ToString();
                     return Json(notificacion, JsonRequestBehavior.AllowGet);
@@ -256,7 +309,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<List<Factura>> notificacion=new FacturaDAO().ObtenerFacturas(factura);
+                Notificacion<List<Factura>> notificacion = new FacturaDAO().ObtenerFacturas(factura);
                 return PartialView(notificacion);
             }
             catch (Exception ex)
