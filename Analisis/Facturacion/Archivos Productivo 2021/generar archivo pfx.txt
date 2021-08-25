@@ -1,0 +1,5 @@
+
+
+pkcs8 -in keyLLuvia2021.key –inform DER -passin pass:GACL7905178F2 -out keyLLuvia2021.pem
+x509 -in cerLLuvia2021.cer –inform DER -out cerLLuvia2021.pem
+pkcs12 -export -inkey keyLLuvia2021.pem -in cerLLuvia2021.pem  -passin pass:GACL7905178F2 -out archivo.pfx 
