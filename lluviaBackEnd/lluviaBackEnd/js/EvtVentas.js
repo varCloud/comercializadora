@@ -386,6 +386,7 @@ function AgregarProducto(producto, cantidad) {
                         return false;
                     }
                     tblVtas.rows[i].cells[4].children[0].value = cantidad;
+                    tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
                     existeProductoAgregar = true;
                 }
             }
@@ -398,6 +399,7 @@ function AgregarProducto(producto, cantidad) {
                         return false;
                     }
                     tblVtas.rows[i].cells[4].children[0].value = cantidad;
+                    tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
                     existeProducto = true;
                 }
             }
@@ -432,7 +434,8 @@ function AgregarProducto(producto, cantidad) {
             "  <td class=\"text-center\">$" + descuento + "</td>" +
             "  <td class=\"text-center\">" +
             btnEliminaFila +
-            "  <td style=\"display: none;\">0</td>" +
+        "  <td style=\"display: none;\">0</td>" +
+        //"  <td style=\"display: ;\" >"+producto.ultimoCostoCompra+"</td>" +
             "  </td>" +
             "</tr >";
 
@@ -1005,6 +1008,7 @@ $('#btnGuardarVenta').click(function (e) {
                     var row_ = {
                         idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
                         cantidad: parseFloat(tblVtas.rows[i].cells[4].children[0].value),
+                        //ultimoCostoCompra: parseFloat(tblVtas.rows[i].cells[9].innerHTML)
                     };
                     productos.push(row_);
                 }

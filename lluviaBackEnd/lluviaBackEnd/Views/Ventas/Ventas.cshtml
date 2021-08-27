@@ -189,6 +189,7 @@
                                         <th class="text-center"> @(esDevolucion == true ? "Devolver Artículos" : "Acciones") </th>
                                         <th class="text-center" style="display: none;">idVentaDetalle</th>
                                         <th class="text-center" style="display: none;">montoComisionBancaria</th>
+                                        @*<th class="text-center" style="display: block;">ultimoCostoDeCompra</th>*@
                                     </tr>
                                 </thead>
                                 @if (notificacion.Modelo != null)
@@ -199,38 +200,39 @@
                                         <tbody>
                                             @foreach (var item in notificacion.Modelo)
                                             {
-                                                <tr>
-                                                    <td>@item.contador</td>
-                                                    <td>@item.idProducto</td>
-                                                    <td>@item.descProducto</td>
-                                                    <td class="text-center">$@item.precioVenta</td>
-                                                    <td class="text-center"><input disabled type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
-                                                    <td class="text-center">$@Convert.ToDecimal(@item.cantidad * item.precioVenta)</td>
-                                                    <td class="text-center">$@Convert.ToDecimal(@item.ahorro)</td>
-                                                    @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
+                                            <tr>
+                                                <td>@item.contador</td>
+                                                <td>@item.idProducto</td>
+                                                <td>@item.descProducto</td>
+                                                <td class="text-center">$@item.precioVenta</td>
+                                                <td class="text-center"><input disabled type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                <td class="text-center">$@Convert.ToDecimal(@item.cantidad * item.precioVenta)</td>
+                                                <td class="text-center">$@Convert.ToDecimal(@item.ahorro)</td>
+                                                @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
 
 
-                                                    @if (esAgregarProductos)
+                                                @if (esAgregarProductos)
+                                                {
+                                                    <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+
+                                                }
+                                                else
+                                                {
+                                                    if (item.necesitaDecimal)
                                                     {
-                                                        <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-
+                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
                                                     }
                                                     else
                                                     {
-                                                        if (item.necesitaDecimal)
-                                                        {
-                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
-                                                        }
+                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
                                                     }
+                                                }
 
-                                                    <td style="display: none;">@item.idVentaDetalle</td>
-                                                    <td style="display: none;">@item.montoComisionBancaria</td>
+                                                <td style="display: none;">@item.idVentaDetalle</td>
+                                                <td style="display: none;">@item.montoComisionBancaria</td>
+                                                @*<td style="display: block;">@item.ultimoCostoCompra</td>*@
 
-                                                </tr>
+                                            </tr>
 
                                             }
 
@@ -384,7 +386,9 @@
                             @Html.DropDownListFor(model => model.formaPago, new SelectList(lstFormasPago, "id", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
                         </div>
 
-                        <div class="pretty p-svg p-curve">
+                       
+                        
+                        <div class="pretty p-svg p-curve" @(esAgregarProductos ? "style=display:none" : "style=display:block") >
                             <input id="chkFacturar" type="checkbox">
                             <div class="state p-success">
                                 <!-- svg path -->
@@ -394,8 +398,10 @@
                                 <label>Facturar esta Venta.</label>
                             </div>
                         </div>
+
                         <br>
                         <br>
+                        
                         <div id="divUsoCFDI">
                             <div class="section-title"><strong>Uso del CFDI: </strong></div>
                             <div class="form-group">

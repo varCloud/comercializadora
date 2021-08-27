@@ -40,5 +40,7 @@ namespace lluviaBackEnd.Models
         public int idDevolucion { get; set; }
         public int idComplemento { get; set; }
         public bool necesitaDecimal { get; set; }
+
+        public float ultimoCostoCompra { get; set; }
     }
 }

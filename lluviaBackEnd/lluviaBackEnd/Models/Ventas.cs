@@ -101,5 +101,9 @@ namespace lluviaBackEnd.Models
         public int diasPasadosVentaInicial { get; set; }
         public string descripcionAlmacen { get; set; }
         public string descripcion { get; set; }
+
+        public int tieneCompleODev { get; set; }
+
+        public float ultimoCostoCompra { get; set; }
     }
 }
