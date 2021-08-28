@@ -379,15 +379,18 @@ function CancelarFactura(idVenta) {
                     data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
                     method: 'post',
                     dataType: 'json',
-                    async: false,
+                    async: true,
                     beforeSend: function (xhr) {
+                        ShowLoader("Cancelando Factura.");
                         console.log("Antes ")
                     },
                     success: function (data) {
+                        OcultarLoader();
                         MuestraToast('success', data.Mensaje);
                         PintarTabla();
                     },
                     error: function (xhr, status) {
+                        OcultarLoader();
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
                         console.log(xhr);
                         console.log(status);
