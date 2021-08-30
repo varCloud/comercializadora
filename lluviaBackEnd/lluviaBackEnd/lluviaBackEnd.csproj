@@ -205,6 +205,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Connected Services\servicioProduccionCancelaFactura\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\servicioTimbradoProductivo\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -264,6 +269,7 @@
     <Compile Include="Models\DropSize.cs" />
     <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\ExcesoEfectivo.cs" />
+    <Compile Include="Models\Facturacion\ClasesCancelaFacturaProductivo.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\IngresoEfectivo.cs" />
@@ -1023,9 +1029,16 @@
     <Content Include="assets\limitesInventario.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Connected Services\servicioProduccionCancelaFactura\configuration91.svcinfo" />
+    <None Include="Connected Services\servicioProduccionCancelaFactura\configuration.svcinfo" />
+    <None Include="Connected Services\servicioProduccionCancelaFactura\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Connected Services\servicioTimbradoProductivo\lluviaBackEnd.servicioTimbradoProductivo.respuestaTimbrado.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <None Include="Connected Services\servicioProduccionCancelaFactura\cancelaCFDI.wsdl" />
     <None Include="Connected Services\servicioTimbradoProductivo\timbraCFDI.wsdl" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration91.svcinfo" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration.svcinfo" />
@@ -1326,6 +1339,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\servicioProduccionCancelaFactura\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivo\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
   </ItemGroup>

@@ -16,6 +16,7 @@ using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.servicioTimbrarPruebas;
 using System.Net;
 using AutoMapper;
+using lluviaBackEnd.Models.Facturacion.Produccion;
 
 namespace lluviaBackEnd.Utilerias
 {
@@ -248,7 +249,105 @@ namespace lluviaBackEnd.Utilerias
                 throw ex;
             }
         }
-       
 
+
+        public static string CancelarFacturaEdifact(string documentoOriginal) {
+            string result = string.Empty;
+            try
+            {
+               
+                XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
+                originalXmlDocument.LoadXml(documentoOriginal);
+
+                // --------------------------------------------------------------------------
+                // III. GENERAR ELEMENTO <Signature> USANDO EL CSD DEL EMISOR
+                // --------------------------------------------------------------------------
+
+                XmlElement signatureElement = ProcesaCfdi.GenerateXmlSignature(originalXmlDocument);
+
+                // --------------------------------------------------------------------------
+                // IV. INCRUSTAR EL ELEMENTO <Signature> DENTRO DEL DOCUMENTO XML ORIGINAL
+                // --------------------------------------------------------------------------
+
+                originalXmlDocument.DocumentElement.AppendChild(originalXmlDocument.ImportNode(signatureElement, true));
+
+                // --------------------------------------------------------------------------
+                // V. EL XML RESULTANTE ES LA SOLICITUD FIRMADA DE CANCELACIÓN
+                // --------------------------------------------------------------------------
+                //Debug.WriteLine(originalXmlDocument.OuterXml);
+
+                if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
+                {
+                    lluviaBackEnd.Models.Facturacion.Produccion.enviaAcuseCancelacion envia = new Models.Facturacion.Produccion.enviaAcuseCancelacion();
+                    result = envia.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+
+                }
+                else
+                {
+                    lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion enviaCancelacion = new lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion();
+                    result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+                return result;
+            
+
+
+        }
+
+
+        public static AcuseCancelacionProductivoResponseWs ObtnerAcuseCancelacionFactura(string xmlCancelado) {
+
+            AcuseCancelacionProductivoResponseWs cancelacion = null;
+            AcuseCancelacionPruebasResponseWS cancelacionPruebas = null;
+            try
+            {
+                
+                if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
+                {
+                     cancelacion = ManagerSerealization<AcuseCancelacionProductivoResponseWs>.DeserializeXMLStringToObject(xmlCancelado);
+                    return cancelacion;
+                }
+                else
+                {
+                    cancelacionPruebas = ManagerSerealization<AcuseCancelacionPruebasResponseWS>.DeserializeXMLStringToObject(xmlCancelado);
+                }
+                ///////////////////MAPER///////////////////
+                var configuration = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<AcuseCancelacionPruebasResponseWS, AcuseCancelacionProductivoResponseWs>();
+                    cfg.CreateMap<Folios, AcuseFolios>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.Signature, lluviaBackEnd.Models.Facturacion.Produccion.Signature>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfo, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfo>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureKeyInfo, lluviaBackEnd.Models.Facturacion.Produccion.SignatureKeyInfo>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoCanonicalizationMethod, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoCanonicalizationMethod>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoSignatureMethod, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoSignatureMethod>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoReference, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoReference>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoReferenceTransforms, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoReferenceTransforms>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoReferenceTransformsTransform, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoReferenceTransformsTransform>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfoReferenceDigestMethod, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfoReferenceDigestMethod>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureKeyInfoKeyValue, lluviaBackEnd.Models.Facturacion.Produccion.SignatureKeyInfoKeyValue>();
+                    cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureKeyInfoKeyValueRSAKeyValue, lluviaBackEnd.Models.Facturacion.Produccion.SignatureKeyInfoKeyValueRSAKeyValue>();
+                });
+                
+
+                configuration.AssertConfigurationIsValid();
+                var mapper = configuration.CreateMapper();
+                cancelacion = mapper.Map<AcuseCancelacionProductivoResponseWs>(cancelacionPruebas);
+                return cancelacion;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

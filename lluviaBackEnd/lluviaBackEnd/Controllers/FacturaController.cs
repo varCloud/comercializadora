@@ -12,6 +12,7 @@ using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
+using lluviaBackEnd.Models.Facturacion.Produccion;
 using lluviaBackEnd.servicioTimbradoProductivo;
 
 using lluviaBackEnd.Utilerias;
@@ -76,37 +77,15 @@ namespace lluviaBackEnd.Controllers
                 {
                     string pathFactura = Utils.ObtnerFolder() + '/';
                     string documentoOriginal = Utilerias.ManagerSerealization<Cancelacion>.SerealizarToString(c);
-
-                    XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
-                    originalXmlDocument.LoadXml(documentoOriginal);
-
-                    // --------------------------------------------------------------------------
-                    // III. GENERAR ELEMENTO <Signature> USANDO EL CSD DEL EMISOR
-                    // --------------------------------------------------------------------------
-
-                    XmlElement signatureElement = ProcesaCfdi.GenerateXmlSignature(originalXmlDocument);
-
-                    // --------------------------------------------------------------------------
-                    // IV. INCRUSTAR EL ELEMENTO <Signature> DENTRO DEL DOCUMENTO XML ORIGINAL
-                    // --------------------------------------------------------------------------
-
-                    originalXmlDocument.DocumentElement.AppendChild(originalXmlDocument.ImportNode(signatureElement, true));
-
-                    // --------------------------------------------------------------------------
-                    // V. EL XML RESULTANTE ES LA SOLICITUD FIRMADA DE CANCELACIÓN
-                    // --------------------------------------------------------------------------
-
-                    //Debug.WriteLine(originalXmlDocument.OuterXml);
-
-                    enviaAcuseCancelacion enviaCancelacion = new enviaAcuseCancelacion();
-                    string result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
                     System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + ".xml", result);
-                    AcuseCancelacionResponseWS cancelacion = ManagerSerealization<AcuseCancelacionResponseWS>.DeserializeXMLStringToObject(result);
+                    //pathFactura = @"F:\Documents\comercializadora\lluviaBackEnd\lluviaBackEnd\Facturas\2021\AGOSTO\";
+                    //string text = System.IO.File.ReadAllText(pathFactura+ "Cancelacion_35705.xml");
+                    AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
                     if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
                     {
                         factura.estatusFactura = EnumEstatusFactura.Cancelada;
                         factura.mensajeError = "Cancelada correctamente";
-
                     }
                     else
                     {
