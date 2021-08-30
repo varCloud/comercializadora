@@ -746,8 +746,7 @@ function initInputsTabla() {
 
         //console.log(producto);
         //console.log(parseInt(thisInput.val()));
-
-        if ((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) {
+        if (((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) && (!thisInput.hasClass("esDevolucion"))) {
             MuestraToast('warning', "No existe suficiente producto en inventario.");
             document.execCommand('undo');
             return;
