@@ -225,6 +225,7 @@
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
+    <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
@@ -277,6 +278,7 @@
     <Compile Include="Models\LimiteInvetario.cs" />
     <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\ConfiguracionVenta.cs" />
+    <Compile Include="Models\PedidosEspecialesV2.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />
     <Compile Include="Models\Sucursal.cs" />
@@ -1073,6 +1075,7 @@
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
+    <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
@@ -1300,6 +1303,7 @@
     <Content Include="Views\Ventas\_ObtenerDetalleTickets.cshtml" />
     <Content Include="Views\Ventas\VerTodosTickets.cshtml" />
     <Content Include="Views\Reportes\Cierres.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\PedidosEspeciales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
