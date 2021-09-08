@@ -248,6 +248,7 @@
     <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
+    <Compile Include="DAO\TareasProgramadasDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
