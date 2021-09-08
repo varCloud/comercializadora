@@ -66,7 +66,7 @@ from  Devoluciones D join DevolucionesDetalle DD on D.idDevolucion = DD.idDevolu
 
 
 /************************ NO TIENEN ASIGNADO ULTIMO COSTO DE COMPRA EN PRODUCTOS ****************************************/
-select * from productos where ultimoCostoCompra is null and activo =1
+--select * from productos where ultimoCostoCompra is null and activo =1
 
 --update VentasDetalle set  fechaVentaDetalle = getdate() where 
 --select * from DevolucionesDetalle where idVenta=35724

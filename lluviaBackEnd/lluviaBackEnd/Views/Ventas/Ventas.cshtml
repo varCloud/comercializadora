@@ -67,27 +67,28 @@
                         <div class="row">
 
                             <div class="col-12 col-sm-12 col-lg-3  ">
-                                <div class="form-group d-flex flex-column">
+                                <div class="form-group d-flex flex-column" style="margin-bottom: 0px!important">
                                     <label>Herramientas</label>
                                     <div class="btn-group btn-group-lg form-group" role="group" aria-label="Basic example">
                                         <div class="btn-group mb-3" role="group" aria-label="Basic example">
                                             <a href="javascript:AbrirModalConsultaExistencias();" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Consultar Existencias"><i class="fas fa-eye"></i></a>
                                             <a href="javascript:AbrirModalIngresoEfectivo();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Ingreso de Efectivo"><i class="fas fa-ticket-alt"></i></a>
-                                            <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Retiro De Exceso de Efectivo)"><i class="fas fa-dollar-sign"> </i></a>
-                                            <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-donate"></i></a>
-                                            <a href="javascript:AbrirCajonDinero();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Abrir Cajón de Dinero"><i class="fas fa-external-link-alt"></i></a>
+                                            @*<a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Retiro De Exceso de Efectivo)"><i class="fas fa-dollar-sign"> </i></a>*@
+                                            @*<a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-donate"></i></a>
+                                            <a href="javascript:AbrirCajonDinero();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Abrir Cajón de Dinero"><i class="fas fa-external-link-alt"></i></a>*@
                                             @if ((!esDevolucion) || (idVenta == 0))
                                             {
                                                 <a href="javascript:AbrirModalPedidoEspecial();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Buscar Pedido Especial"><i class="fas fa-portrait"></i></a>
                                                 <a href="javascript:AbrirModalComplementoVenta();" class="btn btn-icon btn-dark" data-toggle="tooltip" title="Complemento de venta"><i class="fas fa-ticket-alt"></i></a>
                                             }
+                                          
                                         </div>
                                     </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-12 col-lg-5">
-                                    <div class="form-group">
+                                <div class="col-12 col-sm-12 col-lg-6">
+                                    <div class="form-group"  style="margin-bottom: 0px!important">
                                         <label>Producto</label>
                                         @Html.HiddenFor(x => idVenta)
                                         @Html.HiddenFor(x => comisionBancaria)
@@ -100,18 +101,18 @@
                                         <input type="text" class="form-control" id="listProductos" name="listProductos" placeholder="Escriba el nombre del producto">
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-12 col-lg-auto">
+                                @*<div class="col-12 col-sm-12 col-lg-auto">
                                     <div class="form-group">
                                         <label>&nbsp;</label>
                                         <a href="javascript:InitSelect2Productos();" class="btn btn-icon btn-info form-control" data-toggle="tooltip" title="Cargar Existencias"><i class="fas fa-spinner"></i></a>
                                     </div>
-                                </div>
+                                </div>*@
                                 <div class="col-12 col-sm-12 col-lg-3">
 
 
                                     @if ((!esDevolucion) || (idVenta == 0))
                                     {
-                                        <div class="form-group">
+                                        <div class="form-group"  style="margin-bottom: 0px!important">
                                             <label>Cantidad</label>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
@@ -130,7 +131,16 @@
 
                                 </div>
                             </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-auto">
+                                <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Retiro De Exceso de Efectivo)"><i class="fas fa-dollar-sign"> </i></a>
+                                <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-donate"></i></a>
+                                <a href="javascript:AbrirCajonDinero();" class="btn btn-icon btn-info" data-toggle="tooltip" title="Abrir Cajón de Dinero"><i class="fas fa-external-link-alt"></i></a>
+                                <a href="javascript:InitSelect2Productos();" class="btn btn-icon btn-info " data-toggle="tooltip" title="Cargar Existencias"><i class="fas fa-spinner"></i></a>
+                            </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
