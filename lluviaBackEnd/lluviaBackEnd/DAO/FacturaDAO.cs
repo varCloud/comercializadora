@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using lluviaBackEnd.Models;
 using System.ServiceModel;
+using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.DAO
 {
@@ -226,7 +227,7 @@ namespace lluviaBackEnd.DAO
                         facturas.Estatus = rs1.status;
                         facturas.Mensaje = rs1.mensaje;
                         facturas.Modelo = rs.Read<Factura>().ToList();
-                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura+ "/Factura_" + p.idVenta+".pdf");
+                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura);
 
                     }
                     else
@@ -275,6 +276,7 @@ namespace lluviaBackEnd.DAO
             }
             catch (Exception ex)
             {
+                Utils.EscribirLog("ObtenerCancelacionFactura" + ex.Message + " " + ex.StackTrace);
                 throw ex;
             }
             return c;

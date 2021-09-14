@@ -19,7 +19,11 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 ViewBag.lstClientes = this.ObtenerClientes(new Cliente() { idCliente = 0 });
-                ViewBag.lstTipoClientes = this.ObtenerTipoClientes(new TipoCliente() { idTipoCliente = 0 });
+                List<TipoCliente> lst = this.ObtenerTipoClientes(new TipoCliente() { idTipoCliente = 0 });
+                ViewBag.lstTipoClientes = lst;
+                List<SelectListItem> listTipoClientes = new List<SelectListItem>();
+                lst.ForEach(x => listTipoClientes.Add(new SelectListItem() { Text = x.descripcion, Value = (x.idTipoCliente.ToString().Equals("0") ? "" : x.idTipoCliente.ToString()) }));
+                ViewBag.lstTipoClientes = listTipoClientes;
                 return View();
             }
             catch (Exception ex)

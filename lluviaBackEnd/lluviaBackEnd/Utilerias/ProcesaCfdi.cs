@@ -17,12 +17,16 @@ using lluviaBackEnd.servicioTimbrarPruebas;
 using System.Net;
 using AutoMapper;
 using lluviaBackEnd.Models.Facturacion.Produccion;
+using log4net;
 
 namespace lluviaBackEnd.Utilerias
 {
 
     public static class ProcesaCfdi
     {
+
+        private static readonly ILog log4netRequest = LogManager.GetLogger("LogLluvia");
+    
 
         private static string fileName;
         public static string pathArchivoSAT = string.Empty;
@@ -191,21 +195,29 @@ namespace lluviaBackEnd.Utilerias
 
         public static XmlElement GenerateXmlSignature(XmlDocument originalXmlDocument)
         {
-            string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
-            X509Certificate2 cert = new X509Certificate2(Resource.archivoLLuvia2021, strLlavePwd);
-            RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
-            SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
-            Reference reference = new Reference() { Uri = String.Empty };
-            XmlDsigEnvelopedSignatureTransform env = new XmlDsigEnvelopedSignatureTransform();
-            reference.AddTransform(env);
-            KeyInfoX509Data kdata = new KeyInfoX509Data(cert);
-            kdata.AddIssuerSerial(cert.Issuer, cert.SerialNumber);
-            KeyInfo keyInfo = new KeyInfo();
-            keyInfo.AddClause(kdata);
-            signedXml.KeyInfo = keyInfo;
-            signedXml.AddReference(reference);
-            signedXml.ComputeSignature();
-            return signedXml.GetXml();
+            try
+            {
+                string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
+                X509Certificate2 cert = new X509Certificate2(Resource.archivoLLuvia2021, strLlavePwd);
+                RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
+                SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
+                Reference reference = new Reference() { Uri = String.Empty };
+                XmlDsigEnvelopedSignatureTransform env = new XmlDsigEnvelopedSignatureTransform();
+                reference.AddTransform(env);
+                KeyInfoX509Data kdata = new KeyInfoX509Data(cert);
+                kdata.AddIssuerSerial(cert.Issuer, cert.SerialNumber);
+                KeyInfo keyInfo = new KeyInfo();
+                keyInfo.AddClause(kdata);
+                signedXml.KeyInfo = keyInfo;
+                signedXml.AddReference(reference);
+                signedXml.ComputeSignature();
+                return signedXml.GetXml();
+            }
+            catch (Exception ex)
+            {
+                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
+                throw ex;
+            }
         }
 
         public static object TimbrarEdifact(string xmlSerializadoSAT)
@@ -255,7 +267,7 @@ namespace lluviaBackEnd.Utilerias
             string result = string.Empty;
             try
             {
-               
+                log4netRequest.Debug("CancelarFacturaEdifact");
                 XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
                 originalXmlDocument.LoadXml(documentoOriginal);
 
@@ -290,15 +302,10 @@ namespace lluviaBackEnd.Utilerias
             }
             catch (Exception ex)
             {
-
+                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
                 throw ex;
             }
-
-
                 return result;
-            
-
-
         }
 
 
@@ -308,7 +315,7 @@ namespace lluviaBackEnd.Utilerias
             AcuseCancelacionPruebasResponseWS cancelacionPruebas = null;
             try
             {
-                
+                log4netRequest.Debug("ObtnerAcuseCancelacionFactura");
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
                      cancelacion = ManagerSerealization<AcuseCancelacionProductivoResponseWs>.DeserializeXMLStringToObject(xmlCancelado);
@@ -346,6 +353,7 @@ namespace lluviaBackEnd.Utilerias
             }
             catch (Exception ex)
             {
+                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
                 throw ex;
             }
         }

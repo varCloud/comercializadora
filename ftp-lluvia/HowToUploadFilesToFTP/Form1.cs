@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Configuration;
+using System.ServiceProcess;
 
 namespace HowToUploadFilesToFTP
 {
@@ -144,18 +145,20 @@ namespace HowToUploadFilesToFTP
                 DialogResult dialogResult = MessageBox.Show("La actualización del wms-lluvia cerrar tu navegador", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    cerrarNavegadores();
+
+                    stopIIS();
+                    //cerrarNavegadores();
                     this.url = "ftp://" + this.txtAddress.Text + "/" + this.txtFileToDownload.Text;
                     this.txtStatusUnZip.Text = "Descargando archivo :" + this.url;
-                    this.localFilePath = Path.Combine(this.txtDownloadPath.Text, "deploy.zip");
-                    RespaldarZip();
-                    this.credentials = new NetworkCredential(this.txtUserName.Text, this.txtPassword.Text);
-                    FtpWebRequest listRequest = (FtpWebRequest)WebRequest.Create(this.url);
-                    listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-                    listRequest.Credentials = credentials;
-                    Task download = new Task(() => this.DescargarArchivo(this.url, listRequest));
-                    download.RunSynchronously();
-                    this.bg.RunWorkerAsync();
+                    //this.localFilePath = Path.Combine(this.txtDownloadPath.Text, "deploy.zip");
+                    //RespaldarZip();
+                    //this.credentials = new NetworkCredential(this.txtUserName.Text, this.txtPassword.Text);
+                    //FtpWebRequest listRequest = (FtpWebRequest)WebRequest.Create(this.url);
+                    //listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                    //listRequest.Credentials = credentials;
+                    //Task download = new Task(() => this.DescargarArchivo(this.url, listRequest));
+                    //download.RunSynchronously();
+                    //this.bg.RunWorkerAsync();
                 }
                 else if (dialogResult == DialogResult.No)
                 {
@@ -356,6 +359,104 @@ namespace HowToUploadFilesToFTP
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void startIIS() {
+            ServiceController iisService = new ServiceController("W3SVC");
+
+            if (iisService != null)
+
+            {
+
+                do
+
+                {
+
+                    iisService.Refresh();
+
+                }
+
+                while (iisService.Status == ServiceControllerStatus.ContinuePending ||
+
+                       iisService.Status == ServiceControllerStatus.PausePending ||
+
+                       iisService.Status == ServiceControllerStatus.StartPending ||
+
+                       iisService.Status == ServiceControllerStatus.StopPending);
+
+                if (iisService.Status == ServiceControllerStatus.Stopped)
+
+                {
+
+                    iisService.Start();
+
+                    iisService.WaitForStatus(ServiceControllerStatus.Running);
+
+                }
+
+                else
+
+                {
+
+                    if (ServiceControllerStatus.Paused == iisService.Status)
+
+                    {
+
+                        iisService.Continue();
+
+                        iisService.WaitForStatus(ServiceControllerStatus.Running);
+
+                    }
+
+                }
+
+                iisService.Close();
+
+            }
+        }
+        public void stopIIS() {
+            try
+            {
+                ServiceController iisService = new ServiceController("W3SVC");
+                if (iisService != null)
+                {
+
+                    do
+
+                    {
+
+                        iisService.Refresh();
+
+                    }
+
+                    while (iisService.Status == ServiceControllerStatus.ContinuePending ||
+
+                           iisService.Status == ServiceControllerStatus.PausePending ||
+
+                           iisService.Status == ServiceControllerStatus.StartPending ||
+
+                           iisService.Status == ServiceControllerStatus.StopPending);
+
+                    if (iisService.Status == ServiceControllerStatus.Running ||
+
+                        iisService.Status == ServiceControllerStatus.Paused)
+
+                    {
+
+                        iisService.Stop();
+
+                        iisService.WaitForStatus(ServiceControllerStatus.Stopped);
+
+                    }
+                    iisService.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                txtStatusUnZip.AppendText(Environment.NewLine);
+                this.txtStatusUnZip.AppendText(ex.Message +" ::::::::: "+ex.StackTrace);
+
             }
         }
         private void groupBox3_Enter(object sender, EventArgs e)

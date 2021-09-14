@@ -1131,6 +1131,22 @@ $('#btnGuardarVenta').click(function (e) {
 
 });
 
+function tieneCorreoCliente(idCliente) {
+    console.log("idCliente", idCliente)
+    cliente = listClientes.find(x => x.idCliente == idCliente)
+    console.log("cliente", cliente)
+    if (cliente) {
+        if (cliente.correo)
+            return true;
+        else {
+            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico");
+            return false;
+        }
+    } else {
+        MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
+        return false;
+    }
+}
 
 $('#chkFacturar').click(function () {
 
@@ -1151,6 +1167,9 @@ $('#chkFacturar').click(function () {
         document.getElementById("chkFacturar").checked = false;
         return
     }
+    if ($('#chkFacturar').is(':checked'))
+        if (!tieneCorreoCliente(idCliente))
+            return
 
     $('#efectivo').val('');
 
@@ -2541,6 +2560,8 @@ $(document).ready(function () {
         PuedeRealizarVenta = true;
         console.log("puede realizar venta", PuedeRealizarVenta)
     });
+
+    console.log("clientes", listClientes)
 });
 
 

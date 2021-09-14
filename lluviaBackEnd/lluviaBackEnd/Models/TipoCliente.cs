@@ -7,6 +7,7 @@ namespace lluviaBackEnd.Models
 {
     public class TipoCliente
     {
+        
         public int idTipoCliente { get; set; }
         public string descripcion { get; set; }
         public float descuento { get; set; }

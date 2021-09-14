@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Foolproof;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,19 +15,21 @@ namespace lluviaBackEnd.Models
         }
         public Int64 idCliente { get; set; }
 
+        
         [Display(Name = "Nombres")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        [RequiredIfFalse("esPersonaMoral", ErrorMessage = "Esta campo es requerido")]
         public String nombres { get; set; }
 
         [Display(Name = "Apellido Paterno")]
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        [RequiredIfFalse("esPersonaMoral", ErrorMessage = "Esta campo es requerido")]
         public String apellidoPaterno { get; set; }
-        [Display(Name = "Apellido Materno")]
-        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+
         public string  apellidoMaterno { get; set; }
 
         [Display(Name = "Telefóno")]
-        [Required(AllowEmptyStrings =true, ErrorMessage = "Este campo no puede estar vacio")]
+        //[Required(AllowEmptyStrings =true, ErrorMessage = "Este campo no puede estar vacio")]
         [MaxLength(10,ErrorMessage ="El telefóno debe ser maximo  de 10 caracteres")]
         [MinLength(10, ErrorMessage = "El telefóno debe ser minimo de  10 caracteres")]
         [StringLength(10, ErrorMessage = "El telefóno debe ser  de  10 caracteres")]
@@ -59,5 +62,25 @@ namespace lluviaBackEnd.Models
         public decimal descuento { get; set; }
 
         public string nombreCompleto_ { get; set; }
+
+        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        [Range(1,90,ErrorMessage = "Este campo no puede estar vacio")]
+        public int idTipoCliente { get; set; }
+
+        /*******PERSONA MOTAL*********/
+        public bool esPersonaMoral { get; set; }
+
+        [RequiredIfTrue("esPersonaMoral", ErrorMessage = "Esta campo es requerido")]
+        [Display(Name = "Nombres")]
+        [Required(ErrorMessage = "Este campo no puede estar vacio")]
+        public string razonSocial { get; set; }
+
+        [Display(Name = "RFC")]
+        [RequiredIfTrue("esPersonaMoral", ErrorMessage = "Esta campo es requerido")]
+        public string rfcPM { get; set; }
+
+        public string nombreContacto { get; set; }
+        public string telefonoContacto { get; set; }
+        public string correoContacto { get; set; }
     }
 }
