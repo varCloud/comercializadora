@@ -248,6 +248,7 @@
     <Compile Include="DAO\InventarioDAO.cs" />
     <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
+    <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
@@ -1304,6 +1305,8 @@
     <Content Include="Views\Ventas\VerTodosTickets.cshtml" />
     <Content Include="Views\Reportes\Cierres.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\PedidosEspeciales.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\CierreCajas.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\AperturaCajas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
