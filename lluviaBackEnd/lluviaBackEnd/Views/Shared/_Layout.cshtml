@@ -171,7 +171,8 @@
                                 <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="clipboard"></i><span>Pedidos Especiales</span></a>
                                 <ul class="dropdown-menu">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Pedidos Especiales" ? "dropdown active" : "")" href="@Url.Action("PedidosEspeciales", "PedidosEspecialesV2")">Nuevo Pedido</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Pedidos" ? "dropdown active" : "")" href="@Url.Action("ConsultaPedidos", "PedidosEspecialesV2")">Consultar Pedidos</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Cotizaciones" ? "dropdown active" : "")" href="@Url.Action("Cotizaciones", "PedidosEspecialesV2")">Cotizaciones</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "ConsultarPedidosEspeciales" ? "dropdown active" : "")" href="@Url.Action("ConsultarPedidosEspeciales", "PedidosEspecialesV2")">Consultar Pedidos</a></li>
                                 </ul>
                             </li>
                         }

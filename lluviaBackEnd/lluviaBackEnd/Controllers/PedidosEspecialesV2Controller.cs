@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using lluviaBackEnd.Utilerias;
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -85,6 +86,99 @@ namespace lluviaBackEnd.Controllers
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
                 ViewBag.mostrarEfectivoEntregado = false;
                 return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult Cotizaciones()
+        {
+            try
+            {
+                Notificacion<dynamic> cotizaciones = new PedidosEspecialesV2DAO().ObtenerCotizaciones();
+                return View(cotizaciones);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult ConsultarPedidosEspeciales()
+        {
+            try
+            {
+                Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesPedidosEspeciales();
+                Notificacion<dynamic> usuarios = new PedidosEspecialesV2DAO().ObtenerUsuariosPedidosEspeciales();
+                Notificacion<dynamic> estatus = new PedidosEspecialesV2DAO().ObtenerEstatusPedidosEspeciales();
+
+                var listClientes = new List<SelectListItem>();
+                foreach (var cliente in clientes.Modelo)
+                {
+                    var item = new SelectListItem()
+                    {
+                        Text = cliente.nombreCliente,
+                        Value = cliente.idCliente + ""
+                    };
+
+                    listClientes.Add(item);
+
+                }
+
+
+                var listUsuarios = new List<SelectListItem>();
+                foreach (var usuario in usuarios.Modelo)
+                {
+                    var item = new SelectListItem()
+                    {
+                        Text = usuario.nombreUsuario,
+                        Value = usuario.idUsuario + ""
+                    };
+
+                    listUsuarios.Add(item);
+
+                }
+
+
+                var listEstatus = new List<SelectListItem>();
+                foreach (var est in estatus.Modelo)
+                {
+                    var item = new SelectListItem()
+                    {
+                        Text = est.descripcion,
+                        Value = est.idEstatusPedidoEspecial + ""
+                    };
+
+                    listEstatus.Add(item);
+
+                }
+
+                ViewBag.listClientes = listClientes;
+                ViewBag.listUsuarios = listUsuarios;
+                ViewBag.listEstatus = listEstatus;
+
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult BuscarPedidosEspeciales(DateTime? fechaIni, DateTime? fechaFin, Int64 idCliente = 0, Int64 idUsuario = 0, int idEstatusPedidoEspecial = 0)
+        {
+            try
+            {
+
+                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspeciales(fechaIni, fechaFin, idCliente, idUsuario, idEstatusPedidoEspecial);
+
+                return Json(JsonConvert.SerializeObject(pedidosEspeciales), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
