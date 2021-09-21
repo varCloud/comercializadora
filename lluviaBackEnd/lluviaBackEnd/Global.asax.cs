@@ -7,6 +7,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
 using System.Web.Routing;
+using lluviaBackEnd.App_Start;
 
 namespace lluviaBackEnd
 {
@@ -16,6 +17,19 @@ namespace lluviaBackEnd
 
         protected void Application_Start()
         {
+            //JsonValueProviderFactory jsonValueProviderFactory = null;
+            //foreach (var factory in ValueProviderFactories.Factories)
+            //{
+            //    if (factory is JsonValueProviderFactory)
+            //    {
+            //        jsonValueProviderFactory = factory as JsonValueProviderFactory;
+            //    }
+            //}
+            ////remove the default JsonVAlueProviderFactory
+            //if (jsonValueProviderFactory != null) ValueProviderFactories.Factories.Remove(jsonValueProviderFactory);
+            ////add the custom one
+            //ValueProviderFactories.Factories.Add(new CustomJsonValueProviderFactory());
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
             AreaRegistration.RegisterAllAreas();
@@ -24,6 +38,8 @@ namespace lluviaBackEnd
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             log4net.Config.XmlConfigurator.Configure();
+
+
         }
     }
 }

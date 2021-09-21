@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\CustomJsonValueProviderFactory.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
@@ -1312,7 +1313,6 @@
     <Content Include="Views\PedidosEspecialesV2\ConsultarPedidosEspeciales.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\CierreCajas.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\AperturaCajas.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
