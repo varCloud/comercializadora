@@ -1,0 +1,95 @@
+﻿@model lluviaBackEnd.Models.Notificacion<dynamic>
+@using System.Globalization;
+@{
+    ViewBag.Title = "Cotizaciones";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+@*<!DOCTYPE html>*@
+
+
+<h2>Cotizaciones</h2>
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body" id="resultCierres">
+                    @if (Model.Estatus != 200)
+                    {
+
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            <h2>No se encontraron resultados</h2>
+                        </div>
+
+                    }
+                    else
+                    {
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tblCotizaciones">
+                                <thead>
+                                    <tr>
+                                        <th>No. Cotizacion</th>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Cantidad</th>
+                                        <th>Monto Total</th> 
+                                        <th>Editar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Modelo)
+                                    {
+                                    <tr>
+                                        <td>@item.idPedidoEspecial</td>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                        <td>@item.nombreCliente</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td></td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/evtCotizaciones.js"></script>
+}
+
+
