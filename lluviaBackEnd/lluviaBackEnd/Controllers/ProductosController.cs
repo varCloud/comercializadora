@@ -93,6 +93,22 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ObtenerProductosPorAlmacen(int idAlmacen)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                //producto.idUsuario = UsuarioActual.idUsuario;
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductosPorAlmacen(idAlmacen);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public ActionResult ObtenerProductosPedidoEspecial(int idPedidoEspecial)
         {
             try

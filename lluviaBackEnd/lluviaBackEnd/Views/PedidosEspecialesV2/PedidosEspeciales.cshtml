@@ -1,20 +1,1107 @@
-﻿
+﻿@model lluviaBackEnd.Models.PedidosEspecialesV2
 @{
-    Layout = null;
+    ViewBag.Title = "Pedidos Especiales";
+    //List<lluviaBackEnd.Models.Ventas> lstVentas = ViewBag.lstVentas;
+    //List<lluviaBackEnd.Models.Producto> lstProductos = ViewBag.lstProductos;
+    List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
+    List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
+    List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
+    List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
+    //List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
+    //lluviaBackEnd.Models.PedidosEspecialesV2 PedidosEspecialesV2 = ViewBag.PedidosEspecialesV2;
+
+    //int idVenta = ViewBag.venta.idVenta;
+    float comisionBancaria = ViewBag.comisionBancaria;
+    int idClienteDevolucion = 0;
+
+    //Boolean esDevolucion = ViewBag.venta.esDevolucion;
+    //Boolean esAgregarProductos = ViewBag.venta.esAgregarProductos;
+
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+
+
+    //if (idVenta > 0)
+    //{
+    //    notificacion = new lluviaBackEnd.DAO.VentasDAO().ObtenerTickets(new lluviaBackEnd.Models.Ticket() { idVenta = idVenta, tipoVenta = lluviaBackEnd.Models.EnumTipoVenta.ConsultaDevolucion });
+    //    idClienteDevolucion = notificacion.Modelo[0].idCliente;
+    //}
+
+
 }
 
-<!DOCTYPE html>
+@section Styles {
+    <link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>PedidosEspeciales</title>
-</head>
-<body>
-    <div>
+
+    <style>
+        .modal {
+            overflow: auto !important;
+        }
+
+        .ui-autocomplete {
+            z-index: 5000;
+        }
+    </style>
+}
+
+
+<section class="section">
+    <div class="section-body">
+        <div class="row mt-sm-4">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>Agregar Productos al Pedido Especial: </h4>
+                        <div class="card-header-action" id="actionVenta">
+
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-2  ">
+                                <div class="form-group d-flex flex-column">
+                                    <label>Almacenes</label>
+                                    <div class="btn-group btn-group-lg form-group" role="group" aria-label="Basic example">
+                                        <div class="btn-group mb-3" role="group" aria-label="Basic example">
+
+                                            @Html.DropDownListFor(x => x.idAlmacen, lstAlmacenes, new
+                                            {
+                                                id = "idAlmacenExistencia",
+                                                @class = "form-control",
+                                                data_val = "false"@*, @readonly = "readonly"*@})
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-5">
+                                <div class="form-group">
+                                    <label>Producto</label>
+                                    @*@Html.HiddenFor(x => idVenta)*@
+                                    @Html.HiddenFor(x => comisionBancaria)
+                                    @*@Html.HiddenFor(x => esDevolucion)
+                                        @Html.HiddenFor(x => esAgregarProductos)*@
+                                    @Html.HiddenFor(x => idClienteDevolucion)
+
+                                    @*<input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">*@
+                                    @*<select id="idProducto"></select>*@
+                                    <input type="text" class="form-control" id="listProductos" name="listProductos" placeholder="Escriba el nombre del producto">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-auto">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <a href="javascript:ActualizarProductosAlmacen();" class="btn btn-icon btn-info form-control" data-toggle="tooltip" title="Cargar Existencias"><i class="fas fa-spinner"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label>Cantidad</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-boxes" style="font-size:16px !important"></i>
+                                            </span>
+                                        </div>
+                                        <input id="cantidad" type="text" class="form-control" onkeypress="return validaTipoMedida(this, event);" value="1">
+                                        <div class="input-group-append">
+                                            <button type="button" id="btnAgregarProducto" class="btn btn-success"> &nbsp; Agregar &nbsp;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group mb-3">
+                                        <button id="btnAprobarPrecioMayoreo" class="btn btn-dark form-control btn-icon icon-left"><i class="fas fa-save"></i> Aprobar Precio Mayoreo</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-sm-12">
+
+            @*<div class="col-12 col-md-12 col-lg-1">
+
+
+                    <div class="card-body" style="padding: 20px 10px">
+
+                        <div class="btn-group-vertical" role="group" aria-label="Basic example">
+
+                            <a href="javascript:AbrirModalConsultaExistencias();" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Consultar Existencias"><i class="fas fa-eye"></i></a>
+                            <a href="javascript:AbrirModalCierreCajaExcedentes();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Cierre de Caja (Exceso de Efectivo)"><i class="fas fa-dollar-sign"></i></a>
+                            <a href="javascript:AbrirModalCierreDia();" class="btn btn-icon btn-success" data-toggle="tooltip" title="Cierre de Caja (Final del día)"><i class="fas fa-dollar-sign"></i></a>
+
+                        </div>
+                    </div>
+                </div>*@
+
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Resumen del Pedido Especial: </h4>
+                        <div class="card-header-action">
+                            @*@if (esDevolucion)
+                                {
+                                    <div class="badge-outline col-red"><h3>Total a Devolver: <span class="divSubTotal">$0.0</span></h3></div>
+
+                                }
+                                else
+                                {*@
+                            <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
+
+                            @*}*@
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        @*<div class="section-title" id="descuentoCliente">Resumen de la venta</div>*@
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tablaRepVentas">
+                                <thead>
+                                    <tr>
+                                        <th data-width="40" style="width: 40px;">#</th>
+                                        <th>Id Producto</th>
+                                        <th>Producto</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Total</th>
+                                        <th class="text-center">Descuento</th>
+                                        <th class="text-center">Acciones  @*@(esDevolucion == true ? "Devolver Artículos" : "Acciones")*@ </th>
+                                        <th class="text-center" style="display: none;">idVentaDetalle</th>
+                                        <th class="text-center" style="display: none;">montoComisionBancaria</th>
+                                        @*<th class="text-center" style="display: block;">ultimoCostoDeCompra</th>*@
+                                    </tr>
+                                </thead>
+                                @if (notificacion.Modelo != null)
+                                {
+                                    if (notificacion.Modelo.Count() > 0)
+                                    {
+
+                                        <tbody>
+                                            @foreach (var item in notificacion.Modelo)
+                                            {
+                                                <tr>
+                                                    <td>@item.contador</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descProducto</td>
+                                                    <td class="text-center">$@item.precioVenta</td>
+                                                    <td class="text-center"><input disabled type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="@item.cantidad"></td>
+                                                    <td class="text-center">$@Convert.ToDecimal(@item.cantidad * item.precioVenta)</td>
+                                                    <td class="text-center">$@Convert.ToDecimal(@item.ahorro)</td>
+                                                    @*<td class="text-center @(esAgregarProductos == true ? "agregarProductos" : "") "><a href="#" class="@(esAgregarProductos == true ? "btn disabled" : "")" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>*@
+
+
+                                                    @*@if (esAgregarProductos)
+                                                        {
+                                                            <td class="text-center esAgregarProductos"><a href="#" class="btn disabled" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+
+                                                        }
+                                                        else
+                                                        {*@
+                                                    @if (item.necesitaDecimal)
+                                                    {
+                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-center esDevolucion"><input class="esDevolucion" type='text' onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>
+                                                    }
+                                                    @*}*@
+
+                                                    <td style="display: none;">@item.idVentaDetalle</td>
+                                                    <td style="display: none;">@item.montoComisionBancaria</td>
+                                                    @*<td style="display: block;">@item.ultimoCostoCompra</td>*@
+
+                                                </tr>
+
+                                            }
+
+                                        </tbody>
+                                    }
+                                }
+                                else
+                                {
+                                    <tbody></tbody>
+                                }
+
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-6">
+
+                            </div>
+                            <div class="col-lg-6 text-right">
+
+                                @*<div class="invoice-detail-item">
+                                        <div class="invoice-detail-name">I.V.A.</div>
+                                        <div class="invoice-detail-value" id="divIva">$15</div>
+                                    </div>*@
+                                <hr class="mt-2 mb-2">
+                                <div class="invoice-detail-item">
+
+                                    @*@if (esDevolucion)
+                                        {
+                                            <div class="invoice-detail-name">Total a Devolver</div>
+                                        }
+                                        else
+                                        {*@
+                                    <div class="invoice-detail-name">Subtotal</div>
+                                    @*}*@
+                                    <div class="invoice-detail-value divSubTotal">$0.0</div>
+                                </div>
+
+
+
+
+                                @*<div class="invoice-detail-item">
+                                        <div class="invoice-detail-name">Total</div>
+                                        <div class="invoice-detail-value invoice-detail-value-lg" id="divTotal">$685.99</div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        @*@if (esDevolucion)
+                            {
+                                <div class="text-md-right">
+
+                                    <div class="invoice-detail-name  pull-left">Último Cambio:</div>
+                                    <br>
+                                    <div class="invoice-detail-value pull-left" id="ultimoCambio"><h4>$0.0</h4></div>
+
+                                    <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger"><i class="fas fa-times"></i> Cancelar</a>
+                                    <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                        <i class="fas fa-hand-holding-usd"></i> Realizar Devolucion
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {*@
+                        @*@if (esAgregarProductos)
+                            {
+                                <div class="text-md-right">
+
+                                    <div class="invoice-detail-name  pull-left">Último Cambio:</div>
+                                    <br>
+                                    <div class="invoice-detail-value pull-left" id="ultimoCambio"><h4>$0.0</h4></div>
+
+                                    <a href="@Url.Action("Ventas", "Ventas")" class="btn btn- btn-danger"><i class="fas fa-times"></i> Cancelar</a>
+                                    <button id="previoVenta" class="btn btn-primary btn-icon icon-left">
+                                        <i class="far fa-plus-square"></i> Agregar Productos
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {*@
+                        <div>
+                            <div class="text-md-right">
+
+                                <div class="invoice-detail-name  pull-left">Último Cambio:</div>
+                                <br>
+                                <div class="invoice-detail-value pull-left" id="ultimoCambio"><h4>$0.0</h4></div>
+
+                                <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Limpiar</button>
+                                &nbsp;
+                                <button id="btnGenerarPedidoEspecial" class="btn btn-warning btn-icon icon-left"><i class="fas fa-credit-card"></i> Generar Pedido Especial</button>
+                                &nbsp;
+                                <button id="btnGuardarCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>
+
+                            </div>
+                        </div>
+
+                        @*}*@
+                        @*}*@
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</section>
+
+
+
+
+@*Modal previo venta *@
+<div class="modal fade bd-example-modal-lg" id="ModalPrevioVenta" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Previo: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <div class="section-title"><strong>Cliente: </strong></div>
+                        <div class="form-group">
+                            @*@Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idCliente", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })*@
+                            @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="nombreCliente">
+                                    <address>
+                                        <strong></strong><br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-title"><strong>Forma de Pago: </strong></div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.formaPago, new SelectList(lstFormasPago, "id", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+                        </div>
+
+
+
+                        <div class="pretty p-svg p-curve" @(1==1 ? "style=display:none" : "style=display:block")>
+                            <input id="chkFacturar" type="checkbox">
+                            <div class="state p-success">
+                                <!-- svg path -->
+                                <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
+                                </svg>
+                                <label>Facturar esta Venta.</label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <br>
+
+                        <div id="divUsoCFDI">
+                            <div class="section-title"><strong>Uso del CFDI: </strong></div>
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.usoCFDI, new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-5 text-right">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total:</strong></div>
+                            <div class="invoice-detail-value" id="previoTotal"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Descuento: (Mayoreo)</strong></div>
+                            <div class="invoice-detail-value" id="previoDescuentoMenudeo"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <input type="hidden" id="txtDescuentoCliente" />
+                            <div class="invoice-detail-name"><strong>Descuento: (Cliente)</strong></div>
+                            <div class="invoice-detail-value" id="previoDescuentoCliente"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Comisiones</strong></div>
+                            <div class="invoice-detail-value" id="previoComisionBancaria"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Subtotal:</strong></div>
+                            <div class="invoice-detail-value" id="previoSubTotal"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>I.V.A.</strong></div>
+                            <div class="invoice-detail-value" id="previoIVA"><h4>$15</h4></div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="previoFinal"><h4>$15</h4></div>
+                        </div>
+                        <br />
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Cambio</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="cambio" style="color: #ff4d4d"><h4>$0.0</h4></div>
+                        </div>
+
+                        @*<hr class="mt-2 mb-2">*@
+                        <br />
+                        <div id="dvEfectivo">
+                            <div class="section-title"><strong>Efectivo: </strong></div>
+                            <span class="float-right text-muted">
+                                <input id="efectivo" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="btnGuardarVenta" class="btn btn-success">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*Modal Consulta Existencias de Productos *@
+<!--<div class="modal fade bd-example-modal-lg" id="ModalExistencias" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalExistencias">Consulta de Existencias:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-lg-5">
+                                        <div class="form-group">
+                                            <label>Producto:</label>-->
+@*@Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProductoExistencia", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })*@
+<!--<input type="hidden" id="idProductoExistencia" />
+        <input type="text" class="form-control" id="listProductosExistencia" name="listProductosExistencia" placeholder="Escriba el nombre del producto">
+
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-lg-5">
+    <div class="form-group">
+        <label>Almacen:</label>-->
+@*@Html.DropDownListFor(x => x.idSucursal, lstSucursales, "-- SELECCIONA --  ", new { id = "idSucursalExistencia", @class = "form-control readonly", data_val = "false", @readonly = "readonly" })*@
+<!--</div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-2">
+                                        <div class="form-group">
+                                            <div class="text-right" style="margin-top:30px;">
+                                                <button type="button" id="btnBuscarExistencias" class="btn btn-success">Buscar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+
+                                <div id="existencias">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+@*Modal Cierre de Caja por Exceso de Efectivo *@
+<!--<div class="modal fade bd-example-modal-lg" id="ModalCierreExceso" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalExistencias">Cierre de Caja por Exceso de Efectivo:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+
+                        <div class="row">
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+
+                                    <div class="row">
+                                        <div class="col-md-12">-->
+@*<address>
+        <strong>Resumen:</strong><br>
+        <div id="ventasDelDia">Ventas del día:  0 </div>
+        <div id="montoVentasDelDia">Monto de Ventas:  0 </div>
+        <div id="cantidadEfectivo">Cantidad en Efectivo:  0 </div>
+        <div id="cantidadRetirada">Cantidad Retirada del día:  0 </div>
+    </address>*@
+
+<!--<div class="py-4">
+                                                <div id="AperturaCaja">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Apertura de Caja:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+                                                <div id="IngresosEfectivo">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Ingresos de Efectivo:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+                                                <div id="ventasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Ventas del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="montoVentasDelDia">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Monto de Ventas:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadEfectivo">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad en Efectivo:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+
+                                                <div id="cantidadRetirada">
+                                                    <p class="clearfix">
+                                                        <span class="float-left">Cantidad Retirada del día:</span>
+                                                        <span class="float-right text-muted">0</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <label>Cantidad a Retirar:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input id="montoARetirar" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+
+                                <div id="tblRetiros_"></div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>-->
+@*Modal Cierre de Dia *@
+@*<div class="modal fade  bd-example-modal-lg" id="ModalCierre" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TituloModalExistencias">Cierre de Caja fin de Día:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="PartialViewCierreDia">
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                                <button class="btn btn-success " id="btnCierreDia" type="button">Hacer Cierre de Dia</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+@*Modal Motivo de Devolucion de Productos *@
+@*<div class="modal fade bd-example-modal-lg" id="ModalDevolucion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TituloModalExistencias">Motivo de Devolución:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Escriba el Motivo de la Devolución:</label>
+                                <input id="motivoDevolucion" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6"></div>
+                        <div class="col-lg-6 text-right">
+                            <hr class="mt-2 mb-2">
+                            <div class="invoice-detail-item">
+                                <div class="invoice-detail-name">Total a Devolver</div>
+                                <div class="invoice-detail-value" id="divTotalDevolver"><h4>$0.0</h4></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                                <button class="btn btn-success" id="btnAceptarDevolucion" type="button">Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*Modal Agregar Envase *@
+@*<div class="modal fade bd-example-modal-lg" id="ModalAgregarEnvase" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Desea Agregar Envase?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-9">
+                            <div class="form-group">
+                                <label>Envase</label>
+                                <select id="idProductoEnvase"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">#</span>
+                                    </div>
+                                    <input id="cantidadEnvase" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                                <button class="btn btn-success" id="btnAgregarEnvase" type="button">Agregar Envase</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*Modal Pedido Especial *@
+<!--<div class="modal fade bd-example-modal-lg" id="ModalPedidoEspecial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pedido Especial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">-->
+@*<label># Ticket</label>*@
+<!--<div class="input-group mb-3">-->
+@*<div class="input-group-prepend">
+        <span class="input-group-text"># Ticket</span>
+    </div>*@
+<!--<input id="NoPedidoEspecial" type="text" class="form-control" onkeypress="return esNumero(event)">
+                                <div class="input-group-append">
+                                    <button type="button" onclick="BuscarPedidoEspecial()" class="btn btn-success"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblProductosPedidoEspecial">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"> Id </th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Cantidad en Existencia</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" onclick="AgregarPedidoEspecial()" type="button" id="btnAgregarPedidoEspecial">Agregar Pedido Especial a la Venta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+@*Modal Ingreso de Efectivo *@
+@*<div class="modal fade bd-example-modal-lg" id="ModalIngresoEfectivo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ingreso de Efectivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="viewIngresoEfectivo">
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*Modal Complemento de Venta *@
+@*<div class="modal fade bd-example-modal-lg" id="ModalComplementoVenta" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Complemento de Venta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <input id="codigoBarrasTicketVenta" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" onclick="BuscarVentaCodigoBarras()" class="btn btn-success"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="text-right" style="margin-top:15px;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> &nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*Modal Autorizar Precio de Mayoreo *@
+<div class="modal fade bd-example-modal-lg" id="ModalAutorizarPrecioMayoreo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Autorizar Precio de Mayoreo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Datos del Ticket: </h4>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label>Ticket</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-hashtag" style="font-size:16px !important"></i>
+                                            </span>
+                                        </div>
+                                        <input id="txtTicketPrecioMayoreo" type="text" class="form-control" onkeypress="return esNumero(event);" value="0">
+                                        <div class="input-group-append">
+                                            <button type="button" id="btnConsultaTicketMayoreo" class="btn btn-success"> &nbsp; Consultar &nbsp;</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p>
+                                    <div>Articulos: </div>
+                                    <div>Total: </div>
+                                    <div>Cliente: </div>
+                                </p>
+
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Autorizar Precio</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Usuario: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <input id="usuarioAutorizaPrecioMayoreo" name="usuarioAutorizaPrecioMayoreo" class="form-control pwstrength" data-indicator="pwindicator">
+                                    </div>
+                                    <div id="pwindicator" class="pwindicator">
+                                        <div class="bar"></div>
+                                        <div class="label"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Contraseña: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-lock"></i>
+                                            </div>
+                                        </div>
+                                        <input id="contrasenaAutorizaPrecioMayoreo" name="contrasenaAutorizaPrecioMayoreo" type="password" class="form-control pwstrength" data-indicator="pwindicator">
+                                    </div>
+                                    <div id="pwindicator" class="pwindicator">
+                                        <div class="bar"></div>
+                                        <div class="label"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">                                
+                            </div>
+                        </div>                        
+                    </div>
+
+                </div>
+
+
+
+
+                @*<div class="row">
+            <div class="col-12 col-sm-12 col-lg-6">
+
+                <div class="form-group">
+                    <label>Usuario: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <input id="usuarioAutoriza" name="usuarioAutoriza" class="form-control pwstrength" data-indicator="pwindicator">
+                    </div>
+                    <div id="pwindicator" class="pwindicator">
+                        <div class="bar"></div>
+                        <div class="label"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <input id="contrasenaAutoriza" name="contrasenaAutoriza" type="password" class="form-control pwstrength" data-indicator="pwindicator">
+                    </div>
+                    <div id="pwindicator" class="pwindicator">
+                        <div class="bar"></div>
+                        <div class="label"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-12 col-sm-12 col-lg-6">
+
+                <div class="form-group">
+                    <label>Usuario: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <input id="usuarioAutorizaPrecioMayoreo" name="usuarioAutoriza" class="form-control pwstrength" data-indicator="pwindicator">
+                    </div>
+                    <div id="pwindicator" class="pwindicator">
+                        <div class="bar"></div>
+                        <div class="label"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <input id="contrasenaAutorizaPrecioMayoreo" name="contrasenaAutoriza" type="password" class="form-control pwstrength" data-indicator="pwindicator">
+                    </div>
+                    <div id="pwindicator" class="pwindicator">
+                        <div class="bar"></div>
+                        <div class="label"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>*@
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" id="btnAutorizarCierre" type="button">Autorizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -24,6 +1111,7 @@
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/js/jquery-ui.min.js"></script>
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/page/datatables.js"></script>
