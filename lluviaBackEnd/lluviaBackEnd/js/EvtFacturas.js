@@ -152,7 +152,7 @@ function limpiaModalFactura() {
     $("#nombreCliente").html(row_);
     $("#FormaPago").html("");
     $("#usoCFDI").html("");
-    $("#previoTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    //$("#previoTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoSubTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoIVA").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoFinal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
@@ -231,10 +231,10 @@ function modalFactura(idVenta) {
     var montoIVA = parseFloat(data.Modelo.montoTotal * 0.16).toFixed(2);
     var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
 
-    $("#previoTotal").html("<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>");
-    $("#previoSubTotal").html("<h4><strike>$" + parseFloat(montoTotal).toFixed(2) + "</strike></h4>");
+    //$("#previoTotal").html("<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>");
+    $("#previoSubTotal").html("<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>");
     $("#previoIVA").html("<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>");
-    $("#previoFinal").html("<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>");
+    $("#previoFinal").html("<h4>$" + parseFloat(montoFinal).toFixed(2) + "</h4>");
 
     $('#idVentaIVA').val(idVenta);
 
