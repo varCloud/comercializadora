@@ -18,6 +18,7 @@ using lluviaBackEnd.servicioTimbradoProductivo;
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
 using log4net;
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -303,6 +304,38 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<List<Factura>> notificacion = new FacturaDAO().ObtenerFacturas(factura);
                 return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult ObtenerDetalleFactura(Int64 idVenta)
+        {
+            try
+            {
+                Notificacion<dynamic>  notificacion = new FacturaDAO().ObtenerDetalleFactura(idVenta);                
+                return Json(JsonConvert.SerializeObject(notificacion),JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult ReenviarFactura(Int64 idVenta,string correo)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Enviado";
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

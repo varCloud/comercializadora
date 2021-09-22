@@ -935,8 +935,8 @@ $('#btnGuardarVenta').click(function (e) {
         var aplicaIVA = parseInt(0);
         var numClientesAtendidos = parseInt(0);
         var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
-        var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
-        //var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
+        //var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+        var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
         var esDevolucion = $('#esDevolucion').val();
         var esAgregarProductos = $('#esAgregarProductos').val();
         var esVentaNormal = "true";
@@ -1136,10 +1136,10 @@ function tieneCorreoCliente(idCliente) {
     cliente = listClientes.find(x => x.idCliente == idCliente)
     console.log("cliente", cliente)
     if (cliente) {
-        if (cliente.correo)
+        if (validarEmail(cliente.correo))
             return true;
         else {
-            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico");
+            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
             return false;
         }
     } else {
@@ -1147,6 +1147,8 @@ function tieneCorreoCliente(idCliente) {
         return false;
     }
 }
+
+
 
 $('#chkFacturar').click(function () {
 
@@ -1167,9 +1169,28 @@ $('#chkFacturar').click(function () {
         document.getElementById("chkFacturar").checked = false;
         return
     }
-    if ($('#chkFacturar').is(':checked'))
-        if (!tieneCorreoCliente(idCliente))
-            return
+    if ($('#chkFacturar').is(':checked')) {
+        cliente = listClientes.find(x => x.idCliente == idCliente)
+      
+        if (cliente) {
+            if (!validarEmail(cliente.correo)) {
+                MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
+                document.getElementById("chkFacturar").checked = false;
+                return false;
+            }
+
+            if (!validarRFC(cliente.rfc)) {
+                MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
+                document.getElementById("chkFacturar").checked = false;
+                return false;
+            }
+        } else {
+            MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
+            document.getElementById("chkFacturar").checked = false;
+            return false;
+        }            
+    }
+
 
     $('#efectivo').val('');
 

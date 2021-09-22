@@ -425,7 +425,7 @@ function limpiaModalIVA() {
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     $('#efectivo').val('');
-    $('#idClienteIVA').val("0").trigger('change');
+    $('#idClienteIVA').val("0");//.trigger('change');
     $('#formaPago').val("1").trigger('change');
     $('#usoCFDI').val("3").trigger('change');
     $('#idVentaIVA').val(0);
@@ -653,7 +653,9 @@ $("#efectivo").on("keyup", function () {
 
 
 $("#idClienteIVA").on("change", function () {
-
+    $("#divUsoCFDI").hide();
+    $("#btnGuardarIVA").hide();
+    $("#efectivoFactura").hide();
     $('#efectivo').val('');
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
@@ -682,8 +684,28 @@ $("#idClienteIVA").on("change", function () {
             "</address>";
     }
 
-
     document.getElementById("nombreCliente").innerHTML = row_;
+
+    if ((data.Modelo.idCliente != 0) && (idCliente != 0)) {
+        if (!validarEmail(data.Modelo.correo)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");  
+            return false;
+        }
+
+        if (!validarRFC(data.Modelo.rfc)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");    
+            return false;
+        }
+    }
+    else {
+        MuestraToast('warning', "No es posible facturar a  este cliente");
+        return false;
+    }
+
+    $("#divUsoCFDI").show();
+    $("#btnGuardarIVA").show();
+    $("#efectivoFactura").show();
+
 
 });
 

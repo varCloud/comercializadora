@@ -39,7 +39,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Estatus de la factura</label>
-                                    @Html.EnumDropDownListFor(x => x.estatusFactura ,"--TODOS--", new { @class = "select-multiple", data_val = "false" })
+                                    @Html.EnumDropDownListFor(x => x.estatusFactura, "--TODOS--", new { @class = "select-multiple", data_val = "false" })
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
@@ -51,9 +51,9 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Fecha</label>
-                                    <input type="text"  id="rangeFacturas" class="form-control daterange-cus" autocomplete = "off"/>
-                                    @Html.HiddenFor(x=>x.fechaIni)
-                                    @Html.HiddenFor(x=>x.fechaFin)
+                                    <input type="text" id="rangeFacturas" class="form-control daterange-cus" autocomplete="off" />
+                                    @Html.HiddenFor(x => x.fechaIni)
+                                    @Html.HiddenFor(x => x.fechaFin)
                                 </div>
                             </div>
                         </div>
@@ -81,6 +81,120 @@
         </div>
     </div>
 </div>
+
+@*Modal facturacion *@
+<div class="modal fade bd-example-modal-lg" id="ModalFactura" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Reenviar Factura: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <input type="hidden" id="idVentaIVA" name="idVentaIVA" value="0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="nombreCliente">
+                                    <address>
+                                        <strong></strong><br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-title"><strong>Forma de Pago: </strong></div>
+                        <div class="form-group">
+                            <span id="FormaPago">ffff</span>
+                        </div>
+
+
+                        <div id="divUsoCFDI">
+                            <div class="section-title"><strong>Uso del CFDI: </strong></div>
+                            <div class="form-group">
+                                <span id="usoCFDI">ffff</span>
+                            </div>
+                        </div>
+
+                        <div class="pretty p-svg p-curve">
+                            <input id="chkEnviarCopia" type="checkbox">
+                            <div class="state p-success">
+                                <!-- svg path -->
+                                <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
+                                </svg>
+                                <label>Enviar copia de correo.</label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <br>
+
+                        <div id="divCorreoCopia">
+                            <div class="section-title"><strong>Correo: </strong></div>
+                            <div class="form-group">
+                                <input id="correoCopia" type="text" placeholder="Introduzca el correo al cual le llegara copia de factura" class="form-control">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-5 text-right">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total de la Venta:</strong></div>
+                            <div class="invoice-detail-value" id="previoTotal"><h4>$15</h4></div>
+                        </div>
+                        @*<div class="invoice-detail-item">
+                                <div class="invoice-detail-name"><strong>Descuento: (Cliente)</strong></div>
+                                <div class="invoice-detail-value" id="previoDescuentoCliente"><h4>$15</h4></div>
+                            </div>*@
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Subtotal:</strong></div>
+                            <div class="invoice-detail-value" id="previoSubTotal" style="color: #3232ba"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>I.V.A.</strong></div>
+                            <div class="invoice-detail-value" id="previoIVA"><h4>$15</h4></div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="previoFinal"><h4>$15</h4></div>
+                        </div>
+                        <br />  
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="btnReenviar" class="btn btn-success">Reenviar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @section scripts {
 

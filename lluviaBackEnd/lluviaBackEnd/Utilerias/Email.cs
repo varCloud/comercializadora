@@ -12,7 +12,7 @@ namespace lluviaBackEnd.Utilerias
     public class Email
     {
 
-        private  static Factura factura;
+        private static Factura factura;
         #region Notificación recuperar contraseña
 
         public static void NotificacionRecuperarContrasena(string emailDestino, string contrasena)
@@ -30,7 +30,7 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
-        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo , Factura f)
+        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo, Factura f)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace lluviaBackEnd.Utilerias
                 string cuerpo = Cabecera();
                 cuerpo += CuerpoNotificacionPagoReferencia();
                 cuerpo += PiePagina();
-                EnviarCorreoExternoUsuario("Factura Comercializadora Lluvia", cuerpo, emailDestino , pathArchivo);
+                EnviarCorreoExternoUsuario("Factura Comercializadora Lluvia", cuerpo, emailDestino, pathArchivo,"");
                 /*
                 string cuerpo2 = Cabecera();
                 cuerpo2 += CuerpoNotificacionPagoConsola(referencia, idOrdenCompra);
@@ -159,7 +159,7 @@ namespace lluviaBackEnd.Utilerias
 															            <table border='0' cellpadding='0' cellspacing='0' width='100%'>
 															            <tr>
 																            <td>
-                                                                                <b># Ticket: </b>" + factura.idVenta+ @"
+                                                                                <b># Ticket: </b>" + factura.idVenta + @"
 																            </td>
 															            </tr>
                                                                         <tr>
@@ -315,7 +315,7 @@ namespace lluviaBackEnd.Utilerias
             return pie.ToString();
         }
 
-        private static void EnviarCorreoExternoUsuario(string asunto, string cuerpo, string emailUSuario, string file)
+        private static void EnviarCorreoExternoUsuario(string asunto, string cuerpo, string emailUSuario, string file, string correoCopia)
         {
             try
             {
@@ -324,6 +324,8 @@ namespace lluviaBackEnd.Utilerias
 
                 System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
                 mmsg.To.Add(emailUSuario); // cuenta Email a la cual sera dirigido el correo
+                if (!string.IsNullOrEmpty(correoCopia))
+                    mmsg.Bcc.Add(correoCopia);
                 mmsg.Bcc.Add("sapitopicador@gmail.com");
                 mmsg.Bcc.Add("graciela.guizar @gmail.com");
                 mmsg.Subject = asunto; //Asunto del correo
@@ -332,7 +334,7 @@ namespace lluviaBackEnd.Utilerias
                 mmsg.BodyEncoding = System.Text.Encoding.UTF8; // tambien encodear a utf8
                 mmsg.IsBodyHtml = true; // indicamos que dentro del body viene codigo HTML
                 mmsg.From = new System.Net.Mail.MailAddress(correoProveedor); // el email que enviara el correo (proveedor)
-                mmsg.Attachments.Add(new Attachment(file.Replace("Timbre_","Factura_").Replace("xml","pdf")));
+                mmsg.Attachments.Add(new Attachment(file.Replace("Timbre_", "Factura_").Replace("xml", "pdf")));
                 mmsg.Attachments.Add(new Attachment(file));
                 System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient(); // se realiza el cliente correo
 

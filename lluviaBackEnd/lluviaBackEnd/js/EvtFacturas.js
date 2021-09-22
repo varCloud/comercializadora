@@ -135,4 +135,154 @@ function CancelarFactura(idVenta) {
 }
 
 
+//reenviar factura
+
+function limpiaModalFactura() {
+    $("#idVentaIVA").val("");
+
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    $("#nombreCliente").html(row_);
+    $("#FormaPago").html("");
+    $("#usoCFDI").html("");
+    $("#previoTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $("#previoSubTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $("#previoIVA").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $("#previoFinal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    document.getElementById("chkEnviarCopia").checked = false;
+    $("#correoCopia").val("");
+    $("#divCorreoCopia").hide();
+}
+
+$('#chkEnviarCopia').click(function () {
+    $("#correoCopia").val("");
+    $("#divCorreoCopia").hide();
+    if ($('#chkEnviarCopia').is(':checked')) {
+        $("#divCorreoCopia").show();
+    }
+
+
+});
+
+$('#btnReenviar').click(function () {
+    var correo = $("#correoCopia").val();
+    var idVenta = $("#idVentaIVA").val();
+    if ($('#chkEnviarCopia').is(':checked')) {
+        if (!validarEmail(correo)) {
+            MuestraToast('warning', "Introduzca un correo electrónico vàlido");          
+            return false;
+        }
+    }
+
+    $.ajax({
+        url: rootUrl("/Factura/ReenviarFactura"),
+        data: { idVenta: idVenta, correo: correo },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            if (data.Estatus != 200) {
+                MuestraToast('error', data.Mensaje);
+                return;
+            }
+            else
+                MuestraToast('success', data.Mensaje);
+
+
+            $('#ModalFactura').modal('hide');
+            
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+
+
+
+});
+    
+
+function modalFactura(idVenta) {
+    limpiaModalFactura();
+    var data = ConsultaDetalleFactura(idVenta);
+    //console.log(data);
+
+    if (data.Estatus != 200) {
+        MuestraToast('error', data.Mensaje);
+        return;
+    }
+
+    var montoTotal = parseFloat(data.Modelo.montoTotal).toFixed(2);
+    var montoIVA = parseFloat(data.Modelo.montoTotal * 0.16).toFixed(2);
+    var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
+
+    $("#previoTotal").html("<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>");
+    $("#previoSubTotal").html("<h4><strike>$" + parseFloat(montoTotal).toFixed(2) + "</strike></h4>");
+    $("#previoIVA").html("<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>");
+    $("#previoFinal").html("<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>");
+
+    $('#idVentaIVA').val(idVenta);
+
+    var row_ = "<address>" +
+        "    <strong>Datos del Cliente:</strong><br>" +
+        "    Nombre: " + data.Modelo.Nombre.toUpperCase() + "<br>" +
+        "    Telefono: " + data.Modelo.telefono + "<br>" +
+        "    E-mail: " + data.Modelo.correo + "<br>" +
+        "    RFC: " + data.Modelo.Rfc + "<br>" +
+        "    Tipo de Cliente: " + data.Modelo.tipoCliente + "<br>" +
+        "</address>";
+
+    $("#nombreCliente").html(row_);
+    $("#FormaPago").html(data.Modelo.descripcionFormaPago);
+    $("#usoCFDI").html(data.Modelo.descripcionUsoCFDI);
+
+    $('#ModalFactura').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+function ConsultaDetalleFactura(idVenta) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Factura/ObtenerDetalleFactura"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            console.log(JSON.parse(data));
+            result = JSON.parse(data);
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+    return result;
+}
+
+
+
 

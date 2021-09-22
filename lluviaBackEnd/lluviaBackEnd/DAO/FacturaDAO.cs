@@ -282,6 +282,40 @@ namespace lluviaBackEnd.DAO
             return c;
         }
 
+        public Notificacion<dynamic> ObtenerDetalleFactura(Int64 idVenta)
+        {
+            Notificacion<dynamic> facturas = new Notificacion<dynamic>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", idVenta);
+                    var rs = _db.QueryMultiple("SP_FACTURACION_OBTENER_DATOS_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                        facturas.Modelo = rs.ReadSingle();                   
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
+
 
     }
 }
