@@ -27,6 +27,7 @@ namespace lluviaBackEnd.Models
 
         public decimal montoTotal { get; set; }
 
+        public string correoAdicional { get; set; }
 
 
 

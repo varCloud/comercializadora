@@ -151,7 +151,7 @@ namespace lluviaBackEnd.Controllers
                 factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
                 Task.Factory.StartNew(() =>
                 {
-                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura);
+                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura , "");
                 });
                 
                 notificacion = new Notificacion<string>()
@@ -243,7 +243,7 @@ namespace lluviaBackEnd.Controllers
                         Task.Factory.StartNew(() =>
                         {
                             if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", factura);
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", factura ,string.Empty);
                         });
 
 
@@ -328,14 +328,18 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        public ActionResult ReenviarFactura(Int64 idVenta,string correo)
+        public Notificacion<dynamic> ReenviarFactura(Factura f)
         {
             try
             {
-                Notificacion<string> notificacion = new Notificacion<string>();
-                notificacion.Estatus = 200;
-                notificacion.Mensaje = "Enviado";
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
+                Notificacion<dynamic> notificacion = new FacturaDAO().ObtenerDetalleFactura(Convert.ToInt64(f.idVenta));
+                string path = System.Web.HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
+                path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/","").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
+                Email.NotificacionPagoReferencia(notificacion.Modelo.correo,path,f ,f.correoAdicional);
+                notificacion.Mensaje = "Factura reenviada exitosamente";
+                return notificacion;
+
+
             }
             catch (Exception ex)
             {

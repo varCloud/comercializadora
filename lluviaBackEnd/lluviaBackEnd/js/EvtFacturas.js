@@ -182,13 +182,13 @@ $('#btnReenviar').click(function () {
     }
 
     $.ajax({
-        url: rootUrl("/Factura/ReenviarFactura"),
-        data: { idVenta: idVenta, correo: correo },
+        url: pathDominio + "api/WsFactura/ReenviarFactura",
+        data: { idVenta: idVenta, correoAdicional: correo, idUsuario: idUsuarioGlobal  },
         method: 'post',
         dataType: 'json',
-        async: false,
+        async: true,
         beforeSend: function (xhr) {
-            ShowLoader()
+            ShowLoader("Reenviando factura")
         },
         success: function (data) {
             OcultarLoader();
@@ -198,10 +198,7 @@ $('#btnReenviar').click(function () {
             }
             else
                 MuestraToast('success', data.Mensaje);
-
-
             $('#ModalFactura').modal('hide');
-            
         },
         error: function (xhr, status) {
             console.log('hubo un problema pongase en contacto con el administrador del sistema');
