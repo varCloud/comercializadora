@@ -30,7 +30,7 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
-        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo, Factura f)
+        public static void NotificacionPagoReferencia(string emailDestino, string pathArchivo, Factura f , string correoCopia)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace lluviaBackEnd.Utilerias
                 string cuerpo = Cabecera();
                 cuerpo += CuerpoNotificacionPagoReferencia();
                 cuerpo += PiePagina();
-                EnviarCorreoExternoUsuario("Factura Comercializadora Lluvia", cuerpo, emailDestino, pathArchivo,"");
+                EnviarCorreoExternoUsuario("Factura Comercializadora Lluvia", cuerpo, emailDestino, pathArchivo, correoCopia);
                 /*
                 string cuerpo2 = Cabecera();
                 cuerpo2 += CuerpoNotificacionPagoConsola(referencia, idOrdenCompra);
