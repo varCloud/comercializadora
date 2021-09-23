@@ -53,6 +53,7 @@ namespace HowToUploadFilesToFTP
             this.txtDownloadPath = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtFileToDownload = new System.Windows.Forms.TextBox();
+            this.btnStartIIS = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -180,6 +181,7 @@ namespace HowToUploadFilesToFTP
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnStartIIS);
             this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.lblDescargando);
@@ -204,7 +206,7 @@ namespace HowToUploadFilesToFTP
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 19;
-            this.button1.Text = "button1";
+            this.button1.Text = "Stop IIS";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -289,11 +291,21 @@ namespace HowToUploadFilesToFTP
             this.txtFileToDownload.TabIndex = 10;
             this.txtFileToDownload.Text = "/Deploys/deployLluvia.zip";
             // 
+            // btnStartIIS
+            // 
+            this.btnStartIIS.Location = new System.Drawing.Point(133, 257);
+            this.btnStartIIS.Name = "btnStartIIS";
+            this.btnStartIIS.Size = new System.Drawing.Size(75, 23);
+            this.btnStartIIS.TabIndex = 20;
+            this.btnStartIIS.Text = "Start IIS";
+            this.btnStartIIS.UseVisualStyleBackColor = true;
+            this.btnStartIIS.Click += new System.EventHandler(this.btnStartIIS_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 469);
+            this.ClientSize = new System.Drawing.Size(457, 540);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -338,6 +350,7 @@ namespace HowToUploadFilesToFTP
         private System.Windows.Forms.Label lblDescargando;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnStartIIS;
     }
 }
 

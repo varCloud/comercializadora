@@ -19,7 +19,7 @@ select * from InventarioGeneral
 where idProducto = @idProducto
 
 --select * from CatEstatusProductoVenta
-select * from VentasDetalle where idVenta=35792
-select * from ComplementosDetalle where idVenta=35792
-select * from DevolucionesDetalle where idVenta = 35792
+select * from VentasDetalle where idVenta=46333
+select * from ComplementosDetalle where idVenta=46333
+select * from DevolucionesDetalle where idVenta = 46333
 

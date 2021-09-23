@@ -146,19 +146,19 @@ namespace HowToUploadFilesToFTP
                 if (dialogResult == DialogResult.Yes)
                 {
 
-                    stopIIS();
-                    //cerrarNavegadores();
+                    
+                    cerrarNavegadores();
                     this.url = "ftp://" + this.txtAddress.Text + "/" + this.txtFileToDownload.Text;
                     this.txtStatusUnZip.Text = "Descargando archivo :" + this.url;
-                    //this.localFilePath = Path.Combine(this.txtDownloadPath.Text, "deploy.zip");
-                    //RespaldarZip();
-                    //this.credentials = new NetworkCredential(this.txtUserName.Text, this.txtPassword.Text);
-                    //FtpWebRequest listRequest = (FtpWebRequest)WebRequest.Create(this.url);
-                    //listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-                    //listRequest.Credentials = credentials;
-                    //Task download = new Task(() => this.DescargarArchivo(this.url, listRequest));
-                    //download.RunSynchronously();
-                    //this.bg.RunWorkerAsync();
+                    this.localFilePath = Path.Combine(this.txtDownloadPath.Text, "deploy.zip");
+                    RespaldarZip();
+                    this.credentials = new NetworkCredential(this.txtUserName.Text, this.txtPassword.Text);
+                    FtpWebRequest listRequest = (FtpWebRequest)WebRequest.Create(this.url);
+                    listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                    listRequest.Credentials = credentials;
+                    Task download = new Task(() => this.DescargarArchivo(this.url, listRequest));
+                    download.RunSynchronously();
+                    this.bg.RunWorkerAsync();
                 }
                 else if (dialogResult == DialogResult.No)
                 {
@@ -481,10 +481,28 @@ namespace HowToUploadFilesToFTP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+            try
             {
-                Console.WriteLine(printer);
+                this.stopIIS();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+          
+        }
+
+        private void btnStartIIS_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.startIIS();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+           
         }
     }
 }
