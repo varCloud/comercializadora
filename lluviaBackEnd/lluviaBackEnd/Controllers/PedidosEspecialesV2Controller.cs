@@ -79,6 +79,25 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+
+        [HttpPost]
+        public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente)
+        {
+            try
+            {
+                Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                result = new PedidosEspecialesV2DAO().GuardarPedidoEspecial(productos, tipoRevision, idCliente, UsuarioActual.idUsuario);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         public ActionResult CierreCajas()
         {
             try

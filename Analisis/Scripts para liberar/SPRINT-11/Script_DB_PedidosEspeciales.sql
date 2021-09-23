@@ -10,19 +10,17 @@
 --catalAgos
 --------------------------------------------
 
---drop table TBL_TDC_MOTOR_ESTIMADOR_INGRESOS
-
-drop table PedidosEspecialesDevolucionesDetalle
-drop table PedidosEspecialesDevoluciones
-drop table PedidosEspecialesRetiroEfectivoPedidosEspeciales
-drop table PedidosEspecialesCierresPedidosEspecialesDetalle
-drop table PedidosEspecialesCierresPedidosEspeciales
-drop table PedidosEspecialesMovimientosDeMercancia
-drop table PedidosEspecialesAbonosCuentasPorCobrar
-drop table PedidosEspecialesCuentasPorCobrar
-drop table PedidosEspecialesLog
-drop table PedidosEspecialesDetalle
-drop table PedidosEspeciales
+--drop table PedidosEspecialesDevolucionesDetalle
+--drop table PedidosEspecialesDevoluciones
+--drop table PedidosEspecialesRetiroEfectivoPedidosEspeciales
+--drop table PedidosEspecialesCierresPedidosEspecialesDetalle
+--drop table PedidosEspecialesCierresPedidosEspeciales
+--drop table PedidosEspecialesMovimientosDeMercancia
+--drop table PedidosEspecialesAbonosCuentasPorCobrar
+--drop table PedidosEspecialesCuentasPorCobrar
+--drop table PedidosEspecialesLog
+--drop table PedidosEspecialesDetalle
+--drop table PedidosEspeciales
 
 
 -- CatEstatusPedidoEspecial
@@ -41,11 +39,13 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON CatEstatusPedidoEspecial TO PUBLIC
 GO
 	
 
-insert into CatEstatusPedidoEspecial (descripcion) values ('ENTREGADO')
-insert into CatEstatusPedidoEspecial (descripcion) values ('COTIZACION')
-insert into CatEstatusPedidoEspecial (descripcion) values ('EN PROCESO')
-insert into CatEstatusPedidoEspecial (descripcion) values ('ATENDIDO')
-
+Insert into catestatuspedidoespecial (descripcion) values ('Solicitado')
+Insert into catestatuspedidoespecial (descripcion) values ('Cotizado')
+Insert into catestatuspedidoespecial (descripcion) values ('En resguardo')
+Insert into catestatuspedidoespecial (descripcion) values ('Entregado y pagado')
+Insert into catestatuspedidoespecial (descripcion) values ('Entregado a repartidor sin ser pagado')
+Insert into catestatuspedidoespecial (descripcion) values ('Pagado')
+Insert into catestatuspedidoespecial (descripcion) values ('Entregado a crédito')
 
 
 -- CatTipoPagoPedidoEspecial	

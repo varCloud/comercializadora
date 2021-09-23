@@ -45,6 +45,8 @@ as
 						(
 							contador					int identity (1,1),
 							idProducto					int,
+							idAlmacen					int,
+							Almacen						varchar(300),
 							descripcion					varchar(100),
 							idUnidadMedida				int,
 							idLineaProducto				int,
@@ -68,8 +70,7 @@ as
 							fraccion					bit,
 							idUnidadCompra				int,
 							descripcionUnidadCompra		varchar(500),
-							cantidadUnidadCompra		int,
-							
+							cantidadUnidadCompra		int,							
 							
 						)
 						
@@ -77,78 +78,17 @@ as
 
 			begin -- principal
 
-
-				--if (OBJECT_ID('tempdb.dbo.#LineaProductoUsuario','U')) is not null
-				--	drop table #LineaProductoUsuario
-
-				--CREATE TABLE #LineaProductoUsuario (contador int primary key identity ,
-				--idLineaProducto int , idAlmacen int ,  descripcion varchar(255))
-
-				--if(coalesce(@idUsuario,0)>0	or coalesce(@idAlmacen,0)>0)
-				--begin
-				--	insert into #LineaProductoUsuario select * from obtnerLineasProductosXAlmacen(21 , 4)
-				--end
-				--else
-				--begin
-				--	insert into #LineaProductoUsuario(idLineaProducto,idAlmacen,descripcion) 
-				--	select idLineaProducto,@idAlmacen,descripcion from LineaProducto where activo=1					
-				--end
-				
-
-				---- universo de productos
-				--insert into 
-				--	#Productos 
-				--		(
-				--			idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,
-				--			fechaAlta,activo,articulo,idClaveProdServ,precioIndividual,precioMenudeo,
-				--			DescripcionLinea,DescripcionUnidadMedida,cantidad,descripcionConExistencias,costo,
-				--			porcUtilidadIndividual,porcUtilidadMayoreo,cantidadRecibida,fraccion,ultimoCostoCompra,idUnidadCompra,descripcionUnidadCompra,cantidadUnidadCompra							
-				--		)
-				--select	p.idProducto,upper(p.descripcion) as descripcion,p.idUnidadMedida,p.idLineaProducto,cantidadUnidadMedida,codigoBarras,
-				--		p.fechaAlta,p.activo,articulo,claveProdServ,coalesce(precioIndividual, 0) as precioIndividual, coalesce(precioMenudeo, 0) as precioMenudeo,
-				--		l.descripcion as DescripcionLinea, u.descripcion as DescripcionUnidadMedida, coalesce(g.cantidad, 0) as cantidad,
-				--		case
-				--			when g.cantidad is null then upper(p.descripcion) + '  - (S/E)'
-				--			when g.cantidad = 0  then upper(p.descripcion) + '  - (S/E)'
-				--			else upper(p.descripcion) + 
-				--					'  - (E:' + cast(g.cantidad as varchar(500)) + ' / ' +
-				--						 'ME:' + cast(isnull(p.precioIndividual,'') as varchar(500)) + ' / ' +
-				--						 'MA:' + cast(isnull(p.precioMenudeo,'') as varchar(500)) +
-				--						 ')'
-				--		end as descripcionConExistencias,coalesce(p.ultimoCostoCompra,DBO.obtenerPrecioCompra(p.idProducto,GETDATE())) costo,
-				--		porcUtilidadIndividual,porcUtilidadMayoreo,0 cantidadRecibida,dbo.LineaProductoFraccion(p.idLineaProducto,p.idProducto) fraccion,
-				--		isnull(p.ultimoCostoCompra,0)
-				--		,coalesce(p.idUnidadCompra,0),coalesce(unidad.descripcion,'') descripcionUnidadCompra,coalesce(cantidadUnidadCompra,0)
-						
-				--from	Productos p
-				--inner join LineaProducto l 
-				--	on p.idLineaProducto = l.idLineaProducto
-				--inner join CatUnidadMedida u
-				--	on p.idUnidadMedida = u.idUnidadMedida
-				--left join InventarioGeneral g
-				--	on g.idProducto = p.idProducto
-				--left join CatUnidadCompra unidad on p.idUnidadCompra=unidad.idUnidadCompra
-				----join #LineaProductoUsuario lineaUsr on lineaUsr.idLineaProducto=p.idLineaProducto
-				--where p.activo = cast(1 as bit) 
-				--order by p.idProducto desc						
-
-				----select * from InventarioGeneral
-				----select * from InventarioDetalle
-
-
-
-
-
 				-- se inserta todo el universo de productos
 				insert into 
 					#Productos 
 						(
-							idProducto,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,
+							idProducto,idAlmacen,descripcion,idUnidadMedida,idLineaProducto,cantidadUnidadMedida,codigoBarras,
 							fechaAlta,activo,articulo,idClaveProdServ,precioIndividual,precioMenudeo,
 							DescripcionLinea,DescripcionUnidadMedida,cantidad,descripcionConExistencias,costo,
 							porcUtilidadIndividual,porcUtilidadMayoreo,cantidadRecibida,fraccion,ultimoCostoCompra,idUnidadCompra,descripcionUnidadCompra,cantidadUnidadCompra							
 						)
 				select	p.idProducto,
+						ub.idAlmacen,
 						upper(p.descripcion) as descripcion, 
 						p.idUnidadMedida,
 						p.idLineaProducto,
@@ -186,9 +126,15 @@ as
 								on p.idUnidadCompra=unidad.idUnidadCompra								
 				where	id.cantidad > 0
 					and	ub.idPasillo not in (9)
+					--and	ub.idAlmacen = @idAlmacen
 				order by p.idProducto
 
-
+				update	#Productos
+				set		#Productos.idAlmacen = a.idAlmacen,
+						#Productos.Almacen = a.descripcion
+				from	(
+							select idAlmacen, descripcion from Almacenes where idAlmacen = @idAlmacen
+						)A
 
 				-- actualizamos existencias
 				update	#Productos
@@ -209,101 +155,10 @@ as
 							where	id_.cantidad > 0
 								and	ub_.idPasillo not in (9)
 								and	ub_.idAlmacen = @idAlmacen
-							group by p_.idProducto, p_.descripcion, p_.precioIndividual, p_.precioMenudeo, ub_.idAlmacen	
-							--order by p_.idProducto
+							group by p_.idProducto, p_.descripcion, p_.precioIndividual, p_.precioMenudeo, ub_.idAlmacen								
 						)existencias
 				where	#Productos.idProducto = existencias.idProducto
 					
-
-
-
-
-
-
-				--select	id.idProducto, 
-				--		coalesce( (sum(id.cantidad)), 0) as cantidad,
-				--		case
-				--			when coalesce( (sum(id.cantidad)), 0) is null then upper(p.descripcion) + '  - (S/E)'
-				--			when coalesce( (sum(id.cantidad)), 0) = 0  then upper(p.descripcion) + '  - (S/E)'
-				--			else upper(p.descripcion) + 
-				--					'  - (E:'  + cast(coalesce( (sum(id.cantidad)), 0) as varchar(500)) + ' / ' +
-				--							'ME:' + cast(isnull(p.precioIndividual,'') as varchar(500)) + ' / ' +
-				--							'MA:' + cast(isnull(p.precioMenudeo,'') as varchar(500)) +
-				--							')'
-				--		end as descripcionConExistencias
-				--from	Usuarios u
-				--			inner join Almacenes a
-				--				on a.idAlmacen = u.idAlmacen
-				--			inner join Ubicacion ub
-				--				on ub.idAlmacen = a.idAlmacen
-				--			inner join InventarioDetalle id
-				--				on id.idUbicacion = ub.idUbicacion
-				--			inner join Productos p
-				--				on p.idProducto = id.idProducto
-				--where	ub.idPasillo not in (9)
-				----where	u.idUsuario = @idUsuario
-				----	and	ub.idPiso not in (9) -- se eliminan los productos en el piso 9 ya que esos no deben salir ene l combo de productos en una venta 
-				--group by id.idProducto, p.descripcion, p.precioIndividual, p.precioMenudeo
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				--select * from Ubicacion
-				--select * from Almacenes
-				--select * from CatUnidadCompra
-				--select * from InventarioDetalle i join Ubicacion u on u.idUbicacion=i.idUbicacion where idAlmacen in (2,5)
-				
-
-				---- se actualizan existencias si se consulta con el numero de usuario
-				--	update	#Productos 
-				--	set		cantidad = 0,
-				--			descripcionConExistencias = upper(descripcion) + '  - (S/E)'
-
-				--	update	#Productos
-				--	set		#Productos.cantidad = a.cantidad,
-				--			#Productos.descripcionConExistencias = a.descripcionConExistencias
-				--	from	(
-				--				select	id.idProducto, 
-				--						coalesce( (sum(id.cantidad)), 0) as cantidad,
-				--						case
-				--							when coalesce( (sum(id.cantidad)), 0) is null then upper(p.descripcion) + '  - (S/E)'
-				--							when coalesce( (sum(id.cantidad)), 0) = 0  then upper(p.descripcion) + '  - (S/E)'
-				--							else upper(p.descripcion) + 
-				--									'  - (E:'  + cast(coalesce( (sum(id.cantidad)), 0) as varchar(500)) + ' / ' +
-				--											'ME:' + cast(isnull(p.precioIndividual,'') as varchar(500)) + ' / ' +
-				--											'MA:' + cast(isnull(p.precioMenudeo,'') as varchar(500)) +
-				--											')'
-				--						end as descripcionConExistencias
-				--				from	Usuarios u
-				--							inner join Almacenes a
-				--								on a.idAlmacen = u.idAlmacen
-				--							inner join Ubicacion ub
-				--								on ub.idAlmacen = a.idAlmacen
-				--							inner join InventarioDetalle id
-				--								on id.idUbicacion = ub.idUbicacion
-				--							inner join Productos p
-				--								on p.idProducto = id.idProducto
-				--				where	ub.idPasillo not in (9)
-				--				--where	u.idUsuario = @idUsuario
-				--				--	and	ub.idPiso not in (9) -- se eliminan los productos en el piso 9 ya que esos no deben salir ene l combo de productos en una venta 
-				--				group by id.idProducto, p.descripcion, p.precioIndividual, p.precioMenudeo
-				--			)A
-				--	where	#Productos.idProducto = a.idProducto
-
-			
 
 				if not exists ( select 1 from #Productos )
 				begin
@@ -341,7 +196,10 @@ as
 			if ( @valido = 1 )
 				begin
 				
-					select	idProducto,
+					select	distinct 
+							idProducto,
+							idAlmacen,
+							Almacen,
 							descripcion,
 							idUnidadMedida,
 							idLineaProducto,

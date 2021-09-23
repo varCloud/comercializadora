@@ -386,7 +386,7 @@ function AgregarProducto(producto, cantidad) {
                         return false;
                     }
                     tblVtas.rows[i].cells[4].children[0].value = cantidad;
-                    tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
+                    //tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
                     existeProductoAgregar = true;
                 }
             }
@@ -399,7 +399,7 @@ function AgregarProducto(producto, cantidad) {
                         return false;
                     }
                     tblVtas.rows[i].cells[4].children[0].value = cantidad;
-                    tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
+                    //tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
                     existeProducto = true;
                 }
             }

@@ -12,6 +12,8 @@ namespace lluviaBackEnd.Models
         public int idVenta { get; set; }
         public int idProducto { get; set; }
         public string descProducto { get; set; }
+        public int idAlmacen { get; set; }
+        public string Almacen { get; set; }
         public float cantidad { get; set; }
         public int contadorProductosPorPrecio { get; set; }
         public float monto { get; set; }
