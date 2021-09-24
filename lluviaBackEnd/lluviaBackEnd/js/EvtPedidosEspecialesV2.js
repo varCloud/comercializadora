@@ -558,7 +558,7 @@ $('#btnRevisionPorTicket').click(function (e) {
         .then((willDelete) => {
             if (willDelete) {
                 //console.log(willDelete);
-                GuardarPedidoEspecial(1); // por ticket
+                GuardarPedidoEspecial(1,1); // por ticket
             } else {
                 console.log("cancelar");
             }
@@ -580,7 +580,7 @@ $('#btnRevisionPorHandHeld').click(function (e) {
         .then((willDelete) => {
             if (willDelete) {
                 //console.log(willDelete);
-                GuardarPedidoEspecial(2); // por handHeld
+                GuardarPedidoEspecial(2,1); // por handHeld
             } else {
                 console.log("cancelar");
             }
@@ -588,8 +588,31 @@ $('#btnRevisionPorHandHeld').click(function (e) {
 
 });
 
+// cotizaciones
+$('#btnCotizar').click(function (e) {
 
-function GuardarPedidoEspecial(tipoRevision) { // 1-Ticket   /  2-Hand Held
+    swal({
+        title: 'Mensaje',
+        text: '¿Esta seguro que desea hacer la revisión por Hand Held?',
+        icon: 'info',
+        buttons: ["No", "Sí"],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                //console.log(willDelete);
+                GuardarPedidoEspecial(2, 1); // por handHeld
+            } else {
+                console.log("cancelar");
+            }
+        });
+
+});
+
+
+
+
+function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ticket   /  2-Hand Held
 
 
     //PuedeRealizarVenta = false;
@@ -683,8 +706,8 @@ function GuardarPedidoEspecial(tipoRevision) { // 1-Ticket   /  2-Hand Held
         }
     //}
 
-
-    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente});
+    
+    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial});
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarPedidoEspecial"),

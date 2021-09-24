@@ -2,9 +2,26 @@
 
 
 
+insert into CatPiso  ( descripcion) values ( 'Resguardo')
+select * from CatPiso 
+
+insert into CatRaq ( descripcion) values ( 'Resguardo')
+select * from CatRaq
+
+insert into CatPasillo ( descripcion) values ( 'Resguardo')
+select * from CatPasillo
 
 
 
+
+
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario( salida de mercancia por pedido especial)',	-1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario( carga de mercancia por pedido especial)',	1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)',	1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)',	1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)', 1)
+
+--select * from CatTipoMovimientoInventario
 
 --------------------------------------------
 --catalAgos
