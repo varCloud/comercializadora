@@ -387,7 +387,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + centradas + @">
                             <td>" + c.Complemento.TimbreFiscalDigital.FechaTimbrado + @" </td>
-                            <td>" + c.Emisor.RegimenFiscal + " Incorporación fiscal" + " " + @"</td>
+                            <td>" + c.Emisor.RegimenFiscal + " Actividades Empresariales y Profesionales" + " " + @"</td>
                         </tr>
                     </table>";
 
