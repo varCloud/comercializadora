@@ -240,6 +240,7 @@
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="DAO\AppPedidosEspecialesDAO.cs" />
     <Compile Include="DAO\BitacoraDAO.cs" />
     <Compile Include="DAO\ComprasDAO.cs" />
     <Compile Include="DAO\ConstructorDapper.cs" />
@@ -338,6 +339,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestAprobarPedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosEspeciales.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
@@ -372,6 +374,7 @@
     <Compile Include="WebServices\Modelos\WsUtils.cs" />
     <Compile Include="WebServices\WsLoginController.cs" />
     <Compile Include="WebServices\Modelos\RequestLogin.cs" />
+    <Compile Include="WebServices\WsPedidosEspecialesController.cs" />
     <Compile Include="WebServices\WsProductosController.cs" />
     <Compile Include="WebServices\WsProveedorController.cs" />
   </ItemGroup>
