@@ -17,13 +17,19 @@ using lluviaBackEnd.servicioTimbradoProductivo;
 
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
+using log4net;
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
     [SessionTimeout]
     public class FacturaController : Controller
     {
-        // GET: FacturasController
+        private readonly ILog log4netRequest;
+        public FacturaController()
+        { 
+            log4netRequest = LogManager.GetLogger("LogLluvia");
+        }
 
         public ActionResult Factura()
         {
@@ -75,10 +81,14 @@ namespace lluviaBackEnd.Controllers
                 c = new FacturaDAO().ObtenerCancelacionFactura(factura);
                 if (c != null)
                 {
-                    string pathFactura = Utils.ObtnerFolder() + '/';
+                    string timeStamp = "_" + DateTime.Now.Ticks.ToString();
+                    log4netRequest.Debug("C es diferente de null");
+                    string pathFactura = Utils.ObtnerFolder() + @"/";
                     string documentoOriginal = Utilerias.ManagerSerealization<Cancelacion>.SerealizarToString(c);
+                    log4netRequest.Debug("pathFactura : " + pathFactura);
+                    log4netRequest.Debug("Documento a cancelar : " +  documentoOriginal);
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
-                    System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + ".xml", result);
+                    System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta+timeStamp + ".xml", result);
                     //pathFactura = @"F:\Documents\comercializadora\lluviaBackEnd\lluviaBackEnd\Facturas\2021\AGOSTO\";
                     //string text = System.IO.File.ReadAllText(pathFactura+ "Cancelacion_35705.xml");
                     AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
@@ -105,6 +115,7 @@ namespace lluviaBackEnd.Controllers
             }
             catch (Exception ex)
             {
+                log4netRequest.Debug(ex.Message + " " + ex.StackTrace);
                 return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
             }
         }
@@ -132,7 +143,7 @@ namespace lluviaBackEnd.Controllers
                 comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
                 comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
                 Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items);
+                Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items , "");
                 factura.pathArchivoFactura = pathFactura;
                 factura.estatusFactura = EnumEstatusFactura.Facturada;
                 factura.mensajeError = "OK";
@@ -140,7 +151,7 @@ namespace lluviaBackEnd.Controllers
                 factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
                 Task.Factory.StartNew(() =>
                 {
-                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura);
+                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura , "");
                 });
                 
                 notificacion = new Notificacion<string>()
@@ -169,6 +180,8 @@ namespace lluviaBackEnd.Controllers
             {
                 string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
                 string pathServer = Utils.ObtnerFolder() + @"/";
+                log4netRequest.Debug("pathFactura: " + pathFactura);
+                log4netRequest.Debug("pathServer : " + pathServer);
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = null;
                 if (Session != null)
@@ -203,7 +216,7 @@ namespace lluviaBackEnd.Controllers
 
                     //TIMBRAR CON EDI-FACT
                     respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
-
+                    string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     if (respuesta.codigoResultado.Equals("100"))
                     {
 
@@ -215,13 +228,13 @@ namespace lluviaBackEnd.Controllers
                         comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
                         comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
                         comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
+                        
 
+                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta+timeStamp+ ".jpg"));
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items , timeStamp);
+                        System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", xmlTimbradoDecodificado);
 
-                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items );
-                        System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + ".xml", xmlTimbradoDecodificado);
-
-                        factura.pathArchivoFactura = pathFactura;
+                        factura.pathArchivoFactura = pathFactura + "/Factura_" + factura.idVenta + timeStamp + ".pdf";
                         factura.estatusFactura = EnumEstatusFactura.Facturada;
                         factura.mensajeError = "OK";
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
@@ -229,7 +242,8 @@ namespace lluviaBackEnd.Controllers
 
                         Task.Factory.StartNew(() =>
                         {
-                            Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura);
+                            if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", factura ,string.Empty);
                         });
 
 
@@ -238,7 +252,7 @@ namespace lluviaBackEnd.Controllers
                     {
                         factura.estatusFactura = EnumEstatusFactura.Error;
                         factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
-                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + ".xml"), xmlSerealizado);
+                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta+timeStamp + ".xml"), xmlSerealizado);
                         Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
@@ -290,6 +304,42 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<List<Factura>> notificacion = new FacturaDAO().ObtenerFacturas(factura);
                 return PartialView(notificacion);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public ActionResult ObtenerDetalleFactura(Int64 idVenta)
+        {
+            try
+            {
+                Notificacion<dynamic>  notificacion = new FacturaDAO().ObtenerDetalleFactura(idVenta);                
+                return Json(JsonConvert.SerializeObject(notificacion),JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public Notificacion<dynamic> ReenviarFactura(Factura f)
+        {
+            try
+            {
+                Notificacion<dynamic> notificacion = new FacturaDAO().ObtenerDetalleFactura(Convert.ToInt64(f.idVenta));
+                string path = System.Web.HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
+                path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/","").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
+                Email.NotificacionPagoReferencia(notificacion.Modelo.correo,path,f ,f.correoAdicional);
+                notificacion.Mensaje = "Factura reenviada exitosamente";
+                return notificacion;
+
+
             }
             catch (Exception ex)
             {

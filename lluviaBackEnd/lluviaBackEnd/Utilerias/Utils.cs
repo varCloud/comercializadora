@@ -197,7 +197,7 @@ namespace lluviaBackEnd.Utilerias
             return ruta;
         }
 
-        public static void GenerarFactura(Comprobante c, string path, string idVenta, Dictionary<string, object> items , bool esCancelacion = false )
+        public static void GenerarFactura(Comprobante c, string path, string idVenta, Dictionary<string, object> items , string timeStamp )
         {
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -213,7 +213,7 @@ namespace lluviaBackEnd.Utilerias
             MemoryStream memStreamReader = new MemoryStream();
             PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
             ItextEvents eventos = new ItextEvents();
-            eventos.esCancelado = esCancelacion;
+            eventos.esCancelado = false;
             eventos.TituloCabecera = "Articulos de limpieza lluvia";
             PDFWriter.PageEvent = eventos;
             try
@@ -387,7 +387,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + centradas + @">
                             <td>" + c.Complemento.TimbreFiscalDigital.FechaTimbrado + @" </td>
-                            <td>" + c.Emisor.RegimenFiscal + " Incorporación fiscal" + " " + @"</td>
+                            <td>" + c.Emisor.RegimenFiscal + " Actividades Empresariales y Profesionales" + " " + @"</td>
                         </tr>
                     </table>";
 
@@ -416,7 +416,7 @@ namespace lluviaBackEnd.Utilerias
                             </table>
                         </td>
                         <td width='20%'>
-                                        <img src='" + Path.Combine(path, "Qr_" + idVenta + ".jpg") + @"' width = '110' height = '110' align='right' />
+                                        <img src='" + Path.Combine(path, "Qr_" + idVenta+timeStamp + ".jpg") + @"' width = '110' height = '110' align='right' />
                         </td> 
                    </tr>
                 </table>";
@@ -441,7 +441,7 @@ namespace lluviaBackEnd.Utilerias
                 //PdfReader reader = new PdfReader(memStream.ToArray());
                 //PdfEncryptor.Encrypt(reader, memStreamReader, true, "secret", "secret", PdfWriter.ALLOW_PRINTING);
                 byte[] content = memStream.ToArray();
-                using (FileStream fs = File.Create(Path.Combine(path, "Factura_" + idVenta + ".pdf")))
+                using (FileStream fs = File.Create(Path.Combine(path, "Factura_" + idVenta+timeStamp + ".pdf")))
                 {
                     fs.Write(content, 0, (int)content.Length);
                 }

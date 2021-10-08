@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Configuration;
+using System.ServiceProcess;
 
 namespace HowToUploadFilesToFTP
 {
@@ -144,6 +145,8 @@ namespace HowToUploadFilesToFTP
                 DialogResult dialogResult = MessageBox.Show("La actualización del wms-lluvia cerrar tu navegador", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
+
+                    
                     cerrarNavegadores();
                     this.url = "ftp://" + this.txtAddress.Text + "/" + this.txtFileToDownload.Text;
                     this.txtStatusUnZip.Text = "Descargando archivo :" + this.url;
@@ -358,6 +361,104 @@ namespace HowToUploadFilesToFTP
                 MessageBox.Show(ex.Message);
             }
         }
+
+        public void startIIS() {
+            ServiceController iisService = new ServiceController("W3SVC");
+
+            if (iisService != null)
+
+            {
+
+                do
+
+                {
+
+                    iisService.Refresh();
+
+                }
+
+                while (iisService.Status == ServiceControllerStatus.ContinuePending ||
+
+                       iisService.Status == ServiceControllerStatus.PausePending ||
+
+                       iisService.Status == ServiceControllerStatus.StartPending ||
+
+                       iisService.Status == ServiceControllerStatus.StopPending);
+
+                if (iisService.Status == ServiceControllerStatus.Stopped)
+
+                {
+
+                    iisService.Start();
+
+                    iisService.WaitForStatus(ServiceControllerStatus.Running);
+
+                }
+
+                else
+
+                {
+
+                    if (ServiceControllerStatus.Paused == iisService.Status)
+
+                    {
+
+                        iisService.Continue();
+
+                        iisService.WaitForStatus(ServiceControllerStatus.Running);
+
+                    }
+
+                }
+
+                iisService.Close();
+
+            }
+        }
+        public void stopIIS() {
+            try
+            {
+                ServiceController iisService = new ServiceController("W3SVC");
+                if (iisService != null)
+                {
+
+                    do
+
+                    {
+
+                        iisService.Refresh();
+
+                    }
+
+                    while (iisService.Status == ServiceControllerStatus.ContinuePending ||
+
+                           iisService.Status == ServiceControllerStatus.PausePending ||
+
+                           iisService.Status == ServiceControllerStatus.StartPending ||
+
+                           iisService.Status == ServiceControllerStatus.StopPending);
+
+                    if (iisService.Status == ServiceControllerStatus.Running ||
+
+                        iisService.Status == ServiceControllerStatus.Paused)
+
+                    {
+
+                        iisService.Stop();
+
+                        iisService.WaitForStatus(ServiceControllerStatus.Stopped);
+
+                    }
+                    iisService.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                txtStatusUnZip.AppendText(Environment.NewLine);
+                this.txtStatusUnZip.AppendText(ex.Message +" ::::::::: "+ex.StackTrace);
+
+            }
+        }
         private void groupBox3_Enter(object sender, EventArgs e)
         {
 
@@ -380,10 +481,28 @@ namespace HowToUploadFilesToFTP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+            try
             {
-                Console.WriteLine(printer);
+                this.stopIIS();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+          
+        }
+
+        private void btnStartIIS_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.startIIS();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+           
         }
     }
 }

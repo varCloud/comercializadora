@@ -56,6 +56,9 @@
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="FoolproofValidation, Version=0.9.5851.39121, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FoolproofValidation.0.9.4518\lib\net45\FoolproofValidation.dll</HintPath>
+    </Reference>
     <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
     </Reference>
@@ -253,6 +256,7 @@
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
     <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
+    <Compile Include="DAO\TareasProgramadasDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
     <Compile Include="DAO\ReportesDAO.cs" />
@@ -1043,6 +1047,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Client Scripts\mvcfoolproof.unobtrusive.js" />
+    <Content Include="Client Scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="Client Scripts\MvcFoolproofJQueryValidation.js" />
+    <Content Include="Client Scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="Client Scripts\MvcFoolproofValidation.js" />
+    <Content Include="Client Scripts\MvcFoolproofValidation.min.js" />
     <Content Include="Connected Services\servicioTimbradoProductivo\lluviaBackEnd.servicioTimbradoProductivo.respuestaTimbrado.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>

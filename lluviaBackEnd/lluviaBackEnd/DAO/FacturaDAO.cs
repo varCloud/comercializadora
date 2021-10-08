@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using lluviaBackEnd.Models;
 using System.ServiceModel;
+using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.DAO
 {
@@ -226,7 +227,7 @@ namespace lluviaBackEnd.DAO
                         facturas.Estatus = rs1.status;
                         facturas.Mensaje = rs1.mensaje;
                         facturas.Modelo = rs.Read<Factura>().ToList();
-                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura+ "/Factura_" + p.idVenta+".pdf");
+                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura);
 
                     }
                     else
@@ -275,9 +276,44 @@ namespace lluviaBackEnd.DAO
             }
             catch (Exception ex)
             {
+                Utils.EscribirLog("ObtenerCancelacionFactura" + ex.Message + " " + ex.StackTrace);
                 throw ex;
             }
             return c;
+        }
+
+        public Notificacion<dynamic> ObtenerDetalleFactura(Int64 idVenta)
+        {
+            Notificacion<dynamic> facturas = new Notificacion<dynamic>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", idVenta);
+                    var rs = _db.QueryMultiple("SP_FACTURACION_OBTENER_DATOS_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                        facturas.Modelo = rs.ReadSingle();                   
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
         }
 
 

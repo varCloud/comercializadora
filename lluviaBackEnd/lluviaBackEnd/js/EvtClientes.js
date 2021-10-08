@@ -102,6 +102,7 @@ function VerCliente(idCliente, accion) {
             $('#btnGuardarCliente').css('display', '');
             $('#TituloModalCliente').html("Actualizar Cliente");
         }
+
         $('#nombres').val(data.Modelo.nombres);
         $('#apellidoPaterno').val(data.Modelo.apellidoPaterno);
         $('#apellidoMaterno').val(data.Modelo.apellidoMaterno);
@@ -116,7 +117,14 @@ function VerCliente(idCliente, accion) {
         $('#numeroInterior').val(data.Modelo.numeroInterior);
         $('#localidad').val(data.Modelo.localidad);
         $('#numeroExterior').val(data.Modelo.numeroExterior);
-        $('#cbTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente);
+        $('#idTipoCliente').val(data.Modelo.tipoCliente.idTipoCliente);
+        $('#razonSocial').val(data.Modelo.nombres);
+        $('#rfcPM').val(data.Modelo.rfc);
+        $('#nombreContacto').val(data.Modelo.nombreContacto);
+        $("#esPersonaMoral").prop('checked', data.Modelo.esPersonaMoral);
+        checkPM(data.Modelo.esPersonaMoral)
+
+
         $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true })
 
     } else {
@@ -235,13 +243,12 @@ function InitTableClientes() {
 function InitBtnAgregar() {
     $('#btnAgregarCliente').click(function (e) {
         $('.field-validation-error').html("");
-
-       
         $("#frmClientes input").prop("disabled", false);
         $("#frmClientes select").prop("disabled", false);
         $('#btnResetGuardarUsuario').trigger('click');
         $('#btnGuardarCliente').css('display', '');
         $('#idCliente').val('0');
+        checkPM(false)
         //para abrir el modal
         $('#mdlAgregarCliente').modal({ backdrop: 'static', keyboard: false, show: true });
         $('#TituloModalCliente').html("Agregar Cliente");
@@ -249,7 +256,39 @@ function InitBtnAgregar() {
     });
 }
 
+function checkPM(check){ 
+    $("#frmClientes").find('.form-group').find('span.field-validation-error').find('span').css('display', 'none')
+    //console.log("value", $("#esPersonaMoral").is(':checked'))
+    //console.log("check", check)
+    if (check) {
+            $("#nombrePF").css('display', 'none')
+            $("#dvRFC").css('display', 'none')
+            $("#dvNombreC").css('display', '')
+            $("#dvHrContactos").css('display', '')
+            $("#nombrePM").css('display', '')
+            
+            
+     } else {
+            $("#nombrePF").css('display', '')
+            $("#dvRFC").css('display', '')
+            $("#dvHrContactos").css('display', 'none')
+            $("#nombrePM").css('display', 'none')
+            $("#dvNombreC").css('display', 'none')
+            
+     }
+    
+}
+
 $(document).ready(function () {
     InitTableClientes();
-    $('#btnResetGuardarUsuario').css('display','none');
+
+    $("#esPersonaMoral").on("click", function (e) {
+        checkPM($("#esPersonaMoral").is(':checked'))
+    })
+        
+    $('#btnResetGuardarUsuario').css('display', 'none');
+
+    $('#mdlAgregarCliente').on('shown.bs.modal', function (e) {
+    })
+
 });

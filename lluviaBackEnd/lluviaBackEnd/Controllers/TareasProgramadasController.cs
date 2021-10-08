@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lluviaBackEnd.DAO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,8 +17,7 @@ namespace lluviaBackEnd.Controllers
 
         [HttpGet]
         public ActionResult CierreDeInventarioDiario() {
-
-            return Json("Ejecutando tarea programada", JsonRequestBehavior.AllowGet);
+          return Json(new TareasProgramadasDAO().CierreDeInventarioDiario(), JsonRequestBehavior.AllowGet);
         }
     }
 }

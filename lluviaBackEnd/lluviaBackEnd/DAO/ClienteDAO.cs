@@ -26,12 +26,12 @@ namespace lluviaBackEnd.DAO
                 var parameters = new DynamicParameters();
 
                 parameters.Add("@idCliente", c.idCliente);
-                parameters.Add("@nombres" ,string.IsNullOrEmpty(c.nombres) ? "": ti.ToTitleCase(c.nombres));
-                parameters.Add("@apellidoPaterno" , string.IsNullOrEmpty(c.apellidoPaterno) ? "" : ti.ToTitleCase(c.apellidoPaterno));
-                parameters.Add("@apellidoMaterno", string.IsNullOrEmpty(c.apellidoMaterno) ? "" : ti.ToTitleCase(c.apellidoMaterno));
+                parameters.Add("@nombres" , c.esPersonaMoral ?  c.razonSocial : string.IsNullOrEmpty(c.nombres) ? "": ti.ToTitleCase(c.nombres));
+                parameters.Add("@apellidoPaterno" , c.esPersonaMoral ? "" : string.IsNullOrEmpty(c.apellidoPaterno) ? "" : ti.ToTitleCase(c.apellidoPaterno)   );
+                parameters.Add("@apellidoMaterno",  c.esPersonaMoral ? "" : string.IsNullOrEmpty(c.apellidoMaterno) ? "" : ti.ToTitleCase(c.apellidoMaterno)   );
                 parameters.Add("@telefono",c.telefono);
                 parameters.Add("@correo" , c.correo);
-                parameters.Add("@rfc",c.rfc);
+                parameters.Add("@rfc",( c.esPersonaMoral ? c.rfcPM : c.rfc));
                 parameters.Add("@calle",c.calle);
                 parameters.Add("@numeroExterior",c.numeroExterior);
                 parameters.Add("@colonia",c.colonia);
@@ -40,9 +40,9 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@estado",c.estado);
                 parameters.Add("@numeroInterior", c.numeroInterior);
                 parameters.Add("@localidad", c.localidad);
-                //parameters.Add("@fechaAlta",c.FechaAlta.ToString("yyyyMMdd"));
-                //parameters.Add("@activo",c.activo);
-                parameters.Add("@idTipoCliente",c.tipoCliente.idTipoCliente);
+                parameters.Add("@idTipoCliente",c.idTipoCliente);
+                parameters.Add("@esPersonaMoral", c.esPersonaMoral);
+                parameters.Add("@nombreContacto", c.nombreContacto);
                 n =  this._db.QuerySingle<Notificacion<Cliente>>("SP_INSERTA_ACTUALIZA_CLIENTES", parameters, commandType:CommandType.StoredProcedure);
 
 
@@ -122,7 +122,7 @@ namespace lluviaBackEnd.DAO
                         lstClientes = result.Read<TipoCliente>().ToList();
                     }
 
-                    lstClientes.Insert(0 , new TipoCliente() { idTipoCliente=0 , descripcion="--SELECCIONA--" });
+                    lstClientes.Insert(0 , new TipoCliente() {  descripcion="--SELECCIONA--" });
                 }
             }
             catch (Exception ex)
