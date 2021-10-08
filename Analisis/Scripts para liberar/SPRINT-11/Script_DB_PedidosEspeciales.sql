@@ -15,8 +15,8 @@ select * from CatPasillo
 
 
 
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario( salida de mercancia por pedido especial)',	-1)
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario( carga de mercancia por pedido especial)',	1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por pedido especial)',	-1)
+insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial)',	1)
 insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)',	1)
 insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)',	1)
 insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)', 1)
@@ -366,17 +366,17 @@ IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesMovimiento
 CREATE TABLE 
 	PedidosEspecialesMovimientosDeMercancia 
 		(
-			idMovMercancia				bigint primary key identity(1,1),
-			idAlmacenOrigen				int,
-			idAlmacenDestino			int,
-			idProducto					int,
-			cantidad					float,
-			idPedidoEspecial			bigint,
-			idUsuario					int,
-			fechaAlta					datetime,
-			idEstatusPedidoEspecial		int,
-			observaciones				varchar(500),
-			cantidadAtendida			float
+			idMovMercancia						bigint primary key identity(1,1),
+			idAlmacenOrigen						int,
+			idAlmacenDestino					int,
+			idProducto							int,
+			cantidad							float,
+			idPedidoEspecial					bigint,
+			idUsuario							int,
+			fechaAlta							datetime,
+			idEstatusPedidoEspecialDetalle		int,
+			observaciones						varchar(500),
+			cantidadAtendida					float
 		) 
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesMovimientosDeMercancia TO PUBLIC
@@ -397,7 +397,7 @@ GO
 ALTER TABLE PedidosEspecialesMovimientosDeMercancia ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
 GO
 
-ALTER TABLE PedidosEspecialesMovimientosDeMercancia ADD FOREIGN KEY (idEstatusPedidoEspecial) REFERENCES CatEstatusPedidoEspecial (idEstatusPedidoEspecial)
+ALTER TABLE PedidosEspecialesMovimientosDeMercancia ADD FOREIGN KEY (idEstatusPedidoEspecialDetalle) REFERENCES CatEstatusPedidoEspecialDetalle (idEstatusPedidoEspecialDetalle)
 GO
 
 

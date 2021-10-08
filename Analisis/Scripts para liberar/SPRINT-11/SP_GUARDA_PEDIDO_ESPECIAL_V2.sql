@@ -52,7 +52,7 @@ as
 						@ini							int = 0, 
 						@fin							int = 0,
 						@fecha							datetime,
-						@cantProductosLiq				float = 0,
+						--@cantProductosLiq				float = 0,
 						@idComisionBancaria				int = 0,
 						@porcentajeComisionBancaria		money = 0.0,
 						@tolerancia						money = 1.0,
@@ -286,12 +286,6 @@ as
 						select	@montoTotal = Round(sum(montoVenta+montoIva+montoComisionBancaria),2,0) 
 						from	#pedidos
 
-						
-					-- si es revision por ticket se despacha y se manda a ubicacion de resguardo
-					if ( @tipoRevision = 1 )
-						begin
-							print 'es revision ticket'
-						end 
 
 					-- obtenemos la ubicacion especial para cuando es revision por ticket
 					if not exists	(
@@ -358,11 +352,15 @@ as
 								idTicketMayoreo,observaciones,ultimoCostoCompra,cantidadAceptada,cantidadAtendida,cantidadRechazada,
 								idEstatusPedidoEspecialDetalle,notificado
 							)
-					select	@idPedidoEspecial as idPedidoEspecial, idProducto, @idUbicacion as idUbicacion, idAlmacen as idAlmacenOrigen, @idAlmacenSolicita as idAlmacenDestino, @fecha as fechaAlta, cantidad, costo as monto,
-							0 cantidadActualInvGeneral, 0 cantidadAnteriorInvGeneral,precioIndividual,precioMenudeo,precioRango,precioVenta,
-							0 as idTicketMayoreo, null as observaciones, 0 as ultimoCostoCompra, cantidad as cantidadAceptada, cantidad as cantidadAtendida, 0 as cantidadRechazada,
-							1 as idEstatusPedidoEspecialDetalle, null as notificado
+					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idUbicacion as idUbicacion, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
+							@fecha as fechaAlta, p.cantidad, costo as monto, cast(0 as int) as cantidadActualInvGeneral, ig.cantidad as cantidadAnteriorInvGeneral, 
+							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, p.cantidad as cantidadAceptada, 
+							p.cantidad as cantidadAtendida, 0 as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, null as notificado
 					from	#pedidos p
+								join InventarioGeneral ig
+									on ig.idProducto = p.idProducto
+								join Productos pro
+									on pro.idProducto = p.idProducto
 
 
 					-- calculamos las existencias del inventario despues de la venta
@@ -505,7 +503,7 @@ as
 						---------------------------------------------------------------------------------------------------------------------------------------------------------
 						--- destino
 						---------------------------------------------------------------------------------------------------------------------------------------------------------
-						select '#tempExistencias', * from #tempExistencias
+						--select '#tempExistencias', * from #tempExistencias
 
 						-- se inserta el InventarioDetalleLog
 						insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta)
@@ -527,18 +525,6 @@ as
 						where	InventarioDetalle.idUbicacion = a.idUbicacion
 							and	InventarioDetalle.idProducto = a.idProducto 
 						--InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
-
-
-
-
-						---- se actualiza inventario detalle
-						--update	InventarioDetalle
-						--set		fechaActualizacion = dbo.FechaActual()
-						--from	(
-						--			select	idInventarioDetalle, idProducto, cantidad, idUbicacion, cantidadDescontada, cantidadFinal
-						--			from	#tempExistencias
-						--		)A
-						--where	InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
 
 
 
@@ -574,10 +560,69 @@ as
 
 
 
+						-- actualizamos como quedo el el inventario general actual despues de operaciones
+						update	PedidosEspecialesDetalle
+						set		PedidosEspecialesDetalle.cantidadActualInvGeneral = a.cantidad
+						from	(
+									select	ig.idProducto, ig.cantidad
+									from	InventarioGeneral ig
+												join #tempExistencias t
+													on t.idProducto = ig.idProducto
+								)A
+						where	PedidosEspecialesDetalle.idProducto = a.idProducto
 
 
 
-						select @cantProductosLiq=sum(a.cantidad) from #totProductos a join Productos b on a.idProducto=b.idProducto and b.idLineaProducto in (19,20)
+						---------------------------------------------------------------------------------------------------------------------------------------------------------
+						--PedidosEspecialesMovimientosDeMercancia
+						---------------------------------------------------------------------------------------------------------------------------------------------------------
+						-- estatus de solicitado
+						insert into 
+							PedidosEspecialesMovimientosDeMercancia 
+								(
+									idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,
+									fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida
+								)
+						select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
+								dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida
+						from	PedidosEspecialesDetalle ped
+						where	ped.idPedidoEspecial = @idPedidoEspecial
+
+						/*
+						select * from MovimientosDeMercancia
+						select * from PedidosEspecialesMovimientosDeMercancia
+						select * from CatEstatusPedidoEspecial
+						select * from CatEstatusPedidoEspecialDetalle
+						*/
+
+
+
+						-- si es revision por ticket se cambia estatus a atendido
+						if ( @tipoRevision = 1 )
+							begin
+								print 'es revision ticket'
+
+								update	PedidosEspecialesDetalle
+								set		idEstatusPedidoEspecialDetalle = 2	--Atendidos
+								where	idPedidoEspecial = @idPedidoEspecial
+
+								-- movimientos de mercancia con estatus de atendido
+								insert into 
+									PedidosEspecialesMovimientosDeMercancia 
+										(
+											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,
+											fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida
+										)
+								select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
+										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida
+								from	PedidosEspecialesDetalle ped
+								where	ped.idPedidoEspecial = @idPedidoEspecial
+
+							end 
+
+
+
+						--select @cantProductosLiq=sum(a.cantidad) from #totProductos a join Productos b on a.idProducto=b.idProducto and b.idLineaProducto in (19,20)
 
 				begin -- commit de transaccion
 					if @tran_count = 0
