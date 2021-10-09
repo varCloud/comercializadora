@@ -1,6 +1,7 @@
 /****** Script for SelectTopNRows command from SSMS  ******/
 select * from CatEstatusPedidoEspecialDetalle
-SELECT *  FROM [DB_A57E86_lluviadesarrollo].[dbo].[PedidosEspecialesDetalle]
+SELECT * FROM [DB_A57E86_lluviadesarrollo].[dbo].[PedidosEspecialesDetalle]
+select * from [dbo].[PedidosEspecialesMovimientosDeMercancia]
 
 select * from [dbo].[CatPasillo]
 select * from [dbo].[CatRaq]
