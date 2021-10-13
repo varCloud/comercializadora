@@ -28,5 +28,35 @@ namespace lluviaBackEnd.WebServices
             }
 
         }
+
+        [HttpPost]
+        public Notificacion<dynamic> ObtenerPedidoEspecialesXAlmacen(RequestObtenerPedidosEspecialesXAlmacen request)
+        {
+            try
+          {
+                return new AppPedidosEspecialesDAO().ObtenerPedidoseEspecialesXAlmacen(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<dynamic>.RegresaExcepcion(ex, null);
+            }
+
+        }
+
+        [HttpPost]
+        public Notificacion<dynamic> ObtenerDetallePedidosEspeciales(RequestObtenerDetallePedidoEspecial request)
+        {
+            try
+            {
+                return new AppPedidosEspecialesDAO().ObtenerDetallePedidoseEspecial(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<dynamic>.RegresaExcepcion(ex, null);
+            }
+
+        }
     }
 }

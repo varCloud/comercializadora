@@ -12,9 +12,9 @@ CREATE PROCEDURE SP_APP_PEDIDOS_ESPECIALES_OBTENER_PEDIDOS_ESPECIALES_X_ALMACEN
 @idEstatusPedidoEspecialDetalle int
 AS
 BEGIN
-		select 200 Estatus  , 'pedido especial encontrado' Mensaje
+		select 200 status  , 'pedido especial encontrado' mensaje
 		select PE.* , isnull(C.nombres,'')+' '+isnull(C.apellidoPaterno,'')+''+isnull(C.apellidoMaterno,'') nombreCliente from PedidosEspeciales PE
-		join (select idPedidoEspecial from PedidosEspecialesDetalle where idAlmacenDestino = @idAlmacen and idEstatusPedidoEspecialDetalle = @idEstatusPedidoEspecialDetalle
+		join (select idPedidoEspecial from PedidosEspecialesDetalle where idAlmacenDestino = @idAlmacen and idEstatusPedidoEspecialDetalle = coalesce(@idEstatusPedidoEspecialDetalle,idEstatusPedidoEspecialDetalle )
 				group by idPedidoEspecial,idAlmacenDestino) PED 
 		ON PE.idPedidoEspecial = PED.idPedidoEspecial
 		join Clientes C on C.idCliente = PE.idCliente

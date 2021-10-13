@@ -14,10 +14,10 @@ AS
 BEGIN
 		if not exists (select * from PedidosEspeciales where idPedidoEspecial = @idPedidoEspecial)
 		begin
-			select -1 Estatus , 'no existe pedido especial' Mensaje
+			select -1 status , 'no existe pedido especial' mensaje
 		end
 
-		select 200 Estatus  , 'pedido especial encontrado' Mensaje
+		select 200 status  , 'pedido especial encontrado' mensaje
 
 		select PED.* , P.descripcion descProdcuto from PedidosEspecialesDetalle PED join 
 		Productos P on PED.idProducto = P.idProducto and P.activo = 1
