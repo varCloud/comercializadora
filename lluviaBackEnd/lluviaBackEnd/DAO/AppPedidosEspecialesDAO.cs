@@ -4,7 +4,10 @@ using lluviaBackEnd.WebServices.Modelos.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.DAO
 {
@@ -64,6 +67,40 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
+
+        public Notificacion<String> AprobarPedidosEspeciales(RequestAprobarPedidoEspecial request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+
+            try
+            {                
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@xmlProductos", SerializeProductos(request.Productos));
+                    parameters.Add("@idPedidoEspecial", request.idPedidoEspecial);
+                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);         
+                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    notificacion = ConstructorDapper.Ejecutar("SP_APP_APROBAR_PEDIDOS_ESPECIALES", parameters);     
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public string SerializeProductos(List<ProductosPedidoEspecial> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosPedidoEspecial>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+            return stringBuilder.ToString();
+
+        }
+
 
     }
 }

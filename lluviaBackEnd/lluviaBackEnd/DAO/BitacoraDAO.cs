@@ -489,29 +489,29 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
-        {
-            Notificacion<String> notificacion = new Notificacion<String>();
+        //public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        //{
+        //    Notificacion<String> notificacion = new Notificacion<String>();
 
-            try
-            {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@productos", SerializeProductos(request.Productos));
-                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
-                    parameters.Add("@idUsuario", request.idUsuario);
-                    parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
-                    parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);                    
-                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_APROBAR_PEDIDOS_INTERNOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return notificacion;
-        }
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@productos", SerializeProductos(request.Productos));
+        //            parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+        //            parameters.Add("@idUsuario", request.idUsuario);
+        //            parameters.Add("@idAlmacenOrigen", request.idAlmacenOrigen);
+        //            parameters.Add("@idAlmacenDestino", request.idAlmacenDestino);                    
+        //            notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_APROBAR_PEDIDOS_INTERNOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
         public string SerializeProductos(List<ProductosPedidoEspecial> precios)
         {

@@ -10,7 +10,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         public int idAlmacenOrigen { get; set; }
         public int idAlmacenDestino { get; set; }
         public int idUsuario { get; set; }
-        public int idPedidoInterno { get; set; }
+        public int idPedidoEspecial { get; set; }
 
         public List<ProductosPedidoEspecial> Productos { get; set; }
 
@@ -19,12 +19,12 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
 
     public class ProductosPedidoEspecial
     {
-        public int idPedidoInternoDetalle { get; set; }
+        public int idPedidoEspecialDetalle { get; set; }
         public int idUbicacion { get; set; }
         public int idProducto { get; set; }
         public float cantidadAtendida { get; set; }
         public string observaciones { get; set; }
-        public float cantidadSolicitada { get; set; }
+        public int idEstatusPedidoEspecialDetalle { get; set; }
 
     }
 }

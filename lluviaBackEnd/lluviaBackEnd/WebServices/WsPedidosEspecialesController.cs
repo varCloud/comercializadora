@@ -58,5 +58,19 @@ namespace lluviaBackEnd.WebServices
             }
 
         }
+
+        [HttpPost]
+        public Notificacion<String> AprobarPedidosEspeciales(RequestAprobarPedidoEspecial request)
+        {
+            try
+            {
+                return new AppPedidosEspecialesDAO().AprobarPedidosEspeciales(request);
+            }
+
+            catch (Exception ex)
+            {
+                return WsUtils<String>.RegresaExcepcion(ex, null);
+            }
+        }
     }
 }

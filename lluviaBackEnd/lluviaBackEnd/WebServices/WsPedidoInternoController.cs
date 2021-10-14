@@ -183,19 +183,19 @@ namespace lluviaBackEnd.WebServices
 
         //}
 
-        [HttpPost]
-        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
-        {
-            try
-            {
-                return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
-            }
+        //[HttpPost]
+        //public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        //{
+        //    try
+        //    {
+        //        return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
+        //    }
 
-            catch (Exception ex)
-            {
-                return WsUtils<String>.RegresaExcepcion(ex, null);
-            }
-        }
+        //    catch (Exception ex)
+        //    {
+        //        return WsUtils<String>.RegresaExcepcion(ex, null);
+        //    }
+        //}
 
         [HttpPost]
         public Notificacion<String> RechazarPedidosInternosEspeciales(RequestRechazarPedidoInternoEspecial request)

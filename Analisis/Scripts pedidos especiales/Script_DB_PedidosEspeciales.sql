@@ -1,19 +1,12 @@
 
+--insert into CatPiso  ( descripcion) values ( 'Resguardo')
+--select * from CatPiso 
 
+--insert into CatRaq ( descripcion) values ( 'Resguardo')
+--select * from CatRaq
 
-
-insert into CatPiso  ( descripcion) values ( 'Resguardo')
-select * from CatPiso 
-
-insert into CatRaq ( descripcion) values ( 'Resguardo')
-select * from CatRaq
-
-insert into CatPasillo ( descripcion) values ( 'Resguardo')
-select * from CatPasillo
-
-
-
-
+--insert into CatPasillo ( descripcion) values ( 'Resguardo')
+--select * from CatPasillo
 
 insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por pedido especial)',	-1)
 insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial)',	1)
@@ -376,7 +369,8 @@ CREATE TABLE
 			fechaAlta							datetime,
 			idEstatusPedidoEspecialDetalle		int,
 			observaciones						varchar(500),
-			cantidadAtendida					float
+			cantidadAtendida					float,
+			idUbicacion							int
 		) 
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesMovimientosDeMercancia TO PUBLIC
