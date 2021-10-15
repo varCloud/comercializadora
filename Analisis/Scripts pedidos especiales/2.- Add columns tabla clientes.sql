@@ -27,9 +27,9 @@ BEGIN
 END  
 
 
-IF NOT EXISTS(SELECT * FROM sys.columns WHERE Name = N'diaCredito' AND OBJECT_ID = OBJECT_ID(N'Clientes'))
+IF NOT EXISTS(SELECT * FROM sys.columns WHERE Name = N'diasCredito' AND OBJECT_ID = OBJECT_ID(N'Clientes'))
 BEGIN
-	ALTER TABLE Clientes ADD diaCredito int default(0);
+	ALTER TABLE Clientes ADD diasCredito int default(0);
 END  
 
 

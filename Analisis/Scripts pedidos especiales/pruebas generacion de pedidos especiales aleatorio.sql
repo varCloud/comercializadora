@@ -1,9 +1,9 @@
 begin tran
 
 declare 
-@idUsuario int=35,
+@idUsuario int=37,
 @idEstatusPedidoEspecial int=1,
-@TotalProductos int=10
+@TotalProductos int=3
 
 declare @idCliente int=(select top 1 idCliente from clientes where idCliente>1 ORDER BY newid())
 declare @idAlmacenOrigen int=(select idAlmacen from usuarios where idUsuario=@idUsuario)
@@ -79,3 +79,6 @@ select * from PedidosEspecialesDetalle where idPedidoEspecial=@idPedidoEspecial
 
 
 commit tran
+
+
+select * from pedidosEspeciales

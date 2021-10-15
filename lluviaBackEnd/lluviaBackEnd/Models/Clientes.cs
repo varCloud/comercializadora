@@ -67,7 +67,7 @@ namespace lluviaBackEnd.Models
         [Range(1,90,ErrorMessage = "Este campo no puede estar vacio")]
         public int idTipoCliente { get; set; }
 
-        /*******PERSONA MOTAL*********/
+        /*******PERSONA MORAL*********/
         public bool esPersonaMoral { get; set; }
 
         [RequiredIfTrue("esPersonaMoral", ErrorMessage = "Esta campo es requerido")]
@@ -82,5 +82,19 @@ namespace lluviaBackEnd.Models
         public string nombreContacto { get; set; }
         public string telefonoContacto { get; set; }
         public string correoContacto { get; set; }
+
+        /*******INFORMACION PARA PEDIDOS ESPECIALES*********/
+        public string latitud { get; set; }
+        public string longitud { get; set; }
+        public string nombreContactoPE { get; set; }
+        public string telefonoContactoPE { get; set; }
+        public string correoContactoPE { get; set; }
+
+        public int diasCredito { get; set; }
+        public float montoMaximoCredito { get; set; }
+
+        public bool usarDatosCliente { get; set; }
+
+
     }
 }

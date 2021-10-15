@@ -121,6 +121,17 @@ function VerCliente(idCliente, accion) {
         $('#razonSocial').val(data.Modelo.nombres);
         $('#rfcPM').val(data.Modelo.rfc);
         $('#nombreContacto').val(data.Modelo.nombreContacto);
+
+        $('#latitud').val(data.Modelo.latitud);
+        $('#longitud').val(data.Modelo.longitud);
+        $('#nombreContactoPE').val(data.Modelo.nombreContactoPE);
+        $('#correoContactoPE').val(data.Modelo.correoContactoPE);
+        $('#telefonoContactoPE').val(data.Modelo.telefonoContactoPE);
+        $('#diasCredito').val(data.Modelo.diasCredito);
+        $('#montoMaximoCredito').val(data.Modelo.montoMaximoCredito);
+        $('#usarDatosCliente').prop('checked', data.Modelo.usarDatosCliente);
+
+
         $("#esPersonaMoral").prop('checked', data.Modelo.esPersonaMoral);
         checkPM(data.Modelo.esPersonaMoral)
 
@@ -279,13 +290,37 @@ function checkPM(check){
     
 }
 
+function checkUsarDatoscliente(check) {
+    //$("#frmClientes").find('.form-group').find('span.field-validation-error').find('span').css('display', 'none')
+    //console.log("value", $("#esPersonaMoral").is(':checked'))
+    //console.log("check", check)
+    if (check) {
+        $('#nombreContactoPE').val(($("#esPersonaMoral").is(':checked') ? $("#nombreContacto").val() : $("#nombres").val() + ' ' + $("#apellidoPaterno").val() + ' ' + $("#apellidoMaterno").val()    ));
+        $('#correoContactoPE').val($('#correo').val());
+        $('#telefonoContactoPE').val($('#telefono').val());
+
+
+    } else {
+
+        $('#nombreContactoPE').val('');
+        $('#correoContactoPE').val('');
+        $('#telefonoContactoPE').val('');
+
+    }
+
+}
+
 $(document).ready(function () {
     InitTableClientes();
 
     $("#esPersonaMoral").on("click", function (e) {
         checkPM($("#esPersonaMoral").is(':checked'))
     })
-        
+
+    $("#usarDatosCliente").on("click", function (e) {
+        checkUsarDatoscliente($("#usarDatosCliente").is(':checked'))
+    })
+
     $('#btnResetGuardarUsuario').css('display', 'none');
 
     $('#mdlAgregarCliente').on('shown.bs.modal', function (e) {
