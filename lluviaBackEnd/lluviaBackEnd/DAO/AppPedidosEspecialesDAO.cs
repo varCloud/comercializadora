@@ -40,6 +40,8 @@ namespace lluviaBackEnd.DAO
                 var parameters = new DynamicParameters();
                 parameters.Add("@idAlmacen", request.idAlmacen == 0 ? (object)null : request.idAlmacen);
                 parameters.Add("@idEstatusPedidoEspecialDetalle", request.idEstatusPedidoEspecialDetalle == 0 ? (object)null : request.idEstatusPedidoEspecialDetalle);
+                parameters.Add("@fechaInicio", request.fechaInicio == DateTime.MinValue ? (object)null : request.fechaInicio);
+                parameters.Add("@fechaFin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
                 notificacion = ConstructorDapper.Consultar("SP_APP_PEDIDOS_ESPECIALES_OBTENER_PEDIDOS_ESPECIALES_X_ALMACEN", parameters);
             }
             catch (Exception ex)
