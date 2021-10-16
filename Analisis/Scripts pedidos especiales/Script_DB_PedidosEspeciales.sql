@@ -619,6 +619,9 @@ insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values (
 insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values ('Requiere autorizacion para cierre de modulo de Pedidos Especiales.', 1, cast(1 as bit) )
 
 
+-- rol de taxi
+insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
+
 
 
 ------------------------------------------------------------------------------------------------------------------

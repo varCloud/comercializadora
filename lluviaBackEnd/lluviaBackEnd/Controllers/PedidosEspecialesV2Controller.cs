@@ -79,6 +79,92 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        public ActionResult _ObtenerEntregarPedidos(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                //ventas.tipoConsulta = 2;
+                //ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
+
+                notificacion = new PedidosEspecialesV2DAO().ObtenerEntregarPedidos(pedidosEspecialesV2);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstEntregas = notificacion.Modelo;
+                    return PartialView("_ObtenerEntregarPedidos");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_ObtenerEntregarPedidos");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
+        public ActionResult EntregarPedido(PedidosEspecialesV2 pedidoEspecial)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+
+                //List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 3, idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen }), "idUsuario", "nombreCompleto").ToList();
+                //ViewBag.lstUsuarios = listUsuarios;
+
+                //List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 5 }), "idUsuario", "nombreCompleto").ToList();
+                //ViewBag.lstUsuarios = listUsuarios;
+
+
+
+                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                //ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+                //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                //ViewBag.lstPedidosEspeciales = new PedidosEspecialesV2DAO().ConsultaPedidosEspeciales(pedidoEspecial.idPedidoEspecial);
+                //ViewBag.comisionBancaria = usuario.comisionBancaria;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
+        public ActionResult ConfirmarProductos(PedidosEspecialesV2 pedidoEspecial)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                //ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+                //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);                
+                //ViewBag.pedidoEspecial = new PedidosEspecialesV2DAO().ConsultaPedidoEspecial(pedidoEspecial.idPedidoEspecial);
+                //ViewBag.comisionBancaria = usuario.comisionBancaria;
+                pedidoEspecial.lstProductos = new List<Producto>();
+                pedidoEspecial.lstProductos = new PedidosEspecialesV2DAO().ConsultaPedidoEspecialDetalle(pedidoEspecial.idPedidoEspecial);
+                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 5 }), "idUsuario", "nombreCompleto").ToList();
+                ViewBag.lstUsuarios = listUsuarios;
+
+                ViewBag.pedidoEspecial = pedidoEspecial;
+                return View();                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         [HttpPost]
         public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idEstatusPedidoEspecial)

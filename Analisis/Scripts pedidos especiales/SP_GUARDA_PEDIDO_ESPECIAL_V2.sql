@@ -520,6 +520,7 @@ as
 						from	(
 									select	idProducto, idUbicacion, sum(cantidadDescontada) as cantidadDescontada
 									from	#tempExistencias
+									where	cantidadDescontada > 0
 									group by idProducto, idUbicacion
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacion
@@ -539,6 +540,7 @@ as
 								(
 									select	idProducto, cantidadDescontada
 									from	#tempExistencias
+									where	cantidadDescontada > 0.0
 									group by idProducto, cantidadDescontada
 								)  tempExistencias
 									join InventarioDetalle id
@@ -552,6 +554,7 @@ as
 						from	(
 									select	idProducto, idUbicacion, sum(cantidadDescontada) as cantidadDescontada
 									from	#tempExistencias
+									where	cantidadDescontada > 0
 									group by idProducto, idUbicacion
 								)A
 						where	InventarioDetalle.idUbicacion = @idubicacion
@@ -568,6 +571,7 @@ as
 									from	InventarioGeneral ig
 												join #tempExistencias t
 													on t.idProducto = ig.idProducto
+									where	cantidadDescontada > 0
 								)A
 						where	PedidosEspecialesDetalle.idProducto = a.idProducto
 
@@ -604,6 +608,10 @@ as
 
 								update	PedidosEspecialesDetalle
 								set		idEstatusPedidoEspecialDetalle = 2	--Atendidos
+								where	idPedidoEspecial = @idPedidoEspecial
+
+								update	PedidosEspeciales
+								set		idEstatusPedidoEspecial = 3	  --En resguardo
 								where	idPedidoEspecial = @idPedidoEspecial
 
 								-- movimientos de mercancia con estatus de atendido

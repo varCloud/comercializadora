@@ -530,7 +530,7 @@ function abrirModalGuardarPedidoEspecial() {
             //descuento += parseFloat(fila.children[7].innerHTML.replace('$', ''));
         //}
     });
-    console.log(total);
+    //console.log(total);
     if (total > 0) {
         //document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total + descuento).toFixed(2) + "</h4>";
         //document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
@@ -757,8 +757,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
         },
         error: function (xhr, status) {
-            OcultarLoader();
-            
+            OcultarLoader();            
             $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
             $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
             //PuedeRealizarVenta = true;
@@ -927,6 +926,8 @@ function limpiarTicket() {
     idVentaComplemento = 0;
     arrayProductosVentaComplemento = [];
     $("#actionVenta").html("");
+    $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
+    $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
 
 }
 
