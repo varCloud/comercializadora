@@ -115,10 +115,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON CatEstatusPedidoEspecialDetalle TO PUBLI
 GO	
 	
 
-insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Solcitados')
+insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Solicitados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Aceptados')
+insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos/Incompletos')
 
 
 

@@ -101,6 +101,26 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<String> RechazarPedidosEspeciales(RequestRechazarPedidoInternoEspecial request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idPedidoEspecial", request.idPedidoEspecial);
+                parameters.Add("@idUsuario", request.idUsuario);
+                parameters.Add("@idAlmacen", request.idAlmacen);
+                parameters.Add("@observaciones", request.observaciones);
+                notificacion = ConstructorDapper.Ejecutar("SP_APP_RECHAZAR_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

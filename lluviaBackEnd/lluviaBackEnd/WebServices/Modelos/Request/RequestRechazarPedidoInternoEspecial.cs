@@ -8,8 +8,9 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
     public class RequestRechazarPedidoInternoEspecial
     {
 
-        public int idPedidoInterno { get; set; }
+        public int idPedidoEspecial { get; set; }
         public int idUsuario { get; set; }
-        public string observacionGeneral { get; set; }
+        public int idAlmacen { get; set; }
+        public string observaciones { get; set; }
     }
 }

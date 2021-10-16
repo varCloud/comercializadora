@@ -525,27 +525,27 @@ namespace lluviaBackEnd.DAO
 
         }
 
-        public Notificacion<String> RechazarPedidosInternosEspeciales(RequestRechazarPedidoInternoEspecial request)
-        {
-            Notificacion<String> notificacion = new Notificacion<String>();
+        //public Notificacion<String> RechazarPedidosInternosEspeciales(RequestRechazarPedidoInternoEspecial request)
+        //{
+        //    Notificacion<String> notificacion = new Notificacion<String>();
 
-            try
-            {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@idPedidoInterno", request.idPedidoInterno);
-                    parameters.Add("@idUsuario", request.idUsuario);
-                    parameters.Add("@observacionGeneral", request.observacionGeneral);
-                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_RECHAZAR_PEDIDOS_INTERNOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return notificacion;
-        }
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idPedidoInterno", request.idPedidoInterno);
+        //            parameters.Add("@idUsuario", request.idUsuario);
+        //            parameters.Add("@observacionGeneral", request.observacionGeneral);
+        //            notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_RECHAZAR_PEDIDOS_INTERNOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
 
         public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerNotificacionesPedidosInternos(RequestObtenerNotificacionesPedidosInternos request)
