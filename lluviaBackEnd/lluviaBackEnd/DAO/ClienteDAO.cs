@@ -43,6 +43,16 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@idTipoCliente",c.idTipoCliente);
                 parameters.Add("@esPersonaMoral", c.esPersonaMoral);
                 parameters.Add("@nombreContacto", c.nombreContacto);
+                /******************PEDIDOS ESPECIALES********************************/
+                parameters.Add("@latitud", c.latitud);
+                parameters.Add("@longitud", c.longitud);
+                parameters.Add("@nombreContactoPE", c.nombreContactoPE);
+                parameters.Add("@telefonoContactoPE", c.telefonoContactoPE);
+                parameters.Add("@correoContactoPE", c.correoContactoPE);
+                parameters.Add("@diasCredito", c.diasCredito);
+                parameters.Add("@montoMaximoCredito", c.montoMaximoCredito);
+                parameters.Add("@usarDatosCliente", c.usarDatosCliente);
+
                 n =  this._db.QuerySingle<Notificacion<Cliente>>("SP_INSERTA_ACTUALIZA_CLIENTES", parameters, commandType:CommandType.StoredProcedure);
 
 

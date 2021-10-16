@@ -5,12 +5,9 @@ using System.Web;
 
 namespace lluviaBackEnd.WebServices.Modelos.Request
 {
-    public class RequestRechazarPedidoInternoEspecial
+    public class RequestObtenerDetallePedidoEspecial
     {
-
         public int idPedidoEspecial { get; set; }
-        public int idUsuario { get; set; }
         public int idAlmacen { get; set; }
-        public string observaciones { get; set; }
     }
 }

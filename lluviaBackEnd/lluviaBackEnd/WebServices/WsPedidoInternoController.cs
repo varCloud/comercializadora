@@ -168,48 +168,48 @@ namespace lluviaBackEnd.WebServices
 
         }
 
-        [HttpPost]
-        public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesAlmacenApp(RequestObtenerPedidosInternosAlamcen request)
-        {
-            try
-            {
-                return new BitacoraDAO().ObtenerPedidosInternoEspecialesAlmacenApp(request);
-            }
+        //[HttpPost]
+        //public Notificacion<List<ResponseObtenerPedidosInternosEspeciales>> ObtenerPedidosInternoEspecialesAlmacenApp(RequestObtenerPedidosInternosAlamcen request)
+        //{
+        //    try
+        //    {
+        //        return new BitacoraDAO().ObtenerPedidosInternoEspecialesAlmacenApp(request);
+        //    }
 
-            catch (Exception ex)
-            {
-                return WsUtils<List<ResponseObtenerPedidosInternosEspeciales>>.RegresaExcepcion(ex, null);
-            }
+        //    catch (Exception ex)
+        //    {
+        //        return WsUtils<List<ResponseObtenerPedidosInternosEspeciales>>.RegresaExcepcion(ex, null);
+        //    }
 
-        }
+        //}
 
-        [HttpPost]
-        public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
-        {
-            try
-            {
-                return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
-            }
+        //[HttpPost]
+        //public Notificacion<String> AprobarPedidosInternosEspeciales(RequestAprobarPedidoEspecial request)
+        //{
+        //    try
+        //    {
+        //        return new BitacoraDAO().AprobarPedidosInternosEspeciales(request);
+        //    }
 
-            catch (Exception ex)
-            {
-                return WsUtils<String>.RegresaExcepcion(ex, null);
-            }
-        }
+        //    catch (Exception ex)
+        //    {
+        //        return WsUtils<String>.RegresaExcepcion(ex, null);
+        //    }
+        //}
 
-        [HttpPost]
-        public Notificacion<String> RechazarPedidosInternosEspeciales(RequestRechazarPedidoInternoEspecial request)
-        {
-            try
-            {
-                return new BitacoraDAO().RechazarPedidosInternosEspeciales(request);
-            }
+        //[HttpPost]
+        //public Notificacion<String> RechazarPedidosInternosEspeciales(RequestRechazarPedidoInternoEspecial request)
+        //{
+        //    try
+        //    {
+        //        return new BitacoraDAO().RechazarPedidosInternosEspeciales(request);
+        //    }
 
-            catch (Exception ex)
-            {
-                return WsUtils<String>.RegresaExcepcion(ex, null);
-            }
-        }
+        //    catch (Exception ex)
+        //    {
+        //        return WsUtils<String>.RegresaExcepcion(ex, null);
+        //    }
+        //}
 
         [HttpPost]
         public Notificacion<List<ResponseObtenerPedidosInternos>> ObtenerNotificacionesPedidosInternos(RequestObtenerNotificacionesPedidosInternos request)

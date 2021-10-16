@@ -96,7 +96,7 @@
 
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group"  id="dvNombreC" style="display:none">
+                            <div class="form-group" id="dvNombreC" style="display:none">
                                 <label>Nombre completo</label>
                                 @Html.TextBoxFor(x => x.nombreContacto, null, new { @class = "form-control", @id = "nombreContacto" })
                             </div>
@@ -192,7 +192,75 @@
                                 @Html.ValidationMessageFor(x => x.idTipoCliente, null, new { @class = "text-danger was" })
                             </div>
                         </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Latitud</label>
+                                @Html.TextBoxFor(x => x.latitud, null, new { @class = "form-control", @id = "latitud" })
+                                @Html.ValidationMessageFor(x => x.latitud, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Longitud</label>
+                                @Html.TextBoxFor(x => x.longitud, null, new { @class = "form-control", @id = "longitud" })
+                                @Html.ValidationMessageFor(x => x.longitud, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
                     </div>
+                    <div>
+                        <label>Pedidos Especiales</label>
+                        <hr />
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    @*<input type="checkbox" class="custom-control-input" id="esPersonaMoral">*@
+                                    @Html.CheckBoxFor(x => x.usarDatosCliente, new { @class = "custom-control-input", @id = "usarDatosCliente" })
+                                    <label class="custom-control-label" for="usarDatosCliente">Usar Datos del cliente ?</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-8">
+                            <div class="form-group">
+                                <label>Nombre completo</label>
+                                @Html.TextBoxFor(x => x.nombreContactoPE, null, new { @class = "form-control", @id = "nombreContactoPE" })
+                                @Html.ValidationMessageFor(x => x.nombreContactoPE, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Correo</label>
+                                @Html.TextBoxFor(x => x.correoContactoPE, null, new { @class = "form-control", @id = "correoContactoPE" })
+                                @Html.ValidationMessageFor(x => x.correoContactoPE, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                @Html.TextBoxFor(x => x.telefonoContactoPE, null, new { @class = "form-control", @id = "telefonoContactoPE" })
+                                @Html.ValidationMessageFor(x => x.telefonoContactoPE, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Días de crédito</label>
+                                @Html.TextBoxFor(x => x.diasCredito, null, new { @class = "form-control", @id = "diasCredito", onkeypress = "return esNumero(event)" })
+                                @Html.ValidationMessageFor(x => x.diasCredito, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Monto máximo de crédito</label>
+                                @Html.TextBoxFor(x => x.montoMaximoCredito, null, new { @class = "form-control", @id = "montoMaximoCredito" ,onkeypress = "return esDecimal(this, event);" })
+                                @Html.ValidationMessageFor(x => x.montoMaximoCredito, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-12">
                             <div class="text-right" style="margin-top:15px;">
