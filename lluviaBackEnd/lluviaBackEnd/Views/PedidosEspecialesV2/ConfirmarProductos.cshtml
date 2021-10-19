@@ -1,15 +1,9 @@
 ﻿@model lluviaBackEnd.Models.PedidosEspecialesV2
 @{
     ViewBag.Title = "Confirmar Productos";
-    //List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
-    //List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
-    //List<SelectListItem> lstSucursales = (List<SelectListItem>)ViewBag.lstSucursales;
-    //List<SelectListItem> lstAlmacenes = (List<SelectListItem>)ViewBag.lstAlmacenes;
-    //List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
-    //float comisionBancaria = ViewBag.comisionBancaria;
-    lluviaBackEnd.Models.PedidosEspecialesV2 pedidosEspecialesV2 = ViewBag.pedidoEspecial;    
-    List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
-    //lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+    lluviaBackEnd.Models.PedidosEspecialesV2 pedidosEspecialesV2 = ViewBag.pedidoEspecial;
+    List<SelectListItem> listUsuariosRuteo = (List<SelectListItem>)ViewBag.listUsuariosRuteo;
+    List<SelectListItem> listUsuariosTaxi = (List<SelectListItem>)ViewBag.listUsuariosTaxi;
 
 }
 
@@ -60,6 +54,7 @@
                                         <th>Id Producto</th>
                                         <th>Producto</th>
                                         <th>Almacen</th>
+                                        <th class="text-center">Monto</th>
                                         <th class="text-center">Cantidad Solicitada</th>
                                         <th class="text-center">Cantidad Atendida</th>
                                         <th class="text-center">Cantidad Rechazada</th>
@@ -81,6 +76,7 @@
                                                     <td>@item.idProducto</td>
                                                     <td>@item.descripcion</td>
                                                     <td>@item.Almacen</td>
+                                                    <td>$@item.precioVenta</td>
                                                     <td class="text-center">@item.cantidadSolicitada</td>
                                                     <td class="text-center">@item.cantidadAtendida </td>
                                                     <td class="text-center">@item.cantidadRechazada</td>
@@ -117,20 +113,12 @@
 
                         <div>
                             <div class="text-md-right">
-
-                                @*<div class="invoice-detail-name  pull-left">Último Cambio:</div>
-                                    <br>
-                                    <div class="invoice-detail-value pull-left" id="ultimoCambio"><h4>$0.0</h4></div>*@
-
-                                <button id="limpiar" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar</button>
+                                <a href="@Url.Action("EntregarPedido", "PedidosEspecialesV2")" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar </a>
                                 &nbsp;
                                 <button id="btnGuardarPedidoEspecial" class="btn btn-warning btn-icon icon-left"><i class="fas fa-credit-card"></i> Guardar</button>
                                 &nbsp;
-                                @*<button id="btnGuardarCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>*@
-
                             </div>
                         </div>
-
 
                     </div>
                 </div>
@@ -159,144 +147,176 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-12">
 
-
                         <div class="card">
                             <div class="card-header">
-                                <h4>Custom Forms</h4>
+                                <h4>Entregado a:</h4>
                             </div>
-                            <div class="card-body">
-                                @*<div class="section-title mt-0">Checkbox</div>*@
-                                @*<div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                    <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
-                                </div>*@
 
-                                <div class="section-title">Entregar a:</div>
-
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadio1">Cliente </label>
-                                </div>
-
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadio2">Taxi </label>
-                                </div>
-
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadio3">Encargado de Ruteo </label>
-                                </div>
-
-                                <div id="divUsuario">
-                                    <div class="section-title">Usuario</div>
-                                    <div class="form-group">
-                                        @Html.DropDownListFor(model => model.idUsuario, lstUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
-
-                                    </div>
-                                </div>
-
-                                @*<div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline2">
-                                        Or toggle this other custom
-                                        radio
-                                    </label>
-                                </div>*@
-
-                                @*<div class="section-title">Disabled</div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckDisabled" disabled="">
-                                    <label class="custom-control-label" for="customCheckDisabled">Check this custom checkbox</label>
-                                </div>
-
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" name="radioDisabled" class="custom-control-input" disabled="">
-                                    <label class="custom-control-label">Toggle this custom radio</label>
-                                </div>*@
-                            </div>
-                        </div>
-
-
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Datos del Cliente: </h4>
-                            </div>
                             <div class="card-body">
 
-                                    <div class="section-title">Entregar a:</div>
-
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                                        <label class="custom-control-label" for="customRadio1"></label>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCliente">
+                                                <label class="custom-control-label" for="chkCliente">Entregado a Cliente</label>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                                        <label class="custom-control-label" for="customRadio4">Or toggle this other custom radio</label>
+                                    <div class="col-sm-7">
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        @Html.DropDownListFor(model => model.idUsuario, lstUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
 
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkRuteo">
+                                                <label class="custom-control-label" for="chkRuteo">Entregado a Encargado de Ruteo</label>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="col-sm-7">
+                                        @Html.DropDownListFor(model => model.idUsuarioRuteo, listUsuariosRuteo, "--TODOS--", new { @id= "idUsuarioRuteo", style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkTaxi">
+                                                <label class="custom-control-label" for="chkTaxi">Entregado a Taxi</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.DropDownListFor(model => model.idUsuarioTaxi, listUsuariosTaxi, "--TODOS--", new { @id = "idUsuarioTaxi", style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <div class="col-form-label pt-0">Numero de Unidad</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="numeroUnidadTaxi" placeholder="Numero de unidad de Taxi">
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="card-footer">
-                            </div>
+
                         </div>
-                    </div>
-                </div>
 
-                @*<div class="row">
-                    <div class="col-12 col-md-6 col-lg-12">
+
                         <div class="card">
                             <div class="card-header">
-                                <h4>Tipo de Revisión</h4>
-                                <div class="card-header-action">
-                                    <button class="btn btn-info" id="btnRevisionPorTicket" type="button"> Revisión por Ticket </button> &nbsp;&nbsp;&nbsp;
-                                    <button class="btn btn-warning" id="btnRevisionPorHandHeld" type="button"> Revisión por Hand Held </button>
+                                <h4>Tipo de Pago:</h4>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkLiquidado">
+                                                <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="montoTotal" onkeypress="return esDecimal(this, event);" placeholder="Monto total">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCredito">
+                                                <label class="custom-control-label" for="chkCredito">A Crédito </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
+                                                <label class="custom-control-label" for="chkCreditoConAbono">A Crédito con Abono </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="cantidadAbonada" onkeypress="return esDecimal(this, event);" placeholder="Cantidad que abono">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pull-right">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <div class="text-right" style="margin-top:15px;">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                                    <button class="btn btn-success" id="btnEntregarPedidoEspecial" type="button">Aceptar</button>
+
                                 </div>
                             </div>
-                            <div class="card-footer">
-                            </div>
-                        </div>
-                    </div>
-                </div>*@
-
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-lg-12">
-                        <div class="text-right" style="margin-top:15px;">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
-                            <button class="btn btn-success" id="btnEntregarPedidoEspecial" type="button">Aceptar</button>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
+    @*@Html.DropDownListFor(model => model.idUsuario, lstUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })*@
 
 
 
 
+    @section scripts {
+
+        <script src="~/Scripts/jquery.validate.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="~/assets/js/jquery-ui.min.js"></script>
+        <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+        <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/assets/js/page/datatables.js"></script>
+        <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+        <script src="~/assets/js/page/sweetalert.js"></script>
+        <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/js/index.js"></script>
+        <script src="~/js/EvtConfirmarProductosV2.js"></script>
 
 
-@section scripts {
+        <style>
+            input {
+                outline: 0;
+                border-width: 0 0 1px;
+                border-color: lightslategray !important
+            }
 
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-    <script src="~/assets/js/jquery-ui.min.js"></script>
-    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
-    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/assets/js/page/datatables.js"></script>
-    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
-    <script src="~/assets/js/page/sweetalert.js"></script>
-    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
-    <script src="~/js/index.js"></script>
-    <script src="~/js/EvtConfirmarProductosV2.js"></script>
+            input:focus {
+                border-color: lightskyblue
+            }
+        </style>
 
-}
+    }

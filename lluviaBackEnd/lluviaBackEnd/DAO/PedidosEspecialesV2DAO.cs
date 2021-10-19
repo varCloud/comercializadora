@@ -585,5 +585,47 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, int numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
+        {
+            Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@listaProductos", Serialize(productos));
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    parameters.Add("@idEstatusPedidoEspecial", idEstatusPedidoEspecial);
+                    parameters.Add("@idUsuarioEntrega", idUsuarioEntrega);
+                    parameters.Add("@numeroUnidadTaxi", numeroUnidadTaxi);
+                    parameters.Add("@idEstatusCuentaPorCobrar", idEstatusCuentaPorCobrar);
+                    parameters.Add("@montoTotal", montoTotal);
+                    parameters.Add("@montoTotalcantidadAbonada", montoTotalcantidadAbonada);
+
+                    var result = db.QueryMultiple("SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
     }
 }
