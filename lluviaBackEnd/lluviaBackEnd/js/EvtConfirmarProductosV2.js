@@ -32,7 +32,10 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     $('#idUsuarioRuteo').val("0").trigger('change');
     $('#idUsuarioTaxi').val("0").trigger('change');
 
-    $('#ModalEntregarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
+    if (validarProductosAceptados()) {
+        $('#ModalEntregarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
+    }
+
 });
 
 
@@ -254,9 +257,6 @@ function chkChangeEntregar(chk) {
     if (chk == 'chkCliente') {
         document.getElementById("chkRuteo").checked = false;
         document.getElementById("chkTaxi").checked = false;
-
-        $("#btnGuardarVenta").addClass('btn-progress disabled');
-
     }
 
     if (chk == 'chkRuteo') {
@@ -268,7 +268,6 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkRuteo").checked = false;
     }
-
 
 }
 
@@ -291,15 +290,81 @@ function chkChangeTipoPago(chk) {
         document.getElementById("chkCredito").checked = false;
     }
 
-
-
 }
+
+
+
+function validarProductosAceptados() {
+
+    var faltantes = parseInt(0);
+    var tblProductos = document.getElementById('tblConfirmarProductos');
+    var rCount = tblProductos.rows.length;
+    
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            if  (
+                    ((parseFloat(tblProductos.rows[i].cells[5].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[8].children[0].value))) &&
+                    (String(tblProductos.rows[i].cells[9].children[0].value) == "" )
+                ) {
+                if (faltantes == 0) {
+                    MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos."); 
+                }
+                faltantes += 1;
+            }
+        }
+    }
+    
+    return !(faltantes > 0);
+}
+
+
+function actualizarSubTotal() {
+
+    var subTotal = parseFloat(0);
+
+    $('#tblConfirmarProductos tbody tr').each(function (index, fila) {
+        subTotal += parseFloat(fila.children[4].innerHTML.replace('$', ''));
+    });
+
+    $(".divSubTotal").html("$" + parseFloat(subTotal).toFixed(2));
+}
+
+
+
+function initInputsTabla() {
+
+    $('#tblConfirmarProductos input.productos_').on('change', function () {
+
+        var thisInput = $(this);
+        var mensaje = "Debe escribir la cantidad de productos.";
+        var cell = $(this).closest('td');
+        var row = cell.closest('tr');
+        var rowIndex = row[0].rowIndex;
+        var tblProductos = document.getElementById('tblConfirmarProductos');
+        var idProducto = parseInt(tblProductos.rows[rowIndex].cells[1].innerHTML);
+        var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[5].innerHTML);
+        
+        if ((thisInput.val() == "") || (thisInput.val() == "0")) {
+            MuestraToast('warning', mensaje);
+            document.execCommand('undo');
+        }
+
+        if ((parseFloat(thisInput.val())) > (parseFloat(productosSolicitados))) {
+            MuestraToast('warning', "No puede aceptar mas productos de los solicitados.");
+            document.execCommand('undo');
+            return;
+        }
+
+    });
+}
+
 
 
 $(document).ready(function () {
 
     InitSelect2();
-
+    initInputsTabla();
+    actualizarSubTotal();
 });
 
 
