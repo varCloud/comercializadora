@@ -153,8 +153,12 @@ namespace lluviaBackEnd.Controllers
                 //ViewBag.comisionBancaria = usuario.comisionBancaria;
                 pedidoEspecial.lstProductos = new List<Producto>();
                 pedidoEspecial.lstProductos = new PedidosEspecialesV2DAO().ConsultaPedidoEspecialDetalle(pedidoEspecial.idPedidoEspecial);
-                List<SelectListItem> listUsuarios = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 5 }), "idUsuario", "nombreCompleto").ToList();
-                ViewBag.lstUsuarios = listUsuarios;
+
+                List<SelectListItem> listUsuariosRuteo = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 5 }), "idUsuario", "nombreCompleto").ToList();
+                ViewBag.listUsuariosRuteo = listUsuariosRuteo;
+
+                List<SelectListItem> listUsuariosTaxi = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 10 }), "idUsuario", "nombreCompleto").ToList();
+                ViewBag.listUsuariosTaxi = listUsuariosTaxi;
 
                 ViewBag.pedidoEspecial = pedidoEspecial;
                 return View();                
@@ -164,6 +168,24 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+        [HttpPost]
+        public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, int numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
+        {
+            try
+            {
+                Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                idUsuarioEntrega = UsuarioActual.idUsuario;
+                result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar, montoTotal, montoTotalcantidadAbonada);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
 
         [HttpPost]
