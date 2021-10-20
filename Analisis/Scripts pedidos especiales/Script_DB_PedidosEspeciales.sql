@@ -371,7 +371,8 @@ CREATE TABLE
 			idEstatusPedidoEspecialDetalle		int,
 			observaciones						varchar(500),
 			cantidadAtendida					float,
-			idUbicacion							int
+			idUbicacionOrigen					int null,
+			idUbicacionDestino					int null,
 		) 
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesMovimientosDeMercancia TO PUBLIC

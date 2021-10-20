@@ -67,8 +67,8 @@ BEGIN
 
 	
 				--insertamos en la tabla movimientos de mercancia	
-				INSERT INTO PedidosEspecialesMovimientosDeMercancia(idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacion)
-				select @idAlmacen,idAlmacenOrigen,idProducto,cantidad,@idPedidoEspecial,@idUsuario,@fechaActual,@idEstatusPedidoEspecialDetalle,@observaciones,0,0
+				INSERT INTO PedidosEspecialesMovimientosDeMercancia(idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida)
+				select @idAlmacen,idAlmacenOrigen,idProducto,cantidad,@idPedidoEspecial,@idUsuario,@fechaActual,@idEstatusPedidoEspecialDetalle,@observaciones,0
 				from #PedidosEspecialesDetalleRechazados;
 
 
@@ -76,6 +76,10 @@ BEGIN
 				update d set cantidadAtendida=0,cantidadRechazada=d.cantidad,idEstatusPedidoEspecialDetalle=@idEstatusPedidoEspecialDetalle,notificado=0,observaciones=@observaciones
 				from PedidosEspecialesDetalle d
 				join #PedidosEspecialesDetalleRechazados p on d.idPedidoEspecialDetalle=p.idPedidoEspecialDetalle
+
+				--si ya fueron atentidos todos los productos del pedido especial cambiamos el estatus a resguardo
+				IF NOT EXISTS(SELECT 1 FROM PedidosEspecialesDetalle where idPedidoEspecial=@idPedidoEspecial and idEstatusPedidoEspecialDetalle=1)
+				update PedidosEspeciales set idEstatusPedidoEspecial=3 where idPedidoEspecial=@idPedidoEspecial
 
 				
 				
