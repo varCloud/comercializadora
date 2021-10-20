@@ -63,6 +63,41 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<PedidosEspecialesV2>> ObtenerEntregarPedidos(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial == 0 ? (object)null : pedidosEspecialesV2.idPedidoEspecial);
+                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaIni);
+                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaFin);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<PedidosEspecialesV2>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
         public Notificacion<List<Precio>> ObtenerPreciosDeProductos(List<Precio> precios)
         {
@@ -186,6 +221,71 @@ namespace lluviaBackEnd.DAO
 
         }
 
+
+
+        public List<Producto> ConsultaPedidoEspecialDetalle( int idPedidoEspecial )
+        {
+            List<Producto> lstProductosPedido = new List<Producto>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        //notificacion.Estatus = r1.status;
+                        //notificacion.Mensaje = r1.mensaje;
+                        lstProductosPedido = result.Read<Producto>().ToList();                        
+                    }
+                    else
+                    {
+                        //notificacion.Estatus = r1.status;
+                        //notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstProductosPedido;
+        }
+
+        //public Notificacion<List<PedidosEspecialesV2>> ConsultaPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
+        //{
+        //    Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial);
+        //            parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial);
+        //            parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial);
+        //            var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = result.Read<PedidosEspecialesV2>().ToList();                        
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
 
         //public Notificacion<PedidosEspeciales> AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
@@ -484,6 +584,48 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
+
+
+        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, int numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
+        {
+            Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@listaProductos", Serialize(productos));
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    parameters.Add("@idEstatusPedidoEspecial", idEstatusPedidoEspecial);
+                    parameters.Add("@idUsuarioEntrega", idUsuarioEntrega);
+                    parameters.Add("@numeroUnidadTaxi", numeroUnidadTaxi);
+                    parameters.Add("@idEstatusCuentaPorCobrar", idEstatusCuentaPorCobrar);
+                    parameters.Add("@montoTotal", montoTotal);
+                    parameters.Add("@montoTotalcantidadAbonada", montoTotalcantidadAbonada);
+
+                    var result = db.QueryMultiple("SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

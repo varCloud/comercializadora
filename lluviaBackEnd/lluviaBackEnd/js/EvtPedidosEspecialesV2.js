@@ -13,16 +13,9 @@ var arrayProductosVentaComplemento = [];
 var ultimoCambio = parseFloat(0);
 var PuedeRealizarVenta = true;
 
-
-
-
-
-
 $("#idAlmacenExistencia").on("change", function () {
     ActualizarProductosAlmacen();        
 });
-
-
 
 function ActualizarProductosAlmacen() {
 
@@ -38,7 +31,6 @@ function ActualizarProductosAlmacen() {
     }
 
 }
-
 
 function InitSelect2Productos(idAlmacen) {
     MuestraToast('info', "Actualizando productos del almacen");
@@ -530,7 +522,7 @@ function abrirModalGuardarPedidoEspecial() {
             //descuento += parseFloat(fila.children[7].innerHTML.replace('$', ''));
         //}
     });
-    console.log(total);
+    //console.log(total);
     if (total > 0) {
         //document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total + descuento).toFixed(2) + "</h4>";
         //document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
@@ -557,7 +549,6 @@ $('#btnRevisionPorTicket').click(function (e) {
     })
         .then((willDelete) => {
             if (willDelete) {
-                //console.log(willDelete);
                 GuardarPedidoEspecial(1,1); // por ticket
             } else {
                 console.log("cancelar");
@@ -579,8 +570,7 @@ $('#btnRevisionPorHandHeld').click(function (e) {
     })
         .then((willDelete) => {
             if (willDelete) {
-                //console.log(willDelete);
-                GuardarPedidoEspecial(2,1); // por handHeld
+                GuardarPedidoEspecial(2,1); // por hand held
             } else {
                 console.log("cancelar");
             }
@@ -593,7 +583,7 @@ $('#btnCotizar').click(function (e) {
 
     swal({
         title: 'Mensaje',
-        text: '¿Esta seguro que desea hacer la revisión por Hand Held?',
+        text: '¿Esta seguro que desea hacer guardar este pedido especial como una cotización?',
         icon: 'info',
         buttons: ["No", "Sí"],
         dangerMode: true,
@@ -601,7 +591,7 @@ $('#btnCotizar').click(function (e) {
         .then((willDelete) => {
             if (willDelete) {
                 //console.log(willDelete);
-                GuardarPedidoEspecial(2, 1); // por handHeld
+                GuardarPedidoEspecial(3, 1); // cotizacion
             } else {
                 console.log("cancelar");
             }
@@ -757,8 +747,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
         },
         error: function (xhr, status) {
-            OcultarLoader();
-            
+            OcultarLoader();            
             $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
             $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
             //PuedeRealizarVenta = true;
@@ -927,6 +916,8 @@ function limpiarTicket() {
     idVentaComplemento = 0;
     arrayProductosVentaComplemento = [];
     $("#actionVenta").html("");
+    $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
+    $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
 
 }
 

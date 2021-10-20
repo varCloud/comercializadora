@@ -1,0 +1,322 @@
+﻿@model lluviaBackEnd.Models.PedidosEspecialesV2
+@{
+    ViewBag.Title = "Confirmar Productos";
+    lluviaBackEnd.Models.PedidosEspecialesV2 pedidosEspecialesV2 = ViewBag.pedidoEspecial;
+    List<SelectListItem> listUsuariosRuteo = (List<SelectListItem>)ViewBag.listUsuariosRuteo;
+    List<SelectListItem> listUsuariosTaxi = (List<SelectListItem>)ViewBag.listUsuariosTaxi;
+
+}
+
+@section Styles {
+    <link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+
+
+    <style>
+        .modal {
+            overflow: auto !important;
+        }
+
+        .ui-autocomplete {
+            z-index: 5000;
+        }
+    </style>
+}
+
+
+<section class="section">
+    <div class="section-body">
+        <div class="row mt-sm-4">
+        </div>
+
+        <div class="row mt-sm-12">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Confirmar Productos: </h4>
+                        <div class="card-header-action">
+                            <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tblConfirmarProductos">
+                                <thead>
+                                    <tr>
+                                        <th data-width="40" style="width: 40px;">#</th>
+                                        <th>Id Producto</th>
+                                        <th>Producto</th>
+                                        <th>Almacen</th>
+                                        <th class="text-center">Monto</th>
+                                        <th class="text-center">Cantidad Solicitada</th>
+                                        <th class="text-center">Cantidad Atendida</th>
+                                        <th class="text-center">Cantidad Rechazada</th>
+                                        <th class="text-center">Cantidad Aceptada</th>
+                                        <th class="text-center">Observaciones</th>
+                                        <th class="text-center" style="display: none;">idPedidoEspecial</th>
+                                        <th class="text-center" style="display: none;">idPedidoEspecialDetalle</th>
+                                    </tr>
+                                </thead>
+                                @if (pedidosEspecialesV2 != null)
+                                {
+                                    if (pedidosEspecialesV2.lstProductos.Count() > 0)
+                                    {
+                                        <tbody>
+                                            @foreach (var item in pedidosEspecialesV2.lstProductos)
+                                            {
+                                                <tr>
+                                                    <td>@item.id</td>
+                                                    <td>@item.idProducto</td>
+                                                    <td>@item.descripcion</td>
+                                                    <td>@item.Almacen</td>
+                                                    <td>$@item.precioVenta</td>
+                                                    <td class="text-center">@item.cantidadSolicitada</td>
+                                                    <td class="text-center">@item.cantidadAtendida </td>
+                                                    <td class="text-center">@item.cantidadRechazada</td>
+                                                    <td class="text-center"><input type='text' class="productos_" onkeypress="return esDecimal(this, event);" style="text-align: center; background: transparent;" value="@item.cantidadAceptada"></td>
+                                                    <td class="text-center"><input type='text' style="text-align: center; background: transparent;" value=""></td>
+                                                    <td style="display: none;">@item.idPedidoEspecial</td>
+                                                    <td style="display: none;">@item.idPedidoEspecialDetalle</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    }
+                                }
+                                else
+                                {
+                                    <tbody></tbody>
+                                }
+
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-6">
+                            </div>
+                            <div class="col-lg-6 text-right">
+                                <hr class="mt-2 mb-2">
+                                <div class="invoice-detail-item">
+                                    <div class="invoice-detail-name">Subtotal</div>
+                                    <div class="invoice-detail-value divSubTotal">$0.0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div>
+                            <div class="text-md-right">
+                                <a href="@Url.Action("EntregarPedido", "PedidosEspecialesV2")" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Cancelar </a>
+                                &nbsp;
+                                <button id="btnGuardarPedidoEspecial" class="btn btn-warning btn-icon icon-left"><i class="fas fa-credit-card"></i> Guardar</button>
+                                &nbsp;
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+@*Modal Confirmar Productos de Pedido Especial*@
+<div class="modal fade bd-example-modal-lg" id="ModalEntregarPedidoEspecial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Entregar Pedido Especial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Entregado a:</h4>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCliente">
+                                                <label class="custom-control-label" for="chkCliente">Entregado a Cliente</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkRuteo">
+                                                <label class="custom-control-label" for="chkRuteo">Entregado a Encargado de Ruteo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.DropDownListFor(model => model.idUsuarioRuteo, listUsuariosRuteo, "--TODOS--", new { @id= "idUsuarioRuteo", style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkTaxi">
+                                                <label class="custom-control-label" for="chkTaxi">Entregado a Taxi</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.DropDownListFor(model => model.idUsuarioTaxi, listUsuariosTaxi, "--TODOS--", new { @id = "idUsuarioTaxi", style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <div class="col-form-label pt-0">Numero de Unidad</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="numeroUnidadTaxi" placeholder="Numero de unidad de Taxi">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Tipo de Pago:</h4>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkLiquidado">
+                                                <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="montoTotal" onkeypress="return esDecimal(this, event);" placeholder="Monto total">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCredito">
+                                                <label class="custom-control-label" for="chkCredito">A Crédito </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
+                                                <label class="custom-control-label" for="chkCreditoConAbono">A Crédito con Abono </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="cantidadAbonada" onkeypress="return esDecimal(this, event);" placeholder="Cantidad que abono">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pull-right">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <div class="text-right" style="margin-top:15px;">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                                    <button class="btn btn-success" id="btnEntregarPedidoEspecial" type="button">Aceptar</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*@Html.DropDownListFor(model => model.idUsuario, lstUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })*@
+
+
+
+
+    @section scripts {
+
+        <script src="~/Scripts/jquery.validate.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="~/assets/js/jquery-ui.min.js"></script>
+        <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+        <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/assets/js/page/datatables.js"></script>
+        <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+        <script src="~/assets/js/page/sweetalert.js"></script>
+        <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/js/index.js"></script>
+        <script src="~/js/EvtConfirmarProductosV2.js"></script>
+
+
+        <style>
+            input {
+                outline: 0;
+                border-width: 0 0 2px;
+                border-color: lightslategray 
+            }
+
+            input:focus {
+                border-color: dodgerblue
+            }
+        </style>
+
+    }

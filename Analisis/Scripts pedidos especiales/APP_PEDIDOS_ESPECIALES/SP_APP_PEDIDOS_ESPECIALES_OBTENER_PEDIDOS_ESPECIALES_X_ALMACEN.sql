@@ -26,5 +26,6 @@ BEGIN
 		where cast(PE.fechaAlta as date) >= coalesce(cast(@fechaInicio as date),cast(PE.fechaAlta as date))
 		and cast(PE.fechaAlta as date) <= coalesce(cast(@fechaFin as date),cast(PE.fechaAlta as date))
 
+
 END
 GO

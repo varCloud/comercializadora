@@ -1090,6 +1090,7 @@
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
     <Content Include="js\EvtConsultaPedidosEspecialesV2.js" />
+    <Content Include="js\EvtConsultaEntregarPedido.js" />
     <Content Include="js\EvtConsultaVentasCanceladas.js" />
     <Content Include="js\evtCotizaciones.js" />
     <Content Include="js\EvtDashboard.js" />
@@ -1116,6 +1117,7 @@
     <Content Include="js\EvtCodigosBarras.js" />
     <Content Include="js\EvtUbicaciones.js" />
     <Content Include="js\EvtPedidosEspeciales.js" />
+    <Content Include="js\EvtConfirmarProductosV2.js" />
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
@@ -1328,6 +1330,9 @@
     <Content Include="Views\PedidosEspecialesV2\ConsultarPedidosEspeciales.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\CierreCajas.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\AperturaCajas.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\ConfirmarProductos.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\EntregarPedido.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\_ObtenerEntregarPedidos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
