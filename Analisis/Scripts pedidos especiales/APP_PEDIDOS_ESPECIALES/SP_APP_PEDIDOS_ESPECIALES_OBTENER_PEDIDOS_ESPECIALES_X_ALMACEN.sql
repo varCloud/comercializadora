@@ -15,10 +15,20 @@ CREATE PROCEDURE SP_APP_PEDIDOS_ESPECIALES_OBTENER_PEDIDOS_ESPECIALES_X_ALMACEN
 AS
 BEGIN
 		select 200 status  , 'pedido especial encontrado' mensaje
-		select  A.idAlmacen idAlmacenOrigen , A.Descripcion descAlmacenOrigen,	PE.*,  A.Descripcion , isnull(C.nombres,'')+' '+isnull(C.apellidoPaterno,'')+''+isnull(C.apellidoMaterno,'') nombreCliente from PedidosEspeciales PE
-		join (select idPedidoEspecial from PedidosEspecialesDetalle where idAlmacenDestino = @idAlmacen and idEstatusPedidoEspecialDetalle = coalesce(@idEstatusPedidoEspecialDetalle,idEstatusPedidoEspecialDetalle )
-				group by idPedidoEspecial,idAlmacenDestino) PED 
+		select 
+			A.idAlmacen idAlmacenOrigen , A.Descripcion descAlmacenOrigen,	A.Descripcion ,
+			isnull(C.nombres,'')+' '+isnull(C.apellidoPaterno,'')+''+isnull(C.apellidoMaterno,'') nombreCliente,
+			PED.descEstatusPedidoEspecial
+			,PE.*
+		from PedidosEspeciales PE
+		join (select  PED.idPedidoEspecial,PED.idAlmacenDestino, case when PED.idEstatusPedidoEspecialDetalle <> 1 then 'Atendido' else 'Solicitado' end descEstatusPedidoEspecial
+			from PedidosEspeciales  PE join  PedidosEspecialesDetalle PED
+			on PE.idPedidoEspecial = PED.idPedidoEspecial and PED.idAlmacenDestino = @idAlmacen
+			and PED.idEstatusPedidoEspecialDetalle = coalesce(@idEstatusPedidoEspecialDetalle, PED.idEstatusPedidoEspecialDetalle)
+			group by PED.idPedidoEspecial, PED.idAlmacenDestino ,case when PED.idEstatusPedidoEspecialDetalle <> 1 then 'Atendido' else 'Solicitado' end) PED 
 		ON PE.idPedidoEspecial = PED.idPedidoEspecial
+
+					   		
 		join Usuarios U on PE.idUsuario = U.idUsuario
 		join Almacenes A on U.idAlmacen = A.idAlmacen
 		join Clientes C on C.idCliente = PE.idCliente
