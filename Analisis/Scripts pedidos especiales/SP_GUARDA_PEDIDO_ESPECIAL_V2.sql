@@ -337,11 +337,8 @@ as
 						select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 
 								@idUsuario as idUsuario, @idEstatusPedidoEspecial as idEstatusPedidoEspecial,@idEstacion as idEstacion, 
 								null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi
-						from	#pedidos
-						group by cantidad
 
 						select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
-
 
 					-- se inserta el detalle de los productos que se vendieron
 					insert into
