@@ -203,6 +203,9 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+        
+        /************** REIMPRIMIR TICKETS ALMACENES********************/
+        /************** REIMPRIMIR TICKET  GENERAL********************/
 
 
 
