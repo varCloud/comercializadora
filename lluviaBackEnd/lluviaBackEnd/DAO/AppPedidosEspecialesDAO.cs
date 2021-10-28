@@ -13,7 +13,7 @@ namespace lluviaBackEnd.DAO
 {
     public class AppPedidosEspecialesDAO
     {
-        public Notificacion<dynamic> ObtenerNotificacionesPedidosInternos(RequestObtenerNotificacionesPedidosEspeciales request)
+        public Notificacion<dynamic> ObtenerNotificacionesPedidosEspeciales(RequestObtenerNotificacionesPedidosEspeciales request)
         {
             Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
             try

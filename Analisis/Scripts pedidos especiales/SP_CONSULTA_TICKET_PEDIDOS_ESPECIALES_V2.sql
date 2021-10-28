@@ -136,10 +136,12 @@ as
 										ped.cantidadAtendida,
 										ped.cantidadRechazada,
 										ped.idEstatusPedidoEspecialDetalle,
-										ped.notificado
+										ped.notificado,
+										A.Descripcion descAlmacen
 								from	PedidosEspecialesDetalle  ped
 											join Productos p
 												on p.idProducto = ped.idProducto
+											join Almacenes A on A.idAlmacen = Ped.idAlmacenDestino
 								where	idPedidoEspecial = @idPedidoEspecial
 									and	idAlmacenDestino = @ini
 

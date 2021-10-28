@@ -626,6 +626,42 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<dynamic>> consultaTicketPedidoEspecial(Int64 idPedidoEspecial) {
+            Notificacion<List<dynamic>> notificacion = new Notificacion<List<dynamic>>();
+            notificacion.Modelo = new List<dynamic>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    var result = db.QueryMultiple("SP_CONSULTA_TICKET_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        while (!result.IsConsumed ) {
+                            var r2 = result.Read<dynamic>();
+                            notificacion.Modelo.Add(r2);
+                        }
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

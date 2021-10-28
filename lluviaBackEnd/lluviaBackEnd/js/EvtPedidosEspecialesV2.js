@@ -2853,7 +2853,9 @@ function BuscarVentaCodigoBarras() {
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip()
-
+    $("#btnTicket").click(function (evt) {
+        consultarTicketPedidoEspecial();
+    });
     //$('#ModalPrevioVenta').on('shown.bs.modal', function () {
     //    PuedeRealizarVenta = true;
     //    console.log("puede realizar venta", PuedeRealizarVenta)
@@ -2863,3 +2865,23 @@ $(document).ready(function () {
 });
 
 
+
+function consultarTicketPedidoEspecial() {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        data: { idPedidoEspecial: 0 },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast("info", data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
