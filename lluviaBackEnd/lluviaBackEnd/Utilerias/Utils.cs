@@ -371,7 +371,7 @@ namespace lluviaBackEnd.Utilerias
                         </tr>
                          <tr " + centradas + @">
                             <td>" + c.Complemento.TimbreFiscalDigital.NoCertificadoSAT + @" </td>
-                            <td>MORELIA" + " " + "MICHOACÁN" + @"</td>
+                            <td>Uruapan" + " " + "Mich." + @"</td>
                         </tr>
                         <tr " + titulosCabecerasAbre + @">
                             <td>No. de serie del certificado del sat </td>
