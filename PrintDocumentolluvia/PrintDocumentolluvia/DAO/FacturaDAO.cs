@@ -63,6 +63,9 @@ namespace lluviaBackEnd.DAO
                     //OBTENEMOS LAS DESCRIPCIONES DE LA INFORMACION DEL PAGO 
                     items.Add("descripcionUsoCFDI", receptor.descripcionUsoCFDI);
                     items.Add("descripcionFormaPago", receptor.descripcionFormaPago);
+                    items.Add("correoCliente", receptor.correo);
+                    items.Add("domicilioCliente", receptor.domicilio);
+
 
                     ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
                     c.Receptor = new ComprobanteReceptor();
@@ -101,7 +104,8 @@ namespace lluviaBackEnd.DAO
                     items.Add("comprobante", c);
                     items.Add("conceptosAddenda", listConceptosAdenda);
                 }
-                else {
+                else
+                {
 
                     items = new Dictionary<string, object>();
                     items.Add("estatus", r1.Estatus);

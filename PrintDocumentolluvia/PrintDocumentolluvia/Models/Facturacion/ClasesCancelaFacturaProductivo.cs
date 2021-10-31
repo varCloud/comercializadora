@@ -1,111 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
-namespace lluviaBackEnd.Models.Facturacion
+namespace lluviaBackEnd.Models.Facturacion.Produccion
 {
-
-    // NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
-    /// <remarks/>
-    [System.SerializableAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true,Namespace = "http://cancelacfd.sat.gob.mx")]
-    [System.Xml.Serialization.XmlRoot(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
-    public partial class Cancelacion
-    {
-
-        private Folios foliosField;
-
-    
-        private string fechaField;
-
-        private string rfcEmisorField;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
-        public Folios Folios
-        {
-            get
-            {
-                return this.foliosField;
-            }
-            set
-            {
-                this.foliosField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Fecha
-        {
-            get
-            {
-                return this.fechaField;
-            }
-            set
-            {
-                this.fechaField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string RfcEmisor
-        {
-            get
-            {
-                return this.rfcEmisorField;
-            }
-            set
-            {
-                this.rfcEmisorField = value;
-            }
-        }
-    }
-
-    /// <remarks/>
-    [System.SerializableAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
-    public partial class Folios
-    {
-
-        private string uUIDField;
-
-        private string estatusUUIDField;
-
-        /// <remarks/>
-        public string UUID
-        {
-            get
-            {
-                return this.uUIDField;
-            }
-            set
-            {
-                this.uUIDField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string EstatusUUID
-        {
-            get
-            {
-                return this.estatusUUIDField;
-            }
-            set
-            {
-                this.estatusUUIDField = value;
-            }
-        }
-    }
-
-
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
@@ -117,19 +18,32 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private System.Threading.SendOrPostCallback CallenviaAcuseCancelacionOperationCompleted;
 
+        private System.Threading.SendOrPostCallback aceptarRechazarCancelacionOperationCompleted;
+
+        private System.Threading.SendOrPostCallback obtenerPeticionesPendientesOperationCompleted;
+
+        private System.Threading.SendOrPostCallback obtenerRelacionadosOperationCompleted;
+
         /// <remarks/>
         public enviaAcuseCancelacion()
         {
-         
-                this.Url = "http://comprobantes-fiscales.com/service/cancelarCFDI.php";
-           
+            this.Url = "https://www.edifactmx-pac.com:443/serviceCFDI/cancelaCFDI.php";
         }
 
         /// <remarks/>
         public event CallenviaAcuseCancelacionCompletedEventHandler CallenviaAcuseCancelacionCompleted;
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://comprobantes-fiscales.com/service/cancelarCFDI.php/enviaAcuseCancelacion",RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
+        public event aceptarRechazarCancelacionCompletedEventHandler aceptarRechazarCancelacionCompleted;
+
+        /// <remarks/>
+        public event obtenerPeticionesPendientesCompletedEventHandler obtenerPeticionesPendientesCompleted;
+
+        /// <remarks/>
+        public event obtenerRelacionadosCompletedEventHandler obtenerRelacionadosCompleted;
+
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapRpcMethodAttribute("https://www.edifactmx-pac.com/serviceCFDI/cancelaCFDI.php/enviaAcuseCancelacion", RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
         [return: System.Xml.Serialization.SoapElementAttribute("ns1:return")]
         public string CallenviaAcuseCancelacion(string xmlFile)
         {
@@ -179,6 +93,158 @@ namespace lluviaBackEnd.Models.Facturacion
         }
 
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapRpcMethodAttribute("https://www.edifactmx-pac.com/serviceCFDI/cancelaCFDI.php/aceptarRechazarCancelac" +
+            "ion", RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
+        [return: System.Xml.Serialization.SoapElementAttribute("ns1:return")]
+        public string aceptarRechazarCancelacion(string xmlFile)
+        {
+            object[] results = this.Invoke("aceptarRechazarCancelacion", new object[] {
+                    xmlFile});
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public System.IAsyncResult BeginaceptarRechazarCancelacion(string xmlFile, System.AsyncCallback callback, object asyncState)
+        {
+            return this.BeginInvoke("aceptarRechazarCancelacion", new object[] {
+                    xmlFile}, callback, asyncState);
+        }
+
+        /// <remarks/>
+        public string EndaceptarRechazarCancelacion(System.IAsyncResult asyncResult)
+        {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public void aceptarRechazarCancelacionAsync(string xmlFile)
+        {
+            this.aceptarRechazarCancelacionAsync(xmlFile, null);
+        }
+
+        /// <remarks/>
+        public void aceptarRechazarCancelacionAsync(string xmlFile, object userState)
+        {
+            if ((this.aceptarRechazarCancelacionOperationCompleted == null))
+            {
+                this.aceptarRechazarCancelacionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnaceptarRechazarCancelacionOperationCompleted);
+            }
+            this.InvokeAsync("aceptarRechazarCancelacion", new object[] {
+                    xmlFile}, this.aceptarRechazarCancelacionOperationCompleted, userState);
+        }
+
+        private void OnaceptarRechazarCancelacionOperationCompleted(object arg)
+        {
+            if ((this.aceptarRechazarCancelacionCompleted != null))
+            {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.aceptarRechazarCancelacionCompleted(this, new aceptarRechazarCancelacionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapRpcMethodAttribute("https://www.edifactmx-pac.com/serviceCFDI/cancelaCFDI.php/obtenerPeticionesPendie" +
+            "ntes", RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
+        [return: System.Xml.Serialization.SoapElementAttribute("ns1:return")]
+        public string obtenerPeticionesPendientes(string rfcReceptor)
+        {
+            object[] results = this.Invoke("obtenerPeticionesPendientes", new object[] {
+                    rfcReceptor});
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public System.IAsyncResult BeginobtenerPeticionesPendientes(string rfcReceptor, System.AsyncCallback callback, object asyncState)
+        {
+            return this.BeginInvoke("obtenerPeticionesPendientes", new object[] {
+                    rfcReceptor}, callback, asyncState);
+        }
+
+        /// <remarks/>
+        public string EndobtenerPeticionesPendientes(System.IAsyncResult asyncResult)
+        {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public void obtenerPeticionesPendientesAsync(string rfcReceptor)
+        {
+            this.obtenerPeticionesPendientesAsync(rfcReceptor, null);
+        }
+
+        /// <remarks/>
+        public void obtenerPeticionesPendientesAsync(string rfcReceptor, object userState)
+        {
+            if ((this.obtenerPeticionesPendientesOperationCompleted == null))
+            {
+                this.obtenerPeticionesPendientesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnobtenerPeticionesPendientesOperationCompleted);
+            }
+            this.InvokeAsync("obtenerPeticionesPendientes", new object[] {
+                    rfcReceptor}, this.obtenerPeticionesPendientesOperationCompleted, userState);
+        }
+
+        private void OnobtenerPeticionesPendientesOperationCompleted(object arg)
+        {
+            if ((this.obtenerPeticionesPendientesCompleted != null))
+            {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.obtenerPeticionesPendientesCompleted(this, new obtenerPeticionesPendientesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapRpcMethodAttribute("https://www.edifactmx-pac.com/serviceCFDI/cancelaCFDI.php/obtenerRelacionados", RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
+        [return: System.Xml.Serialization.SoapElementAttribute("ns1:return")]
+        public string obtenerRelacionados(string xmlFile)
+        {
+            object[] results = this.Invoke("obtenerRelacionados", new object[] {
+                    xmlFile});
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public System.IAsyncResult BeginobtenerRelacionados(string xmlFile, System.AsyncCallback callback, object asyncState)
+        {
+            return this.BeginInvoke("obtenerRelacionados", new object[] {
+                    xmlFile}, callback, asyncState);
+        }
+
+        /// <remarks/>
+        public string EndobtenerRelacionados(System.IAsyncResult asyncResult)
+        {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((string)(results[0]));
+        }
+
+        /// <remarks/>
+        public void obtenerRelacionadosAsync(string xmlFile)
+        {
+            this.obtenerRelacionadosAsync(xmlFile, null);
+        }
+
+        /// <remarks/>
+        public void obtenerRelacionadosAsync(string xmlFile, object userState)
+        {
+            if ((this.obtenerRelacionadosOperationCompleted == null))
+            {
+                this.obtenerRelacionadosOperationCompleted = new System.Threading.SendOrPostCallback(this.OnobtenerRelacionadosOperationCompleted);
+            }
+            this.InvokeAsync("obtenerRelacionados", new object[] {
+                    xmlFile}, this.obtenerRelacionadosOperationCompleted, userState);
+        }
+
+        private void OnobtenerRelacionadosOperationCompleted(object arg)
+        {
+            if ((this.obtenerRelacionadosCompleted != null))
+            {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.obtenerRelacionadosCompleted(this, new obtenerRelacionadosCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+
+        /// <remarks/>
         public new void CancelAsync(object userState)
         {
             base.CancelAsync(userState);
@@ -215,8 +281,95 @@ namespace lluviaBackEnd.Models.Facturacion
         }
     }
 
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    public delegate void aceptarRechazarCancelacionCompletedEventHandler(object sender, aceptarRechazarCancelacionCompletedEventArgs e);
 
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class aceptarRechazarCancelacionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
+        private object[] results;
+
+        internal aceptarRechazarCancelacionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
+                base(exception, cancelled, userState)
+        {
+            this.results = results;
+        }
+
+        /// <remarks/>
+        public string Result
+        {
+            get
+            {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    public delegate void obtenerPeticionesPendientesCompletedEventHandler(object sender, obtenerPeticionesPendientesCompletedEventArgs e);
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class obtenerPeticionesPendientesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
+
+        private object[] results;
+
+        internal obtenerPeticionesPendientesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
+                base(exception, cancelled, userState)
+        {
+            this.results = results;
+        }
+
+        /// <remarks/>
+        public string Result
+        {
+            get
+            {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    public delegate void obtenerRelacionadosCompletedEventHandler(object sender, obtenerRelacionadosCompletedEventArgs e);
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class obtenerRelacionadosCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
+
+        private object[] results;
+
+        internal obtenerRelacionadosCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
+                base(exception, cancelled, userState)
+        {
+            this.results = results;
+        }
+
+        /// <remarks/>
+        public string Result
+        {
+            get
+            {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
 
 
     // NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
@@ -224,11 +377,11 @@ namespace lluviaBackEnd.Models.Facturacion
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false , ElementName ="Acuse")]
-    public partial class AcuseCancelacionPruebasResponseWS
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false, ElementName = "Acuse")]
+    public partial class AcuseCancelacionProductivoResponseWs
     {
 
-        private Folios foliosField;
+        private AcuseFolios foliosField;
 
         private Signature signatureField;
 
@@ -237,8 +390,7 @@ namespace lluviaBackEnd.Models.Facturacion
         private string rfcEmisorField;
 
         /// <remarks/>
-       [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
-        public Folios Folios
+        public AcuseFolios Folios
         {
             get
             {
@@ -293,7 +445,43 @@ namespace lluviaBackEnd.Models.Facturacion
         }
     }
 
-   
+    /// <remarks/>
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class AcuseFolios
+    {
+
+        private string uUIDField;
+
+        private byte estatusUUIDField;
+
+        /// <remarks/>
+        public string UUID
+        {
+            get
+            {
+                return this.uUIDField;
+            }
+            set
+            {
+                this.uUIDField = value;
+            }
+        }
+
+        /// <remarks/>
+        public byte EstatusUUID
+        {
+            get
+            {
+                return this.estatusUUIDField;
+            }
+            set
+            {
+                this.estatusUUIDField = value;
+            }
+        }
+    }
 
     /// <remarks/>
     [System.SerializableAttribute()]
@@ -719,6 +907,11 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
     }
+
+
+
+
+
 
 
 }
