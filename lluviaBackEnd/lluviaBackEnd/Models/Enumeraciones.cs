@@ -122,7 +122,7 @@ namespace lluviaBackEnd.Models
     public enum EnumRoles
     {
         Administrador = 1,
-        Encargado_de_almacen,
+        Encargado_de_almacen =2,
         Cajero,
         Montacarguista,
         Distribuidor,

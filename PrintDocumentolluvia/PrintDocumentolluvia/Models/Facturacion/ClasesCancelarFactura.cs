@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -119,14 +120,16 @@ namespace lluviaBackEnd.Models.Facturacion
         /// <remarks/>
         public enviaAcuseCancelacion()
         {
-            this.Url = "http://comprobantes-fiscales.com/service/cancelarCFDI.php";
+         
+                this.Url = "http://comprobantes-fiscales.com/service/cancelarCFDI.php";
+           
         }
 
         /// <remarks/>
         public event CallenviaAcuseCancelacionCompletedEventHandler CallenviaAcuseCancelacionCompleted;
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://comprobantes-fiscales.com/service/cancelarCFDI.php/enviaAcuseCancelacion", RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
+        [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://comprobantes-fiscales.com/service/cancelarCFDI.php/enviaAcuseCancelacion",RequestNamespace = "http://edifact.com.mx/xsd", ResponseNamespace = "http://edifact.com.mx/xsd")]
         [return: System.Xml.Serialization.SoapElementAttribute("ns1:return")]
         public string CallenviaAcuseCancelacion(string xmlFile)
         {
@@ -222,7 +225,7 @@ namespace lluviaBackEnd.Models.Facturacion
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false , ElementName ="Acuse")]
-    public partial class AcuseCancelacionResponseWS
+    public partial class AcuseCancelacionPruebasResponseWS
     {
 
         private Folios foliosField;
@@ -234,7 +237,7 @@ namespace lluviaBackEnd.Models.Facturacion
         private string rfcEmisorField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
+       [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
         public Folios Folios
         {
             get

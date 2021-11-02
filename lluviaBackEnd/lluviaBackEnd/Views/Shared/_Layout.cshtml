@@ -167,9 +167,15 @@
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PedidosEspeciales && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
+                            string abrir = string.Empty;
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Encargado_de_almacen)
+                            {
+                                abrir = "display: block;";
+                            }
+
                             <li class="dropdown">
-                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="clipboard"></i><span>Pedidos Especiales</span></a>
-                                <ul class="dropdown-menu">
+                                <a href="#" class="menu-toggle nav-link has-dropdown @abrir"><i data-feather="clipboard"></i><span>Pedidos Especiales</span></a>
+                                <ul class="dropdown-menu"  style="@abrir">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Pedidos Especiales" ? "dropdown active" : "")" href="@Url.Action("PedidosEspeciales", "PedidosEspecialesV2")">Nuevo Pedido</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Entregar Pedido" ? "dropdown active" : "")" href="@Url.Action("EntregarPedido", "PedidosEspecialesV2")">Entregar Pedido</a></li>
                                     @*<li><a class="nav-link @(ViewBag.Title.ToString() == "Confirmar Productos" ? "dropdown active" : "")" href="@Url.Action("ConfirmarProductos", "PedidosEspecialesV2")">Confirmar Productos</a></li>*@

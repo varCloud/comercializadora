@@ -1,13 +1,19 @@
 ﻿using lluviaBackEnd.DAO;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Utilerias;
+using log4net;
+using Newtonsoft.Json;
 using PdfiumViewer;
+using PrintDocumentolluvia.servicioTimbradoProductivo;
+using PrintDocumentolluvia.Utilerias;
 using PrintDocumentolluvia.Utilerias.lluviaBackEnd.Utilerias;
 using RawPrint;
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -25,9 +31,11 @@ namespace PrintDocumentolluvia
 {
     public partial class Form1 : Form
     {
+        private readonly ILog log4netRequest;
         public Form1()
         {
             InitializeComponent();
+            log4netRequest = LogManager.GetLogger("LogLluvia");
         }
         //7022
         //int idVenta = 1948;
@@ -548,11 +556,11 @@ namespace PrintDocumentolluvia
                         datosIndex.Y += espaciado;
                     }
 
-                    
+
                     Console.WriteLine("indexProducto: " + indexProducto);
                     indexProducto++;
                     this.txtLog.Text += " Y:" + datosProducto.Y.ToString();
-                       
+
                     if (datosProducto.Y >= 1092)
                     {
                         this.paginaActual++;
@@ -562,7 +570,7 @@ namespace PrintDocumentolluvia
                     }
 
                 }
-               
+
                 monto += notificacion.Modelo.Sum(x => x.monto);
                 montoIVA += notificacion.Modelo.Sum(x => x.montoIVA);
                 montoComisionBancaria += notificacion.Modelo.Sum(x => x.montoComisionBancaria);
@@ -579,8 +587,8 @@ namespace PrintDocumentolluvia
                 suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
-               
-                if (indexProducto == lstTickets.Count() )
+
+                if (indexProducto == lstTickets.Count())
                 {
                     datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
                     e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
@@ -591,7 +599,7 @@ namespace PrintDocumentolluvia
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
 
-                if (indexProducto == lstTickets.Count() +1)
+                if (indexProducto == lstTickets.Count() + 1)
                 {
                     e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                     e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
@@ -656,7 +664,7 @@ namespace PrintDocumentolluvia
                     e.Graphics.DrawString((montoPagado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
-                     pintaFooterIndice++;
+                    pintaFooterIndice++;
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
@@ -785,7 +793,7 @@ namespace PrintDocumentolluvia
             return imag;
         }
 
-     
+
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -942,6 +950,116 @@ namespace PrintDocumentolluvia
         {
 
             this.txtLog.Text = Moneda.Convertir(this.txtVenta.Text, true);
+
+        }
+
+        private void btnFacturar_Click(object sender, EventArgs e)
+        {
+
+            Notificacion<String> notificacion = new Notificacion<string>();
+            Dictionary<string, object> items = null;
+            try
+            {
+                string pathFactura = ConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
+                pathFactura =  Utils.ObtnerAnoMesFolder().Replace("\\", "/");
+                string pathServer = Utils.ObtnerFolder() + @"/";
+                log4netRequest.Debug("pathFactura: " + pathFactura);
+                log4netRequest.Debug("pathServer : " + pathServer);
+                FacturaDAO facturacionDAO = new FacturaDAO();
+                Sesion UsuarioActual = null;
+                Factura factura = new Factura();
+                //factura.idVenta = "64";
+                factura.idVenta = this.txtNoFactura.Text;
+                Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
+                comprobante.Folio = factura.folio = factura.idVenta;
+                /*
+                comprobante.Emisor.Rfc = "COVO781128LJ1";
+                comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
+                comprobante.Emisor.RegimenFiscal = 621;                
+                */
+                items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                if (items["estatus"].ToString().Equals("200"))
+                {
+                    comprobante = (items["comprobante"] as Comprobante);
+                    facturacionDAO.ObtenerImpuestosGenerales(ref comprobante);
+                    facturacionDAO.ObtenerTotal(ref comprobante);
+
+                    Dictionary<string, string> certificados = ProcesaCfdi.ObtenerCertificado();
+                    if (certificados == null)
+                        this.txtLog.Text += "Error al obtener los certificados";
+
+                    comprobante.Certificado = certificados["Certificado"];
+                    comprobante.NoCertificado = certificados["NoCertificado"];
+
+                    string xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
+                    string cadenaOriginal = ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
+                    comprobante.Sello = ProcesaCfdi.GeneraSello(cadenaOriginal);
+                    xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
+
+                    //TIMBRAR CON EDI-FACT
+                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                    string timeStamp = "_" + DateTime.Now.Ticks.ToString();
+                    if (respuesta.codigoResultado.Equals("100"))
+                    {
+
+                        string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
+
+                        Comprobante comprobanteTimbrado = ManagerSerealization<Comprobante>.DeserializeXMLStringToObject(xmlTimbradoDecodificado);
+                        comprobanteTimbrado.Addenda = new ComprobanteAddenda();
+                        comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
+                        comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
+                        comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
+                        comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
+
+
+                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + timeStamp + ".jpg"));
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items, timeStamp);
+                        System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", xmlTimbradoDecodificado);
+
+                        factura.pathArchivoFactura = pathFactura + "/Factura_" + factura.idVenta + timeStamp + ".pdf";
+                        factura.estatusFactura = EnumEstatusFactura.Facturada;
+                        factura.mensajeError = "OK";
+                        factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
+                        factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
+                        });
+
+
+                    }
+                    else
+                    {
+                        factura.estatusFactura = EnumEstatusFactura.Error;
+                        factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
+                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
+                        ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        //Email.NotificacionPagoReferencia("var901106@gmail.com");
+                    }
+
+                    notificacion = new FacturaDAO().GuardarFactura(factura);
+                    notificacion.Mensaje += " " + factura.mensajeError;
+                    this.txtLog.Text += JsonConvert.SerializeObject(notificacion);
+                }
+
+                else
+                {
+                    notificacion.Estatus = Convert.ToInt16(items["estatus"]);
+                    notificacion.Mensaje = items["mensaje"].ToString();
+                    this.txtLog.Text += JsonConvert.SerializeObject(notificacion);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                this.txtLog.Text = ex.Message;
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }
