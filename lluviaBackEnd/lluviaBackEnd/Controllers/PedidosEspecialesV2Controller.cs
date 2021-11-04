@@ -206,6 +206,25 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+
+        //[HttpPost]
+        public ActionResult ConsultaExistenciasAlmacen( Producto producto )
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new PedidosEspecialesV2DAO().ConsultaExistenciasAlmacen(producto);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         /************** REIMPRIMIR TICKETS ALMACENES********************/
 
 

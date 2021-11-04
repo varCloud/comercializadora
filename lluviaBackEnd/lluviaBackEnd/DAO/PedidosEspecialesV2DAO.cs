@@ -63,6 +63,46 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<Producto>> ConsultaExistenciasAlmacen(Producto producto)
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProducto", producto.idProducto);
+                    parameters.Add("@idAlmacen", producto.idAlmacen);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_EXISTENCIA_PRODUCTO_ALMACEN", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto>().ToList();
+                        //notificacion.Modelo = result.ReadSingle<List<Producto>>();
+                        //notificacion.Modelo = new Producto() { idPedidoEspecial = r1.idPedidoEspecial };
+                        //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
         public Notificacion<List<PedidosEspecialesV2>> ObtenerEntregarPedidos(PedidosEspecialesV2 pedidosEspecialesV2)
         {
             Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();

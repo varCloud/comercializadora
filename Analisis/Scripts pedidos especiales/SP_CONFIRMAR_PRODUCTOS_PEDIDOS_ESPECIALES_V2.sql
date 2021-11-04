@@ -47,7 +47,9 @@ as
 						@fecha						varchar(255) = '',
 						@tran_name					varchar(32) = 'CONFIRMA_PRODUCTOS_PEDIDO_ESP',
 						@tran_count					int = @@trancount,
-						@tran_scope					bit = 0,						
+						@tran_scope					bit = cast(0 as bit),
+						@hayRechazos				bit = cast(0 as bit),
+						@hayNoAceptados				bit = cast(0 as bit),
 						@valido						bit = cast(1 as bit)
 						
 
@@ -149,6 +151,8 @@ as
 				-- universo de venta de productos
 				select	p.idProducto, 
 						i.idPedidoEspecialDetalle,
+						ped.idAlmacenOrigen,
+						ped.idAlmacenDestino,
 						cs.cantidadSolicitada,
 						ca.cantidadAtendida,
 						cr.cantidadRechazada,
@@ -160,6 +164,8 @@ as
 							on p.idProducto = p_.idProducto
 						inner join #idPedidoEspecialDetalle i
 							on i.id = p_.id
+						join PedidosEspecialesDetalle ped
+							on ped.idPedidoEspecialDetalle = i.idPedidoEspecialDetalle
 						inner join #observaciones o
 							on o.id = p_.id
 						inner join #cantidadSolicitada cs
@@ -205,6 +211,120 @@ as
 						update	PedidosEspecialesDetalle
 						set		PedidosEspecialesDetalle.idEstatusPedidoEspecialDetalle = 2	--Atendidos
 						where	PedidosEspecialesDetalle.idPedidoEspecial = @idPedidoEspecial
+
+					end
+
+
+						--select '#productos', * from #productos
+
+
+				-- se envian a sin acomodar los productos que son rechazados
+				if exists ( select 1 from #productos where cantidadRechazada > 0 )
+				begin
+					select @hayRechazos = cast(1 as bit)
+				end
+
+				if exists ( select 1 from #productos where cantidadAceptada <> cantidadSolicitada )
+				begin
+					select @hayNoAceptados = cast(1 as bit)
+				end
+
+				
+				if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
+					begin
+
+						--verificamos si existe el id sin ubicacion
+						select	p.* , u.idUbicacion as idUbicacionRegresar
+						into	#tempUbicacionesDevoluciones_
+						from	#productos p
+									left join Ubicacion u
+										on p.idAlmacenOrigen = u.idAlmacen
+						where	u.idPasillo = 0
+							and	u.idRaq = 0
+							and u.idPiso = 0
+
+						--select '#tempUbicacionesDevoluciones_', * from #tempUbicacionesDevoluciones_
+
+						-- si no existe insertamos la ubicacion sin acomodar
+						if exists	(
+										select 1 from #tempUbicacionesDevoluciones_ where idUbicacionRegresar is null
+									)
+						begin
+							insert into Ubicacion (idAlmacen, idPasillo, idRaq, idPiso)
+							select idAlmacenOrigen, 0,0,0 from #tempUbicacionesDevoluciones_
+						end
+
+
+						-- inserta los registros que se regresaron
+						-- rechazados
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
+								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+						from	#tempUbicacionesDevoluciones_ temp
+									join (
+											select	p.idProducto,  p.cantidadRechazada												
+											from	#productos p
+											where	p.cantidadRechazada	> 0
+										 )rechazados on rechazados.idProducto = temp.idProducto
+									join InventarioDetalle actuales
+										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+					
+						-- no aceptados
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.noAceptados, actuales.cantidad + rechazados.noAceptados as cantidadActual,
+								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+						from	#tempUbicacionesDevoluciones_ temp
+									join (	
+											select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados
+											from	#productos p
+											where	(p.cantidadAtendida - cantidadAceptada)	> 0
+										 )rechazados on rechazados.idProducto = temp.idProducto
+									join InventarioDetalle actuales
+										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+					
+							
+
+						-- actualizamos InventarioDetalle
+						-- rechazados
+						update	InventarioDetalle 
+						set		InventarioDetalle.cantidad = a.cantidad,
+								InventarioDetalle.fechaActualizacion  = @fecha
+						from	(
+									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar
+									from	#tempUbicacionesDevoluciones_ temp
+												join (
+														select	p.idProducto, p.cantidadRechazada
+														from	#productos p
+														where	p.cantidadRechazada > 0
+													 )rechazados on rechazados.idProducto = temp.idProducto
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+								)A
+						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
+							and	InventarioDetalle.idProducto = a.idProducto
+
+
+							
+						-- no aceptados
+						update	InventarioDetalle 
+						set		InventarioDetalle.cantidad = a.cantidad,
+								InventarioDetalle.fechaActualizacion  = @fecha
+						from	(
+									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar
+									from	#tempUbicacionesDevoluciones_ temp
+												join (
+														select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados												
+														from	#productos p
+														where	(p.cantidadAtendida - cantidadAceptada) > 0
+													 )rechazados on rechazados.idProducto = temp.idProducto
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+								)A
+						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
+							and	InventarioDetalle.idProducto = a.idProducto
+
 
 					end
 
