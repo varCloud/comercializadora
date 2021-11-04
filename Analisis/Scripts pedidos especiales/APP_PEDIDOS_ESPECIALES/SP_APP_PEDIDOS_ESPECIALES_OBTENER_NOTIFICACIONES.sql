@@ -43,11 +43,11 @@ BEGIN
 
 	INSERT INTO #notificaciones (idPedidoEspecial , idPedidoEspecialDetalle)
 	select PE.idPedidoEspecial, PE.idPedidoEspecialDetalle from PedidosEspecialesDetalle PE JOIN
-		(select idAlmacenDestino,idPedidoEspecial from PedidosEspecialesDetalle where
-			notificado = 0
-			AND idAlmacenOrigen = coalesce (@idAlmacenOrigen ,  idAlmacenOrigen)
-			AND idAlmacenDestino = coalesce (@idAlmacenDestino ,  idAlmacenDestino)
-			group by idPedidoEspecial, idAlmacenDestino) notificados
+			(select idAlmacenDestino,idPedidoEspecial from PedidosEspecialesDetalle where
+				coalesce(notificado,0) = 0
+				AND idAlmacenOrigen = coalesce (@idAlmacenOrigen ,  idAlmacenOrigen)
+				AND idAlmacenDestino = coalesce (@idAlmacenDestino ,  idAlmacenDestino)
+				group by idPedidoEspecial, idAlmacenDestino) notificados
 	on PE.idPedidoEspecial = notificados.idPedidoEspecial join Productos Prod 
 	on Prod.idProducto = PE.idProducto join #LineaProductoUsuario L 
 	on L.idLineaProducto = Prod.idLineaProducto
@@ -67,7 +67,7 @@ BEGIN
 	UPDATE PedidosEspecialesDetalle SET notificado = 1	WHERE idPedidoEspecial in (select idPedidoEspecial from #notificaciones)
 
 	select 200 status , 'notificaciones encontradas' mensaje
-	select idPedidoEspecial  from  #notificaciones group by idPedidoEspecial
+	--select idPedidoEspecial  from  #notificaciones group by idPedidoEspecial
 	select P.*
 	
 			--P.idEstatusPedidoEspecial,
