@@ -258,8 +258,8 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     notificacion = new FacturaDAO().GuardarFactura(factura);
-                    notificacion.Mensaje += " " + factura.mensajeError;
-                    return Json(notificacion, JsonRequestBehavior.AllowGet);
+                    notificacion.Mensaje += " " + factura.mensajeError; 
+                    return Json (notificacion, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {

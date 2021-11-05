@@ -772,6 +772,7 @@ $(document).ready(function () {
     InitRangePicker('rangeConsultaVentas', 'fechaIni', 'fechaFin');
     //$('#rangeConsultaVentas').val('');
     $('#codigoBarrasTicket').focus();
+    $("#btnBuscarEntregarPedido").trigger('click');
     //$('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 

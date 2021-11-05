@@ -15,11 +15,11 @@ namespace lluviaBackEnd.WebServices
     {
 
         [HttpPost]
-        public Notificacion<dynamic> ObtenerNotificacionesPedidosInternos(RequestObtenerNotificacionesPedidosEspeciales request)
+        public Notificacion<dynamic> ObtenerNotificacionesPedidosEspeciales(RequestObtenerNotificacionesPedidosEspeciales request)
         {
             try
             {
-                return new AppPedidosEspecialesDAO().ObtenerNotificacionesPedidosInternos(request);
+                return new AppPedidosEspecialesDAO().ObtenerNotificacionesPedidosEspeciales(request);
             }
 
             catch (Exception ex)

@@ -9,7 +9,6 @@ function onCompleteSubmit() {
 
 function onSuccessResult(data) {
     console.log("onSuccessResult", JSON.stringify(data));   
-    
     if (data.notificacion.Estatus == 200) {
 
         if (data.notificacion.Modelo.configurado == "0" ) {
@@ -45,4 +44,6 @@ function InitRecaptcha() {
 $(document).ready(function () {
     InitRecaptcha();
     $("#usuario").focus();    
+    //consultarTicketPedidoEspecial();
+
 });

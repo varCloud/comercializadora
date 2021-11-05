@@ -13,8 +13,9 @@ using System.Configuration;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using lluviaBackEnd.Models.Facturacion;
-using lluviaBackEnd.servicioTimbrarPruebas;
 using System.Net;
+using PrintDocumentolluvia.servicioTimbrarPruebas;
+using AutoMapper;
 
 namespace lluviaBackEnd.Utilerias
 {
@@ -116,7 +117,7 @@ namespace lluviaBackEnd.Utilerias
             Dictionary<string, string> certificados = null;
             try
             {
-                X509Certificate2 publicCert = new X509Certificate2(lluviaBackEnd.Resource.lluviacer);
+                X509Certificate2 publicCert = new X509Certificate2(PrintDocumentolluvia.Properties.Resources.cerLLuvia2021);
                 byte[] data = FromHex(publicCert.GetSerialNumberString());
                 string NoCertificado = Encoding.ASCII.GetString(data);
                 Debug.WriteLine("no certificado :" + NoCertificado);
@@ -161,7 +162,7 @@ namespace lluviaBackEnd.Utilerias
                 foreach (char c in strLlavePwd.ToCharArray())
                     passwordSeguro.AppendChar(c);
 
-                byte[] llavePrivadaBytes = lluviaBackEnd.Resource.lluviakey;// ARCHIVO .KEY
+                byte[] llavePrivadaBytes = PrintDocumentolluvia.Properties.Resources.keyLLuvia20211;// ARCHIVO .KEY
                 RSACryptoServiceProvider rsa = opensslkey.DecodeEncryptedPrivateKeyInfo(llavePrivadaBytes, passwordSeguro);
                 //SHA1CryptoServiceProvider hasher = new SHA1CryptoServiceProvider();
                 SHA256CryptoServiceProvider hash265 = new SHA256CryptoServiceProvider();
@@ -190,7 +191,7 @@ namespace lluviaBackEnd.Utilerias
         public static XmlElement GenerateXmlSignature(XmlDocument originalXmlDocument)
         {
             string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
-            X509Certificate2 cert = new X509Certificate2(Resource.lluviaArchivoPfx, strLlavePwd);
+            X509Certificate2 cert = new X509Certificate2(PrintDocumentolluvia.Properties.Resources.lluviaArchivoPfx, strLlavePwd);
             RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
             SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
             Reference reference = new Reference() { Uri = String.Empty };
@@ -210,16 +211,37 @@ namespace lluviaBackEnd.Utilerias
         {
             try
             {
+                PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado respuesta = null;
+                PrintDocumentolluvia.servicioTimbrarPruebas.respuestaTimbrado respuestaPruebas = null;
+
                 System.Net.ServicePointManager.SecurityProtocol =
                 SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
                 ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
                 {
                     return true;
                 };
+                if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
+                {
+                    PrintDocumentolluvia.servicioTimbradoProductivo.timbrarCFDIPortTypeClient timbrar = new PrintDocumentolluvia.servicioTimbradoProductivo.timbrarCFDIPortTypeClient();
+                    respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    return respuesta;
+                }
+                else
+                {
+                    PrintDocumentolluvia.servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new PrintDocumentolluvia.servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
+                    respuestaPruebas = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    ///////////////////MAPER///////////////////
+                    var configuration = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<PrintDocumentolluvia.servicioTimbrarPruebas.respuestaTimbrado, PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>();
 
-                servicioTimbrarPruebas.timbrarCFDIPortTypeClient timbrar = new servicioTimbrarPruebas.timbrarCFDIPortTypeClient();
-                respuestaTimbrado respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
-                return respuesta;
+                    });
+
+                    configuration.AssertConfigurationIsValid();
+                    var mapper = configuration.CreateMapper();
+                    respuesta = mapper.Map<PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>(respuestaPruebas);
+                    return respuesta;
+                }
             }
             catch (Exception ex)
             {

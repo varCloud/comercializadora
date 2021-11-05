@@ -617,6 +617,7 @@ namespace lluviaBackEnd.Controllers
             }
 
         }
+
         int indiceProducto = 0;
         int paginaActual = 0;
         int productosporPagina = 30;

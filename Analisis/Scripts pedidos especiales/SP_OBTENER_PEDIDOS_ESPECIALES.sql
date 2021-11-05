@@ -64,13 +64,14 @@ as
 								join CatEstatusPedidoEspecial e on pe.idEstatusPedidoEspecial=e.idEstatusPedidoEspecial
 
 					where 
-					c.idCliente=coalesce(@idCliente,c.idCliente)	
-					and u.idUsuario=coalesce(@idUsuario,u.idUsuario)
-					and e.idEstatusPedidoEspecial=coalesce(@idEstatusPedidoEspecial,e.idEstatusPedidoEspecial)
-					and cast(pe.fechaAlta as date)>=coalesce(@fechaIni,cast(pe.fechaAlta as date))
-					and cast(pe.fechaAlta as date)<=coalesce(@fechaFin,cast(pe.fechaAlta as date))
+							c.idCliente=coalesce(@idCliente,c.idCliente)	
+							and u.idUsuario=coalesce(@idUsuario,u.idUsuario)
+							and e.idEstatusPedidoEspecial=coalesce(@idEstatusPedidoEspecial,e.idEstatusPedidoEspecial)
+							and cast(pe.fechaAlta as date)>=coalesce(@fechaIni,cast(pe.fechaAlta as date))
+							and cast(pe.fechaAlta as date)<=coalesce(@fechaFin,cast(pe.fechaAlta as date))
 					and coalesce(pe.codigoBarras,'')=coalesce(@codigoBarras,coalesce(pe.codigoBarras,''))
 					
+
 					if not exists (select 1 from #pedidosEspeciales)
 					begin
 						select	
@@ -101,7 +102,7 @@ as
 					@mensaje mensaje
            
 		    if(@status=200)
-				select * from #pedidosEspeciales
+				select * from #pedidosEspeciales order by fechaAlta desc
 			
 					
 		end -- reporte de estatus

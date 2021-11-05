@@ -3,7 +3,7 @@ begin tran
 declare 
 @idUsuario int=37,
 @idEstatusPedidoEspecial int=1,
-@TotalProductos int=3
+@TotalProductos int=150
 
 declare @idCliente int=(select top 1 idCliente from clientes where idCliente>1 ORDER BY newid())
 declare @idAlmacenOrigen int=(select idAlmacen from usuarios where idUsuario=@idUsuario)

@@ -136,12 +136,21 @@ as
 										ped.cantidadAtendida,
 										ped.cantidadRechazada,
 										ped.idEstatusPedidoEspecialDetalle,
-										ped.notificado
+										ped.notificado,
+										A.Descripcion descAlmacen,
+										c.idCliente,
+										c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoMaterno as nombre
 								from	PedidosEspecialesDetalle  ped
 											join Productos p
 												on p.idProducto = ped.idProducto
-								where	idPedidoEspecial = @idPedidoEspecial
-									and	idAlmacenDestino = @ini
+											join Almacenes A 
+												on A.idAlmacen = Ped.idAlmacenDestino
+											join PedidosEspeciales pe
+												on pe.idPedidoEspecial = ped.idPedidoEspecial
+											join Clientes c
+												on c.idCliente = pe.idCliente
+								where	ped.idPedidoEspecial = @idPedidoEspecial
+									and	ped.idAlmacenDestino = @ini
 
 
 								select @ini = min(idAlmacenDestino) from #almacenes where idAlmacenDestino > @ini

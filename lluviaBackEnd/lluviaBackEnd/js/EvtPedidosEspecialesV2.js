@@ -227,24 +227,6 @@ function AgregarProducto(producto, cantidad) {
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            //if ((esAgregarProductos == "true") || (esAgregarProductos == "True")) {
-            //    if (
-            //        (producto.idProducto === parseFloat(tblVtas.rows[i].cells[1].innerHTML)) &&
-            //        (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))
-            //    ) {
-            //        var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value) + cantidad;
-
-            //        if (cantidad > producto.cantidad) {
-            //            MuestraToast('warning', "No existe suficiente producto en inventario.");
-            //            return false;
-            //        }
-            //        tblVtas.rows[i].cells[4].children[0].value = cantidad;
-            //        tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
-            //        existeProductoAgregar = true;
-            //    }
-            //}
-            //else {
-
             //si el producto ya esta en la tabla
             console.log(producto.idAlmacen );
             console.log(tblVtas.rows[i].cells[9].innerHTML);
@@ -260,10 +242,8 @@ function AgregarProducto(producto, cantidad) {
                         return false;
                     }
                     tblVtas.rows[i].cells[5].children[0].value = cantidad;
-                    //tblVtas.rows[i].cells[10].children[0].value = producto.ultimoCostoCompra;
                     existeProducto = true;
                 }
-            //}
         }
     }
 
@@ -292,9 +272,8 @@ function AgregarProducto(producto, cantidad) {
         row_ +=
             "  <td class=\"text-center\">$" + precio + "</td>" +
             "  <td class=\"text-center\">$" + descuento + "</td>" +
-            "  <td class=\"text-center\">" +
-        btnEliminaFila +
-        "  <td style=\"display: none;\">" + producto.idAlmacen + "</td>" +
+            "  <td class=\"text-center\">" + btnEliminaFila +
+            "  <td style=\"display: none;\">" + producto.idAlmacen + "</td>" +
             //"  <td style=\"display: ;\" >"+producto.ultimoCostoCompra+"</td>" +
             "  </td>" +
             "</tr >";
@@ -764,6 +743,47 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
 
 
+function ConsultaExistenciasAlmacen( idProducto, idAlmacen ) { 
+
+    var dataToPost = JSON.stringify({ idProducto: idProducto, idAlmacen: idAlmacen });
+    var result = [];
+
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ConsultaExistenciasAlmacen"),
+        data: dataToPost,
+        method: 'post',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader("Consultando Existencias...");
+        },
+        success: function (data) {
+            OcultarLoader();
+            
+            if (data.Estatus == 200) {
+                result = data.Modelo;
+            }
+            else {
+                MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            }
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();            
+            console.log('Hubo un problema al consultar la existencia del producto, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    
+    return result;
+
+}
+
+
+
+
 
 
 
@@ -1135,36 +1155,42 @@ function initInputsTabla() {
         var rowIndex = row[0].rowIndex;
         var tblVtas = document.getElementById('tablaRepVentas');
         var idProducto = parseInt(tblVtas.rows[rowIndex].cells[1].innerHTML);
+        var idAlmacen = parseInt(tblVtas.rows[rowIndex].cells[9].innerHTML);
         var producto = arrayProductos.find(x => x.idProducto == idProducto);
+        var productoAlmacen = [];
+        productoAlmacen = ConsultaExistenciasAlmacen(idProducto, idAlmacen);
+        var cantidad = productoAlmacen.find(x => x.idProducto === idProducto).cantidad;
 
-        if (((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) && (!thisInput.hasClass("esDevolucion"))) {
+
+        //if (((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) && (!thisInput.hasClass("esDevolucion"))) {
+        if ((parseFloat(thisInput.val()) > (cantidad))) {
             MuestraToast('warning', "No existe suficiente producto en inventario.");
             document.execCommand('undo');
             return;
         }
 
-        if (thisInput.hasClass("esDevolucion")) {
-            mensaje = "Debe escribir la cantidad de productos que va a devolver.";
-        }
+        //if (thisInput.hasClass("esDevolucion")) {
+        //    mensaje = "Debe escribir la cantidad de productos que va a devolver.";
+        //}
 
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
             MuestraToast('warning', mensaje);
             document.execCommand('undo');
         }
 
-        if (thisInput.hasClass("esDevolucion")) {
+        //if (thisInput.hasClass("esDevolucion")) {
 
-            if ((parseFloat(thisInput.val())) > (parseFloat(tblVtas.rows[rowIndex].cells[5].children[0].value))) {
-                MuestraToast('warning', "No puede regresar mas de lo que compro.");
-                document.execCommand('undo');
-                return;
-            }
+        //    if ((parseFloat(thisInput.val())) > (parseFloat(tblVtas.rows[rowIndex].cells[5].children[0].value))) {
+        //        MuestraToast('warning', "No puede regresar mas de lo que compro.");
+        //        document.execCommand('undo');
+        //        return;
+        //    }
 
-            actualizarSubTotalDevoluciones();
-        }
-        else {
+        //    actualizarSubTotalDevoluciones();
+        //}
+        //else {
             actualizaTicketVenta();
-        }
+        //}
 
         $("#listProductos").focus();
 
@@ -2853,7 +2879,9 @@ function BuscarVentaCodigoBarras() {
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip()
-
+    $("#btnTicket").click(function (evt) {
+        consultarTicketPedidoEspecial();
+    });
     //$('#ModalPrevioVenta').on('shown.bs.modal', function () {
     //    PuedeRealizarVenta = true;
     //    console.log("puede realizar venta", PuedeRealizarVenta)
@@ -2863,3 +2891,23 @@ $(document).ready(function () {
 });
 
 
+
+function consultarTicketPedidoEspecial() {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        data: { idPedidoEspecial: 0 },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast("info", data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}

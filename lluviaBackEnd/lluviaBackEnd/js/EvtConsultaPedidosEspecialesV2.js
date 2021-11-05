@@ -221,4 +221,11 @@ $(document).ready(function () {
 
     });
 
+    $("#btnBuscarPedidosEspeciales").trigger('click');
+
+
+    
+
 });
+
+

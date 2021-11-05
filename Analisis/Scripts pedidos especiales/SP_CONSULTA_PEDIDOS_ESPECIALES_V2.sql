@@ -126,6 +126,7 @@ as
 																when @fechaFin is null then cast(p.fechaAlta as date)
 																else cast(@fechaFin as date)
 															end
+						order by p.fechaAlta desc
 
 					end
 				

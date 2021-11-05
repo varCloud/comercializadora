@@ -355,15 +355,15 @@ as
 					insert into
 						PedidosEspecialesDetalle
 							(
-								idPedidoEspecial,idProducto,idUbicacion,idAlmacenOrigen,idAlmacenDestino,fechaAlta,cantidad,monto,
+								idPedidoEspecial,idProducto,idAlmacenOrigen,idAlmacenDestino,fechaAlta,cantidad,monto,
 								cantidadActualInvGeneral,cantidadAnteriorInvGeneral,precioIndividual,precioMenudeo,precioRango,precioVenta,
 								idTicketMayoreo,observaciones,ultimoCostoCompra,cantidadAceptada,cantidadAtendida,cantidadRechazada,
 								idEstatusPedidoEspecialDetalle,notificado
 							)
-					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idUbicacion as idUbicacion, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
+					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
 							@fecha as fechaAlta, p.cantidad, costo as monto, cast(0 as int) as cantidadActualInvGeneral, ig.cantidad as cantidadAnteriorInvGeneral, 
 							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, p.cantidad as cantidadAceptada, 
-							p.cantidad as cantidadAtendida, 0 as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, null as notificado
+							p.cantidad as cantidadAtendida, 0 as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
 					from	#pedidos p
 								join InventarioGeneral ig
 									on ig.idProducto = p.idProducto
@@ -636,7 +636,7 @@ as
 											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,
 											fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida
 										)
-								select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
+								select	ped.idAlmacenDestino, @idAlmacenSolicita as idAlmacenOrigen, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
 										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida
 								from	PedidosEspecialesDetalle ped
 								where	ped.idPedidoEspecial = @idPedidoEspecial

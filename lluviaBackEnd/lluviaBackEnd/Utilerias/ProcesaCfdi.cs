@@ -319,7 +319,7 @@ namespace lluviaBackEnd.Utilerias
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
                      cancelacion = ManagerSerealization<AcuseCancelacionProductivoResponseWs>.DeserializeXMLStringToObject(xmlCancelado);
-                    return cancelacion;
+                    //return cancelacion;
                 }
                 else
                 {
