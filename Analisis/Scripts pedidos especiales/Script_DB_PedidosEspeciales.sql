@@ -120,6 +120,7 @@ insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Aceptados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos/Incompletos')
+insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados por el Administrador')
 
 
 

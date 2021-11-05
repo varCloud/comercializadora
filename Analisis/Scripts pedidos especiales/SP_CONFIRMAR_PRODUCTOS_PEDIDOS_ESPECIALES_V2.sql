@@ -191,7 +191,7 @@ as
 					
 						update	PedidosEspecialesDetalle
 						set		PedidosEspecialesDetalle.observaciones = a.observaciones,
-								idEstatusPedidoEspecialDetalle = 5	--Atendidos/Incompletos
+								idEstatusPedidoEspecialDetalle = 6		-- Rechazados por el Administrador
 						from	(
 									select	idProducto, idPedidoEspecialDetalle, observaciones 
 									from	#productos
