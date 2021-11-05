@@ -703,12 +703,13 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult RealizarAbonoPedidosEspeciales(Int64 idCliente,float montoAdeudo)
+        public ActionResult RealizarAbonoPedidosEspeciales(int idCliente,float abono=0)
         {
             try
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(idCliente, montoAdeudo, UsuarioActual.idUsuario);
+           
+                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(idCliente, abono, UsuarioActual.idUsuario);
                 return Json(JsonConvert.SerializeObject(resultAbono), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

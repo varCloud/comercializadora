@@ -770,7 +770,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<string> RealizarAbonoPedidoEspecial(Int64 idCliente, float monto,int idUsuario)
+        public Notificacion<string> RealizarAbonoPedidoEspecial(int idCliente,float montoAbono, int idUsuario)
         {
             Notificacion<string> notificacion = new Notificacion<string>();
             try
@@ -778,7 +778,7 @@ namespace lluviaBackEnd.DAO
                 var parameters = new DynamicParameters();
                 parameters.Add("@idCliente", idCliente);
                 parameters.Add("@idUsuario", idUsuario);
-                parameters.Add("@monto", monto);
+                parameters.Add("@monto", montoAbono);
                 notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_ABONO_PEDIDOS_ESPECIALES", parameters);
             }
             catch (Exception ex)

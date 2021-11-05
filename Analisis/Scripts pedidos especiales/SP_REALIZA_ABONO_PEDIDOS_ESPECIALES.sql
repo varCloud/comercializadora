@@ -29,7 +29,7 @@ BEGIN
 			if not exists(select 1 from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente)
 				RAISERROR('El cliente no tiene adeudos', 15, 217)			
 
-			if exists(select 1 from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente and saldoActual<@monto)
+			if (select sum(saldoActual) from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente)<@monto
 			begin
 				RAISERROR('El monto a abonar es mayor que el monto adeudado', 15, 217)				
 			end

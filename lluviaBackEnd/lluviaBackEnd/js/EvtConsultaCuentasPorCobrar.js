@@ -266,7 +266,8 @@ $(document).ready(function () {
             return;
         }
 
-        var monto = parseFloat($('#montoAbonar').val());
+       
+        var monto = parseFloat($('#montoAbonar').val()).toFixed(2);
         var idCliente = parseInt($('#idCliente').val());
         var totalAdeudo = parseFloat($("#totalAdeudo").html().replace('<h4>$', '').replace('</h4>', ''));
 
@@ -278,14 +279,18 @@ $(document).ready(function () {
         if (monto > totalAdeudo) {
             MuestraToast('warning', "El monto a abonar no debe de ser mayor que el total adeudo.");
             return;
-        }       
+        } 
+
+
+           
 
         $.ajax({
             url: rootUrl("/PedidosEspecialesV2/RealizarAbonoPedidosEspeciales"),
-            data: { idCliente: idCliente, montoAdeudo: monto},
+            data: JSON.stringify({ idCliente: idCliente, abono: parseFloat($('#montoAbonar').val()) }),
             method: 'post',
             dataType: 'json',
             async: true,
+            contentType: "application/json; charset=utf-8",
             beforeSend: function (xhr) {
                 ShowLoader("Abonando...");
             },
