@@ -301,12 +301,12 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult BuscarPedidosEspeciales(DateTime? fechaIni, DateTime? fechaFin, Int64 idCliente = 0, Int64 idUsuario = 0, int idEstatusPedidoEspecial = 0)
+        public ActionResult BuscarPedidosEspeciales(Filtro filtro)
         {
             try
             {
 
-                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspeciales(fechaIni, fechaFin, idCliente, idUsuario, idEstatusPedidoEspecial);
+                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspeciales(filtro);
 
                 return Json(JsonConvert.SerializeObject(pedidosEspeciales), JsonRequestBehavior.AllowGet);
             }
@@ -317,8 +317,124 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ObtenerPedidosEspecialesDetalle(Int64 idPedidoEspecial)
+        {
+            try
+            {
+
+                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspecialesDetalle(idPedidoEspecial);
+
+                return Json(JsonConvert.SerializeObject(pedidosEspeciales), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        #region CuentasPorCobrar
+        public ActionResult ConsultarCuentasPorCobrar()
+        {
+            try
+            {
+                Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesCuentasXCobrar();             
+
+                var listClientes = new List<SelectListItem>();
+                foreach (var cliente in clientes.Modelo)
+                {
+                    var item = new SelectListItem()
+                    {
+                        Text = cliente.nombreCliente,
+                        Value = cliente.idCliente + ""
+                    };
+
+                    listClientes.Add(item);
+
+                }
+
+                ViewBag.listClientes = listClientes;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult BuscarCuentasPorCobrar(Filtro filtro)
+        {
+            try
+            {
+
+                Notificacion<dynamic> cuentasPorCobrar = new PedidosEspecialesV2DAO().ObtenerCuentasXCobrar(filtro);
+
+                return Json(JsonConvert.SerializeObject(cuentasPorCobrar), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerCuentasPorCobrarDetalle(Int64 idCliente)
+        {
+            try
+            {
+
+                Notificacion<dynamic> detalleCuentasPorCobrar = new PedidosEspecialesV2DAO().ObtenerCuentasXCobrarDetalle(idCliente);
+
+                return Json(JsonConvert.SerializeObject(detalleCuentasPorCobrar), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RealizarAbonoPedidosEspeciales(Int64 idCliente,float montoAdeudo)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(idCliente, montoAdeudo, UsuarioActual.idUsuario);
+                return Json(JsonConvert.SerializeObject(resultAbono), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult PDFDetalleCuentasPorCobrar(Int64 idCliente)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                List<Cliente> clientes=new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = idCliente });
+                Cliente cliente = clientes.First();
+                Notificacion<dynamic> balance = new PedidosEspecialesV2DAO().ObtenerBalanceCuentasXCobrar(idCliente);
+                string pdf = Convert.ToBase64String(Utilerias.Utils.GeneraPDFCuentasPorCobrar(cliente, balance));
+                return Json(pdf, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
 
+
+        #endregion
     }
 
 }

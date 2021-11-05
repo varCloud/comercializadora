@@ -18,7 +18,8 @@ CREATE proc [dbo].[SP_OBTENER_PEDIDOS_ESPECIALES]
 @idUsuario int=null,
 @idEstatusPedidoEspecial int=null,
 @fechaIni date=null,
-@fechaFin date=null
+@fechaFin date=null,
+@codigoBarras varchar(500)=null
 
 as
 
@@ -38,7 +39,19 @@ as
 				
 			
 					SELECT	
-					pe.*,
+					pe.idPedidoEspecial,
+					pe.idCliente,
+					pe.cantidad,
+					CONVERT(VARCHAR(10),pe.fechaAlta,103) + ' ' + CONVERT(VARCHAR(20),pe.fechaAlta,114) fechaAlta,
+					pe.montoTotal,
+					pe.idUsuario,
+					pe.idEstatusPedidoEspecial,
+					pe.idEstacion,
+					ISNULL(pe.observaciones,'') observaciones,
+					ISNULL(pe.codigoBarras,'') codigoBarras,
+					pe.idTipoPago,
+					pe.idUsuarioEntrega,
+					pe.numeroUnidadTaxi,
 					c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoPaterno nombreCliente,
 					u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoPaterno nombreUsuario,
 					e.descripcion estatusPedidoEspecial
@@ -56,6 +69,7 @@ as
 					and e.idEstatusPedidoEspecial=coalesce(@idEstatusPedidoEspecial,e.idEstatusPedidoEspecial)
 					and cast(pe.fechaAlta as date)>=coalesce(@fechaIni,cast(pe.fechaAlta as date))
 					and cast(pe.fechaAlta as date)<=coalesce(@fechaFin,cast(pe.fechaAlta as date))
+					and coalesce(pe.codigoBarras,'')=coalesce(@codigoBarras,coalesce(pe.codigoBarras,''))
 					
 					if not exists (select 1 from #pedidosEspeciales)
 					begin

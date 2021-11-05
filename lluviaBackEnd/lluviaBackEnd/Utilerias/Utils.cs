@@ -2114,6 +2114,138 @@ namespace lluviaBackEnd.Utilerias
             return content;
         }
 
+        public static byte[] GeneraPDFCuentasPorCobrar(Cliente cliente, Notificacion<dynamic> ctas)
+        {
+            byte[] content = null;
+
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            string cabeceraTablas = "bgcolor='#54ca68' style='font-weight:bold; text-align:center; color:white'";
+            string color1 = "bgcolor='#edeceb' style='color:3b3b3b;text-align:center;font-size:10px;' ";
+            string color2 = "style='color:3b3b3b; text-align:center; font-size:10px;'";
+            string tituloIndividual = "style='font-weight:bold;  color:3b3b3b;'";
+            Document document = new Document(PageSize.A4, 30, 30, 30, 110);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.esCancelado = false;
+            eventos.TituloCabecera = "Desglose cuentas por cobrar";
+            PDFWriter.PageEvent = eventos;
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "<br/>";
+
+              
+                html += @"
+                       <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                            <tr " + cabeceraTablas + @">
+                                <td colspan='4'>Datos del cliente</td>    
+                            </tr>
+                            <tr>
+                                <td " + tituloIndividual + @" >Nombre</td> <td colspan ='3'>" + cliente.nombreCompleto_ + @"</td>           
+                            </tr>
+                            <tr>
+                                 <td " + tituloIndividual + @" >R.F.C </td> <td>" + cliente.rfc + @"</td> <td " + tituloIndividual + @">Correo </td><td>" + cliente.correo + @" </td>  
+                            </tr>
+                            <tr>
+                                <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>" + cliente.domicilio + ' ' + @" </td> 
+                            </tr>
+                            <tr>
+                                <td  width='15%'></td>
+                                <td  width='35%'></td> 
+                                <td  width='15%'></td> 
+                                <td  width='35%'></td> 
+                            </tr>
+                        </table>";
+
+                html += "<br/>";
+                html += "<br/>";
+                if (ctas.Estatus == 200)
+                {
+                    html += @" 
+                        <table width='100%' " + cssTabla + @"  CELLPADDING='0' >
+                        <tr " + cabeceraTablas + @">
+                            <td>Fecha</td>
+                            <td>No. pedido</td>
+                            <td>Cargo</td>
+                            <td>Abono</td>
+                            <td>Entregado por</td>
+                        </tr>";
+               
+                    int i = 0;
+                    double sumaCargos = 0, sumaAbonos = 0, saldoCliente = 0;
+                    Int64 idPedidoEspecialAnt=0;
+                    foreach (var item in ctas.Modelo)
+                    {
+                    //item.idPedidoEspecial = item.idPedidoEspecial == idPedidoEspecialAnt ? 0 : item.idPedidoEspecial;
+                    html += "<tr " + (i % 2 == 0 ? color1 : color2) + " >";
+                    html += "<td>" + item.fecha + "</td>";
+                    html += "<td>" + item.idPedidoEspecial + "</td>";
+                    html += "<td>" + item.cargo.ToString("C", new CultureInfo("en-US")) + " </td>";
+                    html += "<td>" + item.abono.ToString("C", new CultureInfo("en-US")) + "</td>";
+                    html += "<td>" + item.entregado_por + "</td>";
+                    html += "</tr>";
+                    sumaCargos = sumaCargos + item.cargo;
+                        sumaAbonos = sumaAbonos + item.abono;
+                        saldoCliente = saldoCliente + item.saldoCliente;
+                        idPedidoEspecialAnt = item.idPedidoEspecial;
+                                                i++;
+                    }
+               
+                html += @"
+                    <br/>
+                    <tr " + color2 + @"> 
+                        <td colspan='1'></td>
+                        <td colspan='1' " + tituloIndividual + @">Totales:</td>
+                        <td>" + sumaCargos.ToString("C", new CultureInfo("en-US")) + @"</td>
+                        <td>" + sumaAbonos.ToString("C", new CultureInfo("en-US")) + @"</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                   
+                     <tr" + color2 + @"> 
+                        <td colspan='2'></td>
+                        <td colspan='1' " + cabeceraTablas + @">Saldo cliente:</td>
+                        <td>" + saldoCliente.ToString("C", new CultureInfo("en-US")) + @"</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td  width='20%'></td>
+                        <td  width='20%'></td>
+                        <td  width='15%'></td>
+                        <td  width='15%'></td>
+                        <td  width='30%'></td>                       
+                    </tr>";
+                html += "</table>";
+
+                }
+
+
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Desglose: " + cliente.idCliente);
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Visualizacion de Ticket");
+                document.CloseDocument();
+
+                document.Close();
+                content = memStream.ToArray();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return content;
+        }
+
 
         public static bool mercanciaAcomodada(string idPasillo, string idRaq, string idPiso)
         {

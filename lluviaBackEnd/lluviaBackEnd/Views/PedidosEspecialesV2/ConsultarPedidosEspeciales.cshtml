@@ -6,6 +6,9 @@
     List<SelectListItem> listUsuarios = (List<SelectListItem>)ViewBag.listUsuarios;
     List<SelectListItem> listEstatus = (List<SelectListItem>)ViewBag.listEstatus;
 }
+
+@model lluviaBackEnd.Models.Filtro
+
 @section Styles {
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
@@ -39,26 +42,24 @@
                     },
                     new { id = "frmBuscarPedidosEspeciales" }))
                     {
-                        @Html.Hidden("fechaIni", new { @id = "fechaIni" })
-                        @Html.Hidden("fechaFin", new { @id = "fechaFin" })
 
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Cliente</label>
-                                @Html.DropDownList("idCliente", listClientes, "TODOS", new { @class = "select-multiple", id = "idCliente", data_val = "false" })
+                                @Html.DropDownListFor(x => x.idCliente, listClientes, "TODOS", new { @class = "select-multiple", id = "idCliente", data_val = "false" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Usuario</label>
-                                @Html.DropDownList("idUsuario", listUsuarios, "TODOS", new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                                @Html.DropDownListFor(x => x.idUsuario, listUsuarios, "TODOS", new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Estatus</label>
-                                @Html.DropDownList("idEstatusPedidoEspecial", listEstatus, "TODOS", new { @class = "select-multiple", id = "idEstatusPedidoEspecial", data_val = "false" })
+                                @Html.DropDownListFor(x => x.idEstatusPedidoEspecial, listEstatus, "TODOS", new { @class = "select-multiple", id = "idEstatusPedidoEspecial", data_val = "false" })
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-4">
@@ -71,7 +72,15 @@
                                         </div>
                                     </div>
                                     <input type="text" id="rangePedidosEspeciales" class="form-control daterange-cus">
+                                    @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                                    @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>Codigo de barras</label>
+                                @Html.TextBoxFor(x=>x.codigoBarras, null, new { @class = "form-control", @id = "codigoBarrasTicket" })
                             </div>
                         </div>
                     </div>
@@ -107,6 +116,22 @@
 
 
 </div>
+
+<div class="modal fade bd-example-modal-xl" id="modalDetallePedidosEspeciales" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle pedidos especiales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detallePedidoEspecial">
+                
+            </div>
+    </div>
+</div>
+ </div>
 
 
 
