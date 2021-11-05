@@ -63,6 +63,46 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<Producto>> ConsultaExistenciasAlmacen(Producto producto)
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idProducto", producto.idProducto);
+                    parameters.Add("@idAlmacen", producto.idAlmacen);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_EXISTENCIA_PRODUCTO_ALMACEN", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto>().ToList();
+                        //notificacion.Modelo = result.ReadSingle<List<Producto>>();
+                        //notificacion.Modelo = new Producto() { idPedidoEspecial = r1.idPedidoEspecial };
+                        //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = producto;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
         public Notificacion<List<PedidosEspecialesV2>> ObtenerEntregarPedidos(PedidosEspecialesV2 pedidosEspecialesV2)
         {
             Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
@@ -564,17 +604,18 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<dynamic> ObtenerPedidosEspeciales(DateTime? fechaIni, DateTime? fechaFin, Int64 idCliente = 0, Int64 idUsuario = 0, int idEstatusPedidoEspecial = 0)
+        public Notificacion<dynamic> ObtenerPedidosEspeciales(Filtro filtro)
         {
             Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
             try
-            {
+            {               
                 var parameters = new DynamicParameters();
-                parameters.Add("@idCliente", idCliente == 0 ? (object)null : idCliente);
-                parameters.Add("@idUsuario", idUsuario == 0 ? (object)null : idUsuario);
-                parameters.Add("@idEstatusPedidoEspecial", idEstatusPedidoEspecial == 0 ? (object)null : idEstatusPedidoEspecial);
-                parameters.Add("@fechaIni", fechaIni == null ? (object)null : fechaIni);
-                parameters.Add("@fechaFin", fechaFin == null ? (object)null : fechaFin);
+                parameters.Add("@idCliente", filtro.idCliente == 0 ? (object)null : filtro.idCliente);
+                parameters.Add("@idUsuario", filtro.idUsuario == 0 ? (object)null : filtro.idUsuario);
+                parameters.Add("@idEstatusPedidoEspecial", filtro.idEstatusPedidoEspecial == 0 ? (object)null : filtro.idEstatusPedidoEspecial);
+                parameters.Add("@fechaIni", filtro.fechaIni == DateTime.MinValue ? (object)null : filtro.fechaIni);
+                parameters.Add("@fechaFin", filtro.fechaFin == DateTime.MinValue ? (object)null : filtro.fechaFin);
+                parameters.Add("@codigoBarras", String.IsNullOrEmpty(filtro.codigoBarras) ? (object)null : filtro.codigoBarras);
                 notificacion = ConstructorDapper.Consultar("SP_OBTENER_PEDIDOS_ESPECIALES", parameters);
             }
             catch (Exception ex)
@@ -585,6 +626,22 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<dynamic> ObtenerPedidosEspecialesDetalle(Int64 idPedidoEspecial)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                 notificacion = ConstructorDapper.Consultar("SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_V2", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
 
         public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, int numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
         {
@@ -662,6 +719,95 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+        #region CuentasPorCobrar
+        public Notificacion<dynamic> ObtenerClientesCuentasXCobrar()
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                notificacion = ConstructorDapper.Consultar("SP_OBTENER_CLIENTES_CUENTAS_X_COBRAR", null);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtenerCuentasXCobrar(Filtro filtro)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idCliente", filtro.idCliente == 0 ? (object)null : filtro.idCliente);
+                notificacion = ConstructorDapper.Consultar("SP_OBTENER_CUENTAS_X_COBRAR_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtenerCuentasXCobrarDetalle(Int64 idCliente)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idCliente", idCliente);
+                notificacion = ConstructorDapper.Consultar("SP_OBTENER_DETALLE_CUENTAS_X_COBRAR_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<string> RealizarAbonoPedidoEspecial(int idCliente,float montoAbono, int idUsuario)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idCliente", idCliente);
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@monto", montoAbono);
+                notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_ABONO_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtenerBalanceCuentasXCobrar(Int64 idCliente)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idCliente", idCliente);
+                notificacion = ConstructorDapper.Consultar("SP_OBTENER_BALCANCE_CUENTAS_X_COBRAR_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+
+        #endregion
 
     }
 }

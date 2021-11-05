@@ -206,6 +206,25 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+
+        //[HttpPost]
+        public ActionResult ConsultaExistenciasAlmacen( Producto producto )
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new PedidosEspecialesV2DAO().ConsultaExistenciasAlmacen(producto);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         /************** REIMPRIMIR TICKETS ALMACENES********************/
 
 
@@ -226,6 +245,7 @@ namespace lluviaBackEnd.Controllers
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 result = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
                 var response = ImprimirTicketAlamacenes(result);
+                VerTicketAlmacenes(idPedidoEspecial);
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -272,7 +292,7 @@ namespace lluviaBackEnd.Controllers
                             {
                                 PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
                                 PrintToFile = true,
-                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\"+pedidoEspecial[0].idPedidoEspecialDetalle.ToString()+"_preview.pdf"
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + pedidoEspecial[0].idPedidoEspecialDetalle.ToString() + "_preview.pdf"
                             };
                         }
 
@@ -295,6 +315,8 @@ namespace lluviaBackEnd.Controllers
                     Thread.Sleep(100);
                     totalProductos.Add(pedidoEspecial);
                 }
+            
+               
                 return notificacion;
             }
             catch (InvalidPrinterException ex)
@@ -317,18 +339,8 @@ namespace lluviaBackEnd.Controllers
         void pd_PrintPage(object sender, PrintPageEventArgs e, dynamic notificacion)
         {
             try
-            {
-                float monto = 0;
-                float montoIVA = 0;
-                float montoComisionBancaria = 0;
-                float montoAhorro = 0;
-                float montoPagado = 0;
-                float suCambio = 0;
+            {           
 
-                float montoPagadoAgregarProductos = 0;
-                float montoAgregarProductos = 0;
-                float suCambioAgregarProductos = 0;
-                float cantidadTotalDeArticulos = 0;
 
                 int ancho = 258;
                 int espaciado = 14;
@@ -360,6 +372,7 @@ namespace lluviaBackEnd.Controllers
 
                 //Color de texto
                 SolidBrush drawBrush = new SolidBrush(Color.Black);
+                int marginLeft = 2;
                 //Logos
                 if (paginaActual == 0)
                 {
@@ -374,22 +387,25 @@ namespace lluviaBackEnd.Controllers
                     postTicketY = (logo.Y + logo.Height + espaciado);
 
 
-                    //postTicketY = postTicketY + 100 + espaciado;
+                    //DATOS FISCALES y DOMICILIO;
+                    
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
-                    e.Graphics.DrawString("RFC:" + "GACL7905178F2" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    //e.Graphics.DrawString("RFC:" + "GACL7905178F2" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    //postTicketY = datos.Y + datos.Height + espaciado;
 
-                    e.Graphics.DrawString("Ticket:" + notificacion[0].idPedidoEspecial.ToString(), font, drawBrush, 40, 181, izquierda);
-                    e.Graphics.DrawString("Fecha:" + notificacion[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                    e.Graphics.DrawString("Hora:" + notificacion[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
+                    postTicketY += espaciado;
+                    e.Graphics.DrawString("Ticket:" + notificacion[0].idPedidoEspecial.ToString(), font, drawBrush, marginLeft, postTicketY, izquierda);
+                    postTicketY += espaciado;
+                    e.Graphics.DrawString("Fecha:" + notificacion[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, marginLeft, postTicketY, izquierda);
+                    postTicketY += espaciado;
+                    e.Graphics.DrawString("Hora:" + notificacion[0].fechaAlta.ToShortTimeString(), font, drawBrush, marginLeft, postTicketY, izquierda);
+                    postTicketY += espaciado;
 
-                    postTicketY = datos.Y + datos.Height + espaciado;
+
                     Rectangle datosEnca = new Rectangle(0, postTicketY, 295, 82);
-
-                    //e.Graphics.DrawString("  Cliente: " + notificacion.nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
-                    //datosEnca.Y += 14;
                     e.Graphics.DrawString("____________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-                    e.Graphics.DrawString(" P E D I D O  E S P E C I A L "  + " \n", font, drawBrush, datosEnca, centrado);
+                    e.Graphics.DrawString(" TICKET PARA DESPACHADORES " + " \n", font, drawBrush, datosEnca, centrado);
                     datosEnca.Y += 14;
                     e.Graphics.DrawString("____________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
@@ -397,29 +413,32 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString("  Almacen Enviado: " + notificacion[0].descAlmacen.ToString() + " \n", Bold, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
 
+                    e.Graphics.DrawString("  Cliente: " + notificacion[0].nombre.ToString() + " \n", Bold, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 14;
+
                     e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-                    e.Graphics.DrawString("#    Descripcion                                                     Cantidad          " + " \n", font, drawBrush, datosEnca, izquierda);
+                    e.Graphics.DrawString("    Descripcion                                                        Cantidad       " + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 9;
                     //e.Graphics.DrawString("                                                                          Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
                     //datosEnca.Y += 6;
                     e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-                    datosIndex = new Rectangle(2, datosEnca.Y, 15, 85);
-                    datosProducto = new Rectangle(20, datosEnca.Y, 200, 85);
+                    //datosIndex = new Rectangle(2, datosEnca.Y, 15, 85);
+                    datosProducto = new Rectangle(2, datosEnca.Y, 200, 85);
                     datosCantidad = new Rectangle(220, datosEnca.Y, 30, 85);
 
                 }
                 else
                 {
-                    datosIndex = new Rectangle(2, 15, 15, 85);
-                    datosProducto = new Rectangle(20, 15, 200, 85);
+                    //datosIndex = new Rectangle(2, 15, 15, 85);
+                    datosProducto = new Rectangle(2, 15, 200, 85);
                     datosCantidad = new Rectangle(220, 15, 30, 85);
                 }
 
                 for (int i = indexProducto; i < ((List<dynamic>)notificacion).ToList().Count ; i++)
                 {
-                    e.Graphics.DrawString((indexProducto + 1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
+                    //e.Graphics.DrawString((indexProducto + 1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
                     e.Graphics.DrawString(notificacion[i].descripcion.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(notificacion[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     datosIndex.Y += espaciado + 5;
@@ -479,9 +498,9 @@ namespace lluviaBackEnd.Controllers
                 var result = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                //string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDespachadoresPDF(ticket.Modelo));
-                //ViewBag.pdfBase64 = pdfCodigos;
-               // ViewBag.title = "Ticket para despachadores: " + idVenta.ToString(); ;
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDespachadoresPDF(result));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket para despachadores: " + idPedidoEspecial.ToString(); ;
                 return View();
             }
             catch (Exception ex)
@@ -587,12 +606,12 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult BuscarPedidosEspeciales(DateTime? fechaIni, DateTime? fechaFin, Int64 idCliente = 0, Int64 idUsuario = 0, int idEstatusPedidoEspecial = 0)
+        public ActionResult BuscarPedidosEspeciales(Filtro filtro)
         {
             try
             {
 
-                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspeciales(fechaIni, fechaFin, idCliente, idUsuario, idEstatusPedidoEspecial);
+                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspeciales(filtro);
 
                 return Json(JsonConvert.SerializeObject(pedidosEspeciales), JsonRequestBehavior.AllowGet);
             }
@@ -603,8 +622,125 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ObtenerPedidosEspecialesDetalle(Int64 idPedidoEspecial)
+        {
+            try
+            {
+
+                Notificacion<dynamic> pedidosEspeciales = new PedidosEspecialesV2DAO().ObtenerPedidosEspecialesDetalle(idPedidoEspecial);
+
+                return Json(JsonConvert.SerializeObject(pedidosEspeciales), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        #region CuentasPorCobrar
+        public ActionResult ConsultarCuentasPorCobrar()
+        {
+            try
+            {
+                Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesCuentasXCobrar();             
+
+                var listClientes = new List<SelectListItem>();
+                foreach (var cliente in clientes.Modelo)
+                {
+                    var item = new SelectListItem()
+                    {
+                        Text = cliente.nombreCliente,
+                        Value = cliente.idCliente + ""
+                    };
+
+                    listClientes.Add(item);
+
+                }
+
+                ViewBag.listClientes = listClientes;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult BuscarCuentasPorCobrar(Filtro filtro)
+        {
+            try
+            {
+
+                Notificacion<dynamic> cuentasPorCobrar = new PedidosEspecialesV2DAO().ObtenerCuentasXCobrar(filtro);
+
+                return Json(JsonConvert.SerializeObject(cuentasPorCobrar), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerCuentasPorCobrarDetalle(Int64 idCliente)
+        {
+            try
+            {
+
+                Notificacion<dynamic> detalleCuentasPorCobrar = new PedidosEspecialesV2DAO().ObtenerCuentasXCobrarDetalle(idCliente);
+
+                return Json(JsonConvert.SerializeObject(detalleCuentasPorCobrar), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RealizarAbonoPedidosEspeciales(int idCliente,float abono=0)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+           
+                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(idCliente, abono, UsuarioActual.idUsuario);
+                return Json(JsonConvert.SerializeObject(resultAbono), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult PDFDetalleCuentasPorCobrar(Int64 idCliente)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                List<Cliente> clientes=new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = idCliente });
+                Cliente cliente = clientes.First();
+                Notificacion<dynamic> balance = new PedidosEspecialesV2DAO().ObtenerBalanceCuentasXCobrar(idCliente);
+                string pdf = Convert.ToBase64String(Utilerias.Utils.GeneraPDFCuentasPorCobrar(cliente, balance));
+                return Json(pdf, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
 
+
+        #endregion
     }
 
 }

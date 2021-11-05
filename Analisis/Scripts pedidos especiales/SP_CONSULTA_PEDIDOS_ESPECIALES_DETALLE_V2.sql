@@ -105,12 +105,14 @@ as
 								ped.cantidadAtendida,
 								ped.cantidadRechazada,
 								ped.idEstatusPedidoEspecialDetalle,
+								est.descripcion estatusPedidoEspecialDetalle,
 								ped.notificado 
 						from	PedidosEspecialesDetalle ped
 									join Productos p 
 										on p.idProducto = ped.idProducto
 									join Almacenes a
 										on a.idAlmacen = ped.idAlmacenDestino
+									join CatEstatusPedidoEspecialDetalle est on est.idEstatusPedidoEspecialDetalle=ped.idEstatusPedidoEspecialDetalle
 						where	idPedidoEspecial = @idPedidoEspecial
 
 					end

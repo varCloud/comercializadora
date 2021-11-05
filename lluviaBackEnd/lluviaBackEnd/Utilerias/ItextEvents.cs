@@ -126,8 +126,8 @@ namespace lluviaBackEnd.Utilerias
                         <td> 
                             <img src='" + pathLogo+ @"' width = '100' height = '70' />
                         </td>
-                        <td "+ Titulo + @">
-                                Articulos de limpieza lluvia
+                        <td "+ Titulo + @"> " + (this.TituloCabecera == "Desglose cuentas por cobrar" ? this.TituloCabecera : "Articulos de limpieza lluvia") + @"
+                                
                         </td>
                         <td> 
                             "+ (this.esCancelado ? @"<img src='" + this.pathLogoCancelado + @"' width = '100' height = '70' />" : "<span></span>") +@"

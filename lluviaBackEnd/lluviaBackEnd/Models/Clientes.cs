@@ -93,6 +93,8 @@ namespace lluviaBackEnd.Models
         public int diasCredito { get; set; }
         public float montoMaximoCredito { get; set; }
 
+        public string domicilio { get; set; }
+
         public bool usarDatosCliente { get; set; }
 
 

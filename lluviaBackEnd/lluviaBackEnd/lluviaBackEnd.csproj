@@ -279,6 +279,7 @@
     <Compile Include="Models\EstatusProducto.cs" />
     <Compile Include="Models\ExcesoEfectivo.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelaFacturaProductivo.cs" />
+    <Compile Include="Models\Filtro.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\Cierre.cs" />
     <Compile Include="Models\IngresoEfectivo.cs" />
@@ -1089,6 +1090,7 @@
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
+    <Content Include="js\EvtConsultaCuentasPorCobrar.js" />
     <Content Include="js\EvtConsultaPedidosEspecialesV2.js" />
     <Content Include="js\EvtConsultaEntregarPedido.js" />
     <Content Include="js\EvtConsultaVentasCanceladas.js" />
@@ -1333,6 +1335,7 @@
     <Content Include="Views\PedidosEspecialesV2\ConfirmarProductos.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\EntregarPedido.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_ObtenerEntregarPedidos.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\ConsultarCuentasPorCobrar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,6 +1,7 @@
 ﻿var table;
 var iframe;
 var tblPedidosEspeciales;
+var tblPedidosEspecialesDet;
 
 //busqueda
 function onBeginSubmitPedidosEspeciales() {
@@ -33,7 +34,8 @@ function onSuccessPedidosEspeciales(data) {
             '         <th>Monto Total</th>' +
             '         <th>Estatus</th>' +
             '         <th>Codigo de barras</th>' +
-            '         <th>Observaciones</th>' +             
+            '         <th>Observaciones</th>' +  
+            '         <th>Acciones</th>' +
             '     </tr>' +
             ' </thead>' +
             ' <tbody>';
@@ -42,7 +44,7 @@ function onSuccessPedidosEspeciales(data) {
         
         $.each(result.Modelo, function (index, dato) {
             //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));
-            console.log(dato[0]);
+           
             html += '<tr>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
@@ -53,6 +55,7 @@ function onSuccessPedidosEspeciales(data) {
                 '             <td>' + dato.estatusPedidoEspecial + '</td>' +
                 '             <td>' + dato.codigoBarras + '</td>' +
                 '             <td>' + dato.observaciones + '</td>' +
+                '             <td><a href="javascript:MostrarDetalle(' + dato.idPedidoEspecial+');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Detalle"><i class="fas fa-align-justify"></i></a></td>' +
                 '</tr>';
         });
         html += ' </tbody>' +
@@ -80,8 +83,7 @@ function onFailurePedidosEspeciales() {
 
 function InitDataTablePedidosEspeciales() {
     var NombreTabla = "tblPedidosEspeciales";
-    tblPedidosEspeciales = initDataTable(NombreTabla);
-
+    tblPedidosEspeciales = initDataTable(NombreTabla);    
     if ($("#tblPedidosEspeciales").length > 0) {
         new $.fn.dataTable.Buttons(tblPedidosEspeciales, {
             buttons: [
@@ -104,13 +106,112 @@ function InitDataTablePedidosEspeciales() {
     }
 }
 
+function MostrarDetalle(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ObtenerPedidosEspecialesDetalle"),
+        data: { idPedidoEspecial: idPedidoEspecial},
+        method: 'post',
+        dataType: 'json',        
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Cargando...");
+        },
+        success: function (data) {
+            OcultarLoader();
+            var html = "";
+            var result = JSON.parse(data);                      
+            if (result.Estatus === 200) {
+                html = '<div class="table-responsive">' +
+                    '<table class="table table-striped" id = "tblPedidosEspecialesDet">' +
+                    '    <thead>' +
+                    '     <tr>' +
+                    '         <th>No. detalle</th>' +
+                    '         <th>Producto</th>' +
+                    '         <th>Almacen</th>' +
+                    '         <th>Cantidad</th>' +
+                    '         <th>Monto</th>' +
+                    '         <th>Precio Venta</th>' +
+                    '         <th>Estatus</th>' +                    
+                    '     </tr>' +
+                    ' </thead>' +
+                    ' <tbody>';
+
+
+
+                $.each(result.Modelo, function (index, dato) {
+                    //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));
+
+                    html += '<tr>' +
+                        '             <td>' + dato.idPedidoEspecialDetalle + '</td>' +
+                        '             <td>' + dato.descripcion + '</td>' +
+                        '             <td>' + dato.Almacen + '</td>' +
+                        '             <td>' + dato.cantidad + '</td>' +
+                        '             <td>' + formatoMoneda(dato.monto) + '</td>' +
+                        '             <td>' + formatoMoneda(dato.precioVenta) + '</td>' +
+                        '             <td>' + dato.estatusPedidoEspecialDetalle + '</td>' +
+                        '</tr>';
+                });
+                html += ' </tbody>' +
+                    '</table>' +
+                    '</div>';
+                $("#detallePedidoEspecial").html(html);
+                if (tblPedidosEspecialesDet != null)
+                    tblPedidosEspecialesDet.destroy();
+                InitDataTablePedidosEspecialesDetalle();
+                $('#modalDetallePedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });
+            }
+            else
+                MuestraToast("error", result.Mensaje);
+
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('Hubo un problema al guardar la compra, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+  
+}
+
+function InitDataTablePedidosEspecialesDetalle() {
+    var NombreTabla = "tblPedidosEspecialesDet";
+    tblPedidosEspecialesDet = initDataTable(NombreTabla);
+    if ($("#tblPedidosEspecialesDet").length > 0) {
+        new $.fn.dataTable.Buttons(tblPedidosEspecialesDet, {
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel" style="font-size:20px;"></i>',
+                    className: '',
+                    titleAttr: 'Exportar a Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    },
+                },
+            ],
+
+        });
+
+        tblPedidosEspecialesDet.buttons(0, null).container().prependTo(
+            tblPedidosEspecialesDet.table().container()
+        );
+    }
+}
+
 
 $(document).ready(function () {
 
     //InitDataTableCierres();
     InitSelect2();
     InitRangePicker('rangePedidosEspeciales', 'fechaIni', 'fechaFin');
-    $('#rangePedidosEspeciales').val('');
+    //$('#rangePedidosEspeciales').val('');
+    $('#fechaIni').val($('#rangePedidosEspeciales').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#fechaFin').val($('#rangePedidosEspeciales').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+
+    $("#btnBuscarPedidosEspeciales").click();
+
 
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarPedidosEspeciales").trigger("reset");
