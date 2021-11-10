@@ -208,6 +208,7 @@ CREATE TABLE
 			cantidadAtendida					float,
 			cantidadRechazada					float,
 			idEstatusPedidoEspecialDetalle		int,
+			observacionesConfirmar				varchar(255),
 			notificado							bit
 		)
 GO

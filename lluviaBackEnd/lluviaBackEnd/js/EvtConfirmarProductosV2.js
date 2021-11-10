@@ -162,11 +162,11 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
                 cantidadAtendida: parseFloat(tblProductos.rows[i].cells[6].innerHTML),
                 cantidadRechazada: parseFloat(tblProductos.rows[i].cells[7].innerHTML),
                 cantidadAceptada: parseFloat(tblProductos.rows[i].cells[8].children[0].value),
-                observaciones: tblProductos.rows[i].cells[9].children[0].value,
+                observaciones: tblProductos.rows[i].cells[10].children[0].value,
                 idPedidoEspecialDetalle: parseInt(tblProductos.rows[i].cells[11].innerHTML),
             };                
             productos.push(row_);
-            idPedidoEspecial = parseInt(tblProductos.rows[i].cells[10].innerHTML);
+            idPedidoEspecial = parseInt(tblProductos.rows[i].cells[12].innerHTML);
         }
     }
 
@@ -304,7 +304,7 @@ function validarProductosAceptados() {
         for (var i = 1; i < rCount; i++) {
             if  (
                     ((parseFloat(tblProductos.rows[i].cells[5].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[8].children[0].value))) &&
-                    (String(tblProductos.rows[i].cells[9].children[0].value) == "" )
+                    (String(tblProductos.rows[i].cells[10].children[0].value) == "" )
                 ) {
                 if (faltantes == 0) {
                     MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos."); 
@@ -361,7 +361,7 @@ function initInputsTabla() {
 
 
 $(document).ready(function () {
-
+    
     InitSelect2();
     initInputsTabla();
     actualizarSubTotal();

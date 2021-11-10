@@ -196,7 +196,7 @@ as
 					begin
 					
 						update	PedidosEspecialesDetalle
-						set		PedidosEspecialesDetalle.observaciones = a.observaciones,
+						set		PedidosEspecialesDetalle.observacionesConfirmar = a.observaciones,
 								idEstatusPedidoEspecialDetalle = 6		-- Rechazados por el Administrador
 						from	(
 									select	idProducto, idPedidoEspecialDetalle, observaciones 

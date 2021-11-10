@@ -56,10 +56,11 @@
                                         <th>Almacen</th>
                                         <th class="text-center">Monto</th>
                                         <th class="text-center">Cantidad Solicitada</th>
+                                        <th class="text-center">Observaciones Entrega</th>
                                         <th class="text-center">Cantidad Atendida</th>
                                         <th class="text-center">Cantidad Rechazada</th>
                                         <th class="text-center">Cantidad Aceptada</th>
-                                        <th class="text-center">Observaciones</th>
+                                        <th class="text-center">Observaciones Confirmar</th>
                                         <th class="text-center" style="display: none;">idPedidoEspecial</th>
                                         <th class="text-center" style="display: none;">idPedidoEspecialDetalle</th>
                                     </tr>
@@ -78,6 +79,7 @@
                                                     <td>@item.Almacen</td>
                                                     <td>$@item.precioVenta</td>
                                                     <td class="text-center">@item.cantidadSolicitada</td>
+                                                    <td class="text-center">@item.observaciones</td>
                                                     <td class="text-center">@item.cantidadAtendida </td>
                                                     <td class="text-center">@item.cantidadRechazada</td>
                                                     <td class="text-center"><input type='text' class="productos_" onkeypress="return esDecimal(this, event);" style="text-align: center; background: transparent;" value="@item.cantidadAceptada"></td>

@@ -38,6 +38,7 @@ else
                                         <th>Monto</th>
                                         <th># Productos</th>
                                         <th>Usuario</th>
+                                        <th>Fecha Alta</th>
                                         <th>Entregar</th>
                                         <th>Eliminar</th>
                                     </tr>
@@ -51,6 +52,7 @@ else
                                             <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@item.cantidad</td>
                                             <td>@item.nombreUsuario</td>
+                                            <td>@item.fechaAlta</td>
                                             <td>
                                                 @if (item.puedeEntregar)
                                                 {
