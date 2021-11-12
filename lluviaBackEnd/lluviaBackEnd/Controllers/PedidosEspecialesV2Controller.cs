@@ -644,6 +644,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                Sesion usuario = (Sesion)Session["UsuarioActual"];
                 Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesCuentasXCobrar();             
 
                 var listClientes = new List<SelectListItem>();
@@ -660,6 +661,18 @@ namespace lluviaBackEnd.Controllers
                 }
 
                 ViewBag.listClientes = listClientes;
+
+                VentasDAO ventasDAO = new VentasDAO();
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = ventasDAO.ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
+
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = ventasDAO.ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+
+                ViewBag.comisionBancaria = usuario.comisionBancaria;
+
                 return View();
             }
             catch (Exception ex)
@@ -703,13 +716,13 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult RealizarAbonoPedidosEspeciales(int idCliente,float abono=0)
+        public ActionResult RealizarAbonoPedidosEspeciales(AbonoCliente abono)
         {
             try
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-           
-                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(idCliente, abono, UsuarioActual.idUsuario);
+                abono.idUsuario = UsuarioActual.idUsuario;
+                Notificacion<string> resultAbono = new PedidosEspecialesV2DAO().RealizarAbonoPedidoEspecial(abono);
                 return Json(JsonConvert.SerializeObject(resultAbono), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
