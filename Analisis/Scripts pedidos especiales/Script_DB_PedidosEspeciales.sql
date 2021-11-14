@@ -622,6 +622,14 @@ insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
 
 
 
+-- se agregan columnas en inventario detalle log para los movimientos de mercancia de pedidos especiales
+if not exists (select 1 FROM sys.columns where Name = N'idPedidoEspecial' AND Object_ID = Object_ID(N'InventarioDetalleLog'))
+BEGIN
+	alter table InventarioDetalleLog add idPedidoEspecial bigint
+END
+go
+
+
 ------------------------------------------------------------------------------------------------------------------
 select * from PedidosEspeciales
 select * from PedidosEspecialesDetalle

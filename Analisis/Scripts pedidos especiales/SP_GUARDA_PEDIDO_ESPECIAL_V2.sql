@@ -517,9 +517,9 @@ as
 								--select '#tempExistencias', * from #tempExistencias
 
 								-- se inserta el InventarioDetalleLog
-								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta)
+								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
 								select	idUbicacion, idProducto, cantidadDescontada, cantidadFinal, cast(17 as int) as idTipoMovInventario,
-										@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, 0 as idVenta
+										@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, 0 as idVenta, @idPedidoEspecial
 								from	#tempExistencias
 								where	cantidadDescontada > 0
 
@@ -544,9 +544,9 @@ as
 								--- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- se inserta el InventarioDetalleLog
-								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta)
+								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
 								select	id.idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
-										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial
 								from	
 										(
 											select	idProducto, cantidadDescontada, idUbicacion

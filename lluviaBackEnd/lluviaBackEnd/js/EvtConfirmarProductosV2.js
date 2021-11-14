@@ -159,14 +159,14 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             var row_ = {
                 idProducto: parseInt(tblProductos.rows[i].cells[1].innerHTML),
                 cantidadSolicitada: parseFloat(tblProductos.rows[i].cells[5].innerHTML),
-                cantidadAtendida: parseFloat(tblProductos.rows[i].cells[6].innerHTML),
-                cantidadRechazada: parseFloat(tblProductos.rows[i].cells[7].innerHTML),
-                cantidadAceptada: parseFloat(tblProductos.rows[i].cells[8].children[0].value),
+                cantidadAtendida: parseFloat(tblProductos.rows[i].cells[7].innerHTML),
+                cantidadRechazada: parseFloat(tblProductos.rows[i].cells[8].innerHTML),
+                cantidadAceptada: parseFloat(tblProductos.rows[i].cells[9].children[0].value),
                 observaciones: tblProductos.rows[i].cells[10].children[0].value,
-                idPedidoEspecialDetalle: parseInt(tblProductos.rows[i].cells[11].innerHTML),
+                idPedidoEspecialDetalle: parseInt(tblProductos.rows[i].cells[12].innerHTML),
             };                
             productos.push(row_);
-            idPedidoEspecial = parseInt(tblProductos.rows[i].cells[12].innerHTML);
+            idPedidoEspecial = parseInt(tblProductos.rows[i].cells[11].innerHTML);
         }
     }
 
@@ -303,7 +303,7 @@ function validarProductosAceptados() {
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
             if  (
-                    ((parseFloat(tblProductos.rows[i].cells[5].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[8].children[0].value))) &&
+                    ((parseFloat(tblProductos.rows[i].cells[5].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[9].children[0].value))) &&
                     (String(tblProductos.rows[i].cells[10].children[0].value) == "" )
                 ) {
                 if (faltantes == 0) {
