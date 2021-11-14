@@ -317,6 +317,32 @@ GO
 ALTER TABLE PedidosEspecialesCuentasPorCobrar ADD FOREIGN KEY (idEstatusCuentaPorCobrar) REFERENCES CatEstatusCuentaPorCobrar (idEstatusCuentaPorCobrar)
 GO
 
+--PedidosEspecialesAbonoClientes
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesAbonoClientes' and xtype = 'u')
+	drop table PedidosEspecialesAbonoClientes
+
+CREATE TABLE 
+	PedidosEspecialesAbonoClientes 
+		(
+			idAbonoCliente			bigint primary key IDENTITY(1, 1),
+			idUsuario				int,						
+			monto					money,	
+			montoIva				money,
+			montoComision			money,
+			montoTotal				money,
+			idCliente				int,
+			requiereFactura			bit,
+			idFacturaAbono		    bigint,
+			idFactura				int,			
+			idFactFormaPago			int,
+			idFactUsoCFDI			int,
+			fechaAlta				datetime,
+			activo					bit,
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesAbonoClientes TO PUBLIC
+
+
 
 
 
@@ -335,9 +361,13 @@ CREATE TABLE
 			idUsuario				int,
 			idPedidoEspecial		bigint,
 			idCuentaPorCobrar		bigint,
+			idAbonoCliente			bigint,
+			EsAbonoInicial			bit default 0,
+			SaldoDespuesOperacion   money default 0
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesAbonosCuentasPorCobrar TO PUBLIC
+
 GO
 
 ALTER TABLE PedidosEspecialesAbonosCuentasPorCobrar ADD FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente)

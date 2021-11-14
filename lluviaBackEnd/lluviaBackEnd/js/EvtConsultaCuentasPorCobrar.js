@@ -38,8 +38,7 @@ function onSuccessCuentasPorCobrar(data) {
       
         
         $.each(result.Modelo, function (index, dato) {
-            //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));
-            let nombre = "jessica almonte";
+            //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));           
             html += '<tr>' +
                 '             <td>' + dato.idCliente + '</td>' +              
                 '             <td>' + dato.nombreCliente + '</td>' +
@@ -104,6 +103,7 @@ function InitDataTableCuentasPorCobrar() {
 }
 
 function MostrarDetalle(idCliente) {
+    limpiarModalAbono();
     var totalAdeudo = parseFloat(0);
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ObtenerCuentasPorCobrarDetalle"),
@@ -142,6 +142,12 @@ function MostrarDetalle(idCliente) {
                         '             <td>' + formatoMoneda(dato.SaldoInicial) + '</td>' +
                         '             <td>' + formatoMoneda(dato.saldoActual) + '</td>' +
                         '</tr>';
+
+                    $('#NombreCliente').html(dato.nombreCliente);
+                    $('#TelefonoCliente').html(dato.telefonoCliente);
+                    $('#mailCliente').html(dato.correoCliente);
+                    $('#rfcCliente').html(dato.rfcCliente);
+                    $('#tipoCliente').html(dato.tipoClienteCliente);
                 });
                 html += ' </tbody>' +
                     '</table>' +
@@ -239,6 +245,74 @@ function downloadPDF(pdf,nombre) {
     downloadLink.click();
 }
 
+function limpiarModalAbono() {
+    var htmlCliente = '<address>'+
+        '<strong>Datos del Cliente:</strong><br>' +
+        'Nombre: <span id="NombreCliente"></span><br>' +
+        'Telefono: <span id="TelefonoCliente"></span><br>' +
+        'E-mail: <span id="mailCliente"></span><br>' +
+        'RFC:  <span id="rfcCliente"></span><br>' +
+        'Tipo de Cliente: <span id="tipoCliente"></span><br>' +
+        '</address>';
+
+    $("#datosCliente").html(htmlCliente);
+    $('#formaPago').val("1").trigger('change');
+    document.getElementById("chkFacturar").checked = false;
+    $('#usoCFDI').val("3").trigger('change');    
+    $("#totalAdeudo").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $('#montoAbonar').val(0);
+    $('#idCliente').val(0);
+    $("#previoComisionBancaria").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");  
+    $("#previoIVA").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $("#previoFinal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $("#cambio").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
+    $('#efectivo').val('');
+    
+   
+
+}
+
+function calculaTotales(conReseteoCampos) {
+
+    if (conReseteoCampos === true) {
+        $('#efectivo').val('');
+        $("#cambio").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");     
+        document.getElementById("chkFacturar").checked = false;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+        $('#usoCFDI').val("3").trigger('change');
+    }
+
+    var formaPago = $('#formaPago').val();
+    var porcentajeComisionBancaria = parseFloat(0);
+   
+    // si la forma de pago es tarjeta de debito o credito se agrega comision bancaria
+
+    if (
+        ((parseInt(formaPago) == parseInt(4)) ||  //Tarjeta de crédito
+            (parseInt(formaPago) == parseInt(18))) &&  //Tarjeta de débito
+        (!$("#chkFacturar").is(":checked"))       // y si la venta no es facturada
+    ) {
+        porcentajeComisionBancaria = parseFloat($('#comisionBancaria').val()).toFixed(2);
+    }
+
+    var abono = parseFloat($("#montoAbonar").val()).toFixed(2);   
+   
+    var comisionBancaria = (parseFloat((abono) * (porcentajeComisionBancaria / 100))).toFixed(2);    
+    var iva = parseFloat(0).toFixed(2);
+
+    // si lleva iva
+    if ($("#chkFacturar").is(":checked")) {
+        iva = parseFloat(abono * 0.16).toFixed(2);
+    }
+
+    var total = (parseFloat(abono) + parseFloat(comisionBancaria)+ parseFloat(iva)).toFixed(2);  
+
+    $("#previoComisionBancaria").html("<h4>$" + comisionBancaria + "</h4>");
+    $("#previoIVA").html("<h4>$" + iva + "</h4>");
+    $("#previoFinal").html("<h4>$" + total + "</h4>");
+
+}
+
 
 $(document).ready(function () {
 
@@ -258,6 +332,95 @@ $(document).ready(function () {
 
     });
 
+    $('#montoAbonar').on("keyup", function (event) {
+        calculaTotales(false);
+    })
+
+    $("#formaPago").on("change", function (value) {
+        this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
+        calculaTotales(true);
+    });
+
+
+    $('#chkFacturar').click(function () {
+
+        var idCliente = $('#idCliente').val();      
+      
+        if (idCliente == 1) {
+            MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
+            document.getElementById("chkFacturar").checked = false;
+            return
+        }
+
+        var cliente = new Object();
+        cliente.idCliente = idCliente;
+        cliente.Nombre = $('#idCliente').html();
+        cliente.Telefono = $('#TelefonoCliente').html();
+        cliente.correo = $('#mailCliente').html();
+        cliente.rfc = $('#rfcCliente').html();
+        cliente.tipoCliente = $('#tipoCliente').html();
+
+        if ($('#chkFacturar').is(':checked')) {
+        
+            if (cliente) {
+                if (!validarEmail(cliente.correo)) {
+                    MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
+                    document.getElementById("chkFacturar").checked = false;
+                    return false;
+                }
+
+                if (!validarRFC(cliente.rfc)) {
+                    MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
+                    document.getElementById("chkFacturar").checked = false;
+                    return false;
+                }
+            } else {
+                MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
+                document.getElementById("chkFacturar").checked = false;
+                return false;
+            }
+        }
+
+
+        $('#efectivo').val('');
+        $("#cambio").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");    
+
+
+        if ($(this).is(':checked')) {
+            document.getElementById("divUsoCFDI").style.display = 'block';           
+        } else {
+            document.getElementById("divUsoCFDI").style.display = 'none';
+        }
+       
+        calculaTotales('false');
+
+    });
+
+    $("#efectivo").on("keyup", function (event) {
+
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $("#btnAbonar").click();
+        }
+        else {
+
+            var cambio_ = parseFloat(0).toFixed(2);
+            var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+            var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
+
+            if (parseFloat(efectivo_) > parseFloat(total_)) {
+                cambio_ = efectivo_ - total_;
+                $("#cambio").html("<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>");
+                           
+            }
+            else {
+                $("#cambio").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");              
+            }
+        }
+
+    });
+
+
     $("#btnAbonar").click(function (evt) {
         evt.preventDefault();
         
@@ -267,9 +430,15 @@ $(document).ready(function () {
         }
 
        
-        var monto = parseFloat($('#montoAbonar').val()).toFixed(2);
+        var monto = parseFloat($('#montoAbonar').val());
         var idCliente = parseInt($('#idCliente').val());
         var totalAdeudo = parseFloat($("#totalAdeudo").html().replace('<h4>$', '').replace('</h4>', ''));
+        var efectivo = parseFloat($('#efectivo').val()).toFixed(2);
+        var total = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
+        var IVA = parseFloat($("#previoIVA").html().replace('<h4>$', '').replace('</h4>', ''));
+        var comision = parseFloat($("#previoComisionBancaria").html().replace('<h4>$', '').replace('</h4>', ''));
+        var formaPago = parseInt($('#formaPago').val());
+        var usoCFDI = 0;
 
         if (monto<=0) {
             MuestraToast('warning', "El monto a abonar debe de ser mayor que 0.");
@@ -281,12 +450,39 @@ $(document).ready(function () {
             return;
         } 
 
+        //pago con efectivo
+        if (parseInt(formaPago) == parseInt(1)) {
 
-           
+            if ($('#efectivo').val() == "") {
+                MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+                return;
+            }
+
+            if (parseFloat(efectivo) < parseFloat(total)) {
+                MuestraToast('warning', "El efectivo no alcanza a cubrir el total: " + total.toString());               
+                return;
+            }
+        }
+
+        if ($("#chkFacturar").is(":checked")) {
+            usoCFDI = parseInt($('#usoCFDI').val());
+        }
+
+        var abono = new Object();
+        abono.idCliente = idCliente;
+        abono.montoAbono = monto;
+        abono.montoIVA = IVA;
+        abono.montoComision = comision;
+        abono.requiereFactura = document.getElementById("chkFacturar").checked;
+        abono.idFactFormaPago = formaPago;
+        abono.idFactUsoCFDI = usoCFDI;
+
+        console.log(JSON.stringify(abono));
+            
 
         $.ajax({
             url: rootUrl("/PedidosEspecialesV2/RealizarAbonoPedidosEspeciales"),
-            data: JSON.stringify({ idCliente: idCliente, abono: parseFloat($('#montoAbonar').val()) }),
+            data: JSON.stringify({ abono: abono}),
             method: 'post',
             dataType: 'json',
             async: true,

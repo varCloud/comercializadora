@@ -15,7 +15,12 @@ status			200 = ok
 CREATE proc [dbo].[SP_REALIZA_ABONO_PEDIDOS_ESPECIALES]
 @idCliente int ,
 @idUsuario int,
-@monto money
+@monto money,
+@montoIVA money null,
+@montoComision money null,
+@requiereFactura bit null,
+@idFactFormaPago int null,
+@idFactUsoCFDI int null
 AS
 BEGIN
 	BEGIN TRY			
@@ -53,11 +58,21 @@ BEGIN
 					@idCuentaPorCobrar bigint,
 					@idPedidoEspecial bigint,
 					@saldoActual money,
-					@saldoRestante money
+					@saldoRestante money,
+					@montoTotal	money,
+					@idAbonoCliente bigint
 					
 				END	
 
 				select @fechaActual=dbo.FechaActual()
+
+				--insertamos en la tabla PedidosEspecialesAbonoClientes
+				select @montoTotal=DBO.redondear(@monto + @montoIVA + @montoComision);
+
+				INSERT INTO PedidosEspecialesAbonoClientes(idUsuario,monto,montoIva,montoComision,montoTotal,idCliente,requiereFactura,idFactFormaPago,idFactUsoCFDI,fechaAlta,activo)
+				VALUES(@idUsuario,@monto,@montoIVA,@montoComision,@montoTotal,@idCliente,@requiereFactura,@idFactFormaPago,@idFactUsoCFDI,dbo.FechaActual(),1)
+
+				select @idAbonoCliente=max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente=@idCliente
 
 				while(@monto>0)
 				begin
@@ -81,8 +96,8 @@ BEGIN
 				where idCuentaPorCobrar=@idCuentaPorCobrar
 
 				--insertamos el abono en la tabla PedidosEspecialesAbonosCuentasPorCobrar
-				INSERT INTO PedidosEspecialesAbonosCuentasPorCobrar(monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar)
-				values(@montoPagado,dbo.FechaActual(),@idCliente,@idUsuario,@idPedidoEspecial,@idCuentaPorCobrar)
+				INSERT INTO PedidosEspecialesAbonosCuentasPorCobrar(monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,idAbonoCliente,SaldoDespuesOperacion)
+				values(@montoPagado,dbo.FechaActual(),@idCliente,@idUsuario,@idPedidoEspecial,@idCuentaPorCobrar,@idAbonoCliente,dbo.redondear(@saldoActual-@montoPagado))
 
 				select @monto=@monto-@montoPagado
 
