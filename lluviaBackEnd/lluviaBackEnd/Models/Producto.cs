@@ -70,6 +70,7 @@ namespace lluviaBackEnd.Models
         public float costo { get; set; }
         public float total { get; set; }
         public string observaciones { get; set; }
+        public string observacionesConfirmar { get; set; }
         public string usuarioRecibio { get; set; }
         public EstatusProducto estatusProducto { get; set; }
         public float cantidadRecibida { get; set; }

@@ -31,17 +31,6 @@ as
 			begin -- principal
 				
 			
-				select idPedidoEspecial,CAST(fechaAlta AS DATE) fecha,SaldoInicial cargo,saldoActual
-				into #CARGOS
-				from PedidosEspecialesCuentasPorCobrar where saldoActual>0
-
-				select a.idPedidoEspecial,CAST(a.fechaAlta AS DATE) fecha,SUM(a.monto) abono
-				INTO #ABONOS
-				from 
-				PedidosEspecialesAbonosCuentasPorCobrar a
-				join PedidosEspecialesCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar where saldoActual>0
-				group by a.idPedidoEspecial,CAST(a.fechaAlta AS DATE)
-
 				CREATE TABLE #BALANCE_CTAS(
 				fecha DATE,
 				idPedidoEspecial BIGINT,
@@ -50,24 +39,25 @@ as
 				entregado_por VARCHAR(200),
 				saldoCliente float
 				)
-
 				INSERT INTO #BALANCE_CTAS(fecha,idPedidoEspecial,cargo,abono,entregado_por,saldoCliente)
-
-				SELECT fecha,idPedidoEspecial, 0 cargo,0 abono,'' entregado_por, 0 saldoCliente				
+				SELECT a.fecha,a.idPedidoEspecial,a.cargo,a.abono,entregado_por,saldoCliente			
 				FROM (
-				SELECT idPedidoEspecial,fecha
-				from #CARGOS
-				UNION 
-				SELECT idPedidoEspecial,fecha
-				from #ABONOS) a
-				GROUP BY a.idPedidoEspecial,a.fecha
+				select a.idPedidoEspecial,a.fechaAlta fecha,a.SaldoInicial cargo,ISNULL(b.monto,0) abono,a.saldoActual saldoCliente,
+				ISNULL(case when u.idRol=10 then 'Taxi unidad' + p.numeroUnidadTaxi else u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno end,'') entregado_por
+				from PedidosEspecialesCuentasPorCobrar a
+				join PedidosEspeciales p on a.idPedidoEspecial=p.idPedidoEspecial
+				left join Usuarios u on p.idUsuarioEntrega=u.idUsuario
+				left join PedidosEspecialesAbonosCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar and coalesce(b.EsAbonoInicial,cast(0 as bit))=1
+				where saldoActual>0
 
-				update a set cargo=c.cargo,saldoCliente=c.saldoActual 
-				from #BALANCE_CTAS a
-				join #CARGOS c on a.idPedidoEspecial=c.idPedidoEspecial and a.fecha=c.fecha
+				UNION
 
-				update a set abono=c.abono from #BALANCE_CTAS a
-				join #ABONOS c on a.idPedidoEspecial=c.idPedidoEspecial and a.fecha=c.fecha
+				select a.idPedidoEspecial,a.fechaAlta fecha,0 cargo,a.monto abono,0 saldoCliente,'' entregado_por
+				from 
+				PedidosEspecialesAbonosCuentasPorCobrar a
+				join PedidosEspecialesCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar where saldoActual>0
+				and coalesce(a.EsAbonoInicial,cast(0 as bit))=0) a
+				order by fecha
 
 					
 				if not exists (select *  from #BALANCE_CTAS)
@@ -103,7 +93,7 @@ as
 				select  CONVERT(VARCHAR(10),fecha,103) fecha,idPedidoEspecial,cargo,abono,entregado_por, saldoCliente
 				from #BALANCE_CTAS
 
-			DROP TABLE #CARGOS,#ABONOS,#BALANCE_CTAS
+			DROP TABLE #BALANCE_CTAS
 					
 		end -- reporte de estatus
 		

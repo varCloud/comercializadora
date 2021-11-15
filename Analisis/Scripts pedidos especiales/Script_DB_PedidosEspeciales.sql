@@ -120,6 +120,7 @@ insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Aceptados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos/Incompletos')
+insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados por el Administrador')
 
 
 
@@ -207,6 +208,7 @@ CREATE TABLE
 			cantidadAtendida					float,
 			cantidadRechazada					float,
 			idEstatusPedidoEspecialDetalle		int,
+			observacionesConfirmar				varchar(255),
 			notificado							bit
 		)
 GO
@@ -315,6 +317,32 @@ GO
 ALTER TABLE PedidosEspecialesCuentasPorCobrar ADD FOREIGN KEY (idEstatusCuentaPorCobrar) REFERENCES CatEstatusCuentaPorCobrar (idEstatusCuentaPorCobrar)
 GO
 
+--PedidosEspecialesAbonoClientes
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesAbonoClientes' and xtype = 'u')
+	drop table PedidosEspecialesAbonoClientes
+
+CREATE TABLE 
+	PedidosEspecialesAbonoClientes 
+		(
+			idAbonoCliente			bigint primary key IDENTITY(1, 1),
+			idUsuario				int,						
+			monto					money,	
+			montoIva				money,
+			montoComision			money,
+			montoTotal				money,
+			idCliente				int,
+			requiereFactura			bit,
+			idFacturaAbono		    bigint,
+			idFactura				int,			
+			idFactFormaPago			int,
+			idFactUsoCFDI			int,
+			fechaAlta				datetime,
+			activo					bit,
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesAbonoClientes TO PUBLIC
+
+
 
 
 
@@ -333,9 +361,13 @@ CREATE TABLE
 			idUsuario				int,
 			idPedidoEspecial		bigint,
 			idCuentaPorCobrar		bigint,
+			idAbonoCliente			bigint,
+			EsAbonoInicial			bit default 0,
+			SaldoDespuesOperacion   money default 0
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesAbonosCuentasPorCobrar TO PUBLIC
+
 GO
 
 ALTER TABLE PedidosEspecialesAbonosCuentasPorCobrar ADD FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente)
@@ -618,6 +650,14 @@ insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values (
 -- rol de taxi
 insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
 
+
+
+-- se agregan columnas en inventario detalle log para los movimientos de mercancia de pedidos especiales
+if not exists (select 1 FROM sys.columns where Name = N'idPedidoEspecial' AND Object_ID = Object_ID(N'InventarioDetalleLog'))
+BEGIN
+	alter table InventarioDetalleLog add idPedidoEspecial bigint
+END
+go
 
 
 ------------------------------------------------------------------------------------------------------------------

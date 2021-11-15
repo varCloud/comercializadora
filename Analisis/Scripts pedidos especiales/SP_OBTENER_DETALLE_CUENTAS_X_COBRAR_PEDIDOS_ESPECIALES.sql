@@ -31,17 +31,18 @@ as
 			begin -- principal
 				
 			
-					SELECT						
+					SELECT
+					pe.idCliente,
 					pe.idPedidoEspecial,
 					pe.SaldoInicial,
 					pe.saldoActual,
 					case when max(a.fechaAlta) is null then 'N/A' else CONVERT(VARCHAR(10),max(a.fechaAlta),103) + ' ' + CONVERT(VARCHAR(20),max(a.fechaAlta),114) end fechaUltimoAbono
 					into #cuentasPorCobrarDetalle
 					FROM	
-						PedidosEspecialesCuentasPorCobrar pe
+						PedidosEspecialesCuentasPorCobrar pe					
 					left join PedidosEspecialesAbonosCuentasPorCobrar a on pe.idCuentaPorCobrar=a.idCuentaPorCobrar
 					where saldoActual>0 and pe.idCliente=coalesce(@idCliente,pe.idCliente)
-					group by pe.idPedidoEspecial, pe.SaldoInicial,pe.saldoActual,pe.fechaAlta
+					group by pe.idCliente,pe.idPedidoEspecial, pe.SaldoInicial,pe.saldoActual,pe.fechaAlta
 					order by pe.fechaAlta
 					
 					
@@ -75,7 +76,17 @@ as
 					@mensaje mensaje
            
 		    if(@status=200)
-				select * from #cuentasPorCobrarDetalle
+			begin			   
+				select c.*,
+				cl.nombres + ' ' + cl.apellidoPaterno + ' ' + cl.apellidoMaterno nombreCliente,
+				ISNULL(cl.telefono,'') telefonoCliente,
+				ISNULL(cl.correo,'') correoCliente,
+				ISNULL(cl.rfc,'') rfcCliente,
+				tc.descripcion tipoClienteCliente
+				from #cuentasPorCobrarDetalle c
+				join Clientes cl on c.idCliente=cl.idCliente
+				join CatTipoCliente tc on cl.idTipoCliente=tc.idTipoCliente
+			end
 			
 					
 		end -- reporte de estatus

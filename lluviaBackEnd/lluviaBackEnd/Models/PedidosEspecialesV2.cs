@@ -20,6 +20,7 @@ namespace lluviaBackEnd.Models
         public int idAlmacen { get; set; }
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
+        public DateTime fechaAlta { get; set; }
         public string nombreCliente { get; set; }
         public float montoTotal { get; set; }
         public float cantidad { get; set; }

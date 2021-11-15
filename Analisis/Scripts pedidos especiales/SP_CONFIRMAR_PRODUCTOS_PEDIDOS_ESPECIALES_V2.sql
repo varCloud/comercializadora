@@ -123,9 +123,9 @@ as
 						save tran @tran_name
 					select @tran_scope = 1
 				end -- inicio transaccion
+				
 
-
-				select @fecha = coalesce(@fecha, dbo.FechaActual())
+				select @fecha = dbo.FechaActual()
 
 				insert into #cantidadSolicitada (cantidadSolicitada)
 				SELECT Pedidos.cantidadSolicitada.value('.','NVARCHAR(200)') AS cantidadSolicitada FROM @listaProductos.nodes('//cantidadSolicitada') as Pedidos(cantidadSolicitada) 
@@ -196,8 +196,8 @@ as
 					begin
 					
 						update	PedidosEspecialesDetalle
-						set		PedidosEspecialesDetalle.observaciones = a.observaciones,
-								idEstatusPedidoEspecialDetalle = 5	--Atendidos/Incompletos
+						set		PedidosEspecialesDetalle.observacionesConfirmar = a.observaciones,
+								idEstatusPedidoEspecialDetalle = 6		-- Rechazados por el Administrador
 						from	(
 									select	idProducto, idPedidoEspecialDetalle, observaciones 
 									from	#productos
@@ -253,14 +253,14 @@ as
 							insert into Ubicacion (idAlmacen, idPasillo, idRaq, idPiso)
 							select idAlmacenOrigen, 0,0,0 from #tempUbicacionesDevoluciones_
 						end
-
+						
 
 						-- inserta los registros que se regresaron
 						-- rechazados
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta
 						from	#tempUbicacionesDevoluciones_ temp
 									join (
 											select	p.idProducto,  p.cantidadRechazada												
@@ -274,7 +274,7 @@ as
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.noAceptados, actuales.cantidad + rechazados.noAceptados as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	
 											select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados
@@ -284,7 +284,7 @@ as
 									join InventarioDetalle actuales
 										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 					
-							
+
 
 						-- actualizamos InventarioDetalle
 						-- rechazados
@@ -324,6 +324,75 @@ as
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
 							and	InventarioDetalle.idProducto = a.idProducto
+
+
+
+
+						-- inserta los registros que se regresaron para los movimientos de mercancia
+						-- rechazados
+						insert into 
+							PedidosEspecialesMovimientosDeMercancia 
+								(
+									idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
+									idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
+								)
+						select	u.idAlmacen as idAlmacenOrigen, ubicacionDestino.idAlmacenOrigen as idAlmacenDestino, idl.idProducto, rechazados.cantidadRechazada as cantidad, idl.idPedidoEspecial,
+								idl.idUsuario, @fecha as fechaAlta, cast(5 as int) as idEstatusPedidoEspecialDetalle, -- 5	Atendidos/Incompletos
+								rechazados.observaciones, rechazados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionDestino.idUbicacionOrigen as idUbicacionDestino
+						from	InventarioDetalleLog idl
+									join Ubicacion u
+										on u.idUbicacion = idl.idUbicacion
+									join	(
+												select	idPedidoEspecial, idAlmacenOrigen, idEstatusPedidoEspecialDetalle, idUbicacionOrigen
+												from	PedidosEspecialesMovimientosDeMercancia
+												where	idPedidoEspecial = @idPedidoEspecial
+													and idEstatusPedidoEspecialDetalle = 1 -- 1	Solcitados
+												group by idPedidoEspecial, idAlmacenOrigen, idEstatusPedidoEspecialDetalle, idUbicacionOrigen
+											)ubicacionDestino
+												on ubicacionDestino.idPedidoEspecial = idl.idPedidoEspecial
+									join	(
+												select	idProducto,  cantidadRechazada as cantidadRechazada, observaciones, cantidadAtendida
+												from	#productos 
+												where	cantidadRechazada > 0												
+											)rechazados
+												on rechazados.idProducto = idl.idProducto
+						where	idl.idPedidoEspecial = @idPedidoEspecial
+							and	idl.idTipoMovInventario = 18
+
+
+
+						-- no aceptados
+						insert into 
+							PedidosEspecialesMovimientosDeMercancia 
+								(
+									idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
+									idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
+								)
+						select	u.idAlmacen as idAlmacenOrigen, ubicacionDestino.idAlmacenOrigen as idAlmacenDestino, idl.idProducto, noAceptados.noAceptados as cantidad, idl.idPedidoEspecial,
+								idl.idUsuario, @fecha as fechaAlta, cast(6 as int) as idEstatusPedidoEspecialDetalle, -- 6	Rechazados por el Administrador
+								noAceptados.observaciones, noAceptados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionDestino.idUbicacionOrigen as idUbicacionDestino
+						from	InventarioDetalleLog idl
+									join Ubicacion u
+										on u.idUbicacion = idl.idUbicacion
+									join	(
+												select	idPedidoEspecial, idAlmacenOrigen, idEstatusPedidoEspecialDetalle, idUbicacionOrigen
+												from	PedidosEspecialesMovimientosDeMercancia
+												where	idPedidoEspecial = @idPedidoEspecial
+													and idEstatusPedidoEspecialDetalle = 1 -- 1	Solcitados
+												group by idPedidoEspecial, idAlmacenOrigen, idEstatusPedidoEspecialDetalle, idUbicacionOrigen
+											)ubicacionDestino
+												on ubicacionDestino.idPedidoEspecial = idl.idPedidoEspecial
+									join	(
+												select	idProducto,  (cantidadSolicitada - cantidadAceptada) as noAceptados, observaciones, cantidadAtendida
+												from	#productos 
+												where	cantidadAceptada <> cantidadSolicitada										
+											)noAceptados
+												on noAceptados.idProducto = idl.idProducto
+						where	idl.idPedidoEspecial = @idPedidoEspecial
+							and	idl.idTipoMovInventario = 18
+
+
+
 
 
 					end

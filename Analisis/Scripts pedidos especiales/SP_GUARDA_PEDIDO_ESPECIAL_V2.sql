@@ -517,9 +517,9 @@ as
 								--select '#tempExistencias', * from #tempExistencias
 
 								-- se inserta el InventarioDetalleLog
-								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta)
+								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
 								select	idUbicacion, idProducto, cantidadDescontada, cantidadFinal, cast(17 as int) as idTipoMovInventario,
-										@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, 0 as idVenta
+										@idUsuario as idUsuario, dbo.FechaActual() as fechaAlta, 0 as idVenta, @idPedidoEspecial
 								from	#tempExistencias
 								where	cantidadDescontada > 0
 
@@ -544,18 +544,18 @@ as
 								--- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- se inserta el InventarioDetalleLog
-								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta)
+								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
 								select	id.idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
-										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial
 								from	
 										(
-											select	idProducto, cantidadDescontada
+											select	idProducto, cantidadDescontada, idUbicacion
 											from	#tempExistencias
 											where	cantidadDescontada > 0.0
-											group by idProducto, cantidadDescontada
+											group by idProducto, cantidadDescontada, idUbicacion
 										)  tempExistencias
 											join InventarioDetalle id
-												on id.idProducto = tempExistencias.idProducto and id.idUbicacion = @idUbicacion
+												on id.idProducto = tempExistencias.idProducto and id.idUbicacion = tempExistencias.idUbicacion
 											
 
 								-- se actualiza inventario detalle
@@ -592,15 +592,18 @@ as
 								--PedidosEspecialesMovimientosDeMercancia
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- estatus de solicitado
+								--select '#tempExistencias', * from #tempExistencias
 								insert into 
 									PedidosEspecialesMovimientosDeMercancia 
 										(
-											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,
-											fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida
+											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
+											idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
 										)
 								select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
-										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida
+										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida, @idUbicacion, t.idUbicacion
 								from	PedidosEspecialesDetalle ped
+											join #tempExistencias t
+												on t.idProducto = ped.idProducto
 								where	ped.idPedidoEspecial = @idPedidoEspecial
 
 								/*
@@ -633,12 +636,14 @@ as
 								insert into 
 									PedidosEspecialesMovimientosDeMercancia 
 										(
-											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,
-											fechaAlta,idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida
+											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
+											idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
 										)
 								select	ped.idAlmacenDestino, @idAlmacenSolicita as idAlmacenOrigen, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
-										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida
+										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida, t.idUbicacion, @idUbicacion
 								from	PedidosEspecialesDetalle ped
+											join #tempExistencias t
+												on t.idProducto = ped.idProducto
 								where	ped.idPedidoEspecial = @idPedidoEspecial
 
 							end 

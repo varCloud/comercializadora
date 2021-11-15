@@ -106,6 +106,7 @@ as
 								ped.cantidadRechazada,
 								ped.idEstatusPedidoEspecialDetalle,
 								est.descripcion estatusPedidoEspecialDetalle,
+								ped.observacionesConfirmar,
 								ped.notificado 
 						from	PedidosEspecialesDetalle ped
 									join Productos p 

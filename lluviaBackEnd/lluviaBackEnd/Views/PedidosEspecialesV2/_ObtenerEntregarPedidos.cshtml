@@ -38,8 +38,8 @@ else
                                         <th>Monto</th>
                                         <th># Productos</th>
                                         <th>Usuario</th>
-                                        <th>Entregar</th>
-                                        <th>Eliminar</th>
+                                        <th>Fecha Alta</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,7 +51,27 @@ else
                                             <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                             <td>@item.cantidad</td>
                                             <td>@item.nombreUsuario</td>
+                                            <td>@item.fechaAlta</td>
                                             <td>
+                                                <div class="dropdown d-inline">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesEntregar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Acciones
+                                                    </button>
+                                                    <div class="dropdown-menu">
+
+                                                        @if (item.puedeEntregar)
+                                                        {
+                                                            <a class="dropdown-item has-icon" href="@Url.Action("ConfirmarProductos", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial})"><i class="fas fa-check"></i> Entregar</a>
+                                                        }
+
+                                                        <a class="dropdown-item has-icon" href="javascript:CancelarPedidoEspecial(@item.idPedidoEspecial);"><i class="fas fa-times"></i> Eliminar</a>
+
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            @*<td>
                                                 @if (item.puedeEntregar)
                                                 {
                                                     <a href="@Url.Action("ConfirmarProductos", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial})"  class="btn btn-success"><i class="fas fa-check"></i> Entregar</a>
@@ -59,7 +79,7 @@ else
                                             </td>
                                             <td>
                                                 <a href="javascript:CancelarPedidoEspecial(@item.idPedidoEspecial);" class="btn btn-danger"><i class="fas fa-times"></i> Eliminar</a>
-                                            </td>
+                                            </td>*@
                                         </tr>
                                     }
                                 </tbody>

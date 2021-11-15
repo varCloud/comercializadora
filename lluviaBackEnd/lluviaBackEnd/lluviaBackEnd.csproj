@@ -270,6 +270,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AbonoCliente.cs" />
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
     <Compile Include="Models\DetallePedidoInterno.cs" />
