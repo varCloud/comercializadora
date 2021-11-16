@@ -360,6 +360,14 @@ function initInputsTabla() {
 
 
 
+
+function EliminarProductos(id) {
+
+    var tblConfirmarProductos = document.getElementById('tblConfirmarProductos');
+    tblConfirmarProductos.rows[id].cells[9].children[0].value = 0;
+
+}
+
 $(document).ready(function () {
     
     InitSelect2();
