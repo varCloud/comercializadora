@@ -169,7 +169,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             idPedidoEspecial = parseInt(tblProductos.rows[i].cells[11].innerHTML);
         }
     }
-
+    
     dataToPost = JSON.stringify({ productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial : idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega, numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoTotal: montoTotal, montoTotalcantidadAbonada: montoTotalcantidadAbonada });
     console.log(dataToPost);
     //return;
@@ -255,18 +255,47 @@ $('#chkCreditoConAbono').click(function () {
 function chkChangeEntregar(chk) {
 
     if (chk == 'chkCliente') {
+
         document.getElementById("chkRuteo").checked = false;
         document.getElementById("chkTaxi").checked = false;
+
+        $('#idUsuarioRuteo').val("0").trigger('change');
+        document.getElementById("idUsuarioRuteo").disabled = true;
+
+        $('#idUsuarioTaxi').val("0").trigger('change');
+        document.getElementById("idUsuarioTaxi").disabled = true;
+
+        document.getElementById("numeroUnidadTaxi").value = "";
+        document.getElementById("numeroUnidadTaxi").disabled = true;
+
     }
 
     if (chk == 'chkRuteo') {
+
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkTaxi").checked = false;
+
+        $('#idUsuarioTaxi').val("0").trigger('change');
+        document.getElementById("idUsuarioTaxi").disabled = true;
+
+        document.getElementById("idUsuarioRuteo").disabled = false;
+        document.getElementById("numeroUnidadTaxi").value = "";
+        document.getElementById("numeroUnidadTaxi").disabled = true;
+
     }
 
     if (chk == 'chkTaxi') {
+
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkRuteo").checked = false;
+
+        $('#idUsuarioRuteo').val("0").trigger('change');
+        document.getElementById("idUsuarioRuteo").disabled = true;
+
+        document.getElementById("idUsuarioTaxi").disabled = false;
+        document.getElementById("numeroUnidadTaxi").value = "";
+        document.getElementById("numeroUnidadTaxi").disabled = false;
+
     }
 
 }
@@ -276,18 +305,30 @@ function chkChangeEntregar(chk) {
 function chkChangeTipoPago(chk) {
 
     if (chk == 'chkLiquidado') {
+
         document.getElementById("chkCredito").checked = false;
         document.getElementById("chkCreditoConAbono").checked = false;
+
+        document.getElementById("montoTotal").disabled = false;
+        document.getElementById("cantidadAbonada").disabled = true;
     }
 
     if (chk == 'chkCredito') {
+
         document.getElementById("chkLiquidado").checked = false;
         document.getElementById("chkCreditoConAbono").checked = false;
+
+        document.getElementById("montoTotal").disabled = true;
+        document.getElementById("cantidadAbonada").disabled = true;
     }
 
     if (chk == 'chkCreditoConAbono') {
+
         document.getElementById("chkLiquidado").checked = false;
         document.getElementById("chkCredito").checked = false;
+
+        document.getElementById("montoTotal").disabled = true;
+        document.getElementById("cantidadAbonada").disabled = false;
     }
 
 }
@@ -373,6 +414,12 @@ $(document).ready(function () {
     InitSelect2();
     initInputsTabla();
     actualizarSubTotal();
+    document.getElementById("idUsuarioRuteo").disabled = true;
+    document.getElementById("idUsuarioTaxi").disabled = true;
+    document.getElementById("numeroUnidadTaxi").disabled = true;
+    document.getElementById("montoTotal").disabled = true;
+    document.getElementById("cantidadAbonada").disabled = true;
+
 });
 
 
