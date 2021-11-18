@@ -85,7 +85,10 @@ namespace lluviaBackEnd.Controllers
                 producto.idUsuario = UsuarioActual.idUsuario;
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
                 notificacion = new ProductosDAO().ObtenerProductosPorUsuario(producto);
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
+                var json = Json(notificacion, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = 500000000;
+                return json;
+
             }
             catch (Exception ex)
             {
