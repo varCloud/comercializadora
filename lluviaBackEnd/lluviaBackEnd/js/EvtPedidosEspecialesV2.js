@@ -590,90 +590,21 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
     var productos = [];
     var idCliente = $('#idCliente').val();
-    //var formaPago = $('#formaPago').val();
-    //var usoCFDI = $('#usoCFDI').val();
-    //var idVenta = $('#idVenta').val();
-    //var aplicaIVA = parseInt(0);
-    //var numClientesAtendidos = parseInt(0);
-    //var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
-    //var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
-    ////var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
-    //var esDevolucion = $('#esDevolucion').val();
-    //var esAgregarProductos = $('#esAgregarProductos').val();
-    //var esVentaNormal = "true";
-    //var motivoDevolucion = $('#motivoDevolucion').val();
-    //var tipoVenta = parseInt(1); // 1-Normal / 2-Devolucion / 3-Agregar Productos a la venta
-
-
-
-    //if (((esDevolucion == "true") || (esDevolucion == "True")) || ((esAgregarProductos == "true") || (esAgregarProductos == "True"))) {
-    //    esVentaNormal = "false"
-    //}
-
-    //if ((esDevolucion == "false") || (esDevolucion == "False")) {
-    //    // validaciones
-    //    if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
-    //        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-    //        //document.getElementById("btnGuardarVenta").disabled = false;
-    //        $("#btnGuardarVenta").removeClass('btn-progress disabled');
-    //        PuedeRealizarVenta = true;
-    //        return;
-    //    }
-
-    //    if (parseFloat(efectivo_) < parseFloat(total_)) {
-    //        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
-    //        //document.getElementById("btnGuardarVenta").disabled = false;
-    //        $("#btnGuardarVenta").removeClass('btn-progress disabled');
-    //        PuedeRealizarVenta = true;
-    //        return;
-    //    }
-
-    //    if ($("#chkFacturar").is(":checked")) {
-    //        aplicaIVA = parseInt(1);
-    //    }
-
-    //    if (($("#idCliente").find("option:selected").text()).includes('RUTA')) {
-
-    //        if ($('#numClientesAtendidos').val() == "") {
-    //            MuestraToast('warning', "Debe escribir cuantos clientes son atendidos por la ruta.");
-    //            //document.getElementById("btnGuardarVenta").disabled = false;
-    //            $("#btnGuardarVenta").removeClass('btn-progress disabled');
-    //            PuedeRealizarVenta = true;
-    //            return;
-    //        }
-    //        else {
-    //            numClientesAtendidos = parseInt($('#numClientesAtendidos').val());
-    //        }
-    //    }
-
-    //    if ((parseInt(formaPago) !== parseInt(1))) // si no es efectivo
-    //    {
-    //        efectivo_ = total_;
-    //    }
-
-    //}
-    //else {
-    //    efectivo_ = parseFloat(0);
-    //}
-
-
 
     // si todo bien
     var tblVtas = document.getElementById('tablaRepVentas');
     var rCount = tblVtas.rows.length;
 
-    //if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
-        if (rCount >= 2) {
-            for (var i = 1; i < rCount; i++) {
-                var row_ = {
-                    idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
-                    cantidad: parseFloat(tblVtas.rows[i].cells[5].children[0].value),
-                    idAlmacen: parseInt(tblVtas.rows[i].cells[9].innerHTML),
-                };
-                productos.push(row_);
-            }
+    if (rCount >= 2) {
+        for (var i = 1; i < rCount; i++) {
+            var row_ = {
+                idProducto: parseInt(tblVtas.rows[i].cells[1].innerHTML),
+                cantidad: parseFloat(tblVtas.rows[i].cells[5].children[0].value),
+                idAlmacen: parseInt(tblVtas.rows[i].cells[9].innerHTML),
+            };
+            productos.push(row_);
         }
-    //}
+    }
 
     
     dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial});
@@ -692,44 +623,24 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
         },
         success: function (data) {
             OcultarLoader();
-
-            //if ((esDevolucion == "true") || (esDevolucion == "True")) {
-            //    //swal(data.Mensaje, '', data.Estatus == 200 ? 'success' : 'error');
-            //}
-            //else {
-                MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            //}
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
 
             if (data.Estatus == 200) {
-                //console.log(esVentaNormal);
 
-                //if ((esVentaNormal == "true") || (esVentaNormal == "True")) {
-                    //ImprimeTicket(data.Modelo.idVenta);
-                    //if (data.Modelo.cantProductosLiq > 0)
-                    //    ImprimeTicketDespachadores(data.Modelo.idVenta);
-
-                    //if ($("#chkFacturar").is(":checked")) {
-                    //    facturaVenta(data.Modelo.idVenta);
-                    //}
-                //}
-
-//                ultimoCambio = parseFloat(document.getElementById("ultimoCambio").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
-
-                //InitSelect2Productos();
+                imprimirTicketPedidoEspecial(data.Modelo.idPedidoEspecial);
                 ActualizarProductosAlmacen();
                 limpiarTicket();
                 $("#listProductos").focus();
-                //ConsultExcesoEfectivo();
+
             }
             $('#ModalGuardarPedidoEspecial').modal('hide');
-            //initTimer();
+
 
         },
         error: function (xhr, status) {
             OcultarLoader();            
             $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
             $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
-            //PuedeRealizarVenta = true;
             console.log('Hubo un problema al guardar el Pedido Especial, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
@@ -2878,10 +2789,11 @@ function BuscarVentaCodigoBarras() {
 
 $(document).ready(function () {
 
-    $('[data-toggle="tooltip"]').tooltip()
-    $("#btnTicket").click(function (evt) {
-        consultarTicketPedidoEspecial();
-    });
+    $('[data-toggle="tooltip"]').tooltip();
+
+    //$("#btnTicket").click(function (evt) {
+    //    consultarTicketPedidoEspecial();
+    //});
     //$('#ModalPrevioVenta').on('shown.bs.modal', function () {
     //    PuedeRealizarVenta = true;
     //    console.log("puede realizar venta", PuedeRealizarVenta)
@@ -2892,10 +2804,10 @@ $(document).ready(function () {
 
 
 
-function consultarTicketPedidoEspecial() {
+function imprimirTicketPedidoEspecial(idPedidoEspecial) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
-        data: { idPedidoEspecial: 0 },
+        data: { idPedidoEspecial: idPedidoEspecial },
         method: 'post',
         dataType: 'json',
         async: true,

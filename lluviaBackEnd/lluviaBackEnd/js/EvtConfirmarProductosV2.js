@@ -52,6 +52,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var montoTotal = parseFloat(0.0);
     var montoTotalcantidadAbonada = parseFloat(0.0);
     var productos = [];
+    var aCredito = parseInt(0);
 
     // validaciones
     if  (
@@ -149,6 +150,17 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     }
 
 
+    // si es a credito -> afectar estructuras de cuentas por cobrar
+    if  (
+            ($("#chkCredito").is(":checked")) ||
+            ($("#chkCreditoConAbono").is(":checked")) 
+        )
+    {
+        aCredito = parseInt(1);
+    }
+
+
+
 
     // si todo bien
     var tblProductos = document.getElementById('tblConfirmarProductos');
@@ -170,7 +182,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         }
     }
     
-    dataToPost = JSON.stringify({ productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial : idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega, numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoTotal: montoTotal, montoTotalcantidadAbonada: montoTotalcantidadAbonada });
+    dataToPost = JSON.stringify({ productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega, numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoTotal: montoTotal, montoTotalcantidadAbonada: montoTotalcantidadAbonada, aCredito: aCredito });
     console.log(dataToPost);
     //return;
 

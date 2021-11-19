@@ -148,11 +148,6 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
-                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
-                //ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
-                //ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);                
-                //ViewBag.pedidoEspecial = new PedidosEspecialesV2DAO().ConsultaPedidoEspecial(pedidoEspecial.idPedidoEspecial);
-                //ViewBag.comisionBancaria = usuario.comisionBancaria;
                 pedidoEspecial.lstProductos = new List<Producto>();
                 pedidoEspecial.lstProductos = new PedidosEspecialesV2DAO().ConsultaPedidoEspecialDetalle(pedidoEspecial.idPedidoEspecial);
 
@@ -162,7 +157,20 @@ namespace lluviaBackEnd.Controllers
                 List<SelectListItem> listUsuariosTaxi = new SelectList(new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = 10 }), "idUsuario", "nombreCompleto").ToList();
                 ViewBag.listUsuariosTaxi = listUsuariosTaxi;
 
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
+
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
+
+                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
+                ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+
+                ViewBag.comisionBancaria = usuario.comisionBancaria;
                 ViewBag.pedidoEspecial = pedidoEspecial;
+
                 return View();                
             }
             catch (Exception ex)
@@ -172,14 +180,14 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
+        public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada, bool aCredito)
         {
             try
             {
                 Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 idUsuarioEntrega = UsuarioActual.idUsuario;
-                result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar, montoTotal, montoTotalcantidadAbonada);
+                result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar, montoTotal, montoTotalcantidadAbonada, aCredito);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

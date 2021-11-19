@@ -1337,6 +1337,7 @@
     <Content Include="Views\PedidosEspecialesV2\EntregarPedido.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_ObtenerEntregarPedidos.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\ConsultarCuentasPorCobrar.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\VerTicketAlmacenes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

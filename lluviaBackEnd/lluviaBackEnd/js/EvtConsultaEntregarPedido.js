@@ -74,6 +74,25 @@ function InitDataTableConsultaEntregarPedidos() {
 }
 
 
+function imprimirTicketPedidoEspecial(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast("info", data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

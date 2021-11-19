@@ -30,7 +30,10 @@ create proc [dbo].[SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2]
 	@numeroUnidadTaxi					varchar(255),
 	@idEstatusCuentaPorCobrar			int,
 	@montoTotal							float,
-	@montoTotalcantidadAbonada			float
+	@montoTotalcantidadAbonada			float,
+	@aCredito							bit,
+	@idTipoPago							int
+	
 
 as
 
@@ -50,7 +53,10 @@ as
 						@tran_scope					bit = cast(0 as bit),
 						@hayRechazos				bit = cast(0 as bit),
 						@hayNoAceptados				bit = cast(0 as bit),
-						@valido						bit = cast(1 as bit)
+						@valido						bit = cast(1 as bit),
+						@idCliente					int = 0,
+						@idUsuario					int = 0,
+						@saldoInicial				float = 0
 						
 
 				create table 
@@ -181,7 +187,10 @@ as
 
 				--select * from #productos
 							
-
+				select	@idCliente = idCliente,
+						@idUsuario = idUsuario
+				from	PedidosEspeciales 
+				where	idPedidoEspecial = @idPedidoEspecial
 
 				-- acualizamos estatus de pedido especial
 				update	PedidosEspeciales
@@ -393,6 +402,65 @@ as
 
 
 
+						-- Afectar las tablas de PedidosEspecialesCuentasPorCobrar cuando el pedido es a credito
+						if ( @aCredito = cast(1 as bit) )
+							begin
+								
+								select @saldoInicial = montoTotal from PedidosEspeciales where idPedidoEspecial = @idPedidoEspecial
+
+								insert into 
+									PedidosEspecialesCuentasPorCobrar 
+										(
+											idPedidoEspecial,idCliente,idUsuario,idTipoPago,fechaAlta,SaldoInicial,saldoActual,idEstatusCuentaPorCobrar
+										)
+								select	@idPedidoEspecial as idPedidoEspecial, @idCliente as idCliente, @idUsuario as idUsuario, @idTipoPago as idTipoPago, 
+										@fecha as fechaAlta, @saldoInicial as SaldoInicial, (@saldoInicial - @montoTotalcantidadAbonada) as saldoActual,
+										cast(1 as int) as idEstatusCuentaPorCobrar -- 1	En Crédito.
+
+										
+								select	@idCuentaPorCobrar = max(idCuentaPorCobrar) from PedidosEspecialesCuentasPorCobrar where idCliente = @idCliente
+
+							end
+						/*
+						select * from PedidosEspeciales where idpedidoespecial = 220 
+						select * from PedidosEspecialesDetalle where idpedidoespecial = 220 
+						select * from PedidosEspecialesCuentasPorCobrar 
+						select * from PedidosEspecialesAbonosCuentasPorCobrar
+						select * from PedidosEspecialesAbonoClientes
+						
+						select * from FactCatFormaPago
+						select * from FactCatMetodoPago
+						select * from CatEstatusCuentaPorCobrar
+						*/
+
+						-- Afectar las tablas de PedidosEspecialesAbonosCuentasPorCobrar cuando el pedido tiene un monto abonado
+						if ( @montoTotalcantidadAbonada > 0.0 )
+							begin
+								
+								insert into 
+									PedidosEspecialesAbonoClientes
+										(
+											idUsuario,monto,montoIva,montoComision,montoTotal,idCliente,requiereFactura,idFacturaAbono,
+											idFactura,idFactFormaPago,idFactUsoCFDI,fechaAlta,activo
+										)
+								select	@idUsuario as idUsuario, @montoTotalcantidadAbonada as monto, @montoIva as montoIva, @montoComision as montoComision,
+										(@montoTotalcantidadAbonada + @montoIva + @montoComision) as  montoTotal, @idCliente as  idCliente,
+										@requiereFactura as requiereFactura, @idFacturaAbono as idFacturaAbono, @idFactura as idFactura,
+										@idFactFormaPago as idFactFormaPago, @idFactUsoCFDI as idFactUsoCFDI, @fecha as fechaAlta, cast(1 as bit) as activo
+
+								select	@idAbonoCliente = max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente = @idCliente
+
+								insert into 
+									PedidosEspecialesAbonosCuentasPorCobrar
+										(
+											monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,
+											EsAbonoInicial,SaldoDespuesOperacion,idAbonoCliente
+										)
+								select	@montoTotalcantidadAbonada as monto, @fecha as fechaAlta, @idCliente as idCliente, @idUsuario as idUsuario, 
+										@idPedidoEspecial as idPedidoEspecial, @idCuentaPorCobrar as idCuentaPorCobrar, cast(1 as bit) as EsAbonoInicial,
+										(@saldoInicial - @montoTotalcantidadAbonada) as SaldoDespuesOperacion, @idAbonoCliente as idAbonoCliente
+
+							end
 
 
 					end

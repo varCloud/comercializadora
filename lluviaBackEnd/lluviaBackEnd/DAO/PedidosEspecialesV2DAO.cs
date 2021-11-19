@@ -643,7 +643,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada)
+        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada, bool aCredito)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -660,6 +660,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idEstatusCuentaPorCobrar", idEstatusCuentaPorCobrar);
                     parameters.Add("@montoTotal", montoTotal);
                     parameters.Add("@montoTotalcantidadAbonada", montoTotalcantidadAbonada);
+                    parameters.Add("@aCredito", aCredito);
 
                     var result = db.QueryMultiple("SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

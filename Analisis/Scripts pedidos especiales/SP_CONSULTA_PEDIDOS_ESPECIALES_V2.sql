@@ -126,6 +126,7 @@ as
 																when @fechaFin is null then cast(p.fechaAlta as date)
 																else cast(@fechaFin as date)
 															end
+						and p.idEstatusPedidoEspecial in (1,2,3)
 						order by p.fechaAlta desc
 
 					end
