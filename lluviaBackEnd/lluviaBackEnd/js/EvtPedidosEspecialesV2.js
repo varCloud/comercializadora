@@ -180,9 +180,20 @@ $('#btnAgregarProducto').click(function (e) {
 
 
 
-function AgregarProducto(producto, cantidad) {
+function AgregarProducto(producto, cantidad, cotizacion) {
     //console.log(producto);
     //var esAgregarProductos = $('#esAgregarProductos').val();
+    var cantidadCotizada = parseFloat(0);
+    var leyenda = "";
+    if (cotizacion == true) {
+        cantidadCotizada = producto.cantidad;
+        producto.cantidad = producto.cantidadActualInvAlmacen;
+
+        if (cantidadCotizada > producto.cantidad)
+            leyenda = "<div class='badge badge-danger badge-shadow'>Cantidad cotizada " + cantidadCotizada + "</div>";
+        else
+            leyenda = "<div class='badge badge-success badge-shadow'>Cantidad de inventario actual " + producto.cantidad + "</div>";
+    }
 
     cantidad = parseFloat(cantidad) || 0.0;
 
@@ -263,10 +274,10 @@ function AgregarProducto(producto, cantidad) {
             (producto.idLineaProducto == 22) ||
             (producto.idLineaProducto == 25)
         ) {
-            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esDecimal(this, event);\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\">" + leyenda + "</td>";
         }
         else {
-            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\"></td>";
+            row_ += "  <td class=\"text-center\"><input type='text' onkeypress=\"return esNumero(event)\" style=\"text-align: center; border: none; border-color: transparent;  background: transparent; \" value=\"" + cantidad + "\">" + leyenda + "</td>";
         }
 
         row_ +=
@@ -483,13 +494,24 @@ function actualizaTicketVenta() {
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
      
-    abrirModalGuardarPedidoEspecial();
+    abrirModalGuardarPedidoEspecial(1);
    
 });
 
-function abrirModalGuardarPedidoEspecial() {
+
+
+function abrirModalGuardarPedidoEspecial(tipo) {
 
     //limpiaModalPrevio();
+    $('#divCotizar').css('display', 'none');
+    $('#buttonCerrar').css('display', 'block');
+    $('#divTipoRevision').css('display', 'block');
+    $('#TituloModalPedidoEspecial').html('Generar Pedido Especial');
+
+    if ($('#idClienteCotizacion').val() > 0)
+        $('#idClienteCotizacion').val("1").trigger('change');
+    else
+        $('#idCliente').val("1").trigger('change');
 
     var total = parseFloat(0);
     //var descuento = parseFloat(0);
@@ -507,6 +529,13 @@ function abrirModalGuardarPedidoEspecial() {
         //document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
         //document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
         //document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
+    
+        if (tipo === 2) { //cotizacion
+            $('#divCotizar').css('display', 'block');
+            $('#buttonCerrar').css('display', 'none');
+            $('#divTipoRevision').css('display', 'none');
+            $('#TituloModalPedidoEspecial').html('Generar Cotizaciòn');
+        }
         $('#ModalGuardarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
     }
     else {
@@ -570,7 +599,7 @@ $('#btnCotizar').click(function (e) {
         .then((willDelete) => {
             if (willDelete) {
                 //console.log(willDelete);
-                GuardarPedidoEspecial(3, 1); // cotizacion
+                GuardarPedidoEspecial(3, 2); // cotizacion
             } else {
                 console.log("cancelar");
             }
@@ -590,6 +619,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
     var productos = [];
     var idCliente = $('#idCliente').val();
+    var idPedidoEspecial = $('#idPedidoEspecial').val();
 
     // si todo bien
     var tblVtas = document.getElementById('tablaRepVentas');
@@ -606,8 +636,8 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
         }
     }
 
-    
-    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial});
+   
+    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idPedidoEspecial: idPedidoEspecial});
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarPedidoEspecial"),
@@ -633,9 +663,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
                 $("#listProductos").focus();
 
             }
-            $('#ModalGuardarPedidoEspecial').modal('hide');
-
-
+            $('#ModalGuardarPedidoEspecial').modal('hide');            
         },
         error: function (xhr, status) {
             OcultarLoader();            
@@ -2542,7 +2570,56 @@ $(document).ready(function () {
     $("#listProductos").focus();
     $('#dvEfectivo').css('display', '')
 
+    if ($("#idPedidoEspecial").val() > 0) {
+
+        AgregarProductosPedidoEspecial();
+
+    }
+
 });
+
+function AgregarProductosPedidoEspecial() {
+
+        $.ajax({
+            url: rootUrl("/PedidosEspecialesV2/ObtenerProductosPedidoEspecial"),
+            data: { idPedidoEspecial: $("#idPedidoEspecial").val() },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (productosPedidoEspecial) {
+            
+            var i, totalProductosAgregados = 0;
+            for (i = 0; i < productosPedidoEspecial.length; i++) {
+                var cantidad = productosPedidoEspecial[i].cantidad > productosPedidoEspecial[i].cantidadActualInvAlmacen ? productosPedidoEspecial[i].cantidadActualInvAlmacen : productosPedidoEspecial[i].cantidad;
+                AgregarProducto(productosPedidoEspecial[i], cantidad, true);
+                    totalProductosAgregados = totalProductosAgregados + 1;
+                
+            }
+
+            if (totalProductosAgregados > 0) {               
+                actualizaTicketVenta();
+                initInputsTabla();              
+            }
+            else {
+                MuestraToast("error", "No existen productos válidos para agregar al pedido especial");
+            }
+
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', 'Ocurrio un error al consultar el pedido especial');
+        }
+    });
+
+
+
+
+
+}
 
 ////*********************** PEDIDO ESPECIAL  ************************************
 //$("#NoPedidoEspecial").keyup(function (evt) {
@@ -2823,3 +2900,9 @@ function imprimirTicketPedidoEspecial(idPedidoEspecial) {
         }
     });
 }
+
+//cotizaciones
+$('#btnGeneraCotizacion').click(function (e) {
+    abrirModalGuardarPedidoEspecial(2);
+});
+

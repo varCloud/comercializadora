@@ -92,8 +92,10 @@
                                     @*@Html.HiddenFor(x => idVenta)*@
                                     @Html.HiddenFor(x => comisionBancaria)
                                     @*@Html.HiddenFor(x => esDevolucion)
-                                        @Html.HiddenFor(x => esAgregarProductos)*@
+        @Html.HiddenFor(x => esAgregarProductos)*@
                                     @Html.HiddenFor(x => idClienteDevolucion)
+                                    @Html.HiddenFor(x => Model.idPedidoEspecial, new { id = "idPedidoEspecial" });
+                                    @Html.HiddenFor(x => Model.idCliente, new { id = "idClienteCotizacion" });
 
                                     @*<input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">*@
                                     @*<select id="idProducto"></select>*@
@@ -190,7 +192,7 @@
                                         <th>Producto</th>
                                         <th>Almacen</th>
                                         <th class="text-center">Precio</th>
-                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Cantidad</th>                                     
                                         <th class="text-center">Total</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Acciones  @*@(esDevolucion == true ? "Devolver Artículos" : "Acciones")*@ </th>
@@ -335,7 +337,10 @@
                                 &nbsp;
                                 <button id="btnGuardarPedidoEspecial" class="btn btn-warning btn-icon icon-left"><i class="fas fa-credit-card"></i> Generar Pedido Especial</button>
                                 &nbsp;
-                                <button id="btnGuardarCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>
+                                @if (Model.idPedidoEspecial==0)
+                                {
+                                    <button id="btnGeneraCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>
+                                }
 
                             </div>
                         </div>
@@ -1035,7 +1040,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Generar Pedido Especial</h5>
+                <h5 class="modal-title" id="TituloModalPedidoEspecial">Generar Pedido Especial</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -1059,7 +1064,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="divTipoRevision">
                     <div class="col-12 col-md-6 col-lg-12">
                         <div class="card">
                             <div class="card-header">
@@ -1075,10 +1080,19 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="buttonCerrar">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;                            
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="divCotizar">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="btnCotizar" class="btn btn-success">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -1086,8 +1100,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 @section scripts {
