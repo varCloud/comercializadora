@@ -12,6 +12,10 @@
 
 }
 
+<script type="text/javascript">
+    var listClientes = @Html.Raw(Json.Encode(lstClientes));
+</script>
+
 @section Styles {
     <link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
@@ -49,7 +53,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-
+                        @Html.HiddenFor(x => comisionBancaria)
 
                         <div class="table-responsive">
                             <table class="table table-striped" id="tblConfirmarProductos">
@@ -60,6 +64,7 @@
                                         <th>Producto</th>
                                         <th>Almacen</th>
                                         <th class="text-center">Monto</th>
+                                        <th class="text-center">Descuento </th>
                                         <th class="text-center">Cantidad Solicitada</th>
                                         <th class="text-center">Observaciones Entrega</th>
                                         <th class="text-center">Cantidad Atendida</th>
@@ -84,6 +89,7 @@
                                                     <td>@item.descripcion</td>
                                                     <td>@item.Almacen</td>
                                                     <td>$@item.precioVenta</td>
+                                                    <td>$0.00</td>
                                                     <td class="text-center">@item.cantidadSolicitada</td>
                                                     <td class="text-center">@item.observaciones</td>
                                                     <td class="text-center">@item.cantidadAtendida </td>
@@ -173,6 +179,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-7">
+                                        @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
                                     </div>
                                 </div>
 
@@ -218,40 +225,8 @@
                                     </div>
                                 </div>
 
-                            </div>
-
-                        </div>
 
 
-
-
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Entregado a:</h4>
-                            </div>
-
-                            <div class="card-body">
-
-                                <div class="section-title"><strong>Cliente: </strong></div>
-                                <div class="form-group">
-                                    @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div id="nombreCliente">
-                                            <address>
-                                                <strong></strong><br>
-                                                <br>
-                                                <br>
-                                                <br>
-                                                <br>
-                                            </address>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="section-title"><strong>Forma de Pago: </strong></div>
                                 <div class="form-group">
@@ -282,14 +257,9 @@
                                 </div>
 
 
-
                             </div>
 
                         </div>
-
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-5">
 
 
                         <div class="card">
@@ -344,6 +314,10 @@
                             </div>
 
                         </div>
+
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-5">
 
                         <div class="card">
                             <div class="card-header">

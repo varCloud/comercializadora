@@ -32,7 +32,8 @@ create proc [dbo].[SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2]
 	@montoTotal							float,
 	@montoTotalcantidadAbonada			float,
 	@aCredito							bit,
-	@idTipoPago							int
+	@idTipoPago							varchar(100),
+	@aplicaIVA							bit
 	
 
 as
@@ -56,8 +57,11 @@ as
 						@valido						bit = cast(1 as bit),
 						@idCliente					int = 0,
 						@idUsuario					int = 0,
-						@saldoInicial				float = 0
-						
+						@saldoInicial				float = 0,
+						@idCuentaPorCobrar			bigint = 0,
+						@montoIva					float = 0,
+						@montoComision				float = 0,
+						@porcentajeComision			float = 0
 
 				create table 
 					#cantidadSolicitada 
@@ -191,6 +195,20 @@ as
 						@idUsuario = idUsuario
 				from	PedidosEspeciales 
 				where	idPedidoEspecial = @idPedidoEspecial
+
+				
+				if ( @idTipoPago in ( '04', '18' ) )
+					begin	
+						select @porcentajeComision = porcentaje from Comisiones where idComision = 1 and activo = cast(1 as bit)
+					end
+				
+				select @porcentajeComision = coalesce(@porcentajeComision, 0.0)
+
+				
+				-- select * from FactCatFormaPago
+				-- select * from Comisiones
+				--select * from FactCatMetodoPago
+
 
 				-- acualizamos estatus de pedido especial
 				update	PedidosEspeciales
