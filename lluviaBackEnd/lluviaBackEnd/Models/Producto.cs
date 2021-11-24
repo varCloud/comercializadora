@@ -86,13 +86,18 @@ namespace lluviaBackEnd.Models
         public int idVenta { get; set; }
         public int idAlmacenOrigen { get; set; }
         public int idAlmacenDestino { get; set; }
-        public int cantidadActualInvGeneral { get; set; }
-        public int cantidadAnteriorInvGeneral { get; set; }
+        public float cantidadActualInvGeneral { get; set; }
+        public float cantidadAnteriorInvGeneral { get; set; }
+        public float cantidadActualInvAlmacen { get; set; }
         public int precioVenta { get; set; }
         public int cantidadSolicitada { get; set; }
         public int cantidadAtendida { get; set; }
         public int cantidadAceptada { get; set; }
         public int cantidadRechazada { get; set; }
+
+
+
+
         public int idEstatusPedidoEspecialDetalle { get; set; }
         public int id { get; set; }
 

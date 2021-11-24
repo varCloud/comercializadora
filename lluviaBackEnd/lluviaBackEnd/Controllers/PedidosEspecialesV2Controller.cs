@@ -59,19 +59,16 @@ namespace lluviaBackEnd.Controllers
                         ViewBag.lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes(0, 0);
 
                         ViewBag.pedidoEspecial = pedidoEspecial;
-                        ViewBag.comisionBancaria = usuario.comisionBancaria;
+                        ViewBag.comisionBancaria = usuario.comisionBancaria;                     
 
-                        return View();
+                        return View(pedidoEspecial);
                     }
                 }
                 else
                 {
                     return View("AperturaCajas");
                 }
-
-
-
-                return View();
+              
             }
             catch (Exception ex)
             {
@@ -107,6 +104,21 @@ namespace lluviaBackEnd.Controllers
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerProductosPedidoEspecial(int idPedidoEspecial)
+        {
+            try
+            {
+                List<Producto> productosPedidoEspecial = new PedidosEspecialesV2DAO().ConsultaPedidoEspecialDetalle(idPedidoEspecial); ;
+                return Json(productosPedidoEspecial, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
         }
@@ -199,13 +211,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idEstatusPedidoEspecial)
+        public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idEstatusPedidoEspecial, int idPedidoEspecial)
         {
             try
             {
                 Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                result = new PedidosEspecialesV2DAO().GuardarPedidoEspecial(productos, tipoRevision, idCliente, UsuarioActual.idUsuario, idEstatusPedidoEspecial, UsuarioActual.idEstacion);
+                result = new PedidosEspecialesV2DAO().GuardarPedidoEspecial(productos, tipoRevision, idCliente, UsuarioActual.idUsuario, idEstatusPedidoEspecial, UsuarioActual.idEstacion, idPedidoEspecial);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -647,6 +659,8 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        
+
         #region CuentasPorCobrar
         public ActionResult ConsultarCuentasPorCobrar()
         {
@@ -762,6 +776,8 @@ namespace lluviaBackEnd.Controllers
 
 
         #endregion
+
+
     }
 
 }

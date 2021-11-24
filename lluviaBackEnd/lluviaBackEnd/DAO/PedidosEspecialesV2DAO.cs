@@ -22,7 +22,7 @@ namespace lluviaBackEnd.DAO
         private IDbConnection db = null;
 
 
-        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion)
+        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion,int idPedidoEspecial)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -37,6 +37,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", idUsuario);
                     parameters.Add("@idEstatusPedidoEspecial", idEstatusPedidoEspecial);
                     parameters.Add("@idEstacion", idEstacion);
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
 
                     var result = db.QueryMultiple("SP_GUARDA_PEDIDO_ESPECIAL_V2", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

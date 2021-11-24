@@ -57,7 +57,9 @@
                                         <td>@item.nombreCliente</td>
                                         <td>@item.cantidad</td>
                                         <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
-                                        <td></td>
+                                        <td>
+                                            <a href="@Url.Action("PedidosEspeciales", "PedidosEspecialesV2",new {idPedidoEspecial=item.idPedidoEspecial,idCliente=item.idCliente })" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar cotizaciòn"><i class="far fa-edit"></i> Editar cotizaciòn</a>
+                                        </td>
                                     </tr>
                                     }
                                 </tbody>

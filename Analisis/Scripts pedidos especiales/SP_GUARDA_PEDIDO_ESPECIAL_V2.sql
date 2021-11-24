@@ -29,7 +29,8 @@ create proc [dbo].[SP_GUARDA_PEDIDO_ESPECIAL_V2]
 	@idCliente					int,
 	@idUsuario					int,
 	@idEstatusPedidoEspecial	int,
-	@idEstacion					int
+	@idEstacion					int,
+	@idPedidoEspecial			int=0
 
 as
 
@@ -59,7 +60,7 @@ as
 						@montoAgregarProductos			money = 0,
 						@ini_							int = 0,
 						@fin_							int = 0,
-						@idPedidoEspecial				int = 0,
+						--@idPedidoEspecial				int = 0,
 						@idAlmacenSolicita				int = 0,
 						@idUbicacion					int = 0,
 						@idRaqResguardo					int = 0,
@@ -151,6 +152,13 @@ as
 
 				
 				select @fecha = coalesce(@fecha, dbo.FechaActual())
+
+				--si el idPedidoEspecial viene diferente de 0 y se encuentra en cotizacion borramos el registros para que se inserte el nuevo pedido especial
+				if exists(select 1 from PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial and idEstatusPedidoEspecial=2 and @idPedidoEspecial>0)
+				begin
+					delete PedidosEspecialesDetalle where idPedidoEspecial=@idPedidoEspecial
+					delete PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial
+				end
 
 				insert into #cantidades (cantidad)
 				SELECT Pedidos.cantidad.value('.','NVARCHAR(200)') AS cantidad FROM @xml.nodes('//cantidad') as Pedidos(cantidad) 
@@ -699,6 +707,6 @@ as
 		end -- reporte de estatus
 
 	end  -- principal
-
+go
 grant exec on SP_GUARDA_PEDIDO_ESPECIAL_V2 to public
 go

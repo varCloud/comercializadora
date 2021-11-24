@@ -87,6 +87,7 @@ as
 								ped.idUbicacion,
 								ped.idAlmacenOrigen,
 								ped.idAlmacenDestino,
+								ped.idAlmacenDestino idAlmacen,
 								a.Descripcion as Almacen,
 								ped.fechaAlta,
 								ped.cantidad,
@@ -107,13 +108,20 @@ as
 								ped.idEstatusPedidoEspecialDetalle,
 								est.descripcion estatusPedidoEspecialDetalle,
 								ped.observacionesConfirmar,
-								ped.notificado 
+								ped.notificado,
+								invActual.cantidadActual cantidadActualInvAlmacen,
+								dbo.LineaProductoFraccion(p.idLineaProducto,p.idProducto) fraccion,
+								p.idLineaProducto
 						from	PedidosEspecialesDetalle ped
 									join Productos p 
 										on p.idProducto = ped.idProducto
 									join Almacenes a
 										on a.idAlmacen = ped.idAlmacenDestino
 									join CatEstatusPedidoEspecialDetalle est on est.idEstatusPedidoEspecialDetalle=ped.idEstatusPedidoEspecialDetalle
+									left join(select sum(cantidad) cantidadActual,idAlmacen,idProducto from InventarioDetalle i
+											join Ubicacion u on i.idUbicacion=u.idUbicacion
+											group by idAlmacen,idProducto
+											) invActual on p.idProducto=invActual.idProducto and invActual.idAlmacen=ped.idAlmacenDestino
 						where	idPedidoEspecial = @idPedidoEspecial
 
 					end
@@ -121,6 +129,6 @@ as
 			end -- reporte de estatus
 
 	end  -- principal
-
+go
 grant exec on SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_V2 to public
 go
