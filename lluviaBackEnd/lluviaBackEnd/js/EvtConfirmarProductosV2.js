@@ -33,8 +33,8 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     document.getElementById("chkCreditoConAbono").checked = false;
     document.getElementById("chkFacturarPedido").checked = false;
 
-    $('#idUsuarioRuteo').val("0").trigger('change');
-    $('#idUsuarioTaxi').val("0").trigger('change');
+    $('#idUsuarioRuteo').val("").trigger('change');
+    $('#idUsuarioTaxi').val("").trigger('change');
     $('#idCliente').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
     $('#usoCFDI').val("1").trigger('change');
@@ -63,6 +63,9 @@ $("#formaPago").on("change", function (value) {
     calculaTotales('true');
 });
 
+//$("#idUsuarioRuteo").on("change", function (value) {
+//    console.log(this.value);
+//});
 
 function calculaTotales(conReseteoCampos) {
 
@@ -498,10 +501,10 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkRuteo").checked = false;
         document.getElementById("chkTaxi").checked = false;
 
-        $('#idUsuarioRuteo').val("0").trigger('change');
+        $('#idUsuarioRuteo').val("").trigger('change');
         document.getElementById("idUsuarioRuteo").disabled = true;
 
-        $('#idUsuarioTaxi').val("0").trigger('change');
+        $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
 
         document.getElementById("idCliente").disabled = false;
@@ -515,7 +518,7 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkTaxi").checked = false;
 
-        $('#idUsuarioTaxi').val("0").trigger('change');
+        $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
 
         $('#idCliente').val("0").trigger('change');
@@ -532,7 +535,7 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkRuteo").checked = false;
 
-        $('#idUsuarioRuteo').val("0").trigger('change');
+        $('#idUsuarioRuteo').val("").trigger('change');
         document.getElementById("idUsuarioRuteo").disabled = true;
 
         $('#idCliente').val("0").trigger('change');

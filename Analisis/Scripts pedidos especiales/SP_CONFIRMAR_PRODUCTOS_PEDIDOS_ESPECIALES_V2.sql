@@ -273,12 +273,13 @@ as
 
 
 						update	PedidosEspeciales
-						set		montoTotal = a.montoTotal
+						set		montoTotal = a.montoTotal,
+								cantidad = a.cantidad
 						from	(
-									select sum(monto) as montoTotal  from PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
+									select	sum(monto) as montoTotal, sum(cantidad) as cantidad 
+									from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
 								)A
 						where	PedidosEspeciales.idPedidoEspecial = @idPedidoEspecial
-
 
 					end
 				else
@@ -502,6 +503,27 @@ as
 									cast(1 as int) as idEstatusCuentaPorCobrar -- 1	En Crédito.
 										
 							select	@idCuentaPorCobrar = max(idCuentaPorCobrar) from PedidosEspecialesCuentasPorCobrar where idCliente = @idCliente
+
+						end
+					else
+						begin  -- si fue liquidado
+							
+							if ( @aplicaIVA = cast(1 as bit) )
+								begin
+									--select @montoIva =  Round((@montoTotalcantidadAbonada * 0.16),2,0) 
+									update	PedidosEspecialesDetalle 
+									set		montoIva = Round((monto * 0.16),2,0) 
+									where	idPedidoEspecial = @idPedidoEspecial
+
+									update	PedidosEspeciales
+									set		montoTotal = a.montoTotal
+									from	(
+												select	sum(monto + montoIva) as montoTotal
+												from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
+											)A
+									where	PedidosEspeciales.idPedidoEspecial = @idPedidoEspecial
+
+								end
 
 						end
 
