@@ -269,7 +269,52 @@
 
                             <div class="card-body">
 
+
                                 <div class="form-group row">
+                                    <div class="col-sm-4">
+
+                                        
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkLiquidado">
+                                                    <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
+                                                </div>
+                                            </div>
+                                        
+                                        
+                                            <input type="text" class="form-control" id="montoTotal" onkeypress="return esDecimal(this, event);" placeholder="Monto total">
+                                        
+
+                                    </div>
+
+                                    <div class="col-sm-4">
+
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkCredito">
+                                                    <label class="custom-control-label" for="chkCredito">A Crédito </label>
+                                                </div>
+                                            </div>
+
+                                    </div>
+
+                                    <div class="col-sm-4">
+
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
+                                                    <label class="custom-control-label" for="chkCreditoConAbono">A Crédito con Abono </label>
+                                                </div>
+                                            </div>
+                                        
+                                            <input type="text" class="form-control" id="cantidadAbonada" onkeypress="return esDecimal(this, event);" placeholder="Cantidad que abono">
+
+                                    </div>
+
+                                </div>
+
+
+                                @*<div class="form-group row">
                                     <div class="col-sm-5">
                                         <div class="form-check">
                                             <div class="custom-control custom-checkbox">
@@ -310,7 +355,7 @@
                                     </div>
                                 </div>
                                 <br />
-                                <br />
+                                <br />*@
                             </div>
 
                         </div>
@@ -393,11 +438,6 @@
             </div>
         </div>
     </div>
-
-
-    @*@Html.DropDownListFor(model => model.idUsuario, lstUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })*@
-
-
 
 
     @section scripts {

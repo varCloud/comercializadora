@@ -226,6 +226,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
     var idUsuarioRuteo = $('#idUsuarioRuteo').val();
     var idUsuarioTaxi = $('#idUsuarioTaxi').val();
+    var idFactUsoCFDI = parseInt(0);
     var numeroUnidadTaxi = "0";
     var idUsuarioEntrega = parseInt(0);
     var idPedidoEspecial = parseInt(0);
@@ -235,14 +236,15 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var montoTotalcantidadAbonada = parseFloat(0.0);
     var productos = [];
     var aCredito = parseInt(0);
-    $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
-
-    // validaciones
-
     var formaPago = $('#formaPago').val();
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
     var aplicaIVA = parseInt(0);
+    var cantidadAbonada_ = parseFloat($('#cantidadAbonada').val()).toFixed(2);
+    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+
+    $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
 
     if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
         MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
@@ -258,6 +260,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
     if ($("#chkFacturarPedido").is(":checked")) {
         aplicaIVA = parseInt(1);
+        idFactUsoCFDI = $('#usoCFDI').val();    
     }
 
     if ((parseInt(formaPago) !== parseInt(1))) // si no es efectivo
@@ -376,7 +379,13 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     }
 
 
-
+    //validaciones
+    if (parseFloat(cantidadAbonada_) > parseFloat(total_)) {
+        MuestraToast('warning', "No puede abonar mas del total del pedido especial .");
+        $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+        return;
+    }
+    
 
     // si todo bien
     var tblProductos = document.getElementById('tblConfirmarProductos');
@@ -401,7 +410,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     dataToPost = JSON.stringify({
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
         numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoTotal: montoTotal, montoTotalcantidadAbonada: montoTotalcantidadAbonada,
-        aCredito: aCredito, idTipoPago : formaPago, aplicaIVA: aplicaIVA
+        aCredito: aCredito, idTipoPago: formaPago, aplicaIVA: aplicaIVA, idFactUsoCFDI: idFactUsoCFDI
     });
     
     $.ajax({
@@ -819,6 +828,14 @@ $("#efectivo").on("keyup", function (event) {
 });
 
 
+$("#cantidadAbonada").on("keyup", function (event) {
+
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnEntregarPedidoEspecial").click();
+    }
+
+});
 
 function initInputsTabla() {
 

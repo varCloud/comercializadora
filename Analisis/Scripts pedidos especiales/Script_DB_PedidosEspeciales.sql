@@ -201,6 +201,7 @@ CREATE TABLE
 			precioMenudeo						money,
 			precioRango							money,
 			precioVenta							money,
+			montoIva							money,
 			idTicketMayoreo						int,
 			observaciones						varchar(255),
 			ultimoCostoCompra					money,
@@ -236,9 +237,7 @@ GO
 ALTER TABLE PedidosEspecialesDetalle ADD FOREIGN KEY (idEstatusPedidoEspecialDetalle) REFERENCES CatEstatusPedidoEspecialDetalle (idEstatusPedidoEspecialDetalle)
 GO
 
-
 -- PedidosEspecialesLog
-
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesLog' and xtype = 'u')
 	drop table PedidosEspecialesLog
 
