@@ -50,6 +50,7 @@ namespace lluviaBackEnd.Utilerias
                 //es lo mismo que el de arriba
                 ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
+                ns.Add("pago10", "http://www.sat.gob.mx/Pagos");
 
                 xmlTextWriter.Formatting = Formatting.Indented;
                 serializer.Serialize(xmlTextWriter, comprobante, ns);
@@ -64,7 +65,7 @@ namespace lluviaBackEnd.Utilerias
                 //serializer.Serialize(strWriter, comprobante);
                 //string resultXml = strWriter.ToString();
                 //strWriter.Close();
-
+                //resultXml = resultXml.Replace("xmlns:pago10=\"http://www.sat.gob.mx/Pagos\" ", "");
                 return resultXml;
 
             }

@@ -19,7 +19,9 @@ BEGIN
 
 		select 200 status  , 'pedido especial encontrado' mensaje
 
-		select PED.* , P.descripcion descProdcuto from PedidosEspecialesDetalle PED join 
+		select PED.* , P.descripcion descProdcuto,
+		[dbo].[LineaProductoFraccion](P.idLineaProducto, null) fraccion
+		from PedidosEspecialesDetalle PED join 
 		Productos P on PED.idProducto = P.idProducto and P.activo = 1
 		where idAlmacenDestino = coalesce(@idAlmacen,idAlmacenDestino) and idPedidoEspecial = @idPedidoEspecial
 

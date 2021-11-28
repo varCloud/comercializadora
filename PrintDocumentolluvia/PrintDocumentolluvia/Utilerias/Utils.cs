@@ -419,7 +419,8 @@ namespace lluviaBackEnd.Utilerias
             string ruta = string.Empty;
             try
             {
-                ruta = ConfigurationManager.AppSettings["pathFacturas"].ToString();
+                
+                ruta = AppDomain.CurrentDomain.BaseDirectory+ConfigurationManager.AppSettings["pathFacturas"].ToString();
                 DateTime fecha = System.DateTime.Now;
 
                 if (!Directory.Exists(ruta))
