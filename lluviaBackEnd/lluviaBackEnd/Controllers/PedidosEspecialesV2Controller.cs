@@ -529,10 +529,8 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-
         /************** REIMPRIMIR TICKET  GENERAL********************/
-
-
+        
 
         public ActionResult CierreCajas()
         {

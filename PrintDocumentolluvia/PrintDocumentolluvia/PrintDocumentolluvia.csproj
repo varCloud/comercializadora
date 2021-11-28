@@ -201,6 +201,7 @@
     <Compile Include="Models\Facturacion\ClasesCancelaFacturaProductivo.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelarFactura.cs" />
     <Compile Include="Models\Facturacion\ClasesFacturacion.cs" />
+    <Compile Include="Models\Facturacion\ClasessPagos.cs" />
     <Compile Include="Models\FormaPago.cs" />
     <Compile Include="Models\Grafico.cs" />
     <Compile Include="Models\IngresoEfectivo.cs" />
@@ -287,7 +288,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Connected Services\servicioProduccionCancelaFactura\cancelaCFDI.wsdl" />
     <None Include="Connected Services\servicioTimbradoProductivo\PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

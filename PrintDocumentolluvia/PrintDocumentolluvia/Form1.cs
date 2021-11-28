@@ -26,6 +26,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
+
 
 namespace PrintDocumentolluvia
 {
@@ -960,9 +963,10 @@ namespace PrintDocumentolluvia
             Dictionary<string, object> items = null;
             try
             {
-                string pathFactura = ConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
-                pathFactura =  Utils.ObtnerAnoMesFolder().Replace("\\", "/");
-                string pathServer = Utils.ObtnerFolder() + @"/";
+                Utils.ObtnerFolder();
+                string pathFactura = AppDomain.CurrentDomain.BaseDirectory+ ConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
+                //pathFactura = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utils.ObtnerAnoMesFolder());
+                string pathServer = pathFactura + @"/";
                 log4netRequest.Debug("pathFactura: " + pathFactura);
                 log4netRequest.Debug("pathServer : " + pathServer);
                 FacturaDAO facturacionDAO = new FacturaDAO();
@@ -977,6 +981,7 @@ namespace PrintDocumentolluvia
                 comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
                 comprobante.Emisor.RegimenFiscal = 621;                
                 */
+                comprobante.MetodoPago = "PPD";
                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
@@ -995,10 +1000,11 @@ namespace PrintDocumentolluvia
                     string cadenaOriginal = ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                     comprobante.Sello = ProcesaCfdi.GeneraSello(cadenaOriginal);
                     xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
-
+                    string timeStamp = "_" + DateTime.Now.Ticks.ToString();
+                    System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
                     //TIMBRAR CON EDI-FACT
                     respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
-                    string timeStamp = "_" + DateTime.Now.Ticks.ToString();
+
                     if (respuesta.codigoResultado.Equals("100"))
                     {
 
@@ -1022,11 +1028,11 @@ namespace PrintDocumentolluvia
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
 
-                        Task.Factory.StartNew(() =>
-                        {
-                            if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
-                        });
+                        //Task.Factory.StartNew(() =>
+                        //{
+                        //    if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
+                        //});
 
 
                     }
@@ -1061,6 +1067,108 @@ namespace PrintDocumentolluvia
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnComplemento_Click(object sender, EventArgs e)
+        {
+            string pathFactura = AppDomain.CurrentDomain.BaseDirectory + ConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/") + @"/"; ;
+            Dictionary<string, string> certificados = ProcesaCfdi.ObtenerCertificado();
+            if (certificados == null)
+                this.txtLog.Text += "Error al obtener los certificados";
+
+
+            try
+            {
+                FacturaDAO facturacionDAO = new FacturaDAO();
+                Comprobante oComprobante = facturacionDAO.ObtenerConfiguracionComprobante();
+                oComprobante.Version = 3.3M;
+                oComprobante.Serie = "H";
+                oComprobante.Folio = "1";
+                oComprobante.Fecha = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                oComprobante.MetodoPago = null;
+
+                oComprobante.Certificado = certificados["Certificado"];
+                oComprobante.NoCertificado = certificados["NoCertificado"];
+
+                oComprobante.SubTotal = 0m;
+                oComprobante.Moneda = "XXX";
+                oComprobante.Total = 0;
+                oComprobante.TipoDeComprobante = "P";
+                //oComprobante.MetodoPago = "PUE";
+                oComprobante.LugarExpedicion = 58149;
+
+
+                ComprobanteReceptor oReceptor = new ComprobanteReceptor();
+                oReceptor.Nombre = "Pepe SA DE CV";
+                oReceptor.Rfc = "BIO091204LB1";
+                oReceptor.UsoCFDI = "P01";
+
+                oComprobante.Receptor = oReceptor;
+
+
+                List<ComprobanteConcepto> lstConceptos = new List<ComprobanteConcepto>();
+                ComprobanteConcepto oConcepto = new ComprobanteConcepto();
+                oConcepto.Importe = 0;
+                oConcepto.ClaveProdServ = 84111506; //siempre
+                oConcepto.Cantidad = 1;
+                oConcepto.ClaveUnidad = "ACT"; //siempre
+                oConcepto.Descripcion = "Pago";
+                oConcepto.ValorUnitario = 0;
+                lstConceptos.Add(oConcepto);
+                oComprobante.Conceptos = lstConceptos.ToArray();
+
+                //complemento de pago
+                Pagos oPagos = new Pagos();
+                List<PagosPago> lstPagos = new List<PagosPago>();
+                PagosPago oPago = new PagosPago();
+                oPago.MonedaP = c_Moneda.MXN;
+                oPago.FormaDePagoP = c_FormaPago.Item01;
+                oPago.Monto = 666;
+                oPago.FechaPago = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
+                //Documentos relacionados aqui se agregan
+                List<PagosPagoDoctoRelacionado> lstDoctos = new List<PagosPagoDoctoRelacionado>();
+                PagosPagoDoctoRelacionado oDoctoRelacionado = new PagosPagoDoctoRelacionado();
+                oDoctoRelacionado.IdDocumento = "BEDC8964-7E57-4604-9968-7E01378E8706";
+                oDoctoRelacionado.MonedaDR = c_Moneda.MXN;
+                oDoctoRelacionado.ImpPagado = 600;
+                oDoctoRelacionado.MetodoDePagoDR = c_MetodoPago.PUE;
+
+                lstDoctos.Add(oDoctoRelacionado);
+
+                oDoctoRelacionado = new PagosPagoDoctoRelacionado();
+                oDoctoRelacionado.IdDocumento = "BEDC8964-7E57-4604-9968-7E01378E8706";
+                oDoctoRelacionado.MonedaDR = c_Moneda.MXN;
+                oDoctoRelacionado.ImpPagado = 66;
+                oDoctoRelacionado.MetodoDePagoDR = c_MetodoPago.PUE;
+
+                lstDoctos.Add(oDoctoRelacionado);
+
+                oPago.DoctoRelacionado = lstDoctos.ToArray();
+
+                lstPagos.Add(oPago);
+                oPagos.Pago = lstPagos.ToArray();
+
+                oComprobante.Complemento = new ComprobanteComplemento();
+                oComprobante.Complemento.Pagos = new Pagos();
+                oComprobante.Complemento.Pagos = oPagos;
+
+                oComprobante.schemaLocation += @" http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd";
+                string xmlSerealizado = ProcesaCfdi.SerializaXML33(oComprobante);
+                string cadenaOriginal = ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
+                oComprobante.Sello = ProcesaCfdi.GeneraSello(cadenaOriginal);
+                xmlSerealizado = ProcesaCfdi.SerializaXML33(oComprobante);
+                string timeStamp = "_" + DateTime.Now.Ticks.ToString();
+                
+                System.IO.File.WriteAllText(pathFactura + ("Comprobante_" + timeStamp + ".xml"), xmlSerealizado);
+                //TIMBRAR CON EDI-FACT
+                respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
+            }
+            catch (Exception ex)
+            {
+                this.txtLog.Text = ex.Message;
+            }
         }
     }
 }
