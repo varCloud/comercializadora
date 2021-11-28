@@ -33,8 +33,8 @@ create proc [dbo].[SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2]
 	@montoTotalcantidadAbonada			float,
 	@aCredito							bit,
 	@idTipoPago							varchar(100),
-	@aplicaIVA							bit
-	
+	@aplicaIVA							bit,
+	@idFactUsoCFDI						int
 
 as
 
@@ -61,7 +61,10 @@ as
 						@idCuentaPorCobrar			bigint = 0,
 						@montoIva					float = 0,
 						@montoComision				float = 0,
-						@porcentajeComision			float = 0
+						@porcentajeComision			float = 0,
+						@idAbonoCliente				bigint = 0,
+						@autorizadoMayoreo			bit = cast(1 as bit),
+						@totalProductos				float = 0
 
 				create table 
 					#cantidadSolicitada 
@@ -170,41 +173,57 @@ as
 						o.observaciones
 				into	#productos
 				from	#idProductos p_
-						inner join Productos p
+						join Productos p
 							on p.idProducto = p_.idProducto
-						inner join #idPedidoEspecialDetalle i
+						join #idPedidoEspecialDetalle i
 							on i.id = p_.id
 						join PedidosEspecialesDetalle ped
 							on ped.idPedidoEspecialDetalle = i.idPedidoEspecialDetalle
-						inner join #observaciones o
+						left join #observaciones o
 							on o.id = p_.id
-						inner join #cantidadSolicitada cs
+						left join #cantidadSolicitada cs
 							on cs.id = p_.id
-						inner join #cantidadAtendida ca
+						left join #cantidadAtendida ca
 							on ca.id = p_.id
-						inner join #cantidadRechazada cr
+						left join #cantidadRechazada cr
 							on cr.id = p_.id
-						inner join #cantidadAceptada cac
+						left join #cantidadAceptada cac
 							on cac.id = p_.id
 
-						
-
-				--select * from #productos
-							
+													   
 				select	@idCliente = idCliente,
 						@idUsuario = idUsuario
 				from	PedidosEspeciales 
 				where	idPedidoEspecial = @idPedidoEspecial
 
-				
-				if ( @idTipoPago in ( '04', '18' ) )
+
+				-- si es tarjeta de credito o debito se aplica comision 
+				if ( ( @idTipoPago in ( '4', '18' ) ) and ( @aplicaIVA = (cast (0 as bit) ) ) ) 
 					begin	
 						select @porcentajeComision = porcentaje from Comisiones where idComision = 1 and activo = cast(1 as bit)
 					end
 				
 				select @porcentajeComision = coalesce(@porcentajeComision, 0.0)
+				
+				select @montoTotalcantidadAbonada = coalesce(@montoTotalcantidadAbonada, 0.0)
+				
+				select @totalProductos = sum(cantidadAceptada) from #Productos
+				select @totalProductos = coalesce(@totalProductos, 0.0)
 
 				
+				-- universo de productos aceptados para calculo de precio de venta de pedido especial
+				select	p_.idProducto, p_.idPedidoEspecialDetalle, p_.cantidadAceptada,  @autorizadoMayoreo as autorizadoMayoreo, 
+						p.precioIndividual, p.precioMenudeo, ped.precioRango, ped.precioVenta
+				into	#productosPrecios
+				from	#productos p_
+							join PedidosEspecialesDetalle ped
+								on	ped.idPedidoEspecialDetalle = p_.idPedidoEspecialDetalle 
+								and ped.idPedidoEspecial = @idPedidoEspecial
+								and	ped.idProducto = p_.idProducto
+							join Productos p 
+								on p.idProducto = p_.idProducto
+
+				--select * from #productosPrecios
 				-- select * from FactCatFormaPago
 				-- select * from Comisiones
 				--select * from FactCatMetodoPago
@@ -217,7 +236,8 @@ as
 						numeroUnidadTaxi = @numeroUnidadTaxi												
 				where	idPedidoEspecial = @idPedidoEspecial
 
-
+				
+				-- si no se aceptaron todos los productos solicitados 
 				-- acualizamos estatus de pedido especial detalle
 				if exists ( select 1 from #productos where cantidadSolicitada <> cantidadAceptada )
 					begin
@@ -231,6 +251,36 @@ as
 								)A
 						where	PedidosEspecialesDetalle.idPedidoEspecialDetalle = a.idPedidoEspecialDetalle
 
+
+						-- si el total aceptado de productos es < 6 y no esta autorizado para mayoreo se debe actualizar el precio de venta 
+						if ( (@totalProductos < 6) and ( @autorizadoMayoreo = cast(0 as bit) ) )
+							begin
+								
+								update	#productosPrecios 
+								set		precioVenta = precioIndividual
+
+							end
+
+						-- si hubo cambios en los productos aceptados habra que actualizar cantidades y montos de venta
+						update	PedidosEspecialesDetalle
+						set		cantidad = a.cantidadAceptada,
+								monto =  Round( (a.cantidadAceptada * a.precioVenta),2,0) 
+						from	(
+									select	idProducto, idPedidoEspecialDetalle, cantidadAceptada, precioIndividual, precioMenudeo, precioRango, precioVenta
+									from	#productosPrecios
+								)A
+						where	PedidosEspecialesDetalle.idPedidoEspecialDetalle = a.idPedidoEspecialDetalle
+
+
+						update	PedidosEspeciales
+						set		montoTotal = a.montoTotal,
+								cantidad = a.cantidad
+						from	(
+									select	sum(monto) as montoTotal, sum(cantidad) as cantidad 
+									from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
+								)A
+						where	PedidosEspeciales.idPedidoEspecial = @idPedidoEspecial
+
 					end
 				else
 					begin
@@ -240,9 +290,6 @@ as
 						where	PedidosEspecialesDetalle.idPedidoEspecial = @idPedidoEspecial
 
 					end
-
-
-						--select '#productos', * from #productos
 
 
 				-- se envian a sin acomodar los productos que son rechazados
@@ -270,7 +317,6 @@ as
 							and	u.idRaq = 0
 							and u.idPiso = 0
 
-						--select '#tempUbicacionesDevoluciones_', * from #tempUbicacionesDevoluciones_
 
 						-- si no existe insertamos la ubicacion sin acomodar
 						if exists	(
@@ -418,70 +464,99 @@ as
 						where	idl.idPedidoEspecial = @idPedidoEspecial
 							and	idl.idTipoMovInventario = 18
 
+					end -- if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
+
+					-- se aplica primero la comision
+					if (  @idTipoPago in ( '4', '18' ) )
+						begin
+							
+							select @montoComision =  Round((@montoTotalcantidadAbonada * @porcentajeComision),2,0) 
+							select @montoComision = coalesce(@montoComision, 0)
+
+						end
 
 
-						-- Afectar las tablas de PedidosEspecialesCuentasPorCobrar cuando el pedido es a credito
-						if ( @aCredito = cast(1 as bit) )
-							begin
+					-- se obtiene monto de iva y ademas si es una venta facturada se elimina el monto de comision
+					if ( @aplicaIVA = cast(1 as bit) )
+						begin
+							
+							select @montoIva =  Round((@montoTotalcantidadAbonada * 0.16),2,0) 
+							select @montoIva = coalesce(@montoIva, 0)
+							select @montoComision = 0
+
+						end
+
+
+					-- Afectar las tablas de PedidosEspecialesCuentasPorCobrar cuando el pedido es a credito
+					if ( @aCredito = cast(1 as bit) )
+						begin
 								
-								select @saldoInicial = montoTotal from PedidosEspeciales where idPedidoEspecial = @idPedidoEspecial
+							select @saldoInicial = montoTotal from PedidosEspeciales where idPedidoEspecial = @idPedidoEspecial
 
-								insert into 
-									PedidosEspecialesCuentasPorCobrar 
-										(
-											idPedidoEspecial,idCliente,idUsuario,idTipoPago,fechaAlta,SaldoInicial,saldoActual,idEstatusCuentaPorCobrar
-										)
-								select	@idPedidoEspecial as idPedidoEspecial, @idCliente as idCliente, @idUsuario as idUsuario, @idTipoPago as idTipoPago, 
-										@fecha as fechaAlta, @saldoInicial as SaldoInicial, (@saldoInicial - @montoTotalcantidadAbonada) as saldoActual,
-										cast(1 as int) as idEstatusCuentaPorCobrar -- 1	En Crédito.
-
+							insert into 
+								PedidosEspecialesCuentasPorCobrar 
+									(
+										idPedidoEspecial,idCliente,idUsuario,idTipoPago,fechaAlta,SaldoInicial,saldoActual,idEstatusCuentaPorCobrar
+									)
+							select	@idPedidoEspecial as idPedidoEspecial, @idCliente as idCliente, @idUsuario as idUsuario, @idTipoPago as idTipoPago, 
+									@fecha as fechaAlta, @saldoInicial as SaldoInicial, (@saldoInicial - @montoTotalcantidadAbonada) as saldoActual,
+									cast(1 as int) as idEstatusCuentaPorCobrar -- 1	En Crédito.
 										
-								select	@idCuentaPorCobrar = max(idCuentaPorCobrar) from PedidosEspecialesCuentasPorCobrar where idCliente = @idCliente
+							select	@idCuentaPorCobrar = max(idCuentaPorCobrar) from PedidosEspecialesCuentasPorCobrar where idCliente = @idCliente
 
-							end
-						/*
-						select * from PedidosEspeciales where idpedidoespecial = 220 
-						select * from PedidosEspecialesDetalle where idpedidoespecial = 220 
-						select * from PedidosEspecialesCuentasPorCobrar 
-						select * from PedidosEspecialesAbonosCuentasPorCobrar
-						select * from PedidosEspecialesAbonoClientes
-						
-						select * from FactCatFormaPago
-						select * from FactCatMetodoPago
-						select * from CatEstatusCuentaPorCobrar
-						*/
+						end
+					else
+						begin  -- si fue liquidado
+							
+							if ( @aplicaIVA = cast(1 as bit) )
+								begin
+									--select @montoIva =  Round((@montoTotalcantidadAbonada * 0.16),2,0) 
+									update	PedidosEspecialesDetalle 
+									set		montoIva = Round((monto * 0.16),2,0) 
+									where	idPedidoEspecial = @idPedidoEspecial
 
-						-- Afectar las tablas de PedidosEspecialesAbonosCuentasPorCobrar cuando el pedido tiene un monto abonado
-						if ( @montoTotalcantidadAbonada > 0.0 )
-							begin
+									update	PedidosEspeciales
+									set		montoTotal = a.montoTotal
+									from	(
+												select	sum(monto + montoIva) as montoTotal
+												from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
+											)A
+									where	PedidosEspeciales.idPedidoEspecial = @idPedidoEspecial
+
+								end
+
+						end
+
+					-- Afectar las tablas de PedidosEspecialesAbonosCuentasPorCobrar cuando el pedido tiene un monto abonado
+					if ( @montoTotalcantidadAbonada > 0.0 )
+						begin
 								
-								insert into 
-									PedidosEspecialesAbonoClientes
-										(
-											idUsuario,monto,montoIva,montoComision,montoTotal,idCliente,requiereFactura,idFacturaAbono,
-											idFactura,idFactFormaPago,idFactUsoCFDI,fechaAlta,activo
-										)
-								select	@idUsuario as idUsuario, @montoTotalcantidadAbonada as monto, @montoIva as montoIva, @montoComision as montoComision,
-										(@montoTotalcantidadAbonada + @montoIva + @montoComision) as  montoTotal, @idCliente as  idCliente,
-										@requiereFactura as requiereFactura, @idFacturaAbono as idFacturaAbono, @idFactura as idFactura,
-										@idFactFormaPago as idFactFormaPago, @idFactUsoCFDI as idFactUsoCFDI, @fecha as fechaAlta, cast(1 as bit) as activo
+							insert into 
+								PedidosEspecialesAbonoClientes  --a nivel general
+									(
+										idUsuario,monto,montoIva,montoComision,montoTotal,idCliente,requiereFactura,idFacturaAbono,
+										idFactura,idFactFormaPago,idFactUsoCFDI,fechaAlta,activo
+									)
+							select	@idUsuario as idUsuario, @montoTotalcantidadAbonada as monto, @montoIva as montoIva, @montoComision as montoComision,
+									(@montoTotalcantidadAbonada + @montoIva + @montoComision) as  montoTotal, @idCliente as  idCliente,
+									@aplicaIVA as requiereFactura, cast(0 as int) as idFacturaAbono, cast(0 as int) as idFactura,
+									@idTipoPago as idFactFormaPago, @idFactUsoCFDI as idFactUsoCFDI, @fecha as fechaAlta, cast(1 as bit) as activo
 
-								select	@idAbonoCliente = max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente = @idCliente
-
-								insert into 
-									PedidosEspecialesAbonosCuentasPorCobrar
-										(
-											monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,
-											EsAbonoInicial,SaldoDespuesOperacion,idAbonoCliente
-										)
-								select	@montoTotalcantidadAbonada as monto, @fecha as fechaAlta, @idCliente as idCliente, @idUsuario as idUsuario, 
-										@idPedidoEspecial as idPedidoEspecial, @idCuentaPorCobrar as idCuentaPorCobrar, cast(1 as bit) as EsAbonoInicial,
-										(@saldoInicial - @montoTotalcantidadAbonada) as SaldoDespuesOperacion, @idAbonoCliente as idAbonoCliente
-
-							end
+							select	@idAbonoCliente = max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente = @idCliente
 
 
-					end
+							insert into 
+								PedidosEspecialesAbonosCuentasPorCobrar  -- abonos a nivel desglose
+									(
+										monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,
+										EsAbonoInicial,SaldoDespuesOperacion,idAbonoCliente
+									)
+							select	@montoTotalcantidadAbonada as monto, @fecha as fechaAlta, @idCliente as idCliente, @idUsuario as idUsuario, 
+									@idPedidoEspecial as idPedidoEspecial, @idCuentaPorCobrar as idCuentaPorCobrar, cast(1 as bit) as EsAbonoInicial,
+									(@saldoInicial - @montoTotalcantidadAbonada) as SaldoDespuesOperacion, @idAbonoCliente as idAbonoCliente
+
+						end
+
 
 
 
