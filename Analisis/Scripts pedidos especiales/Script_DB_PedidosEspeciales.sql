@@ -642,6 +642,55 @@ GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON ConfiguracionesPedidosEspeciales TO PUBLIC
 GO
 
+---- PedidosEspecialesIngresosEfectivo
+
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesIngresosEfectivo' and xtype = 'u')
+	drop table PedidosEspecialesIngresosEfectivo
+
+CREATE TABLE 
+	PedidosEspecialesIngresosEfectivo 
+		(
+			idIngresoPedidoEspecial bigint primary key identity(1,1),
+			monto money,
+			idUsuario int,
+			fechaAlta datetime,
+			idTipoIngreso int
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesIngresosEfectivo TO PUBLIC
+GO
+
+ALTER TABLE PedidosEspecialesIngresosEfectivo ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
+GO
+ALTER TABLE PedidosEspecialesIngresosEfectivo ADD FOREIGN KEY (idTipoIngreso) REFERENCES CatTipoIngreso (idTipoIngreso)
+GO
+
+---- PedidosEspecialesRetirosExcesoEfectivo
+
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesRetirosExcesoEfectivo' and xtype = 'u')
+	drop table PedidosEspecialesRetirosExcesoEfectivo
+
+CREATE TABLE 
+	PedidosEspecialesRetirosExcesoEfectivo 
+		(
+			idRetiro bigint primary key identity(1,1),
+			montoRetiro money,
+			idUsuario int,
+			idEstacion int,
+			fechaAlta datetime,
+			idEstatusRetiro int,
+			montoAutorizado money,
+			idUsuarioAut int
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesRetirosExcesoEfectivo TO PUBLIC
+GO
+
+ALTER TABLE PedidosEspecialesRetirosExcesoEfectivo ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
+GO
+
+
+
 
 insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values ('Dias para poder hacer complementos/devoluciones.', 30, cast(1 as bit) )
 insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values ('Requiere autorizacion para cierre de modulo de Pedidos Especiales.', 1, cast(1 as bit) )
