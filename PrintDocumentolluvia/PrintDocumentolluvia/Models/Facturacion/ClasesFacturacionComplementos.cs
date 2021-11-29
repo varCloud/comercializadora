@@ -1,18 +1,19 @@
-﻿using System;
+﻿using lluviaBackEnd.Models.Facturacion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Xml.Serialization;
 
-namespace lluviaBackEnd.Models.Facturacion
+namespace lluviaBackEnd.Models.FacturacionPE
 {
 
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
     [XmlRoot(Namespace = "http://www.sat.gob.mx/cfd/3", IsNullable = false, ElementName = "Comprobante")]
 
-    public partial class Comprobante
+    public partial class Comprobante_PE
     {
-        public Comprobante()
+        public Comprobante_PE()
         {
             xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
            
@@ -45,7 +46,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private ComprobanteAddenda addendaField = null;
 
-        private ComprobanteComplemento complementoField;
+        private ComprobanteComplemento[] complementoField;
 
         private decimal versionField;
 
@@ -146,7 +147,7 @@ namespace lluviaBackEnd.Models.Facturacion
         }
 
         /// <remarks/>
-        public ComprobanteComplemento Complemento
+        public ComprobanteComplemento[] Complemento
         {
             get
             {
@@ -1451,36 +1452,36 @@ namespace lluviaBackEnd.Models.Facturacion
     public partial class ComprobanteComplemento
     {
 
-        private Pagos pagos;
-
-        private TimbreFiscalDigital timbreFiscalDigitalField;
+        private System.Xml.XmlElement[] anyField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")]
-        public TimbreFiscalDigital TimbreFiscalDigital
+        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        public System.Xml.XmlElement[] Any
         {
             get
             {
-                return this.timbreFiscalDigitalField;
+                return this.anyField;
             }
             set
             {
-                this.timbreFiscalDigitalField = value;
+                this.anyField = value;
             }
         }
+        //private TimbreFiscalDigital timbreFiscalDigitalField;
 
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.sat.gob.mx/Pagos")]
-        public Pagos Pagos
-        {
-            get
-            {
-                return this.pagos;
-            }
-            set
-            {
-                this.pagos = value;
-            }
-        }
+        ///// <remarks/>
+        //[System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")]
+        //public TimbreFiscalDigital TimbreFiscalDigital
+        //{
+        //    get
+        //    {
+        //        return this.timbreFiscalDigitalField;
+        //    }
+        //    set
+        //    {
+        //        this.timbreFiscalDigitalField = value;
+        //    }
+        //}
     }
 
     /// <remarks/>

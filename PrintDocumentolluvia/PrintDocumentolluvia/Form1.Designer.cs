@@ -39,6 +39,7 @@
             this.btnCantToText = new System.Windows.Forms.Button();
             this.btnFacturar = new System.Windows.Forms.Button();
             this.txtNoFactura = new System.Windows.Forms.TextBox();
+            this.btnComplemento = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -142,12 +143,24 @@
             this.txtNoFactura.Name = "txtNoFactura";
             this.txtNoFactura.Size = new System.Drawing.Size(100, 20);
             this.txtNoFactura.TabIndex = 10;
+            this.txtNoFactura.Text = "54067";
+            // 
+            // btnComplemento
+            // 
+            this.btnComplemento.Location = new System.Drawing.Point(12, 324);
+            this.btnComplemento.Name = "btnComplemento";
+            this.btnComplemento.Size = new System.Drawing.Size(93, 23);
+            this.btnComplemento.TabIndex = 11;
+            this.btnComplemento.Text = "Complemento";
+            this.btnComplemento.UseVisualStyleBackColor = true;
+            this.btnComplemento.Click += new System.EventHandler(this.btnComplemento_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(927, 446);
+            this.Controls.Add(this.btnComplemento);
             this.Controls.Add(this.txtNoFactura);
             this.Controls.Add(this.btnFacturar);
             this.Controls.Add(this.btnCantToText);
@@ -180,6 +193,7 @@
         private System.Windows.Forms.Button btnCantToText;
         private System.Windows.Forms.Button btnFacturar;
         private System.Windows.Forms.TextBox txtNoFactura;
+        private System.Windows.Forms.Button btnComplemento;
     }
 }
 
