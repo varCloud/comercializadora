@@ -183,6 +183,9 @@ namespace lluviaBackEnd.Controllers
                 ViewBag.comisionBancaria = usuario.comisionBancaria;
                 ViewBag.pedidoEspecial = pedidoEspecial;
 
+                ViewBag.cajaAbierta = new PedidosEspecialesV2DAO().ValidaAperturaCajas(usuario.idUsuario).Estatus == 200 ? true : false;
+
+
                 return View();                
             }
             catch (Exception ex)
@@ -773,6 +776,84 @@ namespace lluviaBackEnd.Controllers
 
 
 
+        #endregion
+
+
+        #region IngresoEfectivo
+
+        [HttpPost]
+        public ActionResult IngresoEfectivo(float montoIngresoEfectivo, int idTipoIngresoEfectivo)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                notificacion = new PedidosEspecialesV2DAO().IngresoEfectivo(UsuarioActual.idUsuario, montoIngresoEfectivo, idTipoIngresoEfectivo);
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region RetiroExcesoEfectivo
+        [HttpPost]
+        public ActionResult ObtenerRetirosEfectivo(Retiros retiro)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                retiro.idUsuario = UsuarioActual.idUsuario;
+                Notificacion<dynamic> retirosEfectivo = new PedidosEspecialesV2DAO().ObtenerRetirosEfectivo(retiro);
+
+                return Json(JsonConvert.SerializeObject(retirosEfectivo), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtieneInfoCierre()
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];               
+                Notificacion<dynamic> infoCierre = new PedidosEspecialesV2DAO().ObtieneInfoCierre(new Cierre {idUsuario=UsuarioActual.idUsuario,idEstacion=UsuarioActual.idEstacion });
+
+                return Json(JsonConvert.SerializeObject(infoCierre), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RetirarExcesoEfectivo(float montoRetiro)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Retiros retiros = new Retiros();
+                retiros.idEstacion = usuario.idEstacion;
+                retiros.idUsuario = usuario.idUsuario;
+                retiros.montoRetiro = montoRetiro;
+                notificacion = new PedidosEspecialesV2DAO().RetirarExcesoEfectivo(retiros);
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
 

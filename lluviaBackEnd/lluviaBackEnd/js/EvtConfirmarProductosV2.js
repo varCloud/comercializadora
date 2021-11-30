@@ -206,7 +206,7 @@ $('#chkFacturarPedido').click(function () {
     $('#efectivo').val('');
 
     document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
-//    document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    //    document.getElementById("ultimoCambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
 
     var subTotal = parseFloat(document.getElementById("previoSubTotal").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
     var final = parseFloat(subTotal).toFixed(2);
@@ -234,7 +234,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var idUsuarioEntrega = parseInt(0);
     var idPedidoEspecial = parseInt(0);
     var idEstatusPedidoEspecial = parseInt(0);
-    var idEstatusCuentaPorCobrar = parseInt(0);    
+    var idEstatusCuentaPorCobrar = parseInt(0);
     var montoTotal = parseFloat(0.0);
     var montoTotalcantidadAbonada = parseFloat(0.0);
     var productos = [];
@@ -263,7 +263,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
     if ($("#chkFacturarPedido").is(":checked")) {
         aplicaIVA = parseInt(1);
-        idFactUsoCFDI = $('#usoCFDI').val();    
+        idFactUsoCFDI = $('#usoCFDI').val();
     }
 
     if ((parseInt(formaPago) !== parseInt(1))) // si no es efectivo
@@ -271,12 +271,11 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         efectivo_ = total_;
     }
 
-    if  (
-            !$("#chkCliente").is(":checked") &&
-            !$("#chkRuteo").is(":checked") &&
-            !$("#chkTaxi").is(":checked") 
-        )
-    {
+    if (
+        !$("#chkCliente").is(":checked") &&
+        !$("#chkRuteo").is(":checked") &&
+        !$("#chkTaxi").is(":checked")
+    ) {
         MuestraToast('warning', "Debe elegir a quien va a entregar el Pedido Especial");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
@@ -295,7 +294,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     // 4	Entregado y pagado
     // 6	Pagado
     if ($("#chkLiquidado").is(":checked")) {
-        if  ( $("#chkCliente").is(":checked") ) {
+        if ($("#chkCliente").is(":checked")) {
             idEstatusPedidoEspecial = parseInt(6);
         }
         else {
@@ -304,19 +303,18 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     }
     // 5	Entregado a repartidor sin ser pagado
     // 7	Entregado a crédito
-    else{
-        if ( $("#chkCliente").is(":checked") ) {
+    else {
+        if ($("#chkCliente").is(":checked")) {
             idEstatusPedidoEspecial = parseInt(7);
         }
-        else{
+        else {
             idEstatusPedidoEspecial = parseInt(5);
         }
     }
 
 
     // entregado a encargado de ruteo
-    if ($("#chkRuteo").is(":checked")  )
-    {
+    if ($("#chkRuteo").is(":checked")) {
         if (isNaN(parseInt(idUsuarioRuteo))) {
             MuestraToast('warning', "Debe elegir el usuario Encargado de Ruteo que recibe el Pedido Especial");
             return;
@@ -335,8 +333,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             return;
         }
 
-        if ( ($('#numeroUnidadTaxi').val() == "") )
-        {
+        if (($('#numeroUnidadTaxi').val() == "")) {
             MuestraToast('warning', "Debe elegir el numero de la unidad de Taxi que recibe el Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
@@ -365,7 +362,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
         if (($('#cantidadAbonada').val() == "")) {
             MuestraToast('warning', "Debe escribir la cantidad que abono al Pedido Especial");
-        $   ("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
         }
         montoTotalcantidadAbonada = $('#cantidadAbonada').val();
@@ -373,11 +370,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 
     // si es a credito -> afectar estructuras de cuentas por cobrar
-    if  (
-            ($("#chkCredito").is(":checked")) ||
-            ($("#chkCreditoConAbono").is(":checked")) 
-        )
-    {
+    if (
+        ($("#chkCredito").is(":checked")) ||
+        ($("#chkCreditoConAbono").is(":checked"))
+    ) {
         aCredito = parseInt(1);
     }
 
@@ -388,7 +384,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
     }
-    
+
 
     // si todo bien
     var tblProductos = document.getElementById('tblConfirmarProductos');
@@ -404,18 +400,18 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
                 cantidadAceptada: parseFloat(tblProductos.rows[i].cells[10].children[0].value),
                 observaciones: tblProductos.rows[i].cells[11].children[0].value,
                 idPedidoEspecialDetalle: parseInt(tblProductos.rows[i].cells[13].innerHTML),
-            };                
+            };
             productos.push(row_);
             idPedidoEspecial = parseInt(tblProductos.rows[i].cells[12].innerHTML);
         }
     }
-    
+
     dataToPost = JSON.stringify({
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
         numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoTotal: montoTotal, montoTotalcantidadAbonada: montoTotalcantidadAbonada,
         aCredito: aCredito, idTipoPago: formaPago, aplicaIVA: aplicaIVA, idFactUsoCFDI: idFactUsoCFDI
     });
-    
+
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarConfirmacion"),
         data: dataToPost,
@@ -430,10 +426,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            
+
 
             if (data.Estatus == 200) {
-            
+
                 window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
 
             }
@@ -594,15 +590,15 @@ function validarProductosAceptados() {
     var cantidad = parseFloat(0);
     var tblProductos = document.getElementById('tblConfirmarProductos');
     var rCount = tblProductos.rows.length;
-    
+
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            if  (
-                    ((parseFloat(tblProductos.rows[i].cells[6].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) &&
-                    (String(tblProductos.rows[i].cells[11].children[0].value) == "" )
-                ) {
+            if (
+                ((parseFloat(tblProductos.rows[i].cells[6].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) &&
+                (String(tblProductos.rows[i].cells[11].children[0].value) == "")
+            ) {
                 if (faltantes == 0) {
-                    MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos."); 
+                    MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos.");
                 }
                 faltantes += 1;
             }
@@ -617,7 +613,7 @@ function validarProductosAceptados() {
     else {
         return !(faltantes > 0);
     }
-    
+
 }
 
 
@@ -762,8 +758,7 @@ function actualizaTicketPedidoEspecial() {
 
                 var cantidad = parseFloat(tblVtas.rows[i].cells[10].children[0].value);
 
-                if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) === (parseInt(productos[j].idProducto)))
-                {
+                if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) === (parseInt(productos[j].idProducto))) {
                     tblVtas.rows[i].cells[4].innerHTML = "$" + ((parseFloat(productos[j].precioIndividual).toFixed(2)) * ((cantidad).toFixed(2))).toFixed(2);   // monto
                     //tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioVenta) * cantidad).toFixed(2);   //total
                     tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(productos[j].precioIndividual - productos[j].precioVenta) * cantidad).toFixed(2);  //descuento
@@ -852,7 +847,7 @@ function initInputsTabla() {
         var tblProductos = document.getElementById('tblConfirmarProductos');
         var idProducto = parseInt(tblProductos.rows[rowIndex].cells[1].innerHTML);
         var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[5].innerHTML);
-        
+
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
             MuestraToast('warning', mensaje);
             document.execCommand('undo');
@@ -930,12 +925,12 @@ function InitarrayProductos() {
 
     arrayProductos = [];
     arrayProductos = result.Modelo;
-    
+
 }
 
 
 $(document).ready(function () {
-    
+
     InitSelect2();
     initInputsTabla();
     arrayPreciosRangos = ObtenerPrecios_(0);
@@ -966,8 +961,287 @@ $(document).ready(function () {
     $('#usoCFDI').val("3").trigger('change');
     //console.log("clientes", listClientes)
 
+    
+    if ($("#cajaAbierta").val() == "False") {
+        AbrirModalIngresoEfectivo(1);
+    }
+
 
 });
 
 
+//ingresos de efectivo
+//Ingreso Efectivo
+function AbrirModalIngresoEfectivo(idTipoIngreso) {
+    if (idTipoIngreso == 1) {
+        $("#headerModalIngresoEfectivo").html('<h5 class="modal-title">Apertura de caja</h5>');
+    }
+    else {
+        $("#headerModalIngresoEfectivo").html('<h5 class="modal-title">Ingreso de Efectivo</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
 
+    }
+    $('#idTipoIngresoEfectivo').val(idTipoIngreso);
+    $('#montoIngresoEfectivo').val(0);
+    $('#ModalIngresoEfectivo').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketIngresosEfectivo"),
+        data: { idIngresoEfectivo: idIngresoEfectivo },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+
+$("#GuardarIngresoEfectivo").click(function (evt) {
+    evt.preventDefault();
+
+    if ($('#montoIngresoEfectivo').val() == "") {
+        MuestraToast('warning', "Debe escribir la cantidad de ingreso de efectivo.");
+        return;
+    }
+
+    var monto = parseFloat($('#montoIngresoEfectivo').val());
+
+    if ($("#idTipoIngresoEfectivo").val() == 2) {
+        if (monto <= 0) {
+            MuestraToast('warning', "El ingreso de efectivo debe de ser mayor que 0");
+            return;
+        }
+    }
+
+   
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/IngresoEfectivo"),
+        data: JSON.stringify({montoIngresoEfectivo: monto, idTipoIngresoEfectivo: $("#idTipoIngresoEfectivo").val() }),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            var result = JSON.parse(data);
+            if (result.Estatus === 200) {
+                MuestraToast('success', result.Mensaje);
+                //ImprimeTicketIngresoEfectivo(data.id);
+                $('#ModalIngresoEfectivo').modal('hide');
+                //ConsultExcesoEfectivo();
+            }
+            else
+                MuestraToast("error", result.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+})
+
+//retiro de exceso de efectivo
+function AbrirModalRetiroExcesoEfectivo() {
+    ConsultRetiros();
+    ConsultaInfoCierre();
+    $('#montoARetirar').val('');
+    $('#ModalRetiroExcesoEfectivo').modal({ backdrop: 'static', keyboard: false, show: true });
+}
+
+function ConsultRetiros() {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ObtenerRetirosEfectivo"),
+        data: { idRetiro: 0 },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            OcultarLoader();
+            var html = "";
+            var result = JSON.parse(data);
+            if (result.Estatus !== 200) {
+                html = '<div class="empty-state">' +
+                    '<div class="empty-state-icon" >' +
+                    '   <i class="fas fa-info"></i>' +
+                    '</div>' +
+                    '<h2> No se encontraron resultados</h2> ' +
+                    '</div>';
+            }
+            else {
+
+                html = '<div class="table-responsive">' +
+                    '<table class="table table-striped" id = "tblRetirosEfectivo">' +
+                    '    <thead>' +
+                    '     <tr>' +
+                    '         <th>Id</th>' +
+                    '         <th>Monto</th>' +
+                    '         <th>Usuario</th>' +
+                    '         <th>Estación</th>' +
+                    '         <th>Fecha</th>' +
+                    '         <th>Reimprimir</th>' +
+                    '     </tr>' +
+                    ' </thead>' +
+                    ' <tbody>';
+
+
+                $.each(result.Modelo, function (index, dato) {
+                    //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));           
+                    html += '<tr>' +
+                        '             <td>' + dato.idRetiro + '</td>' +
+                        '             <td>' + formatoMoneda(dato.montoRetiro) + '</td>' +
+                        '             <td>' + dato.nombreUsuario + '</td>' +
+                        '             <td>' + dato.nombreEstacion + '</td>' +
+                        '             <td>' + dato.fechaAlta + '</td>' +
+                        '             <td class="text-center"><a href="javascript:ImprimeTicketRetiro(@c.idRetiro,1)" data-toggle="tooltip" title="" data-original-title="Reimprimir Ticket"><i class="fas fa-print"></i></a> </td>' +                      
+                        '</tr>';
+                });
+                html += ' </tbody>' +
+                    '</table>' +
+                    '</div>';
+            }
+            $('#divRetirosDia').html(html);
+        },
+        error: function (xhr, status) {
+            console.log('Hubo un error al procesar su solicitud, contactese con el administrador del sistema.');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+function ConsultaInfoCierre() {
+    $('#AperturaCaja').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">$0</span></p>");
+    $('#IngresosEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">$0</span></p>");
+    $('#pedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">$0</span></p>");
+    $('#montoPedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Monto de Ventas: </span><span class=\"float-right text-muted\">$0</span></p>");
+    $('#cantidadEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$0</span></p>");
+    $('#cantidadRetirada').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$0</span></p>");
+
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ObtieneInfoCierre"),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            var result = JSON.parse(data);
+            console.log(result);
+            if (result.Estatus === 200) {
+                $('#AperturaCaja').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].montoApertura) + "</span></p>");
+                $('#IngresosEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].montoIngresosEfectivo) + "</span></p>");
+                $('#pedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].totalPedidosEspeciales) + "</span></p>");
+                $('#montoPedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Monto de Ventas: </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].montoPedidosEspecialesDelDia) + "</span></p>");
+                $('#cantidadEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].efectivoDisponible) + "</span></p>");
+                $('#cantidadRetirada').html("<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].retirosExcesoEfectivo) + "</span></p>");
+            }
+            else
+                MuestraToast("error", result.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+$('#btnRetirarExcesoEfectivo').click(function (e) {
+
+    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+     var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
+
+    if ($('#montoARetirar').val() == "") {
+        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
+        return
+    }
+
+    if ((cantidadEfectivo - montoARetirar_) < 0.0) {
+        MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo).toString() + " para retirar.");
+        return
+    }
+    // si todo bien
+    retirarExcesoEfectivo(montoARetirar_);
+
+});
+
+function retirarExcesoEfectivo(montoRetiro) {
+
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/RetirarExcesoEfectivo"),
+        data: JSON.stringify({ montoRetiro: parseFloat(montoRetiro) }),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            var result = JSON.parse(data);
+            MuestraToast(result.Estatus == 200 ? 'success' : 'error', result.Mensaje);
+            $('#ModalRetiroExcesoEfectivo').modal('hide');
+            //ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
+            //ConsultExcesoEfectivo();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
+    $.ajax({
+        url: rootUrl("/Ventas/ImprimeTicketRetiro"),
+        data: { idRetiro: idRetiro, idCliente: idRetiro, tipoRetiro: tipoRetiro },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
