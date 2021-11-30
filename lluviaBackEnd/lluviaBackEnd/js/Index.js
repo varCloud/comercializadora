@@ -380,12 +380,10 @@ function validarRFC(valor) {
     }
 }
 
-function formatoMoneda(valor) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-    })
-
-    return formatter.format(valor);
-}
+function formatoMoneda(valor) {    
+    const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+    const rep = '$1,';
+    let arr = valor.toString().split('.');
+    arr[0] = arr[0].replace(exp, rep);
+    return '$' + (arr[1] ? arr.join('.') : arr[0]);
+ }

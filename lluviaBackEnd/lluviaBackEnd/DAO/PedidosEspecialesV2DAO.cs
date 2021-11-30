@@ -22,7 +22,7 @@ namespace lluviaBackEnd.DAO
         private IDbConnection db = null;
 
 
-        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion,int idPedidoEspecial)
+        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion, int idPedidoEspecial)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -45,7 +45,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new PedidosEspecialesV2() { idPedidoEspecial = r1.idPedidoEspecial};
+                        notificacion.Modelo = new PedidosEspecialesV2() { idPedidoEspecial = r1.idPedidoEspecial };
                         //notificacion.Modelo = precios; //result.ReadSingle<Producto>();
                     }
                     else
@@ -253,7 +253,7 @@ namespace lluviaBackEnd.DAO
         {
             var xmlSerializer = new XmlSerializer(typeof(List<Precio>));
             var stringBuilder = new StringBuilder();
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 , OmitXmlDeclaration= true }))
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8, OmitXmlDeclaration = true }))
             {
                 xmlSerializer.Serialize(xmlWriter, precios);
             }
@@ -264,7 +264,7 @@ namespace lluviaBackEnd.DAO
 
 
 
-        public List<Producto> ConsultaPedidoEspecialDetalle( int idPedidoEspecial )
+        public List<Producto> ConsultaPedidoEspecialDetalle(int idPedidoEspecial)
         {
             List<Producto> lstProductosPedido = new List<Producto>();
             try
@@ -279,7 +279,7 @@ namespace lluviaBackEnd.DAO
                     {
                         //notificacion.Estatus = r1.status;
                         //notificacion.Mensaje = r1.mensaje;
-                        lstProductosPedido = result.Read<Producto>().ToList();                        
+                        lstProductosPedido = result.Read<Producto>().ToList();
                     }
                     else
                     {
@@ -609,7 +609,7 @@ namespace lluviaBackEnd.DAO
         {
             Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
             try
-            {               
+            {
                 var parameters = new DynamicParameters();
                 parameters.Add("@idCliente", filtro.idCliente == 0 ? (object)null : filtro.idCliente);
                 parameters.Add("@idUsuario", filtro.idUsuario == 0 ? (object)null : filtro.idUsuario);
@@ -634,7 +634,7 @@ namespace lluviaBackEnd.DAO
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@idPedidoEspecial", idPedidoEspecial);
-                 notificacion = ConstructorDapper.Consultar("SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_V2", parameters);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_V2", parameters);
             }
             catch (Exception ex)
             {
@@ -644,7 +644,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada, bool aCredito, string idTipoPago, int aplicaIVA, int idFactUsoCFDI)        
+        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada, bool aCredito, string idTipoPago, int aplicaIVA, int idFactUsoCFDI)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -689,7 +689,8 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<List<dynamic>> consultaTicketPedidoEspecial(Int64 idPedidoEspecial) {
+        public Notificacion<List<dynamic>> consultaTicketPedidoEspecial(Int64 idPedidoEspecial)
+        {
             Notificacion<List<dynamic>> notificacion = new Notificacion<List<dynamic>>();
             notificacion.Modelo = new List<dynamic>();
             try
@@ -706,7 +707,8 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = r1.status;
                         notificacion.Mensaje = r1.mensaje;
-                        while (!result.IsConsumed ) {
+                        while (!result.IsConsumed)
+                        {
                             var r2 = result.Read<dynamic>();
                             notificacion.Modelo.Add(r2);
                         }
@@ -817,6 +819,107 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+        #endregion
+
+        #region IngresoEfectivo
+
+        public Notificacion<string> ValidaAperturaCajas(int idUsuario)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);              
+                notificacion = ConstructorDapper.Ejecutar("SP_VALIDA_APERTURA_CAJAS_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<string> IngresoEfectivo(int idUsuario, float monto, int idTipoIngreso)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@monto", monto);
+                parameters.Add("@idTipoIngreso", idTipoIngreso);
+                notificacion = ConstructorDapper.Ejecutar("SP_INGRESO_EFECTIVO_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+        #endregion
+
+        #region RetiroExcesoEfectivo
+        public Notificacion<dynamic> ObtenerRetirosEfectivo(Retiros retiros)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idEstacion", retiros.idEstacion == 0 ? (object)null : retiros.idEstacion);
+                parameters.Add("@fecha", retiros.fechaAlta == DateTime.MinValue ? (object)null : retiros.fechaAlta);
+                parameters.Add("@idRetiro", retiros.idRetiro == 0 ? (object)null : retiros.idRetiro);
+                parameters.Add("@idUsuario", retiros.idUsuario == 0 ? (object)null : retiros.idUsuario);
+                parameters.Add("@idAlmacen", retiros.idAlmacen == 0 ? (object)null : retiros.idAlmacen);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_RETIROS_EFECTIVO_PEDIDOS_ESPECIALES", parameters);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtieneInfoCierre(Cierre cierre)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idEstacion", cierre.idEstacion);
+                parameters.Add("@idUsuario", cierre.idUsuario);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_INFO_CIERRE_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<string> RetirarExcesoEfectivo(Retiros retiros)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idEstacion", retiros.idEstacion);
+                parameters.Add("@idUsuario", retiros.idUsuario);
+                parameters.Add("@monto", retiros.montoRetiro);
+                parameters.Add("@caso", 1);
+                notificacion = ConstructorDapper.Ejecutar("SP_RETIRA_EFECTIVO_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
 
         #endregion
 

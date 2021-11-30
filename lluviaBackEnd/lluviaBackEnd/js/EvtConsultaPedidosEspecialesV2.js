@@ -33,8 +33,9 @@ function onSuccessPedidosEspeciales(data) {
             '         <th>Cantidad</th>' +
             '         <th>Monto Total</th>' +
             '         <th>Estatus</th>' +
+            '         <th>Facturado</th>' +
             '         <th>Codigo de barras</th>' +
-            '         <th>Observaciones</th>' +  
+            '         <th>Observaciones</th>' +             
             '         <th>Acciones</th>' +
             '     </tr>' +
             ' </thead>' +
@@ -44,6 +45,35 @@ function onSuccessPedidosEspeciales(data) {
         
         $.each(result.Modelo, function (index, dato) {
             //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));
+
+            var estatus = "";
+            switch (dato.idEstatusPedidoEspecial) {
+                case 1://solicitado
+                    estatus = '<div class="badge badge-light badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 2://cotizado
+                    estatus = '<div class="badge badge-warning badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 3:// en resguardo
+                    estatus = '<div class="badge badge-info badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 4://entregado y pagado
+                    estatus = '<div class="badge badge-success badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 5://entregado a repartidor sin ser pagado
+                    estatus = '<div class="badge badge-primary badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 6://Pagado
+                    estatus = '<div class="badge badge-success badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                case 7://Entregado a crédito
+                    estatus = '<div class="badge badge-danger badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+                default:
+                    estatus = '<div class="badge badge-light badge-shadow">' + dato.estatusPedidoEspecial + '</div>';
+                    break;
+
+            }
            
             html += '<tr>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
@@ -51,8 +81,9 @@ function onSuccessPedidosEspeciales(data) {
                 '             <td>' + dato.nombreCliente + '</td>' +
                 '             <td>' + dato.nombreUsuario + '</td>' +
                 '             <td>' + dato.cantidad + '</td>' +
-                '             <td>' + dato.montoTotal + '</td>' +
-                '             <td>' + dato.estatusPedidoEspecial + '</td>' +
+                '             <td>' + formatoMoneda(dato.montoTotal) + '</td>' +
+                '             <td>' + estatus + '</td>' +
+                '             <td>' + dato.facturado + '</td>' +
                 '             <td>' + dato.codigoBarras + '</td>' +
                 '             <td>' + dato.observaciones + '</td>' +
                 '             <td><a href="javascript:MostrarDetalle(' + dato.idPedidoEspecial+');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Detalle"><i class="fas fa-align-justify"></i></a></td>' +
@@ -141,6 +172,32 @@ function MostrarDetalle(idPedidoEspecial) {
                 $.each(result.Modelo, function (index, dato) {
                     //var fecha = new Date(parseInt(dato.fechaAlta.substr(6)));
 
+                    var estatus = "";
+                    switch (dato.idEstatusPedidoEspecialDetalle) {
+                        case 1://Solcitados
+                            estatus = '<div class="badge badge-light badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+                        case 2://Atendidos
+                            estatus = '<div class="badge badge-info badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+                        case 3://Rechazados
+                            estatus = '<div class="badge badge-danger badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+                        case 4://Aceptados
+                            estatus = '<div class="badge badge-success badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+                        case 5://Atendidos/Incompletos
+                            estatus = '<div class="badge badge-warning badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+                        case 6://Rechazados por el Administrador
+                            estatus = '<div class="badge badge-danger badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;                       
+                        default:
+                            estatus = '<div class="badge badge-light badge-shadow">' + dato.estatusPedidoEspecialDetalle + '</div>';
+                            break;
+
+                    }
+
                     html += '<tr>' +
                         '             <td>' + dato.idPedidoEspecialDetalle + '</td>' +
                         '             <td>' + dato.descripcion + '</td>' +
@@ -148,7 +205,7 @@ function MostrarDetalle(idPedidoEspecial) {
                         '             <td>' + dato.cantidad + '</td>' +
                         '             <td>' + formatoMoneda(dato.monto) + '</td>' +
                         '             <td>' + formatoMoneda(dato.precioVenta) + '</td>' +
-                        '             <td>' + dato.estatusPedidoEspecialDetalle + '</td>' +
+                        '             <td>' + estatus + '</td>' +
                         '</tr>';
                 });
                 html += ' </tbody>' +
