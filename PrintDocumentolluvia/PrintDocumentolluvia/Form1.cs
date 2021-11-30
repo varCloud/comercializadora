@@ -1075,8 +1075,6 @@ namespace PrintDocumentolluvia
             Dictionary<string, string> certificados = ProcesaCfdi.ObtenerCertificado();
             if (certificados == null)
                 this.txtLog.Text += "Error al obtener los certificados";
-
-
             try
             {
                 FacturaDAO facturacionDAO = new FacturaDAO();
