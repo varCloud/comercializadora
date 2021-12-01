@@ -587,6 +587,35 @@ function ObtenerCliente(idCliente) {
 }
 
 
+function CancelarPedidoEspecial(idPedidoEspecial) {
+
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/CancelarrPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial},
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+
+            if (data.Estatus == 200) {
+                location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
+            }
+
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
 
 
 $('#btnGuardarIVA').click(function (e) {

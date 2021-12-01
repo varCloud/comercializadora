@@ -64,6 +64,38 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<PedidosEspecialesV2> CancelarPedidoEspecial(int idPedidoEspecial)
+        {
+            Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    var result = db.QueryMultiple("SP_CANCELAR_PEDIDO_ESPECIAL_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo = new PedidosEspecialesV2() { idPedidoEspecial = r1.idPedidoEspecial };
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
         public Notificacion<List<Producto>> ConsultaExistenciasAlmacen(Producto producto)
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
