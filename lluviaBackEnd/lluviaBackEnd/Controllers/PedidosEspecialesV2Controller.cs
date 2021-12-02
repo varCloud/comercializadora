@@ -279,7 +279,6 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                idPedidoEspecial = 137;
                 Notificacion<List<dynamic>> result = new Notificacion<List<dynamic>>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 result = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
