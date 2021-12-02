@@ -15,5 +15,7 @@ namespace lluviaBackEnd.Models
         public Boolean requiereFactura { get; set; }
         public int idFactFormaPago { get; set; }
         public int idFactUsoCFDI { get; set; }
+        public Int64 idPedidoEspecial { get; set; }
+
     }
 }

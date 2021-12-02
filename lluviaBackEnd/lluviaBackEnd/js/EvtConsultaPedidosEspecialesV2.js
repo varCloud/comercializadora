@@ -34,6 +34,7 @@ function onSuccessPedidosEspeciales(data) {
             '         <th>Monto Total</th>' +
             '         <th>Estatus</th>' +
             '         <th>Facturado</th>' +
+            '         <th>Liquidado</th>' +
             '         <th>Codigo de barras</th>' +
             '         <th>Observaciones</th>' +             
             '         <th>Acciones</th>' +
@@ -74,6 +75,13 @@ function onSuccessPedidosEspeciales(data) {
                     break;
 
             }
+
+            var liquidado = "";
+
+            if (dato.liquidado)
+                liquidado = '<div class="badge badge-success badge-shadow">SI</div>';
+            else
+                liquidado = '<div class="badge badge-danger badge-shadow">NO</div>';
            
             html += '<tr>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
@@ -84,6 +92,7 @@ function onSuccessPedidosEspeciales(data) {
                 '             <td>' + formatoMoneda(dato.montoTotal) + '</td>' +
                 '             <td>' + estatus + '</td>' +
                 '             <td>' + dato.facturado + '</td>' +
+                '             <td>' + liquidado + '</td>' +
                 '             <td>' + dato.codigoBarras + '</td>' +
                 '             <td>' + dato.observaciones + '</td>' +
                 '             <td><a href="javascript:MostrarDetalle(' + dato.idPedidoEspecial+');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Detalle"><i class="fas fa-align-justify"></i></a></td>' +
@@ -124,7 +133,7 @@ function InitDataTablePedidosEspeciales() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10]
                     },
                 },
             ],

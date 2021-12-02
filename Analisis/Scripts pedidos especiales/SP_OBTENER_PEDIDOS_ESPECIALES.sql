@@ -55,7 +55,8 @@ as
 					c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoPaterno nombreCliente,
 					u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoPaterno nombreUsuario,
 					e.descripcion estatusPedidoEspecial,
-					'NO' facturado
+					'NO' facturado,
+					liquidado
 					into #pedidosEspeciales
 					FROM	PedidosEspeciales pe
 								join Clientes c

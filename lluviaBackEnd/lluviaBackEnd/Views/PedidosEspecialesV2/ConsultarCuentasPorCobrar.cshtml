@@ -47,7 +47,7 @@
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Cliente</label>
-                                    @Html.DropDownListFor(x => x.idCliente, listClientes, "TODOS", new { @class = "select-multiple", id = "idCliente", data_val = "false" })
+                                    @Html.DropDownListFor(x => x.idCliente, listClientes, "TODOS", new { @class = "select-multiple", id = "idClienteFiltro", data_val = "false" })
                                 </div>
                             </div>
                        </div>
@@ -96,20 +96,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#itemRealizarAbono" role="tab"
-                                   aria-controls="home" aria-selected="true">Realizar abono</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#itemDetalleCtasCobrar" role="tab"
-                                   aria-controls="profile" aria-selected="false">Detalle cuentas por cobrar</a>
-                            </li>
-                           
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="itemRealizarAbono" role="tabpanel" aria-labelledby="home-tab">
-                                <input type="hidden" id="idCliente" />
+                              <input type="hidden" id="idCliente" />
                                 @Html.HiddenFor(x => comisionBancaria)
 
 
@@ -119,43 +106,52 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div id="datosCliente">
-                                                    <address>
-                                                        <strong>Datos del Cliente:</strong><br>
-                                                        Nombre: <span id="NombreCliente">Jessica Almonte</span><br>
-                                                        Telefono: <span id="TelefonoCliente">4431155160</span><br>
-                                                        E-mail: <span id="mailCliente">yessyalmonte@gmail.com</span><br>
-                                                        RFC:  <span id="rfcCliente">AOAJ921103LF1</span><br>
-                                                        Tipo de Cliente: <span id="tipoCliente">General</span><br>
-                                                    </address>
+                                                    <strong>Nombre del cliente:</strong><span id="NombreCliente"></span>
                                                 </div>
+
+                                                <div class="row" id="detalleCuentasPorCobrar">
+
+                                                </div>
+                                                <!--<div id="datosCliente">
+        <address>
+            <strong>Datos del Cliente:</strong><br>
+            Nombre: <span id="NombreCliente">Jessica Almonte</span><br>
+            Telefono: <span id="TelefonoCliente">4431155160</span><br>
+            E-mail: <span id="mailCliente">yessyalmonte@gmail.com</span><br>
+            RFC:  <span id="rfcCliente">AOAJ921103LF1</span><br>
+            Tipo de Cliente: <span id="tipoCliente">General</span><br>
+        </address>
+    </div>!-->
                                             </div>
-                                        </div>
+                                            </div>
 
                                         <div class="section-title"><strong>Forma de Pago: </strong></div>
                                         <div class="form-group">
                                             @Html.DropDownList("idFactFormaPago", new SelectList(lstFormasPago, "id", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
                                         </div>
 
-                                        <div class="pretty p-svg p-curve">
-                                            <input id="chkFacturar" type="checkbox">
-                                            <div class="state p-success">
-                                                <!-- svg path -->
-                                                <svg class="svg svg-icon" viewBox="0 0 20 20">
-                                                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
-                                                </svg>
-                                                <label>Facturar este abono.</label>
-                                            </div>
-                                        </div>
+                                        
 
-                                        <br>
-                                        <br>
+                                        <!-- <div class="pretty p-svg p-curve">
+         <input id="chkFacturar" type="checkbox">
+         <div class="state p-success">
 
-                                        <div id="divUsoCFDI">
-                                            <div class="section-title"><strong>Uso del CFDI: </strong></div>
-                                            <div class="form-group">
-                                                @Html.DropDownList("idFactUsoCFDI", new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
-                                            </div>
-                                        </div>
+             <svg class="svg svg-icon" viewBox="0 0 20 20">
+                 <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
+             </svg>
+             <label>Facturar este abono.</label>
+         </div>
+     </div>
+
+     <br>
+     <br>
+
+     <div id="divUsoCFDI">
+         <div class="section-title"><strong>Uso del CFDI: </strong></div>
+         <div class="form-group">
+             @Html.DropDownList("idFactUsoCFDI", new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+         </div>
+     </div>-->
                                     </div>
                                     <div class="col-lg-5 text-right">
                                         <div class="invoice-detail-item">
@@ -188,10 +184,10 @@
                                             <div class="invoice-detail-name"><strong>Comisiones</strong></div>
                                             <div class="invoice-detail-value" id="previoComisionBancaria"><h4>$15</h4></div>
                                         </div>                                      
-                                        <div class="invoice-detail-item">
+                                        @*<div class="invoice-detail-item">
                                             <div class="invoice-detail-name"><strong>I.V.A.</strong></div>
                                             <div class="invoice-detail-value" id="previoIVA"><h4>$15</h4></div>
-                                        </div>
+                                        </div>*@
                                         <hr class="mt-2 mb-2">
                                         <div class="invoice-detail-item">
                                             <div class="invoice-detail-name"><strong>Total</strong></div>
@@ -223,16 +219,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="itemDetalleCtasCobrar" role="tabpanel" aria-labelledby="home-tab">
-                                <div class="row">
+                         
 
-                                    <div class="col-12 col-sm-12 col-lg-7" id="detalleCuentasPorCobrar">
-
-                                    </div>
-                                </div>
-                            </div>
-                    </div>               
+                                  
                     </div>
                     </div>
             

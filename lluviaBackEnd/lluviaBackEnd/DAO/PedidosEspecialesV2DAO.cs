@@ -792,6 +792,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@requiereFactura", abono.requiereFactura);
                 parameters.Add("@idFactFormaPago", abono.idFactFormaPago);
                 parameters.Add("@idFactUsoCFDI", abono.idFactUsoCFDI);
+                parameters.Add("@idPedidoEspecial", abono.idPedidoEspecial==0 ? (object)null :abono.idPedidoEspecial);
                 notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_ABONO_PEDIDOS_ESPECIALES", parameters);
             }
             catch (Exception ex)

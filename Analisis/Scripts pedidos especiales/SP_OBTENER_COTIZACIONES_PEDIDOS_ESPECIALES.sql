@@ -69,7 +69,7 @@ as
 					@mensaje mensaje
            
 		    if(@status=200)
-				select * from #cotizaciones
+				select * from #cotizaciones order by fechaAlta desc
 			
 					
 		end -- reporte de estatus

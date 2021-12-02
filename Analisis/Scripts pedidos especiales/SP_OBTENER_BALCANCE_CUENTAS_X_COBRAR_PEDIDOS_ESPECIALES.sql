@@ -48,7 +48,7 @@ as
 				join PedidosEspeciales p on a.idPedidoEspecial=p.idPedidoEspecial
 				left join Usuarios u on p.idUsuarioEntrega=u.idUsuario
 				left join PedidosEspecialesAbonosCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar and coalesce(b.EsAbonoInicial,cast(0 as bit))=1
-				where saldoActual>0
+				where saldoActual>0 and a.idCliente=coalesce(@idCliente,a.idCliente)
 
 				UNION
 
@@ -56,7 +56,7 @@ as
 				from 
 				PedidosEspecialesAbonosCuentasPorCobrar a
 				join PedidosEspecialesCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar where saldoActual>0
-				and coalesce(a.EsAbonoInicial,cast(0 as bit))=0) a
+				and coalesce(a.EsAbonoInicial,cast(0 as bit))=0 and a.idCliente=coalesce(@idCliente,a.idCliente)) a
 				order by fecha
 
 					

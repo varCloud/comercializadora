@@ -20,7 +20,8 @@ CREATE proc [dbo].[SP_REALIZA_ABONO_PEDIDOS_ESPECIALES]
 @montoComision money null,
 @requiereFactura bit null,
 @idFactFormaPago int null,
-@idFactUsoCFDI int null
+@idFactUsoCFDI int null,
+@idPedidoEspecial bigint null
 AS
 BEGIN
 	BEGIN TRY			
@@ -34,7 +35,7 @@ BEGIN
 			if not exists(select 1 from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente)
 				RAISERROR('El cliente no tiene adeudos', 15, 217)			
 
-			if (select sum(saldoActual) from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente)<@monto
+			if (select sum(saldoActual) from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente and idPedidoEspecial=coalesce(@idPedidoEspecial,idPedidoEspecial))<@monto
 			begin
 				RAISERROR('El monto a abonar es mayor que el monto adeudado', 15, 217)				
 			end
@@ -56,7 +57,7 @@ BEGIN
 					@fechaActual date,
 					@montoPagado money,
 					@idCuentaPorCobrar bigint,
-					@idPedidoEspecial bigint,
+					--@idPedidoEspecial bigint,
 					@saldoActual money,
 					@saldoRestante money,
 					@montoTotal	money,
@@ -74,34 +75,61 @@ BEGIN
 
 				select @idAbonoCliente=max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente=@idCliente
 
-				while(@monto>0)
+				if(coalesce(@idPedidoEspecial,0)>0)
 				begin
 
-			    --consultamos el primer pedido especial
-				select top 1 @idCuentaPorCobrar=idCuentaPorCobrar,@idPedidoEspecial=idPedidoEspecial,@saldoActual=saldoActual			
-				from [dbo].[PedidosEspecialesCuentasPorCobrar]  where idCliente=@idCliente and saldoActual>0
-				order by idCuentaPorCobrar
+				    select  @idCuentaPorCobrar=idCuentaPorCobrar,@idPedidoEspecial=idPedidoEspecial,@saldoActual=saldoActual			
+					from [dbo].[PedidosEspecialesCuentasPorCobrar]  where idCliente=@idCliente and saldoActual>0 and idPedidoEspecial=@idPedidoEspecial
+					order by idCuentaPorCobrar
 
-				if(@saldoActual>@monto)
-				begin
-				select @montoPagado=@monto
+					--afectamos el saldo actual de la tabla PedidosEspecialesCuentasPorCobrar
+					UPDATE PedidosEspecialesCuentasPorCobrar SET saldoActual=dbo.redondear(saldoActual-@monto) 
+					where idCuentaPorCobrar=@idCuentaPorCobrar
+
+					--insertamos el abono en la tabla PedidosEspecialesAbonosCuentasPorCobrar
+					INSERT INTO PedidosEspecialesAbonosCuentasPorCobrar(monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,idAbonoCliente,SaldoDespuesOperacion)
+					values(@monto,dbo.FechaActual(),@idCliente,@idUsuario,@idPedidoEspecial,@idCuentaPorCobrar,@idAbonoCliente,dbo.redondear(@saldoActual-@monto))
+
+					if exists(select 1 from [PedidosEspecialesCuentasPorCobrar] where idPedidoEspecial=@idPedidoEspecial  and saldoActual=0)
+					   update PedidosEspeciales set liquidado=1 where idPedidoEspecial=@idPedidoEspecial
+
 				end
 				else
 				begin
-				select @montoPagado=@saldoActual
+					while(@monto>0)
+					begin
+
+						--consultamos el primer pedido especial
+						select top 1 @idCuentaPorCobrar=idCuentaPorCobrar,@idPedidoEspecial=idPedidoEspecial,@saldoActual=saldoActual			
+						from [dbo].[PedidosEspecialesCuentasPorCobrar]  where idCliente=@idCliente and saldoActual>0
+						order by idCuentaPorCobrar
+
+						if(@saldoActual>@monto)
+						begin
+						select @montoPagado=@monto
+						end
+						else
+						begin
+						select @montoPagado=@saldoActual
+						end
+
+						--afectamos el saldo actual de la tabla PedidosEspecialesCuentasPorCobrar
+						UPDATE PedidosEspecialesCuentasPorCobrar SET saldoActual=dbo.redondear(saldoActual-@montoPagado) 
+						where idCuentaPorCobrar=@idCuentaPorCobrar
+
+						--insertamos el abono en la tabla PedidosEspecialesAbonosCuentasPorCobrar
+						INSERT INTO PedidosEspecialesAbonosCuentasPorCobrar(monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,idAbonoCliente,SaldoDespuesOperacion)
+						values(@montoPagado,dbo.FechaActual(),@idCliente,@idUsuario,@idPedidoEspecial,@idCuentaPorCobrar,@idAbonoCliente,dbo.redondear(@saldoActual-@montoPagado))
+
+						if exists(select 1 from [PedidosEspecialesCuentasPorCobrar] where idPedidoEspecial=@idPedidoEspecial  and saldoActual=0)
+							update PedidosEspeciales set liquidado=1 where idPedidoEspecial=@idPedidoEspecial
+
+						select @monto=@monto-@montoPagado
+
+					end
+
 				end
 
-				--afectamos el saldo actual de la tabla PedidosEspecialesCuentasPorCobrar
-				UPDATE PedidosEspecialesCuentasPorCobrar SET saldoActual=dbo.redondear(saldoActual-@montoPagado) 
-				where idCuentaPorCobrar=@idCuentaPorCobrar
-
-				--insertamos el abono en la tabla PedidosEspecialesAbonosCuentasPorCobrar
-				INSERT INTO PedidosEspecialesAbonosCuentasPorCobrar(monto,fechaAlta,idCliente,idUsuario,idPedidoEspecial,idCuentaPorCobrar,idAbonoCliente,SaldoDespuesOperacion)
-				values(@montoPagado,dbo.FechaActual(),@idCliente,@idUsuario,@idPedidoEspecial,@idCuentaPorCobrar,@idAbonoCliente,dbo.redondear(@saldoActual-@montoPagado))
-
-				select @monto=@monto-@montoPagado
-
-				end
 
 			
 			--VALIDAMOS SI LA TRANSACCION SE GENERO AQUI , AQUIMISMO SE HACE EL COMMIT	

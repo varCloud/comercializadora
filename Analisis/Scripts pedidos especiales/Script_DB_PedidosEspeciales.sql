@@ -151,7 +151,8 @@ CREATE TABLE
 			codigoBarras					varchar(250),
 			idTipoPago						int,
 			idUsuarioEntrega				int,				--Ruteo ,taxi,0 = (Cliente)
-			numeroUnidadTaxi				varchar(100)		--0,36
+			numeroUnidadTaxi				varchar(100),		--0,36
+			liquidado						bit default 0
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspeciales TO PUBLIC
