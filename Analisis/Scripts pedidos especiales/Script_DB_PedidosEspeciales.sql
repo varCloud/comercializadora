@@ -56,6 +56,7 @@ Insert into catestatuspedidoespecial (descripcion) values ('Entregado y pagado')
 Insert into catestatuspedidoespecial (descripcion) values ('Entregado a repartidor sin ser pagado')
 Insert into catestatuspedidoespecial (descripcion) values ('Pagado')
 Insert into catestatuspedidoespecial (descripcion) values ('Entregado a crédito')
+Insert into catestatuspedidoespecial (descripcion) values ('Cancelado')
 
 
 -- CatTipoPagoPedidoEspecial	
@@ -121,6 +122,7 @@ insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Aceptados')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos/Incompletos')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados por el Administrador')
+insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Cancelados')
 
 
 

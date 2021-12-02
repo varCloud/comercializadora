@@ -230,6 +230,22 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult CancelarrPedidoEspecial(int idPedidoEspecial)
+        {
+            try
+            {
+                Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                result = new PedidosEspecialesV2DAO().CancelarPedidoEspecial(idPedidoEspecial);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         //[HttpPost]
         public ActionResult ConsultaExistenciasAlmacen( Producto producto )

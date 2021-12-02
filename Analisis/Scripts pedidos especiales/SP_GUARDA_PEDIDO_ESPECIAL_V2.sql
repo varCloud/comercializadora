@@ -245,12 +245,9 @@ as
 														activo = cast(1 as bit)
 														group by idProducto) maxRango 
 												on ppp.idProducto=maxRango.idProducto
-											--left join #VentaComplemento vc on v.idProducto=vc.idProducto 
 								where	ppp.activo = cast(1 as bit)
-									--and	v.cantidad between ppp.min and ppp.max
 									and	(v.cantidad ) >= min and (v.cantidad ) <= case when (v.cantidad ) > maxCantRango and max = maxCantRango
 									then (v.cantidad ) else max end
-
 							)A
 					where	#pedidos.idProducto = a.idProducto
 
@@ -383,7 +380,11 @@ as
 						begin
 						
 							-- calculamos las existencias del inventario despues de la venta
-							select idProducto, idAlmacen, cast((sum(cantidad)) as float) as cantidad into #totProductos from #pedidos group by idProducto, idAlmacen
+							select	row_number() over(order by idProducto) as id,
+									idProducto, idAlmacen, cast((sum(cantidad)) as float) as cantidad 
+							into	#totProductos 
+							from	#pedidos 
+							group by idProducto, idAlmacen
 
 							select	distinct 
 									idInventarioDetalle, id.idProducto, p.idAlmacen, id.cantidad, fechaAlta, 
@@ -414,44 +415,74 @@ as
 
 
 							-- se calcula de que ubicaciones se van a descontar los productos
-							select @ini = min(idProducto), @fin= max(idProducto) from #totProductos
+							select	@ini = min(id), @fin= max(id) 
+							from	#totProductos
 
 							while ( @ini <= @fin )
 								begin
-									declare	@cantidadProductos as float = 0
-									select	@cantidadProductos = cantidad from #totProductos where idProducto = @ini
+									declare	@cantidadProductos as float = 0,
+											@idProducto as int = 0,
+											@idAlmacen as int = 0
+
+									select	@idProducto = idProducto, 
+											@cantidadProductos = cantidad,
+											@idAlmacen = idAlmacen
+									from	#totProductos 
+									where	id = @ini
+
+									--select	@cantidadProductos = cantidad from #totProductos where id = @id
 
 									while ( @cantidadProductos > 0 )
 										begin
-											declare @cantidadDest as float = 0, @idInventarioDetalle as int = 0
-											select	@cantidadDest = coalesce(max(cantidad), 0) from #tempExistencias where idProducto = @ini and cantidadDescontada = 0
-											select	@idInventarioDetalle = idInventarioDetalle from #tempExistencias where idProducto = @ini and cantidadDescontada = 0 and cantidad = @cantidadDest
+											declare @cantidadDest as float = 0, 
+													@idInventarioDetalle as int = 0
+
+											select	@cantidadDest = cantidad,
+													@idInventarioDetalle = idInventarioDetalle 
+											from	#tempExistencias 
+											where	idProducto = @idProducto 
+												and idAlmacen = @idAlmacen 
+												and cantidadDescontada = 0
+												and cantidad = ( select max(cantidad) from #tempExistencias where	idProducto = @idProducto and idAlmacen = @idAlmacen and cantidadDescontada = 0 )
+
+											select @cantidadDest = coalesce(@cantidadDest, 0)
 
 											-- si ya no hay ubicaciones con existencias a descontar
 											if ( @cantidadDest = 0 )
 												begin
-													update  #tempExistencias set cantidadDescontada = (select cantidad from #totProductos where idProducto = @ini)
-													where	idProducto = @ini
+													update  #tempExistencias 
+													set		cantidadDescontada = ( select cantidad from #totProductos where idProducto = @idProducto and idAlmacen = @idAlmacen )
+													where	idProducto = @idProducto 
+														and	idAlmacen = @idAlmacen
+
 													select @cantidadProductos = 0
 												end
 											else
 												begin
 													if ( @cantidadDest >= @cantidadProductos )
 														begin 
-															update	#tempExistencias set cantidadDescontada = @cantidadProductos 
-															where	idProducto = @ini and idInventarioDetalle = @idInventarioDetalle
+															update	#tempExistencias 
+															set		cantidadDescontada = @cantidadProductos 
+															where	idProducto = @idProducto
+																and idAlmacen = @idAlmacen
+																and idInventarioDetalle = @idInventarioDetalle
+
 															select	@cantidadProductos = 0 
 														end
 													else
 														begin
-															update	#tempExistencias set cantidadDescontada = @cantidadDest
-															where	idProducto = @ini and idInventarioDetalle = @idInventarioDetalle
+															update	#tempExistencias 
+															set		cantidadDescontada = @cantidadDest
+															where	idProducto = @idProducto
+																and idInventarioDetalle = @idInventarioDetalle
+																and	idAlmacen = @idAlmacen
+
 															select	@cantidadProductos = @cantidadProductos - @cantidadDest						
 														end
 												end 
 										end  -- while ( @cantidadProductos > 0 )
 
-									select @ini = min(idProducto) from #totProductos where idProducto > @ini
+									select @ini = min(id) from #totProductos where id > @ini
 
 								end  -- while ( @ini <= @fin )
 						
@@ -465,10 +496,6 @@ as
 									raiserror (@mensaje, 11, -1)
 								end
 
-
-
-
-								--select '#totProductos', * from #totProductos
 
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- InventarioGeneral y InventarioGeneralLog 
@@ -515,15 +542,12 @@ as
 
 
 
-
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								--  InventarioDetalle y InventarioDetalleLog 
 								---------------------------------------------------------------------------------------------------------------------------------------------------------						
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								--- destino
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
-								--select '#tempExistencias', * from #tempExistencias
-
 								-- se inserta el InventarioDetalleLog
 								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
 								select	idUbicacion, idProducto, cantidadDescontada, cantidadFinal, cast(17 as int) as idTipoMovInventario,
@@ -544,8 +568,6 @@ as
 										)A
 								where	InventarioDetalle.idUbicacion = a.idUbicacion
 									and	InventarioDetalle.idProducto = a.idProducto 
-								--InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
-
 
 
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -580,8 +602,6 @@ as
 									and	InventarioDetalle.idProducto = a.idProducto 
 
 
-
-
 								-- actualizamos como quedo el el inventario general actual despues de operaciones
 								update	PedidosEspecialesDetalle
 								set		PedidosEspecialesDetalle.cantidadActualInvGeneral = a.cantidad
@@ -607,26 +627,21 @@ as
 											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
 											idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
 										)
-								select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
-										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida, @idUbicacion, t.idUbicacion
+								select	@idAlmacenSolicita as idAlmacenOrigen, ped.idAlmacenDestino, ped.idProducto, t.cantidadDescontada, ped.idPedidoEspecial, @idUsuario as idUsuario,
+										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, t.cantidadDescontada, @idUbicacion, t.idUbicacion
 								from	PedidosEspecialesDetalle ped
 											join #tempExistencias t
-												on t.idProducto = ped.idProducto
+												on	t.idProducto = ped.idProducto
+												and t.idAlmacen	= ped.idAlmacenDestino 
 								where	ped.idPedidoEspecial = @idPedidoEspecial
+									and	t.cantidadDescontada > 0
 
-								/*
-								select * from MovimientosDeMercancia
-								select * from PedidosEspecialesMovimientosDeMercancia
-								select * from CatEstatusPedidoEspecial
-								select * from CatEstatusPedidoEspecialDetalle
-								*/
+								--select @idAlmacenSolicita idAlmacenSolicita
+								--select '#totProductos', * from #totProductos
+								--select '#tempExistencias', * from #tempExistencias						
+						end  --if ( @tipoRevision = 1 ) -- ticket
 
 						
-						end
-
-
-
-
 						-- si es revision por ticket se cambia estatus a atendido
 						if ( @tipoRevision = 1 )
 							begin
@@ -647,18 +662,16 @@ as
 											idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
 											idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
 										)
-								select	ped.idAlmacenDestino, @idAlmacenSolicita as idAlmacenOrigen, ped.idProducto, ped.cantidad, ped.idPedidoEspecial, @idUsuario as idUsuario,
-										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, ped.cantidadAtendida, t.idUbicacion, @idUbicacion
+								select	ped.idAlmacenDestino, @idAlmacenSolicita as idAlmacenOrigen, ped.idProducto, t.cantidadDescontada, ped.idPedidoEspecial, @idUsuario as idUsuario,
+										dbo.FechaActual() as fechaAlta, ped.idEstatusPedidoEspecialDetalle, ped.observaciones, t.cantidadDescontada, t.idUbicacion, @idUbicacion
 								from	PedidosEspecialesDetalle ped
 											join #tempExistencias t
-												on t.idProducto = ped.idProducto
+												on	t.idProducto = ped.idProducto
+												and t.idAlmacen	= ped.idAlmacenDestino 
 								where	ped.idPedidoEspecial = @idPedidoEspecial
+									and	t.cantidadDescontada > 0
 
 							end 
-
-
-
-						--select @cantProductosLiq=sum(a.cantidad) from #totProductos a join Productos b on a.idProducto=b.idProducto and b.idLineaProducto in (19,20)
 
 				begin -- commit de transaccion
 					if @tran_count = 0
