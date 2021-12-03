@@ -154,7 +154,8 @@ CREATE TABLE
 			idTipoPago						int,
 			idUsuarioEntrega				int,				--Ruteo ,taxi,0 = (Cliente)
 			numeroUnidadTaxi				varchar(100),		--0,36
-			liquidado						bit default 0
+			liquidado						bit default 0,
+			diasCredito						int
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspeciales TO PUBLIC
