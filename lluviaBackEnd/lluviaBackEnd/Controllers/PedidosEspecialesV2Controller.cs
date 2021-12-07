@@ -177,8 +177,11 @@ namespace lluviaBackEnd.Controllers
                 usoCFDI = new VentasDAO().ObtenerUsoCFDI();
                 ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
-                //ViewBag.lstSucursales = new UsuarioDAO().ObtenerSucursales();
                 ViewBag.lstClientes = new ClienteDAO().ObtenerClientes(new Cliente() { idCliente = 0 });
+
+                List<Cliente> cliente = new List<Cliente>();
+                cliente = new ClienteDAO().ObtenerClientes(new Cliente { idCliente = pedidoEspecial.idCliente });
+                ViewBag.cliente = cliente[0];
 
                 ViewBag.comisionBancaria = usuario.comisionBancaria;
                 ViewBag.pedidoEspecial = pedidoEspecial;

@@ -10,6 +10,7 @@
     List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
     float comisionBancaria = ViewBag.comisionBancaria;
     bool cajaAbierta = ViewBag.cajaAbierta;
+    lluviaBackEnd.Models.Cliente cliente = ViewBag.cliente;
 
 }
 
@@ -186,7 +187,18 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
+                                        @*@Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })*@
+                                        @Html.HiddenFor(x => cliente.idCliente, new { id = "idCliente" })
+                                        @Html.HiddenFor(x => cliente.descuento, new { id = "descuentoCliente" })
+
+                                        <address>
+                                            <div class="text-info mb-2">
+                                                <strong>Nombre:</strong>  @cliente.nombreCompleto_.ToUpper() <br>
+                                                <strong>RFC:</strong>  @cliente.rfc.ToUpper() <br>
+                                                <strong>Tipo de Cliente:</strong> @cliente.tipoCliente.descripcion.ToUpper()<br>
+                                            </div>
+                                        </address>
+
                                     </div>
                                 </div>
 

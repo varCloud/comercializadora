@@ -35,11 +35,11 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
 
     $('#idUsuarioRuteo').val("").trigger('change');
     $('#idUsuarioTaxi').val("").trigger('change');
-    $('#idCliente').val("0").trigger('change');
+    //$('#idCliente').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
     $('#usoCFDI').val("1").trigger('change');
 
-    document.getElementById("idCliente").disabled = true;
+    //document.getElementById("idCliente").disabled = true;
     document.getElementById("idUsuarioRuteo").disabled = true;
     document.getElementById("idUsuarioTaxi").disabled = true;
     document.getElementById("numeroUnidadTaxi").value = "";
@@ -89,7 +89,7 @@ function calculaTotales(conReseteoCampos) {
     ) {
         porcentajeComisionBancaria = $('#comisionBancaria').val();
     }
-
+    //console.log('id_cliente___' + $('#idCliente').val());
     if (parseFloat($('#idCliente').val()) != 1) {
         descuento = $("#txtDescuentoCliente").val();
     }
@@ -124,82 +124,83 @@ function calculaTotales(conReseteoCampos) {
 
 
 
-$("#idCliente").on("change", function () {
+function RevisarDescuentoCliente() { 
 
     var idCliente = parseFloat($('#idCliente').val());
-    var data = ObtenerCliente(idCliente);
     var descuento = parseFloat(0.0);
 
     if (idCliente != 1) {
-        descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
+        descuento = parseFloat($('#descuentoCliente').val()).toFixed(2);;
     }
-
     $("#txtDescuentoCliente").val(descuento);
     calculaTotales('true');
-
-});
-
-
-function ObtenerCliente(idCliente) {
-    var result = "";
-    $.ajax({
-        url: rootUrl("/Clientes/ObtenerCliente"),
-        data: { idCliente: idCliente },
-        method: 'post',
-        dataType: 'json',
-        async: false,
-        beforeSend: function (xhr) {
-            //console.log("Antes_")
-        },
-        success: function (data) {
-            result = data;
-        },
-        error: function (xhr, status) {
-            console.log('hubo un problema pongase en contacto con el administrador del sistema');
-            console.log(xhr);
-            console.log(status);
-        }
-    });
-    return result;
 }
 
 
+function ValidarClienteParaFacturacion(checked_) {
+    var idCliente = $('#idCliente').val();
+    var status = true;
+    cliente = listClientes.find(x => x.idCliente == idCliente)
+
+    if (cliente) {
+        if (!validarEmail(cliente.correo)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
+            document.getElementById("chkFacturarPedido").checked = checked_;
+            status = false;
+        }
+
+        if (!validarRFC(cliente.rfc)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
+            document.getElementById("chkFacturarPedido").checked = checked_;
+            status = false;
+        }
+    } else {
+        MuestraToast('warning', "No es posible facturar a este cliente por favor comuníquese con el administrador web");
+        document.getElementById("chkFacturarPedido").checked = checked_;
+        status = false;
+    }
+    return status;
+}
 
 
 $('#chkFacturarPedido').click(function () {
 
-    var idCliente = $('#idCliente').val();
+    //var idCliente = $('#idCliente').val();
     var esDevolucion = $('#esDevolucion').val();
     var formaPago = $('#formaPago').val();
     var iva = parseFloat(0).toFixed(2);
     var porcentajeIva = parseFloat(0.16).toFixed(2);
 
-    if (idCliente == 1) {
-        MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
-        document.getElementById("chkFacturarPedido").checked = false;
-        return
-    }
+    //if (idCliente == 1) {
+    //    MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
+    //    document.getElementById("chkFacturarPedido").checked = false;
+    //    return
+    //}
 
     if ($('#chkFacturarPedido').is(':checked')) {
-        cliente = listClientes.find(x => x.idCliente == idCliente)
-        console.log(cliente);
-        if (cliente) {
-            if (!validarEmail(cliente.correo)) {
-                MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
-                document.getElementById("chkFacturarPedido").checked = false;
-                return false;
-            }
 
-            if (!validarRFC(cliente.rfc)) {
-                MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
-                document.getElementById("chkFacturarPedido").checked = false;
-                return false;
-            }
-        } else {
-            MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
-            document.getElementById("chkFacturarPedido").checked = false;
-            return false;
+        if (!ValidarClienteParaFacturacion(false)) {
+            return;
         }
+        //cliente = listClientes.find(x => x.idCliente == idCliente)
+        //console.log(cliente);
+        //if (cliente) {
+        //    if (!validarEmail(cliente.correo)) {
+        //        MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
+        //        document.getElementById("chkFacturarPedido").checked = false;
+        //        return false;
+        //    }
+
+        //    if (!validarRFC(cliente.rfc)) {
+        //        MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
+        //        document.getElementById("chkFacturarPedido").checked = false;
+        //        return false;
+        //    }
+        //} else {
+        //    MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
+        //    document.getElementById("chkFacturarPedido").checked = false;
+        //    return false;
+        //}
     }
 
 
@@ -503,7 +504,7 @@ function chkChangeEntregar(chk) {
         $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
 
-        document.getElementById("idCliente").disabled = false;
+        //document.getElementById("idCliente").disabled = false;
         document.getElementById("numeroUnidadTaxi").value = "";
         document.getElementById("numeroUnidadTaxi").disabled = true;
 
@@ -517,8 +518,8 @@ function chkChangeEntregar(chk) {
         $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
 
-        $('#idCliente').val("0").trigger('change');
-        document.getElementById("idCliente").disabled = true;
+        //$('#idCliente').val("0").trigger('change');
+        //document.getElementById("idCliente").disabled = true;
 
         document.getElementById("idUsuarioRuteo").disabled = false;
         document.getElementById("numeroUnidadTaxi").value = "";
@@ -534,8 +535,8 @@ function chkChangeEntregar(chk) {
         $('#idUsuarioRuteo').val("").trigger('change');
         document.getElementById("idUsuarioRuteo").disabled = true;
 
-        $('#idCliente').val("0").trigger('change');
-        document.getElementById("idCliente").disabled = true;
+        //$('#idCliente').val("0").trigger('change');
+        //document.getElementById("idCliente").disabled = true;
 
         document.getElementById("idUsuarioTaxi").disabled = false;
         document.getElementById("numeroUnidadTaxi").value = "";
@@ -936,12 +937,14 @@ $(document).ready(function () {
     arrayPreciosRangos = ObtenerPrecios_(0);
     InitarrayProductos();
     actualizaTicketPedidoEspecial();
+    RevisarDescuentoCliente();
+    ValidarClienteParaFacturacion(true);
 
-    $('#idCliente').val("0").trigger('change');
+    //$('#idCliente').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
     $('#usoCFDI').val("1").trigger('change');
 
-    document.getElementById("idCliente").disabled = true;
+    //document.getElementById("idCliente").disabled = true;
     document.getElementById("idUsuarioRuteo").disabled = true;
     document.getElementById("idUsuarioTaxi").disabled = true;
     document.getElementById("numeroUnidadTaxi").disabled = true;
