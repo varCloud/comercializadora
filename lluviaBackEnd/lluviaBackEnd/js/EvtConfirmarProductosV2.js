@@ -59,9 +59,66 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
 });
 
 $("#formaPago").on("change", function (value) {
-    this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
-    calculaTotales('true');
+    //    this.value == 1 ? $('#dvEfectivo').css('display', '') : $('#dvEfectivo').css('display', 'none');
+    RevisarInputEfectivo();
+    //if (this.value == 1) {
+
+    //    //if ($("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked")) {
+    //    if ( !$("#chkCredito").is(":checked") && !$("#chkLiquidado").is(":checked") ) {
+    //        $('#dvEfectivo').css('display', '');
+    //    }
+    //    else {
+    //        $('#dvEfectivo').css('display', 'none');
+    //    }
+    //}
+    //else {
+    //   // if ( $("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked") ) {
+    //    if (!$("#chkCredito").is(":checked") && !$("#chkLiquidado").is(":checked")) {
+    //        $('#dvEfectivo').css('display', '');
+    //    }
+    //    else {
+    //        $('#dvEfectivo').css('display', 'none');
+    //    }
+    //}
+
+    //if (this.value != 0) {
+    //    document.getElementById("chkCredito").checked = false;
+    //}
+    //calculaTotales('true');
 });
+
+function RevisarInputEfectivo() {
+
+    var formaPago = parseInt($('#formaPago').val());
+
+    if (formaPago == 1) {
+
+        //if ($("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked")) {
+        if (!$("#chkCredito").is(":checked") && !$("#chkLiquidado").is(":checked")) {
+            $('#dvEfectivo').css('display', '');
+        }
+        else {
+            $('#dvEfectivo').css('display', 'none');
+        }
+    }
+    else {
+        // if ( $("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked") ) {
+        if (!$("#chkCredito").is(":checked") && !$("#chkLiquidado").is(":checked")) {
+            $('#dvEfectivo').css('display', '');
+        }
+        else {
+            $('#dvEfectivo').css('display', 'none');
+        }
+    }
+
+    if (formaPago != 0) {
+        document.getElementById("chkCredito").checked = false;
+    }
+    calculaTotales('true');
+
+
+
+}
 
 //$("#idUsuarioRuteo").on("change", function (value) {
 //    console.log(this.value);
@@ -552,6 +609,8 @@ function chkChangeTipoPago(chk) {
 
     if (chk == 'chkLiquidado') {
 
+        //$('#formaPago').val("1").trigger('change');
+
         document.getElementById("chkCredito").checked = false;
         document.getElementById("chkCreditoConAbono").checked = false;
 
@@ -561,6 +620,8 @@ function chkChangeTipoPago(chk) {
     }
 
     if (chk == 'chkCredito') {
+
+        $('#formaPago').val("0").trigger('change');
 
         document.getElementById("chkLiquidado").checked = false;
         document.getElementById("chkCreditoConAbono").checked = false;
@@ -572,6 +633,8 @@ function chkChangeTipoPago(chk) {
     }
 
     if (chk == 'chkCreditoConAbono') {
+
+        //$('#formaPago').val("1").trigger('change');
 
         document.getElementById("chkLiquidado").checked = false;
         document.getElementById("chkCredito").checked = false;
