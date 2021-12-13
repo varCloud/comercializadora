@@ -327,6 +327,39 @@ namespace lluviaBackEnd.DAO
             return lstProductosPedido;
         }
 
+
+        public Notificacion<List<Ticket>> ObtenerTicketsPedidoEspecialV2(Ticket ticket)
+        {
+            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", ticket.idPedidoEspecial);
+                    var result = db.QueryMultiple("SP_CONSULTA_TICKET_PEDIDO_ESPECIALV2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ticket>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Ticket> { ticket };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
         //public Notificacion<List<PedidosEspecialesV2>> ConsultaPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
         //{
         //    Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
