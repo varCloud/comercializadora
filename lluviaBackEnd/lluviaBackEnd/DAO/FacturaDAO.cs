@@ -52,8 +52,8 @@ namespace lluviaBackEnd.DAO
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
                 parameters.Add("@idVenta", factura.idFactura);
-                string sp = factura.idFactura == 0? "SP_FACTURACION_OBTENER_DETALLE_VENTA" : "SP_FACTURACION_OBTENER_DETALLE_PEDIDO_ESPECIAL";
-                var result = this._db.QueryMultiple("SP_FACTURACION_OBTENER_DETALLE_VENTA", param: parameters, commandType: CommandType.StoredProcedure);
+                string sp = factura.idVenta.Equals("0") ? "SP_FACTURACION_OBTENER_DETALLE_VENTA" : "SP_FACTURACION_OBTENER_DETALLE_PEDIDO_ESPECIAL";
+                var result = this._db.QueryMultiple(sp, param: parameters, commandType: CommandType.StoredProcedure);
                 var r1 = result.ReadFirst();
                 if (r1.Estatus == 200)
                 {
@@ -170,7 +170,6 @@ namespace lluviaBackEnd.DAO
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
                 parameters.Add("@idVenta", f.folio);
-
                 parameters.Add("@idUsuario", f.idUsuario);
                 parameters.Add("@fechaTimbrado", (f.fechaTimbrado == DateTime.MinValue ? DateTime.Now : (f.fechaTimbrado)));
                 parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)null : f.UUID);

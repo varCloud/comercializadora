@@ -187,7 +187,7 @@ namespace lluviaBackEnd.Controllers
                 //factura.idVenta = "64";
                 factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Folio = factura.folio = factura.idVenta;
+                comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") ? "PE"+factura.idPedidoEspecial : factura.idVenta);
                 items = facturacionDAO.ObtenerComprobante(factura, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
@@ -223,11 +223,11 @@ namespace lluviaBackEnd.Controllers
                         comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
                         
 
-                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta+timeStamp+ ".jpg"));
-                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items , timeStamp);
-                        System.IO.File.WriteAllText(pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", xmlTimbradoDecodificado);
+                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + comprobante.Folio+timeStamp+ ".jpg"));
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, comprobante.Folio, items , timeStamp);
+                        System.IO.File.WriteAllText(pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", xmlTimbradoDecodificado);
 
-                        factura.pathArchivoFactura = pathFactura + "/Factura_" + factura.idVenta + timeStamp + ".pdf";
+                        factura.pathArchivoFactura = pathFactura + "/Factura_" + comprobante.Folio + timeStamp + ".pdf";
                         factura.estatusFactura = EnumEstatusFactura.Facturada;
                         factura.mensajeError = "OK";
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
@@ -236,7 +236,7 @@ namespace lluviaBackEnd.Controllers
                         Task.Factory.StartNew(() =>
                         {
                             if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta+timeStamp + ".xml", factura ,string.Empty);
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura ,string.Empty);
                         });
 
 
@@ -245,8 +245,8 @@ namespace lluviaBackEnd.Controllers
                     {
                         factura.estatusFactura = EnumEstatusFactura.Error;
                         factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
-                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta+timeStamp + ".xml"), xmlSerealizado);
-                        Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        System.IO.File.WriteAllText(pathServer + ("Comprobante_" + comprobante.Folio + timeStamp + ".xml"), xmlSerealizado);
+                        Utilerias.ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + comprobante.Folio));
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
 
