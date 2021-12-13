@@ -455,9 +455,6 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI
     });
 
-    //console.log(dataToPost);
-    //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-    //return;
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarConfirmacion"),
@@ -495,6 +492,31 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 });
 
 
+function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            //console.log(data);
+        }
+    });
+}
 
 function InitSelect2() {
     $('.select-multiple').select2({
