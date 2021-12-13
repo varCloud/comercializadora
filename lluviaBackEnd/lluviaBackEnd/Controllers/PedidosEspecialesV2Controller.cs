@@ -43,10 +43,6 @@ namespace lluviaBackEnd.Controllers
                         return RedirectToAction("CierreCajas");
                     else
                     {
-                        //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                        //notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
-                        //ViewBag.lstProductos = notificacion.Modelo;
-
                         Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
                         formasPago = new VentasDAO().ObtenerFormasPago();
                         ViewBag.lstFormasPago = formasPago.Modelo;
@@ -269,6 +265,27 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+        [HttpPost]
+        public ActionResult ConsultaDatosTicketPedidoEspecialV2(int idPedidoEspecial)
+        {
+            try
+            {
+
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                //PedidosEspecialesV2 pedido = new PedidosEspecialesV2();
+
+                notificacion = new PedidosEspecialesV2DAO().ObtenerEntregarPedidos(new PedidosEspecialesV2() { idPedidoEspecial = idPedidoEspecial, fechaIni = new DateTime(1900,01,01), fechaFin = new DateTime(1900,01,01) });
+                //pedido = notificacion;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         /************** REIMPRIMIR TICKETS ALMACENES********************/
