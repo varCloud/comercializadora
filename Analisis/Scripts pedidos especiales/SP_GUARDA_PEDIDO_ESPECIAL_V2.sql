@@ -593,10 +593,10 @@ as
 								set		InventarioDetalle.cantidad = InventarioDetalle.cantidad + a.cantidadDescontada, 
 										fechaActualizacion = dbo.FechaActual()
 								from	(
-											select	idProducto, idUbicacion, sum(cantidadDescontada) as cantidadDescontada
+											select	idProducto, sum(cantidadDescontada) as cantidadDescontada
 											from	#tempExistencias
 											where	cantidadDescontada > 0
-											group by idProducto, idUbicacion
+											group by idProducto
 										)A
 								where	InventarioDetalle.idUbicacion = @idubicacion
 									and	InventarioDetalle.idProducto = a.idProducto 

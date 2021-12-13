@@ -10,6 +10,10 @@
     List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
     float comisionBancaria = ViewBag.comisionBancaria;
     bool cajaAbierta = ViewBag.cajaAbierta;
+    lluviaBackEnd.Models.Cliente cliente = ViewBag.cliente;
+    cliente.rfc = cliente.rfc == null ? "" : cliente.rfc.ToUpper();
+    cliente.correo = cliente.correo == null ? "" : cliente.correo.ToUpper();
+    cliente.tipoCliente.descripcion = cliente.tipoCliente.descripcion == null ? "" : cliente.tipoCliente.descripcion.ToUpper();
 
 }
 
@@ -40,7 +44,7 @@
 
 <section class="section">
     <div class="section-body">
-        <div class="row mt-sm-4">          
+        <div class="row mt-sm-4">
         </div>
 
         <div class="row mt-sm-12">
@@ -56,7 +60,7 @@
                     </div>
                     <div class="card-body">
                         @Html.HiddenFor(x => comisionBancaria)
-                        @Html.HiddenFor(x => cajaAbierta, new {id="cajaAbierta" })
+                        @Html.HiddenFor(x => cajaAbierta, new { id = "cajaAbierta" })
                         <div class="text-md-right">
                             <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
                         </div>
@@ -143,7 +147,7 @@
                         </div>
 
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -177,7 +181,7 @@
                             <div class="card-body">
 
                                 <div class="form-group row">
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <div class="form-check">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="chkCliente">
@@ -185,8 +189,41 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-7">
-                                        @Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })
+                                    <div class="col-sm-8">
+                                        @*@Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })*@
+                                        @Html.HiddenFor(x => cliente.idCliente, new { id = "idCliente" })
+                                        @Html.HiddenFor(x => cliente.descuento, new { id = "descuentoCliente" })
+
+                                        <div class="form-group row text-info mb-2">
+                                            <label class="col-sm-4 text-info mb-2"> <strong>Nombre:</strong> </label>
+                                            <div class="col-sm-8"> @cliente.nombreCompleto_.ToUpper() </div>
+                                        </div>
+
+                                        <div class="form-group row text-info mb-2">
+                                            <label class="col-sm-4 text-info mb-2"> <strong>RFC:</strong> </label>
+                                            <div class="col-sm-8">  @cliente.rfc.ToUpper() </div>
+                                        </div>
+
+                                        <div class="form-group row text-info mb-2">
+                                            <label class="col-sm-4 text-info mb-2"> <strong>Email:</strong> </label>
+                                            <div class="col-sm-8">  @cliente.correo.ToUpper() </div>
+                                        </div>
+
+                                        <div class="form-group row text-info mb-2">
+                                            <label class="col-sm-4 text-info mb-2"> <strong>Tipo de Cliente:</strong> </label>
+                                            <div class="col-sm-8">  @cliente.tipoCliente.descripcion.ToUpper() </div>
+                                        </div>
+
+                                        <div class="form-group row text-warning mb-2">
+                                            <label class="col-sm-4 text-warning mb-2"> <strong>Adeudo:</strong> </label>
+                                            <div class="col-sm-8">
+                                                $ @cliente.adeudo.ToString().ToUpper()
+                                                <br>
+                                                Días desde último abono: @cliente.diasTranscurridos.ToString().ToUpper()
+                                            </div>
+                                            
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -268,105 +305,6 @@
 
                         </div>
 
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Tipo de Pago:</h4>
-                            </div>
-
-                            <div class="card-body">
-
-
-                                <div class="form-group row">
-                                    <div class="col-sm-4">
-
-
-                                        <div class="form-check">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="chkLiquidado">
-                                                <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
-                                            </div>
-                                        </div>
-
-
-                                        <input type="text" class="form-control" id="montoTotal" onkeypress="return esDecimal(this, event);" placeholder="Monto total">
-
-
-                                    </div>
-
-                                    <div class="col-sm-4">
-
-                                        <div class="form-check">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="chkCredito">
-                                                <label class="custom-control-label" for="chkCredito">A Crédito </label>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-sm-4">
-
-                                        <div class="form-check">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
-                                                <label class="custom-control-label" for="chkCreditoConAbono">A Crédito con Abono </label>
-                                            </div>
-                                        </div>
-
-                                        <input type="text" class="form-control" id="cantidadAbonada" onkeypress="return esDecimal(this, event);" placeholder="Cantidad que abono">
-
-                                    </div>
-
-                                </div>
-
-
-                                @*<div class="form-group row">
-                                        <div class="col-sm-5">
-                                            <div class="form-check">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="chkLiquidado">
-                                                    <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" id="montoTotal" onkeypress="return esDecimal(this, event);" placeholder="Monto total">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-5">
-                                            <div class="form-check">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="chkCredito">
-                                                    <label class="custom-control-label" for="chkCredito">A Crédito </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-7">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-5">
-                                            <div class="form-check">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
-                                                    <label class="custom-control-label" for="chkCreditoConAbono">A Crédito con Abono </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" id="cantidadAbonada" onkeypress="return esDecimal(this, event);" placeholder="Cantidad que abono">
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <br />*@
-                            </div>
-
-                        </div>
-
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-5">
@@ -415,6 +353,41 @@
                                         <div class="invoice-detail-value invoice-detail-value-lg" id="cambio" style="color: #ff4d4d"><h4>$0.0</h4></div>
                                     </div>
 
+
+                                    <div class="card-header">
+                                        <h4>Tipo de Pago:</h4>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkLiquidado">
+                                                    <label class="custom-control-label" for="chkLiquidado">Liquidado </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-4">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkCredito">
+                                                    <label class="custom-control-label" for="chkCredito">A Crédito </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-5">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkCreditoConAbono">
+                                                    <label class="custom-control-label" for="chkCreditoConAbono">Crédito con Abono </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+
                                     <br />
                                     <div id="dvEfectivo">
                                         <div class="section-title"><strong>Efectivo: </strong></div>
@@ -445,187 +418,187 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
-    @*Modal Ingreso de Efectivo *@
-    <div class="modal fade bd-example-modal-lg" id="ModalIngresoEfectivo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header" id="headerModalIngresoEfectivo">
-                    <h5 class="modal-title" >Ingreso de Efectivo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+@*Modal Ingreso de Efectivo *@
+<div class="modal fade bd-example-modal-lg" id="ModalIngresoEfectivo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" id="headerModalIngresoEfectivo">
+                <h5 class="modal-title">Ingreso de Efectivo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <input id="idTipoIngresoEfectivo" name="idTipoIngresoEfectivo" type="hidden">
+                        <div class="form-group">
+                            @*<label>Monto</label>*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input id="montoIngresoEfectivo" name="montoIngresoEfectivo" type="text" class="form-control" onkeypress="return esDecimal(this, event);" required>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <input id="idTipoIngresoEfectivo" name="idTipoIngresoEfectivo" type="hidden">
-                            <div class="form-group">
-                                @*<label>Monto</label>*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">$</span>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button class="btn btn-success" type="submit" id="GuardarIngresoEfectivo">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Cierre de Caja por Exceso de Efectivo *@
+<div class="modal fade bd-example-modal-lg" id="ModalRetiroExcesoEfectivo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalExistencias">Retiro por exceso de efectivo:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#itemRetirarEfectivo" role="tab"
+                                   aria-controls="home" aria-selected="true">Retirar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#itemRetiros" role="tab"
+                                   aria-controls="profile" aria-selected="false">Retiros del dìa</a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="itemRetirarEfectivo" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <div class="form-group">
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="py-4">
+                                                        <div id="AperturaCaja">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Apertura de Caja:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+                                                        <div id="IngresosEfectivo">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Ingresos de Efectivo:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+                                                        <div id="pedidosEspecialesDelDia">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Pedidos especiales del día:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+
+                                                        <div id="montoPedidosEspecialesDelDia">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Monto de pedidos especiales del dìa:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+
+                                                        <div id="cantidadEfectivo">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Cantidad en Efectivo:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+
+                                                        <div id="cantidadRetirada">
+                                                            <p class="clearfix">
+                                                                <span class="float-left">Cantidad Retirada del día:</span>
+                                                                <span class="float-right text-muted">0</span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
                                     </div>
-                                    <input id="montoIngresoEfectivo" name="montoIngresoEfectivo" type="text" class="form-control" onkeypress="return esDecimal(this, event);" required>
+
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Cantidad a Retirar:</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input id="montoARetirar" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="text-right" style="margin-top:15px;">                                
-                                <button class="btn btn-success" type="submit" id="GuardarIngresoEfectivo">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
+
+
             </div>
         </div>
     </div>
-
-    @*Modal Cierre de Caja por Exceso de Efectivo *@
-    <div class="modal fade bd-example-modal-lg" id="ModalRetiroExcesoEfectivo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="TituloModalExistencias">Retiro por exceso de efectivo:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#itemRetirarEfectivo" role="tab"
-                                       aria-controls="home" aria-selected="true">Retirar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#itemRetiros" role="tab"
-                                       aria-controls="profile" aria-selected="false">Retiros del dìa</a>
-                                </li>
-
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="itemRetirarEfectivo" role="tabpanel" aria-labelledby="home-tab">
-                                    <div class="row">
-
-                                        <div class="col-12 col-sm-12 col-lg-6">
-                                            <div class="form-group">
-
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="py-4">
-                                                            <div id="AperturaCaja">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Apertura de Caja:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-                                                            <div id="IngresosEfectivo">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Ingresos de Efectivo:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-                                                            <div id="pedidosEspecialesDelDia">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Pedidos especiales del día:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-
-                                                            <div id="montoPedidosEspecialesDelDia">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Monto de pedidos especiales del dìa:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-
-                                                            <div id="cantidadEfectivo">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Cantidad en Efectivo:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-
-                                                            <div id="cantidadRetirada">
-                                                                <p class="clearfix">
-                                                                    <span class="float-left">Cantidad Retirada del día:</span>
-                                                                    <span class="float-right text-muted">0</span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
+</div>
 
 
 
+@section scripts {
 
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 col-sm-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label>Cantidad a Retirar:</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <input id="montoARetirar" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-success" id="btnRetirarExcesoEfectivo" type="button">Retirar Dinero</button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>
-                    </div>                    
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/js/jquery-ui.min.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/index.js"></script>
+    <script src="~/js/EvtConfirmarProductosV2.js"></script>
 
 
-                </div>
-            </div>
-        </div>
-    </div>
+    <style>
+        input {
+            outline: 0;
+            border-width: 0 0 2px;
+            border-color: lightslategray
+        }
 
-
-
-    @section scripts {
-
-        <script src="~/Scripts/jquery.validate.js"></script>
-        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-        <script src="~/assets/js/jquery-ui.min.js"></script>
-        <script src="~/assets/bundles/datatables/datatables.min.js"></script>
-        <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/assets/js/page/datatables.js"></script>
-        <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
-        <script src="~/assets/js/page/sweetalert.js"></script>
-        <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
-        <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
-        <script src="~/js/index.js"></script>
-        <script src="~/js/EvtConfirmarProductosV2.js"></script>
-
-
-        <style>
-            input {
-                outline: 0;
-                border-width: 0 0 2px;
-                border-color: lightslategray
+            input:focus {
+                border-color: dodgerblue
             }
+    </style>
 
-                input:focus {
-                    border-color: dodgerblue
-                }
-        </style>
-
-    }
+}

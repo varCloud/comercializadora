@@ -29,11 +29,12 @@ create proc [dbo].[SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2]
 	@idUsuarioEntrega					int,
 	@numeroUnidadTaxi					varchar(255),
 	@idEstatusCuentaPorCobrar			int,
-	@montoTotal							float,
+	@montoPagado						float,
 	@montoTotalcantidadAbonada			float,
 	@aCredito							bit,
-	@idTipoPago							varchar(100),
 	@aplicaIVA							bit,
+	@idMetodoPago						int,
+	@idFactFormaPago					int,
 	@idFactUsoCFDI						int
 
 as
@@ -198,7 +199,7 @@ as
 
 
 				-- si es tarjeta de credito o debito se aplica comision 
-				if ( ( @idTipoPago in ( '4', '18' ) ) and ( @aplicaIVA = (cast (0 as bit) ) ) ) 
+				if ( ( @idFactFormaPago in ( '4', '18' ) ) and ( @aplicaIVA = (cast (0 as bit) ) ) ) 
 					begin	
 						select @porcentajeComision = porcentaje from Comisiones where idComision = 1 and activo = cast(1 as bit)
 					end
@@ -467,7 +468,7 @@ as
 					end -- if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
 
 					-- se aplica primero la comision
-					if (  @idTipoPago in ( '4', '18' ) )
+					if (  @idFactFormaPago in ( '4', '18' ) )
 						begin
 							
 							select @montoComision =  Round((@montoTotalcantidadAbonada * @porcentajeComision),2,0) 
@@ -498,7 +499,7 @@ as
 									(
 										idPedidoEspecial,idCliente,idUsuario,idTipoPago,fechaAlta,SaldoInicial,saldoActual,idEstatusCuentaPorCobrar
 									)
-							select	@idPedidoEspecial as idPedidoEspecial, @idCliente as idCliente, @idUsuario as idUsuario, @idTipoPago as idTipoPago, 
+							select	@idPedidoEspecial as idPedidoEspecial, @idCliente as idCliente, @idUsuario as idUsuario, @idFactFormaPago as idFactFormaPago, 
 									@fecha as fechaAlta, @saldoInicial as SaldoInicial, (@saldoInicial - @montoTotalcantidadAbonada) as saldoActual,
 									cast(1 as int) as idEstatusCuentaPorCobrar -- 1	En Crédito.
 										
@@ -540,7 +541,7 @@ as
 							select	@idUsuario as idUsuario, @montoTotalcantidadAbonada as monto, @montoIva as montoIva, @montoComision as montoComision,
 									(@montoTotalcantidadAbonada + @montoIva + @montoComision) as  montoTotal, @idCliente as  idCliente,
 									@aplicaIVA as requiereFactura, cast(0 as int) as idFacturaAbono, cast(0 as int) as idFactura,
-									@idTipoPago as idFactFormaPago, @idFactUsoCFDI as idFactUsoCFDI, @fecha as fechaAlta, cast(1 as bit) as activo
+									@idFactFormaPago as idFactFormaPago, @idFactUsoCFDI as idFactUsoCFDI, @fecha as fechaAlta, cast(1 as bit) as activo
 
 							select	@idAbonoCliente = max(idAbonoCliente) from PedidosEspecialesAbonoClientes where idCliente = @idCliente
 
