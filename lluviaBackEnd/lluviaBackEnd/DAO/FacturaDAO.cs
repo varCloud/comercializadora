@@ -40,7 +40,7 @@ namespace lluviaBackEnd.DAO
             return comprobante;
         }
 
-        public Dictionary<string, object> ObtenerComprobante(string idVenta, Comprobante c)
+        public Dictionary<string, object> ObtenerComprobante(Factura factura, Comprobante c)
         {
             Dictionary<string, object> items = null;
             List<ComprobanteConcepto> listConceptos = null;
@@ -51,7 +51,8 @@ namespace lluviaBackEnd.DAO
                 // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
-                parameters.Add("@idVenta", idVenta);
+                parameters.Add("@idVenta", factura.idFactura);
+                string sp = factura.idFactura == 0? "SP_FACTURACION_OBTENER_DETALLE_VENTA" : "SP_FACTURACION_OBTENER_DETALLE_PEDIDO_ESPECIAL";
                 var result = this._db.QueryMultiple("SP_FACTURACION_OBTENER_DETALLE_VENTA", param: parameters, commandType: CommandType.StoredProcedure);
                 var r1 = result.ReadFirst();
                 if (r1.Estatus == 200)

@@ -180,8 +180,6 @@ namespace lluviaBackEnd.Controllers
             {
                 string pathFactura = WebConfigurationManager.AppSettings["pathFacturas"].ToString() + Utils.ObtnerAnoMesFolder().Replace("\\", "/");
                 string pathServer = Utils.ObtnerFolder() + @"/";
-                log4netRequest.Debug("pathFactura: " + pathFactura);
-                log4netRequest.Debug("pathServer : " + pathServer);
                 FacturaDAO facturacionDAO = new FacturaDAO();
                 Sesion UsuarioActual = null;
                 if (Session != null)
@@ -190,12 +188,7 @@ namespace lluviaBackEnd.Controllers
                 factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = factura.idVenta;
-                /*
-                comprobante.Emisor.Rfc = "COVO781128LJ1";
-                comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
-                comprobante.Emisor.RegimenFiscal = 621;                
-                */
-                items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                items = facturacionDAO.ObtenerComprobante(factura, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
                     comprobante = (items["comprobante"] as Comprobante);

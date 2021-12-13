@@ -389,3 +389,4 @@ lluviaBackEnd/lluviaBackEnd/Facturas/
 lluviaBackEnd/lluviaBackEnd/Facturas/
 luviaBackEnd/lluviaBackEnd/Tickets/
 Tickets/*.pdf
+*.pdf

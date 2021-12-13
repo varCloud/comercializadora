@@ -9,6 +9,7 @@ namespace lluviaBackEnd.Models
     public class Factura
     {
         public Int64 idFactura { get; set; }
+        public Int64 idPedidoEspecial { get; set; }
         public string idVenta { get; set; }
         public string folio { get; set; }
         public EnumEstatusFactura estatusFactura { get; set; }
