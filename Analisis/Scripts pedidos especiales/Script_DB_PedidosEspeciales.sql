@@ -181,7 +181,7 @@ CREATE TABLE
 			idComision						int,
 			diasCredito						int,
 			fechaEntrega					datetime,
-			idMetodoPago					int,
+			idFactMetodoPago				int,
 			idFactFormaPago					int,
 			idFactUsoCFDI					int,
 			montoPagado						money,

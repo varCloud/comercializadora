@@ -677,8 +677,8 @@ namespace lluviaBackEnd.DAO
         }
 
         public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, 
-                                                                     int idEstatusCuentaPorCobrar, float montoPagado, float montoTotalcantidadAbonada, bool aCredito, int aplicaIVA, string idMetodoPago, 
-                                                                     int idFactFormaPago, int idFactUsoCFDI)
+                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
+                                                                     int aplicaIVA, int idFactFormaPago, int idFactUsoCFDI)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -694,10 +694,10 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@numeroUnidadTaxi", numeroUnidadTaxi);
                     parameters.Add("@idEstatusCuentaPorCobrar", idEstatusCuentaPorCobrar);
                     parameters.Add("@montoPagado", montoPagado);
-                    parameters.Add("@montoTotalcantidadAbonada", montoTotalcantidadAbonada);
                     parameters.Add("@aCredito", aCredito);
+                    parameters.Add("@aCreditoConAbono", aCreditoConAbono);
                     parameters.Add("@aplicaIVA", aplicaIVA);
-                    parameters.Add("@idMetodoPago", idMetodoPago);
+                    //parameters.Add("@idMetodoPago", idMetodoPago);
                     parameters.Add("@idFactFormaPago", idFactFormaPago);
                     parameters.Add("@idFactUsoCFDI", idFactUsoCFDI);
 

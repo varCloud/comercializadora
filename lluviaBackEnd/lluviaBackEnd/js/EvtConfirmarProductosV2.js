@@ -25,7 +25,7 @@ $('#btnCancelar').click(function (e) {
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
-    document.getElementById("chkCliente").checked = false;
+    document.getElementById("chkCliente").checked = true;
     document.getElementById("chkRuteo").checked = false;
     document.getElementById("chkTaxi").checked = false;
     document.getElementById("chkLiquidado").checked = false;
@@ -80,16 +80,16 @@ function RevisarInputEfectivo(chk) {
 
     var formaPago = parseInt($('#formaPago').val());
 
-    if (chk == 'chkLiquidado' || chk == 'chkCreditoConAbono') {
-
-        if (formaPago == parseInt(4) || formaPago == parseInt(18)) {
+    if  (
+         ( formaPago == parseInt(4) || formaPago == parseInt(18)) && 
+         ( (chk == 'chkCredito' || chk == 'chkLiquidado') )
+        ) {
             $('#dvEfectivo').css('display', 'none');
         }
-        else {
-            $('#dvEfectivo').css('display', '');
+    else {
+        $('#dvEfectivo').css('display', '');
         }
 
-    }
 
 }
 
@@ -262,33 +262,43 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var idPedidoEspecial = parseInt(0);
     var idEstatusPedidoEspecial = parseInt(0);
     var idEstatusCuentaPorCobrar = parseInt(0);
-    var montoPagado = parseFloat(0.0);
-    var montoTotalcantidadAbonada = parseFloat(0.0);
+    var montoPagado = parseFloat($('#efectivo').val());
+    //var montoTotalcantidadAbonada = parseFloat(0.0);
     var productos = [];
     var aCredito = parseInt(0);
+    var aCreditoConAbono = parseInt(0);
     var formaPago = $('#formaPago').val();
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
     var aplicaIVA = parseInt(0);
-    var idMetodoPago = parseInt(0);
-    var idFactFormaPago = parseInt(0);
+    //var idMetodoPago = parseInt(1);
+    //var idFactFormaPago = parseInt(0);
     var idFactUsoCFDI = parseInt(0);
-    var cantidadAbonada_ = parseFloat(0); 
+    //var cantidadAbonada_ = parseFloat(0); 
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
     $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
 
-    if (($('#efectivo').val() == "") && (parseInt(formaPago) == parseInt(1))) {
-        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
-        $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-        return;
+    if ($("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked")) {
+
+        if (parseInt(formaPago) != parseInt(4) && parseInt(formaPago) != parseInt(18)) {
+
+            if ($('#efectivo').val() == "") {
+                MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+                $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+                return;
+            }
+
+            if ( (parseFloat(efectivo_) < parseFloat(total_)) && ($("#chkLiquidado").is(":checked")) ) {
+                MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total del pedido: " + total_.toString());
+                $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+                return;
+            }
+        
+        }
+        
     }
 
-    if (parseFloat(efectivo_) < parseFloat(total_)) {
-        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total de la venta: " + total_.toString());
-        $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-        return;
-    }
 
     if ($("#chkFacturarPedido").is(":checked")) {
         aplicaIVA = parseInt(1);
@@ -379,10 +389,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
         if (($('#efectivo').val() == "")) {
             MuestraToast('warning', "Debe escribir el monto total de liquidación");
-            ("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
         }
-        montoTotal = $('#efectivo').val();
+        //montoTotal = $('#efectivo').val();
     }
 
 
@@ -394,21 +404,25 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
         }
-        montoTotalcantidadAbonada = $('#efectivo').val();
+        //montoPagado = $('#efectivo').val();
     }
 
 
     // si es a credito -> afectar estructuras de cuentas por cobrar
-    if (
-        ($("#chkCredito").is(":checked")) ||
-        ($("#chkCreditoConAbono").is(":checked"))
-    ) {
+    if ( ($("#chkCredito").is(":checked")) ) {
         aCredito = parseInt(1);
+        //idMetodoPago = parseInt(2);
+    }
+
+
+    if ( ($("#chkCreditoConAbono").is(":checked")) ) {
+        aCreditoConAbono = parseInt(1);
+        //idMetodoPago = parseInt(2);
     }
 
 
     //validaciones
-    if (parseFloat(cantidadAbonada_) > parseFloat(total_)) {
+    if (parseFloat(efectivo_) > parseFloat(total_)) {
         MuestraToast('warning', "No puede abonar mas del total del pedido especial .");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
@@ -437,9 +451,13 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
     dataToPost = JSON.stringify({
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
-        numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoPagado: montoPagado, montoTotalcantidadAbonada: montoTotalcantidadAbonada,
-        aCredito: aCredito, aplicaIVA: aplicaIVA, idMetodoPago: idMetodoPago, idFactFormaPago: idFactFormaPago, idFactUsoCFDI: idFactUsoCFDI
+        numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoPagado: montoPagado, aCredito: aCredito,
+        aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI
     });
+
+    //console.log(dataToPost);
+    //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+    //return;
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarConfirmacion"),
@@ -579,10 +597,11 @@ function chkChangeEntregar(chk) {
 function chkChangeTipoPago(chk) {
 
     //var formaPago = parseInt($('#formaPago').val());
-
+    //console.log(chk);
     if (chk == 'chkLiquidado') {
 
         document.getElementById("formaPago").disabled = false;
+        $('#dvEfectivo').css('display', '');
         RevisarInputEfectivo(chk);
 
         document.getElementById("chkCredito").checked = false;
@@ -610,6 +629,7 @@ function chkChangeTipoPago(chk) {
     if (chk == 'chkCreditoConAbono') {
 
         document.getElementById("formaPago").disabled = false;
+        $('#dvEfectivo').css('display', '');
         RevisarInputEfectivo(chk);
 
         document.getElementById("chkLiquidado").checked = false;
@@ -1026,6 +1046,14 @@ function AbrirModalIngresoEfectivo(idTipoIngreso) {
     $('#montoIngresoEfectivo').val(0);
     $('#ModalIngresoEfectivo').modal({ backdrop: 'static', keyboard: false, show: true });
 }
+
+
+$("#montoIngresoEfectivo").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("GuardarIngresoEfectivo").click();
+    }
+});
 
 function ImprimeTicketIngresoEfectivo(idIngresoEfectivo) {
     $.ajax({
