@@ -470,11 +470,13 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-
-
             if (data.Estatus == 200) {
-
-                window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
+                if ($("#chkFacturarPedido").is(":checked")) {
+                    console.log(data)
+                    //facturarPedidoEspecial()
+                }
+                else
+                    window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
 
             }
             $('#ModalEntregarPedidoEspecial').modal('hide');
@@ -491,7 +493,31 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 });
 
+function facturarPedidoEspecial(idPedidoEspecial) {
 
+    
+    $.ajax({
+        url: pathDominio + "api/WsFactura/GenerarFactura",
+        data: { idVenta: 0, idPedidoEspecial , idUsuario: idUsuarioGlobal },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
 function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),

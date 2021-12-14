@@ -199,11 +199,12 @@ namespace lluviaBackEnd.DAO
 
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
-                parameters.Add("@idVenta", f.idVenta);
+                string sp = f.idPedidoEspecial == 0 ? "SP_FACTURACION_INSERTA_FACTURA_CANCELADA" : "SP_FACTURACION_INSERTA_FACTURA_CANCELADA_PEDIDOS_ESPECIALES";
+                parameters.Add(f.idPedidoEspecial == 0 ? "@idVenta" : "@idPedidoEspecial", f.idPedidoEspecial == 0 ? f.idVenta : f.idPedidoEspecial.ToString());
                 parameters.Add("@idUsuario", f.idUsuario);
                 parameters.Add("@idEstatusFactura", f.estatusFactura);
                 parameters.Add("@msjError", f.mensajeError);
-                n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA_CANCELADA", parameters, commandType: CommandType.StoredProcedure);
+                n = _db.QuerySingle<Notificacion<String>>(sp, parameters, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -250,6 +251,45 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
+
+        public Notificacion<List<Factura>> ObtenerFacturasPedidosEspeciales(Factura factura)
+        {
+            Notificacion<List<Factura>> facturas = new Notificacion<List<Factura>>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idStatusFactura", factura.estatusFactura == 0 ? (object)null : factura.estatusFactura);
+                    parameters.Add("@idUsuario", factura.idUsuario == 0 ? (object)null : factura.idUsuario);
+                    parameters.Add("@fechaIni", factura.fechaIni == DateTime.MinValue ? (object)null : factura.fechaIni);
+                    parameters.Add("@fechaFin", factura.fechaFin == DateTime.MinValue ? (object)null : factura.fechaFin);
+                    var rs = _db.QueryMultiple("SP_FACTURACION_OBTENER_FACTURAS_PEDIDOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        facturas.Estatus = rs1.status;
+                        facturas.Mensaje = rs1.mensaje;
+                        facturas.Modelo = rs.Read<Factura>().ToList();
+                        facturas.Modelo.ForEach(p => p.pathArchivoFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + p.pathArchivoFactura);
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.status;
+                        facturas.Mensaje = rs1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
+
         public Cancelacion ObtenerCancelacionFactura(Factura factura)
         {
             Cancelacion c = null;
@@ -258,9 +298,11 @@ namespace lluviaBackEnd.DAO
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idVenta", factura.idVenta);
 
-                    var rs = _db.QueryMultiple("SP_OBTENER_CANCELACION_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                    string sp = factura.idPedidoEspecial == 0 ? "SP_OBTENER_CANCELACION_FACTURA" : "SP_FACTURACION_OBTENER_CANCELACION_FACTURA";
+                    parameters.Add(factura.idPedidoEspecial == 0 ? "@idVenta": "@idPedidoEspecial", factura.idPedidoEspecial == 0 ?factura.idVenta : factura.idPedidoEspecial.ToString());
+
+                    var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.Estatus == 200)
                     {
@@ -286,7 +328,43 @@ namespace lluviaBackEnd.DAO
             return c;
         }
 
-        public Notificacion<dynamic> ObtenerDetalleFactura(Int64 idVenta)
+        public Notificacion<dynamic> ObtenerDetalleFactura(Factura f)
+        {
+            Notificacion<dynamic> facturas = new Notificacion<dynamic>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    string sp = "SP_FACTURACION_OBTENER_DATOS_FACTURA";
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta",f.idVenta);
+                    var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                        facturas.Modelo = rs.ReadSingle();                   
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
+
+
+        public Notificacion<dynamic> ObtenerDetalleFacturaPE(Factura f)
         {
             Notificacion<dynamic> facturas = new Notificacion<dynamic>();
             try
@@ -294,14 +372,14 @@ namespace lluviaBackEnd.DAO
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@idVenta", idVenta);
-                    var rs = _db.QueryMultiple("SP_FACTURACION_OBTENER_DATOS_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@idPedidoEspecial", f.idPedidoEspecial);
+                    var rs = _db.QueryMultiple("SP_FACTURACION_OBTENER_DATOS_FACTURA_PEDIDO_ESPECIAL", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
                     if (rs1.Estatus == 200)
                     {
                         facturas.Estatus = rs1.Estatus;
                         facturas.Mensaje = rs1.Mensaje;
-                        facturas.Modelo = rs.ReadSingle();                   
+                        facturas.Modelo = rs.ReadSingle();
 
                     }
                     else

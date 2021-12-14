@@ -33,38 +33,10 @@ namespace lluviaBackEnd.Controllers
 
         public ActionResult Factura()
         {
-            //ViewBag.lstFacturas = new FacturaDAO().ObtenerFacturas(new Models.Factura() { idFactura = 0 });
             return View();
         }
 
-        //    public ActionResult ObtenerFactura(int idFactura)
-        //    {
-        //        try
-        //        {
-        //            Models.Factura p = new FacturaDAO().ObtenerFacturas(new Models.Factura() { idFactura = idFactura })[0];
-        //            return Json(p, JsonRequestBehavior.AllowGet);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
-
-        //    public ActionResult _ObtenerFacturas(int idFactura)
-        //    {
-        //        try
-        //        {
-        //            //List<Models.Socio> Lstsocio = new SocioDAO().ObtenerSocios(new Models.Socio() { IdSocio = 0 });
-        //            ViewBag.lstFacturas = new FacturaDAO().ObtenerFacturas(new Models.Factura() { idFactura = 0 });
-        //            return PartialView("_ObtenerFacturas");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
-
-
+        
         [HttpPost]
         public JsonResult CancelarFactura(Factura factura)
         {
@@ -89,8 +61,6 @@ namespace lluviaBackEnd.Controllers
                     log4netRequest.Debug("Documento a cancelar : " +  documentoOriginal);
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
                     System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta+timeStamp + ".xml", result);
-                    //pathFactura = @"F:\Documents\comercializadora\lluviaBackEnd\lluviaBackEnd\Facturas\2021\AGOSTO\";
-                    //string text = System.IO.File.ReadAllText(pathFactura+ "Cancelacion_35705.xml");
                     AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
                     if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
                     {
@@ -184,7 +154,6 @@ namespace lluviaBackEnd.Controllers
                 Sesion UsuarioActual = null;
                 if (Session != null)
                     UsuarioActual = (Sesion)Session["UsuarioActual"];
-                //factura.idVenta = "64";
                 factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") || string.IsNullOrEmpty(factura.idVenta) ? "PE"+factura.idPedidoEspecial : factura.idVenta);
@@ -310,7 +279,9 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<dynamic>  notificacion = new FacturaDAO().ObtenerDetalleFactura(idVenta);                
+                Factura f = new Factura();
+                f.idVenta = idVenta.ToString();
+                Notificacion<dynamic>  notificacion = new FacturaDAO().ObtenerDetalleFactura(f);                
                 return Json(JsonConvert.SerializeObject(notificacion),JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -325,7 +296,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Notificacion<dynamic> notificacion = new FacturaDAO().ObtenerDetalleFactura(Convert.ToInt64(f.idVenta));
+                Notificacion<dynamic> notificacion = null;
+                notificacion = f.idPedidoEspecial  == 0 ? new FacturaDAO().ObtenerDetalleFactura(f) : new FacturaDAO().ObtenerDetalleFacturaPE(f);
                 string path = System.Web.HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
                 path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/","").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
                 Email.NotificacionPagoReferencia(notificacion.Modelo.correo,path,f ,f.correoAdicional);
@@ -342,20 +314,6 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-
-        //    [HttpPost]
-        //    public ActionResult ActualizarEstatusFactura(int idFactura, bool activo)
-        //    {
-        //        try
-        //        {
-        //            Result result = new FacturaDAO().ActualizarEstatusFactura(idFactura, activo);
-        //            return Json(result, JsonRequestBehavior.AllowGet);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
 
     }
 
