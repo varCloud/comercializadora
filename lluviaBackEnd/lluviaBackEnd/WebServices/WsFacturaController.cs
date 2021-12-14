@@ -15,6 +15,7 @@ namespace lluviaBackEnd.WebServices
 {
     public class WsFacturaController : ApiController
     {
+        [System.Web.Http.HttpPost]
         public Notificacion<String> GenerarFactura(Factura f) {
             Notificacion<String> n = new Notificacion<string>();
             

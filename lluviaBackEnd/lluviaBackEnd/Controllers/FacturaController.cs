@@ -187,7 +187,7 @@ namespace lluviaBackEnd.Controllers
                 //factura.idVenta = "64";
                 factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") ? "PE"+factura.idPedidoEspecial : factura.idVenta);
+                comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") || string.IsNullOrEmpty(factura.idVenta) ? "PE"+factura.idPedidoEspecial : factura.idVenta);
                 items = facturacionDAO.ObtenerComprobante(factura, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {

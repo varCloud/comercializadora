@@ -51,8 +51,11 @@ namespace lluviaBackEnd.DAO
                 // para generar qr del sat = https://groups.google.com/forum/#!topic/vfp-factura-electronica-mexico/wLMK1MAhZWQ
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
-                parameters.Add("@idVenta", factura.idFactura);
-                string sp = factura.idVenta.Equals("0") ? "SP_FACTURACION_OBTENER_DETALLE_VENTA" : "SP_FACTURACION_OBTENER_DETALLE_PEDIDO_ESPECIAL";
+
+               
+                parameters.Add(factura.folio.Contains("PE") ? "@idPedidoEspecial":"@idVenta",(factura.folio.Contains("PE") ? factura.idPedidoEspecial.ToString(): factura.idVenta ));
+                string sp = factura.folio.Contains("PE") ? "SP_FACTURACION_OBTENER_DETALLE_PEDIDO_ESPECIAL" : "SP_FACTURACION_OBTENER_DETALLE_VENTA" ;
+
                 var result = this._db.QueryMultiple(sp, param: parameters, commandType: CommandType.StoredProcedure);
                 var r1 = result.ReadFirst();
                 if (r1.Estatus == 200)
@@ -169,14 +172,15 @@ namespace lluviaBackEnd.DAO
             {
                 _db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString());
                 var parameters = new DynamicParameters();
-                parameters.Add("@idVenta", f.folio);
+                string sp = f.folio.Contains("PE") ? "SP_FACTURACION_PEDIDOS_ESPECIALES_INSERTA_FACTURA" : "SP_FACTURACION_INSERTA_FACTURA";
+                parameters.Add(f.folio.Contains("PE") ? "@idPedidoEspecial" : "@idVenta", (f.folio.Contains("PE") ? f.idPedidoEspecial.ToString() : f.idVenta));
                 parameters.Add("@idUsuario", f.idUsuario);
                 parameters.Add("@fechaTimbrado", (f.fechaTimbrado == DateTime.MinValue ? DateTime.Now : (f.fechaTimbrado)));
                 parameters.Add("@UUID", string.IsNullOrEmpty(f.UUID) ? (object)null : f.UUID);
                 parameters.Add("@idEstatusFactura", f.estatusFactura);
                 parameters.Add("@msjError", f.mensajeError);
                 parameters.Add("@pathArchivo", f.pathArchivoFactura);
-                n = _db.QuerySingle<Notificacion<String>>("SP_FACTURACION_INSERTA_FACTURA", parameters, commandType: CommandType.StoredProcedure);
+                n = _db.QuerySingle<Notificacion<String>>(sp, parameters, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
