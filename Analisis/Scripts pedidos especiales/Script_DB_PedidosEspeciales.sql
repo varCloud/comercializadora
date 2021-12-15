@@ -237,6 +237,7 @@ CREATE TABLE
 			precioRango							money,
 			precioVenta							money,
 			montoIva							money,
+			montoComisionBancaria				money,
 			idTicketMayoreo						int,
 			observaciones						varchar(255),
 			ultimoCostoCompra					money,

@@ -216,8 +216,10 @@ as
 				-- si es tarjeta de credito o debito se aplica comision 
 				if ( ( @idFactFormaPago in ( '4', '18' ) ) and ( @aplicaIVA = (cast (0 as bit) ) ) ) 
 					begin	
-						select	@porcentajeComision = porcentaje 
-						from	Comisiones where idComision = 1 and activo = cast(1 as bit)
+						select	@porcentajeComision = cast( (porcentaje/100) as money ) 
+						from	Comisiones 
+						where	idComision = 1 
+							and activo = cast(1 as bit)
 					end
 				
 				select @porcentajeComision = coalesce(@porcentajeComision, 0.0)
@@ -505,6 +507,18 @@ as
 
 						end
 
+
+					-- se actualiza el monto de comision en caso que existiera
+					update	PedidosEspecialesDetalle
+					set		montoComisionBancaria = a.montoComisionBancaria
+					from	(
+								select	idPedidoEspecial, idPedidoEspecialDetalle, cantidadAceptada, precioVenta, 
+										Round( ( (cantidadAceptada * precioVenta )* @porcentajeComision),2,0) as montoComisionBancaria 
+								from	PedidosEspecialesDetalle
+								where	idPedidoEspecial = @idPedidoEspecial								
+							)A
+					where	PedidosEspecialesDetalle.idPedidoEspecial = a.idPedidoEspecial
+						and	PedidosEspecialesDetalle.idPedidoEspecialDetalle = a.idPedidoEspecialDetalle
 
 					-- Afectar las tablas de PedidosEspecialesCuentasPorCobrar cuando el pedido es a credito
 					if ( (@aCredito = cast(1 as bit)) or (@aCreditoConAbono = cast(1 as bit)) )
