@@ -43,10 +43,6 @@ namespace lluviaBackEnd.Controllers
                         return RedirectToAction("CierreCajas");
                     else
                     {
-                        //Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                        //notificacion = new ProductosDAO().ObtenerProductosPorUsuario(new Models.Producto() { idProducto = 0, idUsuario = usuario.idUsuario, activo = true });
-                        //ViewBag.lstProductos = notificacion.Modelo;
-
                         Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
                         formasPago = new VentasDAO().ObtenerFormasPago();
                         ViewBag.lstFormasPago = formasPago.Modelo;
@@ -270,6 +266,27 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult ConsultaDatosTicketPedidoEspecialV2(int idPedidoEspecial)
+        {
+            try
+            {
+
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                //PedidosEspecialesV2 pedido = new PedidosEspecialesV2();
+
+                notificacion = new PedidosEspecialesV2DAO().ObtenerEntregarPedidos(new PedidosEspecialesV2() { idPedidoEspecial = idPedidoEspecial, fechaIni = new DateTime(1900,01,01), fechaFin = new DateTime(1900,01,01) });
+                //pedido = notificacion;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /************** REIMPRIMIR TICKETS ALMACENES********************/
 
@@ -315,32 +332,7 @@ namespace lluviaBackEnd.Controllers
                 {
                     using (PrintDocument pd = new PrintDocument())
                     {
-
-                        string nombreImpresora = string.Empty;
-                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
-                        {
-                            if (strPrinter.Contains("PDF"))
-                            {
-                                nombreImpresora = strPrinter;
-                            }
-                        }
-
-                        if (nombreImpresora == string.Empty)
-                        {
-                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
-                            notificacion.Estatus = -1;
-                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
-                        }
-                        else
-                        {
-                            pd.PrinterSettings = new PrinterSettings
-                            {
-                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
-                                PrintToFile = true,
-                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + pedidoEspecial[0].idPedidoEspecialDetalle.ToString() + "_preview.pdf"
-                            };
-                        }
-
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
 
                         //Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
                         //PaperSize ps = new PaperSize("", 285, 540);
@@ -353,7 +345,6 @@ namespace lluviaBackEnd.Controllers
                         //pd.DefaultPageSettings.PaperSize = ps;
                         pd.Print();
                         pd.Dispose();
-                        nombreImpresora = string.Empty;
                         this.indexProducto = 0;
                         this.paginaActual = 0;
                     }
