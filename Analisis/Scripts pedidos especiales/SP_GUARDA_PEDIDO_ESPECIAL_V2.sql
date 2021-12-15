@@ -153,11 +153,10 @@ as
 				
 				select @fecha = coalesce(@fecha, dbo.FechaActual())
 
-				--si el idPedidoEspecial viene diferente de 0 y se encuentra en cotizacion borramos el registros para que se inserte el nuevo pedido especial
+				--si el idPedidoEspecial viene diferente de 0 y se encuentra en cotizacion borramos el detalle para que se inserten los nuevos productos
 				if exists(select 1 from PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial and idEstatusPedidoEspecial=2 and @idPedidoEspecial>0)
 				begin
-					delete PedidosEspecialesDetalle where idPedidoEspecial=@idPedidoEspecial
-					delete PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial
+					delete PedidosEspecialesDetalle where idPedidoEspecial=@idPedidoEspecial					
 				end
 
 				insert into #cantidades (cantidad)
@@ -342,6 +341,8 @@ as
 					----------------------------------------------------------------------------------------------------------------------------------------------------------
 					----------------------------------------------------------------------------------------------------------------------------------------------------------
 					
+					if(coalesce(@idPedidoEspecial,0)=0) 
+					begin
 					-- inserta en tablas fisicas
 						insert into 
 							PedidosEspeciales
@@ -355,7 +356,12 @@ as
 								null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi
 
 						select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
-
+                    end
+					else
+					begin
+						update PedidosEspeciales set idCliente=@idCliente,cantidad=@totalProductos,idUsuario=@idUsuario,montoTotal=@montoTotal,
+						idEstatusPedidoEspecial=@idEstatusPedidoEspecial,idEstacion=@idEstacion
+					end
 					-- se inserta el detalle de los productos que se vendieron
 					insert into
 						PedidosEspecialesDetalle
