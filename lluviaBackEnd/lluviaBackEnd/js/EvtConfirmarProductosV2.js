@@ -422,7 +422,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 
     //validaciones
-    if (parseFloat(efectivo_) > parseFloat(total_)) {
+    if ( (parseFloat(efectivo_) > parseFloat(total_) ) && ( formaPago != 1 ) ) {
         MuestraToast('warning', "No puede abonar mas del total del pedido especial .");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
@@ -473,6 +473,11 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 
             if (data.Estatus == 200) {
+                ImprimeTicketPedidoEspecialProductos(idPedidoEspecial);
+
+                if (aplicaIVA === parseInt(1)) {
+                    facturaPedidoEspecial(idPedidoEspecial, idUsuarioEntrega);
+                }
 
                 window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
 
@@ -514,6 +519,32 @@ function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
             console.log(xhr);
             console.log(status);
             //console.log(data);
+        }
+    });
+}
+
+
+
+function facturaPedidoEspecial(idPedidoEspecial, idUsuario) {
+    //console.log("facturaVenta_" + idVenta);
+    $.ajax({
+        url: pathDominio + "api/WsFactura/GenerarFactura",
+        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuario },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
         }
     });
 }
