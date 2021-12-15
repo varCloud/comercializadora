@@ -327,6 +327,39 @@ namespace lluviaBackEnd.DAO
             return lstProductosPedido;
         }
 
+
+        public Notificacion<List<Ticket>> ObtenerTicketsPedidoEspecialV2(Ticket ticket)
+        {
+            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", ticket.idPedidoEspecial);
+                    var result = db.QueryMultiple("SP_CONSULTA_TICKET_PEDIDO_ESPECIALV2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Ticket>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<Ticket> { ticket };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
         //public Notificacion<List<PedidosEspecialesV2>> ConsultaPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
         //{
         //    Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
@@ -676,7 +709,9 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, int idEstatusCuentaPorCobrar, float montoTotal, float montoTotalcantidadAbonada, bool aCredito, string idTipoPago, int aplicaIVA, int idFactUsoCFDI)
+        public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, 
+                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
+                                                                     int aplicaIVA, int idFactFormaPago, int idFactUsoCFDI)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -691,11 +726,12 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuarioEntrega", idUsuarioEntrega);
                     parameters.Add("@numeroUnidadTaxi", numeroUnidadTaxi);
                     parameters.Add("@idEstatusCuentaPorCobrar", idEstatusCuentaPorCobrar);
-                    parameters.Add("@montoTotal", montoTotal);
-                    parameters.Add("@montoTotalcantidadAbonada", montoTotalcantidadAbonada);
+                    parameters.Add("@montoPagado", montoPagado);
                     parameters.Add("@aCredito", aCredito);
-                    parameters.Add("@idTipoPago", idTipoPago);
+                    parameters.Add("@aCreditoConAbono", aCreditoConAbono);
                     parameters.Add("@aplicaIVA", aplicaIVA);
+                    //parameters.Add("@idMetodoPago", idMetodoPago);
+                    parameters.Add("@idFactFormaPago", idFactFormaPago);
                     parameters.Add("@idFactUsoCFDI", idFactUsoCFDI);
 
 

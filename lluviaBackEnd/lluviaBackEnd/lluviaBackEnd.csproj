@@ -228,6 +228,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\FacturaPedidosEspecialesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
@@ -1097,6 +1098,7 @@
     <Content Include="js\EvtConsultaVentasCanceladas.js" />
     <Content Include="js\evtCotizaciones.js" />
     <Content Include="js\EvtDashboard.js" />
+    <Content Include="js\EvtFacturasPedidosEspeciales.js" />
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
@@ -1338,6 +1340,8 @@
     <Content Include="Views\PedidosEspecialesV2\_ObtenerEntregarPedidos.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\ConsultarCuentasPorCobrar.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\VerTicketAlmacenes.cshtml" />
+    <Content Include="Views\FacturaPedidosEspeciales\FacturaPedidosEspeciales.cshtml" />
+    <Content Include="Views\FacturaPedidosEspeciales\_ObtenerFacturasPE.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -97,6 +97,9 @@ namespace lluviaBackEnd.Models
 
         public bool usarDatosCliente { get; set; }
 
+        public float adeudo { get; set; }
+
+        public int diasTranscurridos { get; set; }
 
     }
 }

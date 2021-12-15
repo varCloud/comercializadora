@@ -8,14 +8,37 @@
 --insert into CatPasillo ( descripcion) values ( 'Resguardo')
 --select * from CatPasillo
 
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por pedido especial)',	-1)
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial)',	1)
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)',	1)
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)',	1)
-insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)', 1)
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(salida de mercancia por pedido especial)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por pedido especial)',	-1)
+end
+
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por pedido especial)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial)',	1)
+end
+
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)',	1)
+end
+
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)',	1)
+end
+
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)', 1)
+end
+
+
+--delete CatTipoMovimientoInventario where idTipoMovInventario > 21
 
 --select * from CatTipoMovimientoInventario
-
+--DBCC CHECKIDENT ('[CatTipoMovimientoInventario]', RESEED, 21);
+--GO
 --------------------------------------------
 --catalAgos
 --------------------------------------------
@@ -151,11 +174,19 @@ CREATE TABLE
 			idEstacion						int,
 			observaciones					varchar(500),
 			codigoBarras					varchar(250),
-			idTipoPago						int,
+			--idTipoPago						int,
 			idUsuarioEntrega				int,				--Ruteo ,taxi,0 = (Cliente)
 			numeroUnidadTaxi				varchar(100),		--0,36
 			liquidado						bit default 0,
-			diasCredito						int
+			idComision						int,
+			diasCredito						int,
+			fechaEntrega					datetime,
+			idFactMetodoPago				int,
+			idFactFormaPago					int,
+			idFactUsoCFDI					int,
+			montoPagado						money,
+			idUsuarioCancelacion			int,
+			fechaCancelacion				datetime
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspeciales TO PUBLIC

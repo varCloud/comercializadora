@@ -382,6 +382,15 @@ as
 									on pro.idProducto = p.idProducto
 
 
+					update p set codigoBarras= 
+					cast((RIGHT('000000' + Ltrim(Rtrim(idPedidoEspecial)),6)) as varchar) + 
+					cast((RIGHT('00' + Ltrim(Rtrim(DAY(fechaAlta))),2)) as varchar)  + 
+					cast((RIGHT('00' + Ltrim(Rtrim(month(fechaAlta))),2)) as varchar)  + 
+					cast((RIGHT('00' + Ltrim(Rtrim(year(fechaAlta))),2)) as varchar)  + 
+					cast((RIGHT('000' + Ltrim(Rtrim(idUsuario)),3)) as varchar)  +
+					cast((RIGHT('00' + Ltrim(Rtrim(ROUND(((99 - 1) * RAND() + 1), 0))),2)) as varchar)  
+					from PedidosEspeciales p where idpedidoespecial=@idpedidoespecial
+
 					if ( @tipoRevision = 1 ) -- ticket
 						begin
 						
@@ -599,10 +608,10 @@ as
 								set		InventarioDetalle.cantidad = InventarioDetalle.cantidad + a.cantidadDescontada, 
 										fechaActualizacion = dbo.FechaActual()
 								from	(
-											select	idProducto, idUbicacion, sum(cantidadDescontada) as cantidadDescontada
+											select	idProducto, sum(cantidadDescontada) as cantidadDescontada
 											from	#tempExistencias
 											where	cantidadDescontada > 0
-											group by idProducto, idUbicacion
+											group by idProducto
 										)A
 								where	InventarioDetalle.idUbicacion = @idubicacion
 									and	InventarioDetalle.idProducto = a.idProducto 

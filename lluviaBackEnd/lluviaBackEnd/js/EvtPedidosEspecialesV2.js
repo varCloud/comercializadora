@@ -148,10 +148,16 @@ $('#btnAprobarPrecioMayoreo').click(function (e) {
 });
 
 function ModalAutorizarPrecioMayoreo() {
-    //$("#usuarioAutoriza").val("");
-    //$("#contrasenaAutoriza").val("");
-    $('#ModalAutorizarPrecioMayoreo').modal({ backdrop: 'static', keyboard: false, show: true });
+    $("#usuarioAutoriza").val("");
+    $("#contrasenaAutoriza").val("");
+    $("#idPedidoEspecialMayoreo").val("");
+    $("#usuarioAutorizaPrecioMayoreo").val("");
+    $("#contrasenaAutorizaPrecioMayoreo").val("");
 
+    $("#_articulos").html("");
+    $("#_total").html("");
+    $("#_cliente").html("");
+    $('#ModalAutorizarPrecioMayoreo').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
 
@@ -2864,9 +2870,172 @@ function BuscarVentaCodigoBarras() {
     });
 }
 
+$("#idPedidoEspecialMayoreo").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnConsultaTicketMayoreo").click();
+    }
+});
+
+$("#contrasenaAutorizaPrecioMayoreo").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnAutorizarTicketMayoreo").click();
+    }
+});
+
+
+$('#btnAutorizarTicketMayoreo').click(function (e) {
+
+    var usuario = $('#usuarioAutorizaPrecioMayoreo').val();
+    var contrasena = $('#contrasenaAutorizaPrecioMayoreo').val();
+    var idPedidoEspecialMayoreo = $('#idPedidoEspecialMayoreo').val();
+
+    var _articulos = document.getElementById("_articulos").innerHTML;
+    var _total = document.getElementById("_total").innerHTML;
+    var _cliente = document.getElementById("_cliente").innerHTML;
+
+
+    if ((usuario === '') || (contrasena === '')) {
+        MuestraToast("error", "Debe ingresar Usuario y Contraseña para autorizar el precio de mayoreo .");
+        return;
+    }
+
+    if  (
+            (idPedidoEspecialMayoreo === '') ||
+            (_articulos === '') ||
+            (_total === '') ||
+            (_cliente === '') 
+        ) {
+        MuestraToast("error", "Debe consultar un pedido especial válido para autorizar el precio de mayoreo .");
+        return;
+    }
+
+
+
+    $.ajax({
+        url: rootUrl("/Ventas/ValidarContrasena"),
+        data: { usuario: usuario, contrasena: contrasena },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Validando");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+
+            if (data.Estatus === 200) {
+
+                swal({
+                    title: 'Mensaje',
+                    text: '¿Esta seguro que desea autorizar el ticket a precio de mayoreo?',
+                    icon: 'info',
+                    buttons: ["No", "Sí"],
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+
+                            $('#ModalAutorizarPrecioMayoreo').modal('hide');
+                            $('#idPedidoEspecialMayoreo_').val($('#idPedidoEspecialMayoreo').val()); // $('#idPedidoEspecialMayoreo').val();
+                            document.getElementById("divIdPedidoMayoreo").innerHTML = "Autorizado con Pedido #: <span> " + $('#idPedidoEspecialMayoreo').val() + " </span>";
+                            $('#divIdPedidoMayoreo').css('display', '');
+
+                        } else {
+                            console.log("cancelar");
+                            //$('#divIdPedidoMayoreo').css('display', 'none');
+                        }
+                    });    
+
+            }
+
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+});
+
+$('#btnConsultaTicketMayoreo').click(function (e) {
+
+    var pedido;
+    var idPedidoEspecial = parseInt(0);
+
+    $("#_articulos").html("");
+    $("#_total").html("");
+    $("#_cliente").html("");
+
+    // validaciones
+    if  (
+         ($('#idPedidoEspecialMayoreo').val() == "") ||
+         ($('#idPedidoEspecialMayoreo').val() == "0") 
+        ) {
+        MuestraToast('warning', "Debe escribir el # de ticket de mayoreo.");
+        return;
+    }
+
+    idPedidoEspecial = parseInt($('#idPedidoEspecialMayoreo').val());    
+    pedido = ConsultaDatosTicketPedidoEspecialV2(idPedidoEspecial);
+
+    if ( pedido.Estatus == "200" ) {
+
+        if (parseInt(pedido.Modelo[0].cantidad) >= 6) {
+            $("#_articulos").html(pedido.Modelo[0].cantidad);
+            $("#_total").html("$" + pedido.Modelo[0].montoTotal);
+            $("#_cliente").html(pedido.Modelo[0].nombreCliente);
+        }
+        else {
+            MuestraToast('warning', "El ticket no contiene al menos 6 productos.");
+            $("#_articulos").html("");
+            $("#_total").html("");
+            $("#_cliente").html("");
+        }
+
+    }
+    else {
+
+        MuestraToast('warning', pedido.Mensaje);
+
+    }
+
+});
+
+function ConsultaDatosTicketPedidoEspecialV2(idPedidoEspecial) {
+
+    var result = [];
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ConsultaDatosTicketPedidoEspecialV2"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes")
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+    return result;
+}
+
+
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
+    $('#divIdPedidoMayoreo').css('display', 'none');
 
     //$("#btnTicket").click(function (evt) {
     //    consultarTicketPedidoEspecial();
