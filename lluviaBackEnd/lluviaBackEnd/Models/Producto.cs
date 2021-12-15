@@ -89,11 +89,11 @@ namespace lluviaBackEnd.Models
         public float cantidadActualInvGeneral { get; set; }
         public float cantidadAnteriorInvGeneral { get; set; }
         public float cantidadActualInvAlmacen { get; set; }
-        public int precioVenta { get; set; }
-        public int cantidadSolicitada { get; set; }
-        public int cantidadAtendida { get; set; }
-        public int cantidadAceptada { get; set; }
-        public int cantidadRechazada { get; set; }
+        public float precioVenta { get; set; }
+        public float cantidadSolicitada { get; set; }
+        public float cantidadAtendida { get; set; }
+        public float cantidadAceptada { get; set; }
+        public float cantidadRechazada { get; set; }
 
 
 
