@@ -706,8 +706,12 @@ function validarProductosAceptados() {
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
-            if (
-                ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ((parseFloat(tblProductos.rows[i].cells[8].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) ) &&
+            if (parseFloat(tblProductos.rows[i].cells[10].children[0].value) > parseFloat(tblProductos.rows[i].cells[8].innerHTML)) {
+                MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida");
+                faltantes += 1;
+                return;
+            }else  if (
+                ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ((parseFloat(tblProductos.rows[i].cells[8].innerHTML)) <= (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) ) &&
                 (String(tblProductos.rows[i].cells[11].children[0].value) == "")
             ) {
                 if (faltantes == 0) {
