@@ -146,10 +146,10 @@
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                                     string abrir = string.Empty;
-                                       if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
-                                       {
+                                    if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
+                                    {
                                            abrir = "display: block;";
-                                       }
+                                    }
                                    
 
                             <li class="dropdown">
@@ -168,7 +168,7 @@
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PedidosEspeciales && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             string abrir = string.Empty;
-                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Encargado_de_almacen)
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
                             {
                                 abrir = "display: block;";
                             }

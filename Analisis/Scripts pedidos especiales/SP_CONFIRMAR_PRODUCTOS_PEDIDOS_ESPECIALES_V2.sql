@@ -254,6 +254,7 @@ as
 						fechaEntrega = @fecha,
 						idFactMetodoPago = @idFactMetodoPago,
 						idFactFormaPago = @idFactFormaPago,
+						idFactUsoCFDI = @idFactUsoCFDI,
 						montoPagado = @montoPagado
 				where	idPedidoEspecial = @idPedidoEspecial
 

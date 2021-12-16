@@ -37,7 +37,7 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     $('#idUsuarioTaxi').val("").trigger('change');
     //$('#idCliente').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
-    $('#usoCFDI').val("1").trigger('change');
+    $('#usoCFDI').val("3").trigger('change');
 
     //document.getElementById("idCliente").disabled = true;
     document.getElementById("idUsuarioRuteo").disabled = true;
@@ -495,31 +495,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 });
 
-function facturarPedidoEspecial(idPedidoEspecial) {
 
-    
-    $.ajax({
-        url: pathDominio + "api/WsFactura/GenerarFactura",
-        data: { idVenta: 0, idPedidoEspecial , idUsuario: idUsuarioGlobal },
-        method: 'post',
-        dataType: 'json',
-        async: true,
-        beforeSend: function (xhr) {
-            ShowLoader("Facturando Venta.");
-        },
-        success: function (data) {
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            OcultarLoader();
-        },
-        error: function (xhr, status) {
-            console.log('Disculpe, existió un problema');
-            console.log(xhr);
-            console.log(status);
-            OcultarLoader();
-        }
-    });
-
-}
 function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
@@ -548,11 +524,10 @@ function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
 
 
 
-function facturaPedidoEspecial(idPedidoEspecial, idUsuario) {
-    //console.log("facturaVenta_" + idVenta);
+function facturaPedidoEspecial(idPedidoEspecial) {
     $.ajax({
         url: pathDominio + "api/WsFactura/GenerarFactura",
-        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuario },
+        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
         method: 'post',
         dataType: 'json',
         async: true,
@@ -562,8 +537,10 @@ function facturaPedidoEspecial(idPedidoEspecial, idUsuario) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
+            window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
         },
         error: function (xhr, status) {
+            $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             console.log('Disculpe, existió un problema');
             console.log(xhr);
             console.log(status);
@@ -730,7 +707,7 @@ function validarProductosAceptados() {
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
             if (
-                ((parseFloat(tblProductos.rows[i].cells[6].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) &&
+                ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ((parseFloat(tblProductos.rows[i].cells[8].innerHTML)) !== (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) ) &&
                 (String(tblProductos.rows[i].cells[11].children[0].value) == "")
             ) {
                 if (faltantes == 0) {
@@ -1077,7 +1054,7 @@ $(document).ready(function () {
 
     //$('#idCliente').val("0").trigger('change');
     $('#formaPago').val("1").trigger('change');
-    $('#usoCFDI').val("1").trigger('change');
+    
 
     //document.getElementById("idCliente").disabled = true;
     document.getElementById("idUsuarioRuteo").disabled = true;
@@ -1103,7 +1080,7 @@ $(document).ready(function () {
     if ($("#cajaAbierta").val() == "False") {
         AbrirModalIngresoEfectivo(1);
     }
-
+    $('#usoCFDI').val("3").trigger('change');
 
 });
 
