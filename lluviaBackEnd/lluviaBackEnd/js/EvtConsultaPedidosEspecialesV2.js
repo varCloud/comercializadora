@@ -95,7 +95,27 @@ function onSuccessPedidosEspeciales(data) {
                 '             <td>' + liquidado + '</td>' +
                 '             <td>' + dato.codigoBarras + '</td>' +
                 '             <td>' + dato.observaciones + '</td>' +
-                '             <td><a href="javascript:MostrarDetalle(' + dato.idPedidoEspecial+');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Detalle"><i class="fas fa-align-justify"></i></a></td>' +
+                //'             <td><a href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Detalle"><i class="fas fa-align-justify"></i></a></td>' +
+                '<td>' +
+                '    <div class="dropdown d-inline">' +
+                '        <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesConsultar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                '            Acciones' +
+                '        </button>' +
+                '        <div class="dropdown-menu">' +
+                '            <a class="dropdown-item has-icon" href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');"><i class="fas fa-align-justify"></i>Ver Detalle </a>' +
+                '            <a class="dropdown-item has-icon" href="javascript:imprimirTicketPedidoEspecial(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket </a>';
+                
+                if (
+                        (dato.idEstatusPedidoEspecial == 6) || // pagado
+                        (dato.idEstatusPedidoEspecial == 7)    // a credito
+                    ) {                
+                    html += '           <a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecialProductos(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Ticket Productos</a>';
+                }
+
+                html += '    <a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>' +
+                '        </div>' +
+                '    </div> '+
+                ' </td>' +
                 '</tr>';
         });
         html += ' </tbody>' +
@@ -109,6 +129,7 @@ function onSuccessPedidosEspeciales(data) {
         InitDataTablePedidosEspeciales();
     }
 }
+
 
 function completarCeros(valor) {
     return ('00' + valor).slice(-2);
@@ -264,6 +285,52 @@ function InitDataTablePedidosEspecialesDetalle() {
             tblPedidosEspecialesDet.table().container()
         );
     }
+}
+
+function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            //console.log(data);
+        }
+    });
+}
+
+function imprimirTicketPedidoEspecial(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast("info", data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
 }
 
 

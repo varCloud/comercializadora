@@ -688,7 +688,6 @@ namespace lluviaBackEnd.Controllers
 
                 this.idPedidoEspecial = pedido.idPedidoEspecial;
 
-                //PrintDocument pd = new PrintDocument();
                 using (PrintDocument pd = new PrintDocument())
                 {
                     if (pedido.ticketVistaPrevia)
@@ -830,7 +829,7 @@ namespace lluviaBackEnd.Controllers
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
                     e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
-                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
+                    e.Graphics.DrawString("Ticket: PE" + notificacion.Modelo[0].idPedidoEspecial.ToString(), font, drawBrush, 40, 181, izquierda);
                     e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
                     e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
 
