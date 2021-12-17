@@ -55,7 +55,7 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     if (validarProductosAceptados()) {
         $('#ModalEntregarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
     }
-
+    calculaTotales('true');
 });
 
 $("#formaPago").on("change", function (value) {
@@ -262,7 +262,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var idPedidoEspecial = parseInt(0);
     var idEstatusPedidoEspecial = parseInt(0);
     var idEstatusCuentaPorCobrar = parseInt(0);
-    var montoPagado = parseFloat($('#efectivo').val());
+    var montoPagado = parseFloat(0);
     //var montoTotalcantidadAbonada = parseFloat(0.0);
     var productos = [];
     var aCredito = parseInt(0);
@@ -280,7 +280,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
 
     if ($("#chkLiquidado").is(":checked") || $("#chkCreditoConAbono").is(":checked")) {
-
+        
         if (parseInt(formaPago) != parseInt(4) && parseInt(formaPago) != parseInt(18)) {
 
             if ($('#efectivo').val() == "") {
@@ -294,6 +294,8 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
                 $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
                 return;
             }
+
+            montoTotal = $('#efectivo').val();
         
         }
         
@@ -387,7 +389,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     // si es liquidado en su totalidad 
     if ($("#chkLiquidado").is(":checked")) {
 
-        if (($('#efectivo').val() == "")) {
+        if  (
+                ($('#efectivo').val() == "") &&
+                (parseInt(formaPago) != parseInt(4) && parseInt(formaPago) != parseInt(18))
+            ) {
             MuestraToast('warning', "Debe escribir el monto total de liquidación");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
@@ -455,6 +460,9 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI
     });
 
+    console.log(dataToPost);
+    $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+    return;
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarConfirmacion"),
@@ -704,16 +712,22 @@ function validarProductosAceptados() {
     var tblProductos = document.getElementById('tblConfirmarProductos');
     var rCount = tblProductos.rows.length;
 
+
     if (rCount >= 2) {
+
         for (var i = 1; i < rCount; i++) {
-            if (parseFloat(tblProductos.rows[i].cells[10].children[0].value) > parseFloat(tblProductos.rows[i].cells[8].innerHTML)) {
+
+            if (parseFloat(tblProductos.rows[i].cells[10].children[0].value) > parseFloat(tblProductos.rows[i].cells[8].innerHTML))
+            {
                 MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida");
                 faltantes += 1;
                 return;
-            }else  if (
-                ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ((parseFloat(tblProductos.rows[i].cells[8].innerHTML)) <= (parseFloat(tblProductos.rows[i].cells[10].children[0].value))) ) &&
-                (String(tblProductos.rows[i].cells[11].children[0].value) == "")
-            ) {
+            }
+            else
+                if  (
+                        ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ( (parseFloat(tblProductos.rows[i].cells[10].children[0].value)) < (parseFloat(tblProductos.rows[i].cells[8].innerHTML)) ) ) &&
+                        (String(tblProductos.rows[i].cells[11].children[0].value) == "")
+                    ) {
                 if (faltantes == 0) {
                     MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos.");
                 }
@@ -723,6 +737,8 @@ function validarProductosAceptados() {
         }
     }
 
+    
+
     if (cantidad <= 0.0) {
         MuestraToast('warning', "Para cancelar todos los productos de todo el pedido debe hacerlo desde el menu de Entregar Pedido.");
         return false;
@@ -730,7 +746,6 @@ function validarProductosAceptados() {
     else {
         return !(faltantes > 0);
     }
-
 }
 
 
@@ -963,7 +978,7 @@ function initInputsTabla() {
         var rowIndex = row[0].rowIndex;
         var tblProductos = document.getElementById('tblConfirmarProductos');
         var idProducto = parseInt(tblProductos.rows[rowIndex].cells[1].innerHTML);
-        var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[5].innerHTML);
+        var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[6].innerHTML);
 
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
             MuestraToast('warning', mensaje);

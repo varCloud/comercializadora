@@ -287,7 +287,7 @@ as
 
 					
 					-- si todo bien
-						select	@montoTotal = Round(sum(montoVenta+montoIva+montoComisionBancaria),2,0) 
+						select	@montoTotal = Round(sum(costo+montoIva+montoComisionBancaria),2,0) 
 						from	#pedidos
 
 
@@ -315,16 +315,27 @@ as
 								and idPasillo = @idPasilloResguardo --27
 								and idRaq = @idRaqResguardo --26
 								and idPiso = @idPisoResguardo --10
+								 
 
-
-							if not exists ( select 1 from InventarioDetalle where idUbicacion = @idUbicacion )
+							if exists	(
+											select	p.idProducto, p.idAlmacen, @idUbicacion as idUbicacion, id.idUbicacion as idUbicacionInventarioDetalle
+											from	#pedidos p
+														left join InventarioDetalle id
+															on	id.idProducto = p.idProducto
+															and	id.idUbicacion = @idUbicacion
+											where	id.idUbicacion is null
+										)
 							begin
 								insert into InventarioDetalle ( idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion )
-								select	idProducto, 0 as cantidad, @fecha as fechaAlta, @idUbicacion as idUbicacion, @fecha as fechaActualizacion
-								from	#pedidos
-								group by idProducto
+								select	p.idProducto, cast(0 as float) as cantidad, @fecha, @idUbicacion as idUbicacion, @fecha
+								from	#pedidos p
+											left join InventarioDetalle id
+												on	id.idProducto = p.idProducto
+												and	id.idUbicacion = @idUbicacion
+								where	id.idUbicacion is null
+								group by p.idProducto
 							end
-
+								
 						end
 					else
 						begin
@@ -373,8 +384,10 @@ as
 							)
 					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
 							@fecha as fechaAlta, p.cantidad, costo as monto, cast(0 as int) as cantidadActualInvGeneral, ig.cantidad as cantidadAnteriorInvGeneral, 
-							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, p.cantidad as cantidadAceptada, 
-							p.cantidad as cantidadAtendida, 0 as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
+							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, 
+							cast(0 as float) as cantidadAceptada, 
+							p.cantidad as cantidadAtendida, 
+							cast(0 as float) as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
 					from	#pedidos p
 								join InventarioGeneral ig
 									on ig.idProducto = p.idProducto
@@ -584,13 +597,13 @@ as
 								where	InventarioDetalle.idUbicacion = a.idUbicacion
 									and	InventarioDetalle.idProducto = a.idProducto 
 
-
+									
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								--- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- se inserta el InventarioDetalleLog
 								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
-								select	id.idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
+								select	@idUbicacion as idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
 										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial
 								from	
 										(
