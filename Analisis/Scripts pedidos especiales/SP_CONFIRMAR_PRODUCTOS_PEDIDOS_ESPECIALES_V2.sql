@@ -63,7 +63,7 @@ as
 						@montoComision				float = 0,
 						@porcentajeComision			float = 0,
 						@idAbonoCliente				bigint = 0,
-						@autorizadoMayoreo			bit = cast(1 as bit),
+						@autorizadoMayoreo			bit = cast(0 as bit),
 						@totalProductos				float = 0,
 						@diasCredito				int = 0,
 						@idFactMetodoPago			int = 0
@@ -258,6 +258,15 @@ as
 						montoPagado = @montoPagado
 				where	idPedidoEspecial = @idPedidoEspecial
 
+
+				update	PedidosEspecialesDetalle
+				set		cantidadAceptada = a.cantidadAceptada
+				from	(
+							select	idProducto, idPedidoEspecialDetalle, cantidadAceptada, precioIndividual, precioMenudeo, precioRango, precioVenta
+							from	#productosPrecios
+						)A
+				where	PedidosEspecialesDetalle.idPedidoEspecialDetalle = a.idPedidoEspecialDetalle
+
 				
 				-- si no se aceptaron todos los productos solicitados 
 				-- acualizamos estatus de pedido especial detalle
@@ -329,7 +338,7 @@ as
 				if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
 					begin
 
-						--verificamos si existe el id sin ubicacion
+						--verificamos si existe el id sin ubicacion por productos
 						select	p.* , u.idUbicacion as idUbicacionRegresar
 						into	#tempUbicacionesDevoluciones_
 						from	#productos p
@@ -349,13 +358,33 @@ as
 							select idAlmacenOrigen, 0,0,0 from #tempUbicacionesDevoluciones_
 						end
 						
+						
+						-- si no existe registro en inventario detalle para regresar productos
+						if exists	(
+										select	* 
+										from	#tempUbicacionesDevoluciones_ t 
+													left join InventarioDetalle id 
+														on	id.idProducto = t.idProducto
+														and	id.idUbicacion = t.idUbicacionRegresar
+										where	id.idProducto is null
+									)
+						begin
+							insert into InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
+							select	t.idProducto, cast(0 as float) as cantidad, @fecha as fechaAlta, t.idUbicacionRegresar, @fecha as  fechaActualizacion
+							from	#tempUbicacionesDevoluciones_ t 
+										left join InventarioDetalle id 
+											on	id.idProducto = t.idProducto
+											and	id.idUbicacion = t.idUbicacionRegresar
+							where	id.idProducto is null
+						end
+
 
 						-- inserta los registros que se regresaron
 						-- rechazados
-						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta
+								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (
 											select	p.idProducto,  p.cantidadRechazada												
@@ -366,10 +395,10 @@ as
 										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 					
 						-- no aceptados
-						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.noAceptados, actuales.cantidad + rechazados.noAceptados as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta
+								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	
 											select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados
@@ -383,11 +412,12 @@ as
 
 						-- actualizamos InventarioDetalle
 						-- rechazados
+						-- se descuentan de ubicacion resguardo
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad = a.cantidad,
+						set		InventarioDetalle.cantidad -= a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar
+									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
 														select	p.idProducto, p.cantidadRechazada
@@ -396,18 +426,49 @@ as
 													 )rechazados on rechazados.idProducto = temp.idProducto
 												join InventarioDetalle actuales
 													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+												join Ubicacion u
+													on	u.idAlmacen = temp.idAlmacenOrigen
+													and	u.idPasillo = 1000
+													and u.idRaq = 1000
+													and u.idPiso = 1000
+								)A
+						where	InventarioDetalle.idUbicacion = a.idUbicacionOrigen
+							and	InventarioDetalle.idProducto = a.idProducto
+
+
+						-- se agregan a sin acomodar
+						update	InventarioDetalle 
+						set		InventarioDetalle.cantidad += a.cantidad,
+								InventarioDetalle.fechaActualizacion  = @fecha
+						from	(
+									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									from	#tempUbicacionesDevoluciones_ temp
+												join (
+														select	p.idProducto, p.cantidadRechazada
+														from	#productos p
+														where	p.cantidadRechazada > 0
+													 )rechazados on rechazados.idProducto = temp.idProducto
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+												join Ubicacion u
+													on	u.idAlmacen = temp.idAlmacenOrigen
+													and	u.idPasillo = 1000
+													and u.idRaq = 1000
+													and u.idPiso = 1000
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
 							and	InventarioDetalle.idProducto = a.idProducto
 
 
+
 							
 						-- no aceptados
+						-- se descuentan de ubicacion resguardo
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad = a.cantidad,
+						set		InventarioDetalle.cantidad -= a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar
+									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
 														select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados												
@@ -416,11 +477,38 @@ as
 													 )rechazados on rechazados.idProducto = temp.idProducto
 												join InventarioDetalle actuales
 													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+												join Ubicacion u
+													on	u.idAlmacen = temp.idAlmacenOrigen
+													and	u.idPasillo = 1000
+													and u.idRaq = 1000
+													and u.idPiso = 1000
 								)A
-						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
+						where	InventarioDetalle.idUbicacion = a.idUbicacionOrigen
 							and	InventarioDetalle.idProducto = a.idProducto
 
 
+						-- se agregan a sin acomodar
+						update	InventarioDetalle 
+						set		InventarioDetalle.cantidad += a.cantidad,
+								InventarioDetalle.fechaActualizacion  = @fecha
+						from	(
+									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									from	#tempUbicacionesDevoluciones_ temp
+												join (
+														select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados												
+														from	#productos p
+														where	(p.cantidadAtendida - cantidadAceptada) > 0
+													 )rechazados on rechazados.idProducto = temp.idProducto
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
+												join Ubicacion u
+													on	u.idAlmacen = temp.idAlmacenOrigen
+													and	u.idPasillo = 1000
+													and u.idRaq = 1000
+													and u.idPiso = 1000
+								)A
+						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
+							and	InventarioDetalle.idProducto = a.idProducto
 
 
 						-- inserta los registros que se regresaron para los movimientos de mercancia
@@ -487,6 +575,60 @@ as
 							and	idl.idTipoMovInventario = 18
 
 					end -- if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
+
+
+					-- se actualiza inventario detalle para la salida de mercancia (venta) de los productos aceptados					
+					insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
+					select	u.idUbicacion, id.idProducto, t.cantidadAceptada, (id.cantidad - t.cantidadAceptada ) as cantidadActual, cast(1 as int) as idTipoMovInventario, --1 Venta
+							@idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial										
+					from	InventarioDetalle id
+								join #tempUbicacionesDevoluciones_ t
+									on id.idProducto = t.idProducto
+								join Ubicacion u	
+									on	u.idUbicacion = id.idUbicacion 
+									and	u.idAlmacen = t.idAlmacenOrigen
+					where	u.idPasillo = 1000
+						and	u.idRaq = 1000
+						and u.idPiso = 1000
+					
+					
+					update	InventarioDetalle
+					set		cantidad = a.cantidadActual,
+							fechaActualizacion = dbo.FechaActual()
+					from	(
+								select	id.idInventarioDetalle, id.idProducto,  (id.cantidad - t.cantidadAceptada ) as cantidadActual
+								from	InventarioDetalle id
+											join #tempUbicacionesDevoluciones_ t
+												on id.idProducto = t.idProducto
+											join Ubicacion u	
+												on	u.idUbicacion = id.idUbicacion 
+												and	u.idAlmacen = t.idAlmacenOrigen
+								where	u.idPasillo = 1000
+									and	u.idRaq = 1000
+									and u.idPiso = 1000
+							)A
+					where	InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
+
+
+					
+					-- actualizamos inventario general
+					insert into InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
+					select	ig.idProducto, t.cantidadAceptada, ( ig.cantidad - t.cantidadAceptada ) as cantidadDespuesDeOperacion, @fecha as fechaAlta, cast(1 as bit) as idTipoMovInventario
+					from	InventarioGeneral ig
+								join #tempUbicacionesDevoluciones_ t
+									on t.idProducto = ig.idProducto
+
+					update	InventarioGeneral
+					set		cantidad = a.total
+					from	(
+								select	id.idProducto, sum(id.cantidad) as total
+								from	InventarioDetalle id
+											join #tempUbicacionesDevoluciones_ t
+												on t.idProducto = id.idProducto
+								group by id.idProducto
+							)a
+					where	InventarioGeneral.idProducto = a.idProducto
+
 
 					-- se aplica primero la comision
 					if (  @idFactFormaPago in ( '4', '18' ) )
