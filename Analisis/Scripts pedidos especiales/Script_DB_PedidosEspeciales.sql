@@ -174,7 +174,7 @@ CREATE TABLE
 			idEstacion						int,
 			observaciones					varchar(500),
 			codigoBarras					varchar(250),
-			--idTipoPago						int,
+			idTicketMayoreo					int,
 			idUsuarioEntrega				int,				--Ruteo ,taxi,0 = (Cliente)
 			numeroUnidadTaxi				varchar(100),		--0,36
 			liquidado						bit default 0,
@@ -211,7 +211,6 @@ ALTER TABLE PedidosEspeciales ADD FOREIGN KEY ([idUsuarioEntrega]) REFERENCES [U
 GO
 
 
-
 --PedidosEspecialesDetalle
 
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesDetalle' and xtype = 'u')
@@ -238,7 +237,6 @@ CREATE TABLE
 			precioVenta							money,
 			montoIva							money,
 			montoComisionBancaria				money,
-			idTicketMayoreo						int,
 			observaciones						varchar(255),
 			ultimoCostoCompra					money,
 			cantidadAceptada					float,

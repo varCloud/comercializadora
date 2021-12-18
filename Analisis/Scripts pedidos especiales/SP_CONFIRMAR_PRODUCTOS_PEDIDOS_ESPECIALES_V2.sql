@@ -66,7 +66,8 @@ as
 						@autorizadoMayoreo			bit = cast(0 as bit),
 						@totalProductos				float = 0,
 						@diasCredito				int = 0,
-						@idFactMetodoPago			int = 0
+						@idFactMetodoPago			int = 0,
+						@idPedidoEspecialMayoreo_	int = 0
 
 				create table 
 					#cantidadSolicitada 
@@ -194,9 +195,13 @@ as
 
 													   
 				select	@idCliente = idCliente,
-						@idUsuario = idUsuario
+						@idUsuario = idUsuario,
+						@idPedidoEspecialMayoreo_ = idTicketMayoreo
 				from	PedidosEspeciales 
 				where	idPedidoEspecial = @idPedidoEspecial
+
+				select @idPedidoEspecialMayoreo_ = coalesce(@idPedidoEspecialMayoreo_, 0)
+
 
 				select	@diasCredito = diasCredito 
 				from	Clientes
@@ -284,7 +289,7 @@ as
 
 
 						-- si el total aceptado de productos es < 6 y no esta autorizado para mayoreo se debe actualizar el precio de venta 
-						if ( (@totalProductos < 6) and ( @autorizadoMayoreo = cast(0 as bit) ) )
+						if ( (@totalProductos < 6) and (@idPedidoEspecialMayoreo_ = 0) )
 							begin
 								
 								update	#productosPrecios 
@@ -348,7 +353,7 @@ as
 							and	u.idRaq = 0
 							and u.idPiso = 0
 
-
+							
 						-- si no existe insertamos la ubicacion sin acomodar
 						if exists	(
 										select 1 from #tempUbicacionesDevoluciones_ where idUbicacionRegresar is null
@@ -576,13 +581,13 @@ as
 
 					end -- if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
 
-
+					
 					-- se actualiza inventario detalle para la salida de mercancia (venta) de los productos aceptados					
 					insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 					select	u.idUbicacion, id.idProducto, t.cantidadAceptada, (id.cantidad - t.cantidadAceptada ) as cantidadActual, cast(1 as int) as idTipoMovInventario, --1 Venta
 							@idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial										
 					from	InventarioDetalle id
-								join #tempUbicacionesDevoluciones_ t
+								join #productos t
 									on id.idProducto = t.idProducto
 								join Ubicacion u	
 									on	u.idUbicacion = id.idUbicacion 
@@ -598,7 +603,7 @@ as
 					from	(
 								select	id.idInventarioDetalle, id.idProducto,  (id.cantidad - t.cantidadAceptada ) as cantidadActual
 								from	InventarioDetalle id
-											join #tempUbicacionesDevoluciones_ t
+											join #productos t
 												on id.idProducto = t.idProducto
 											join Ubicacion u	
 												on	u.idUbicacion = id.idUbicacion 
@@ -615,7 +620,7 @@ as
 					insert into InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
 					select	ig.idProducto, t.cantidadAceptada, ( ig.cantidad - t.cantidadAceptada ) as cantidadDespuesDeOperacion, @fecha as fechaAlta, cast(1 as bit) as idTipoMovInventario
 					from	InventarioGeneral ig
-								join #tempUbicacionesDevoluciones_ t
+								join #productos t
 									on t.idProducto = ig.idProducto
 
 					update	InventarioGeneral
@@ -623,7 +628,7 @@ as
 					from	(
 								select	id.idProducto, sum(id.cantidad) as total
 								from	InventarioDetalle id
-											join #tempUbicacionesDevoluciones_ t
+											join #productos t
 												on t.idProducto = id.idProducto
 								group by id.idProducto
 							)a

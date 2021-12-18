@@ -51,7 +51,7 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     //document.getElementById("cantidadAbonada").disabled = true;
 
     actualizarSubTotal();
-
+    //console.log(validarProductosAceptados());
     if (validarProductosAceptados()) {
         $('#ModalEntregarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
     }
@@ -460,9 +460,9 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI
     });
 
-    console.log(dataToPost);
-    $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-    return;
+    //console.log(dataToPost);
+    //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+    //return;
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarConfirmacion"),
@@ -708,6 +708,7 @@ function chkChangeTipoPago(chk) {
 function validarProductosAceptados() {
 
     var faltantes = parseInt(0);
+    var faltantes_ = parseInt(0);
     var cantidad = parseFloat(0);
     var tblProductos = document.getElementById('tblConfirmarProductos');
     var rCount = tblProductos.rows.length;
@@ -716,35 +717,47 @@ function validarProductosAceptados() {
     if (rCount >= 2) {
 
         for (var i = 1; i < rCount; i++) {
-
+            
             if (parseFloat(tblProductos.rows[i].cells[10].children[0].value) > parseFloat(tblProductos.rows[i].cells[8].innerHTML))
             {
-                MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida");
-                faltantes += 1;
-                return;
-            }
-            else
-                if  (
-                        ( parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ( (parseFloat(tblProductos.rows[i].cells[10].children[0].value)) < (parseFloat(tblProductos.rows[i].cells[8].innerHTML)) ) ) &&
-                        (String(tblProductos.rows[i].cells[11].children[0].value) == "")
-                    ) {
-                if (faltantes == 0) {
-                    MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos.");
+                if (faltantes_ == 0) {
+                    MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida");
                 }
-                faltantes += 1;
+                faltantes_ += 1;
+                return false;
             }
+
+            if  (
+                  (parseFloat(tblProductos.rows[i].cells[10].children[0].value) == 0 || ( (parseFloat(tblProductos.rows[i].cells[10].children[0].value)) != (parseFloat(tblProductos.rows[i].cells[8].innerHTML)) ) ) &&
+                  (String(tblProductos.rows[i].cells[11].children[0].value) == "")
+                ) {
+                    if (faltantes == 0) {
+                        MuestraToast('warning', "Tiene que capturar las observaciones si no esta aceptando todos los productos.");
+                    }
+                    faltantes += 1;
+                    return false;
+            }
+
             cantidad += parseFloat(tblProductos.rows[i].cells[10].children[0].value);
         }
     }
 
-    
-
+    //console.log(faltantes);
+    //console.log(faltantes_);
     if (cantidad <= 0.0) {
         MuestraToast('warning', "Para cancelar todos los productos de todo el pedido debe hacerlo desde el menu de Entregar Pedido.");
         return false;
     }
     else {
-        return !(faltantes > 0);
+
+        if (faltantes == 0 && faltantes_ == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+        
     }
 }
 
@@ -755,6 +768,7 @@ function actualizaTicketPedidoEspecial() {
     var productos = [];
     var tblVtas = document.getElementById('tblConfirmarProductos');
     var rCount = tblVtas.rows.length;
+    var idPedidoEspecialMayoreo_ = parseInt(0);
 
     if (rCount >= 2) {
         for (var i = 1; i < rCount; i++) {
@@ -770,10 +784,11 @@ function actualizaTicketPedidoEspecial() {
                 totalPorIdProductos: 0
             };
             productos.push(row_);
+            idPedidoEspecialMayoreo_ = parseInt(tblVtas.rows[i].cells[15].innerHTML);
         }
 
     }
-
+    
     var cantidadTotalPorProducto = [];
     var cantidadDeProductos = parseFloat(0);
 
@@ -822,7 +837,7 @@ function actualizaTicketPedidoEspecial() {
 
     //  si se ejecuta precio de mayoreo cuando el ticket tiene 6 o + articulos
     for (var o = 0; o < productos.length; o++) {
-        if (cantidadDeProductos >= 6) {
+        if ( (cantidadDeProductos >= 6) || (parseInt(idPedidoEspecialMayoreo_) > 0) ) {
             productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
         }
         else {
@@ -878,7 +893,7 @@ function actualizaTicketPedidoEspecial() {
         }
     }
 
-
+    
     // actualizamos el ticket
     for (var j = 0; j < productos.length; j++) {
 
@@ -980,14 +995,14 @@ function initInputsTabla() {
         var idProducto = parseInt(tblProductos.rows[rowIndex].cells[1].innerHTML);
         var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[6].innerHTML);
 
-        if ((thisInput.val() == "") || (thisInput.val() == "0")) {
-            MuestraToast('warning', mensaje);
-            document.execCommand('undo');
-        }
+        //if ((thisInput.val() == "") || (thisInput.val() == "0")) {
+        //    MuestraToast('warning', mensaje);
+        //    //document.execCommand('undo');
+        //}
 
         if ((parseFloat(thisInput.val())) > (parseFloat(productosSolicitados))) {
-            MuestraToast('warning', "No puede aceptar mas productos de los solicitados.");
-            document.execCommand('undo');
+            //MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida.");
+            //document.execCommand('undo');
             return;
         }
 
@@ -1038,7 +1053,7 @@ function InitarrayProductos() {
     $("#listProductos").val('');
     var result = '';
     $.ajax({
-        url: rootUrl("/Productos/ObtenerProductosPorUsuario"),
+        url: rootUrl("/Productos/ObtenerTodosLosProductos"),
         data: { idProducto: 0, idUsuario: 0, activo: true },
         method: 'post',
         dataType: 'json',

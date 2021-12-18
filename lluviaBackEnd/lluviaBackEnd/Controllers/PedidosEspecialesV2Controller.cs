@@ -217,13 +217,13 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idEstatusPedidoEspecial, int idPedidoEspecial)
+        public ActionResult GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idEstatusPedidoEspecial, int idPedidoEspecial, int idPedidoEspecialMayoreo_)
         {
             try
             {
                 Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                result = new PedidosEspecialesV2DAO().GuardarPedidoEspecial(productos, tipoRevision, idCliente, UsuarioActual.idUsuario, idEstatusPedidoEspecial, UsuarioActual.idEstacion, idPedidoEspecial);
+                result = new PedidosEspecialesV2DAO().GuardarPedidoEspecial(productos, tipoRevision, idCliente, UsuarioActual.idUsuario, idEstatusPedidoEspecial, UsuarioActual.idEstacion, idPedidoEspecial, idPedidoEspecialMayoreo_);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

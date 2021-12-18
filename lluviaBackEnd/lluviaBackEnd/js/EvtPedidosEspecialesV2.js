@@ -305,6 +305,9 @@ function AgregarProducto(producto, cantidad, cotizacion) {
 
 function actualizaTicketVenta() {
 
+    var idPedidoEspecialMayoreo_ = parseInt($('#idPedidoEspecialMayoreo_').val());
+    //console.log("id_"+idPedidoEspecialMayoreo_);
+
     // acttualizamos el id y la funcion de eliminar fila
     $('#tablaRepVentas tbody tr').each(function (index, fila) {
         fila.children[0].innerHTML = index + 1;
@@ -411,7 +414,7 @@ function actualizaTicketVenta() {
 
     //  si se ejecuta precio de mayoreo cuando el ticket tiene 6 o + articulos
     for (var o = 0; o < productos.length; o++) {
-        if (cantidadDeProductos >= 6) {
+        if ( (cantidadDeProductos >= 6) || ( parseInt(idPedidoEspecialMayoreo_) > 0 ) ) {
             productos[o].precioVenta = arrayProductos.find(x => x.idProducto === productos[o].idProducto).precioMenudeo;
         }
         else {
@@ -618,9 +621,7 @@ $('#btnCotizar').click(function (e) {
 
 function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ticket   /  2-Hand Held
 
-
-    //PuedeRealizarVenta = false;
-    
+    var idPedidoEspecialMayoreo_ = parseInt($('#idPedidoEspecialMayoreo_').val());
     $("#btnGuardarVenta").addClass('btn-progress disabled');
 
     var productos = [];
@@ -643,7 +644,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
     }
 
    
-    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idPedidoEspecial: idPedidoEspecial});
+    dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idPedidoEspecial: idPedidoEspecial, idPedidoEspecialMayoreo_: idPedidoEspecialMayoreo_});
 
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/GuardarPedidoEspecial"),
@@ -1106,37 +1107,18 @@ function initInputsTabla() {
         productoAlmacen = ConsultaExistenciasAlmacen(idProducto, idAlmacen);
         var cantidad = productoAlmacen.find(x => x.idProducto === idProducto).cantidad;
 
-
-        //if (((parseFloat(thisInput.val())) > (parseFloat(producto.cantidad))) && (!thisInput.hasClass("esDevolucion"))) {
         if ((parseFloat(thisInput.val()) > (cantidad))) {
             MuestraToast('warning', "No existe suficiente producto en inventario.");
             document.execCommand('undo');
             return;
         }
 
-        //if (thisInput.hasClass("esDevolucion")) {
-        //    mensaje = "Debe escribir la cantidad de productos que va a devolver.";
-        //}
-
         if ((thisInput.val() == "") || (thisInput.val() == "0")) {
             MuestraToast('warning', mensaje);
             document.execCommand('undo');
         }
 
-        //if (thisInput.hasClass("esDevolucion")) {
-
-        //    if ((parseFloat(thisInput.val())) > (parseFloat(tblVtas.rows[rowIndex].cells[5].children[0].value))) {
-        //        MuestraToast('warning', "No puede regresar mas de lo que compro.");
-        //        document.execCommand('undo');
-        //        return;
-        //    }
-
-        //    actualizarSubTotalDevoluciones();
-        //}
-        //else {
-            actualizaTicketVenta();
-        //}
-
+        actualizaTicketVenta();
         $("#listProductos").focus();
 
     });
@@ -2941,7 +2923,7 @@ $('#btnAutorizarTicketMayoreo').click(function (e) {
                             $('#idPedidoEspecialMayoreo_').val($('#idPedidoEspecialMayoreo').val()); // $('#idPedidoEspecialMayoreo').val();
                             document.getElementById("divIdPedidoMayoreo").innerHTML = "Autorizado con Pedido #: <span> " + $('#idPedidoEspecialMayoreo').val() + " </span>";
                             $('#divIdPedidoMayoreo').css('display', '');
-
+                            actualizaTicketVenta();
                         } else {
                             console.log("cancelar");
                             //$('#divIdPedidoMayoreo').css('display', 'none');
@@ -2982,26 +2964,42 @@ $('#btnConsultaTicketMayoreo').click(function (e) {
 
     idPedidoEspecial = parseInt($('#idPedidoEspecialMayoreo').val());    
     pedido = ConsultaDatosTicketPedidoEspecialV2(idPedidoEspecial);
+    //console.log(pedido);
 
-    if ( pedido.Estatus == "200" ) {
 
-        if (parseInt(pedido.Modelo[0].cantidad) >= 6) {
-            $("#_articulos").html(pedido.Modelo[0].cantidad);
-            $("#_total").html("$" + pedido.Modelo[0].montoTotal);
-            $("#_cliente").html(pedido.Modelo[0].nombreCliente);
+    if (pedido.Estatus == "200") {
+
+        if (
+            (parseInt(pedido.Modelo[0].idEstatusPedidoEspecial) == 4) ||
+            (parseInt(pedido.Modelo[0].idEstatusPedidoEspecial) == 5) ||
+            (parseInt(pedido.Modelo[0].idEstatusPedidoEspecial) == 6) ||
+            (parseInt(pedido.Modelo[0].idEstatusPedidoEspecial) == 7)
+
+        ) {
+
+            if (parseInt(pedido.Modelo[0].cantidad) >= 6) {
+                $("#_articulos").html(pedido.Modelo[0].cantidad);
+                $("#_total").html("$" + pedido.Modelo[0].montoTotal);
+                $("#_cliente").html(pedido.Modelo[0].nombreCliente);
+            }
+            else {
+                MuestraToast('warning', "El ticket no contiene al menos 6 productos.");
+                $("#_articulos").html("");
+                $("#_total").html("");
+                $("#_cliente").html("");
+            }
         }
         else {
-            MuestraToast('warning', "El ticket no contiene al menos 6 productos.");
+            MuestraToast('warning', "El ticket tiene que estar en estatus de entregado.");
             $("#_articulos").html("");
             $("#_total").html("");
             $("#_cliente").html("");
         }
 
+
     }
     else {
-
         MuestraToast('warning', pedido.Mensaje);
-
     }
 
 });

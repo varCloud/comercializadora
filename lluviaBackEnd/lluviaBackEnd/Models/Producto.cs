@@ -94,10 +94,7 @@ namespace lluviaBackEnd.Models
         public float cantidadAtendida { get; set; }
         public float cantidadAceptada { get; set; }
         public float cantidadRechazada { get; set; }
-
-
-
-
+        public int idTicketMayoreo { get; set; }
         public int idEstatusPedidoEspecialDetalle { get; set; }
         public int id { get; set; }
 
