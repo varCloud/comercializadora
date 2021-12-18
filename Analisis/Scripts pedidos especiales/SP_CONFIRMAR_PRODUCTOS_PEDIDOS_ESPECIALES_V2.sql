@@ -67,7 +67,8 @@ as
 						@totalProductos				float = 0,
 						@diasCredito				int = 0,
 						@idFactMetodoPago			int = 0,
-						@idPedidoEspecialMayoreo_	int = 0
+						@idPedidoEspecialMayoreo_	int = 0,
+						@idUbicacionResguardo		int = 0
 
 				create table 
 					#cantidadSolicitada 
@@ -202,6 +203,16 @@ as
 
 				select @idPedidoEspecialMayoreo_ = coalesce(@idPedidoEspecialMayoreo_, 0)
 
+
+				select	@idUbicacionResguardo = u.idUbicacion
+				from	Ubicacion u
+							join Usuarios usr
+								on	usr.idAlmacen = u.idAlmacen
+								and	usr.idUsuario = @idUsuario
+				where	u.idPasillo = 1000
+					and u.idRaq = 1000
+					and u.idPiso = 1000
+					
 
 				select	@diasCredito = diasCredito 
 				from	Clientes
@@ -419,23 +430,24 @@ as
 						-- rechazados
 						-- se descuentan de ubicacion resguardo
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad -= a.cantidad,
+						set		InventarioDetalle.cantidad = a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									select	distinct temp.idProducto, actuales.cantidad - rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen									
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
-														select	p.idProducto, p.cantidadRechazada
+														select	p.idProducto,  sum(p.cantidadRechazada) as cantidadRechazada												
 														from	#productos p
-														where	p.cantidadRechazada > 0
+														where	cantidadRechazada > 0
+														group by p.idProducto
 													 )rechazados on rechazados.idProducto = temp.idProducto
-												join InventarioDetalle actuales
-													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
 													and	u.idPasillo = 1000
 													and u.idRaq = 1000
 													and u.idPiso = 1000
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionOrigen
 							and	InventarioDetalle.idProducto = a.idProducto
@@ -443,50 +455,51 @@ as
 
 						-- se agregan a sin acomodar
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad += a.cantidad,
+						set		InventarioDetalle.cantidad = a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									select	distinct temp.idProducto, actuales.cantidad + rechazados.cantidadRechazada as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen									
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
-														select	p.idProducto, p.cantidadRechazada
+														select	p.idProducto,  sum(p.cantidadRechazada) as cantidadRechazada												
 														from	#productos p
-														where	p.cantidadRechazada > 0
+														where	(p.cantidadAtendida - cantidadAceptada) > 0
+														group by p.idProducto
 													 )rechazados on rechazados.idProducto = temp.idProducto
-												join InventarioDetalle actuales
-													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
-													and	u.idPasillo = 1000
-													and u.idRaq = 1000
-													and u.idPiso = 1000
+													and	u.idPasillo = 0
+													and u.idRaq = 0
+													and u.idPiso = 0
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
 							and	InventarioDetalle.idProducto = a.idProducto
 
 
 
-							
 						-- no aceptados
 						-- se descuentan de ubicacion resguardo
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad -= a.cantidad,
+						set		InventarioDetalle.cantidad = a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									select	distinct temp.idProducto, actuales.cantidad - rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen									
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
-														select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados												
+														select	p.idProducto,  sum( (p.cantidadAtendida - cantidadAceptada)) as noAceptados												
 														from	#productos p
 														where	(p.cantidadAtendida - cantidadAceptada) > 0
+														group by p.idProducto
 													 )rechazados on rechazados.idProducto = temp.idProducto
-												join InventarioDetalle actuales
-													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
 													and	u.idPasillo = 1000
 													and u.idRaq = 1000
 													and u.idPiso = 1000
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionOrigen
 							and	InventarioDetalle.idProducto = a.idProducto
@@ -494,23 +507,24 @@ as
 
 						-- se agregan a sin acomodar
 						update	InventarioDetalle 
-						set		InventarioDetalle.cantidad += a.cantidad,
+						set		InventarioDetalle.cantidad = a.cantidad,
 								InventarioDetalle.fechaActualizacion  = @fecha
 						from	(
-									select	temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen
+									select	distinct temp.idProducto, actuales.cantidad + rechazados.noAceptados as cantidad, temp.idUbicacionRegresar, u.idUbicacion as idUbicacionOrigen									
 									from	#tempUbicacionesDevoluciones_ temp
 												join (
-														select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados												
+														select	p.idProducto,  sum( (p.cantidadAtendida - cantidadAceptada)) as noAceptados												
 														from	#productos p
 														where	(p.cantidadAtendida - cantidadAceptada) > 0
+														group by p.idProducto
 													 )rechazados on rechazados.idProducto = temp.idProducto
-												join InventarioDetalle actuales
-													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
-													and	u.idPasillo = 1000
-													and u.idRaq = 1000
-													and u.idPiso = 1000
+													and	u.idPasillo = 0
+													and u.idRaq = 0
+													and u.idPiso = 0
+												join InventarioDetalle actuales
+													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
 						where	InventarioDetalle.idUbicacion = a.idUbicacionRegresar
 							and	InventarioDetalle.idProducto = a.idProducto
@@ -626,11 +640,10 @@ as
 					update	InventarioGeneral
 					set		cantidad = a.total
 					from	(
-								select	id.idProducto, sum(id.cantidad) as total
-								from	InventarioDetalle id
-											join #productos t
-												on t.idProducto = id.idProducto
-								group by id.idProducto
+								select	idProducto, sum(cantidad) as total
+								from	InventarioDetalle
+								where	idProducto in (select idProducto from #productos)
+								group by idProducto
 							)a
 					where	InventarioGeneral.idProducto = a.idProducto
 

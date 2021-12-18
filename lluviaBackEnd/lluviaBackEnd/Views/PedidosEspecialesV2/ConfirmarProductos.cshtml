@@ -194,7 +194,7 @@
                                     <div class="col-sm-8">
                                         @*@Html.DropDownListFor(model => model.idCliente, new SelectList(lstClientes, "idCliente", "nombreCompleto_"), new { id = "idCliente", style = "width:100%", placeholder = "", @class = "select-multiple", data_val_required = "Seleccione un cliente", data_val = "true" })*@
                                         @Html.HiddenFor(x => cliente.idCliente, new { id = "idCliente" })
-                                        @Html.HiddenFor(x => cliente.descuento, new { id = "descuentoCliente" })
+                                        @Html.HiddenFor(x => cliente.tipoCliente.descuento, new { id = "descuentoCliente" })
 
                                         <div class="form-group row text-info mb-2">
                                             <label class="col-sm-4 text-info mb-2"> <strong>Nombre:</strong> </label>
