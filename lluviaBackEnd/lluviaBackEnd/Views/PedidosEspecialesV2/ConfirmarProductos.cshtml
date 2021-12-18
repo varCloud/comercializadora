@@ -85,6 +85,7 @@
                                         <th class="text-center" style="display: none;">idPedidoEspecial</th>
                                         <th class="text-center" style="display: none;">idPedidoEspecialDetalle</th>
                                         <th class="text-center">Eliminar </th>
+                                        <th class="text-center" style="display: none;">idTicketMayoreo</th>
                                     </tr>
                                 </thead>
                                 @if (pedidosEspecialesV2 != null)
@@ -110,6 +111,7 @@
                                                     <td style="display: none;">@item.idPedidoEspecial</td>
                                                     <td style="display: none;">@item.idPedidoEspecialDetalle</td>
                                                     <td>  <a href="javascript:EliminarProductos(@item.id)" data-toggle="tooltip" title="" data-original-title="Eliminar"><i class="far fa-trash-alt"></i></a> </td>
+                                                    <td style="display: none;">@item.idTicketMayoreo</td>
                                                 </tr>
                                             }
                                         </tbody>

@@ -37,7 +37,8 @@ as
 						@mensaje				varchar(255) = '',
 						@error_line				varchar(255) = '',
 						@error_procedure		varchar(255) = '',
-						@valido					bit = cast(1 as bit)
+						@valido					bit = cast(1 as bit),
+						@idTicketMayoreo		int = 0
 						
 			end  --declaraciones 
 
@@ -66,6 +67,10 @@ as
 			end catch
 
 			begin -- reporte de estatus
+
+			select	@idTicketMayoreo = idTicketMayoreo
+			from	PedidosEspeciales
+			where	idPedidoEspecial = @idPedidoEspecial
 
 			--reporte de estatus
 				select	@status status,
@@ -111,7 +116,8 @@ as
 								ped.notificado,
 								invActual.cantidadActual cantidadActualInvAlmacen,
 								dbo.LineaProductoFraccion(p.idLineaProducto,p.idProducto) fraccion,
-								p.idLineaProducto
+								p.idLineaProducto,
+								@idTicketMayoreo as idTicketMayoreo
 						from	PedidosEspecialesDetalle ped
 									join Productos p 
 										on p.idProducto = ped.idProducto
