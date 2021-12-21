@@ -43,47 +43,47 @@
                     new { id = "frmBuscarPedidosEspeciales" }))
                     {
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Cliente</label>
-                                @Html.DropDownListFor(x => x.idCliente, listClientes, "TODOS", new { @class = "select-multiple", id = "idCliente", data_val = "false" })
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    @Html.DropDownListFor(x => x.idCliente, listClientes, "TODOS", new { @class = "select-multiple", id = "idCliente", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Usuario</label>
-                                @Html.DropDownListFor(x => x.idUsuario, listUsuarios, "TODOS", new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    @Html.DropDownListFor(x => x.idUsuario, listUsuarios, "TODOS", new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Estatus</label>
-                                @Html.DropDownListFor(x => x.idEstatusPedidoEspecial, listEstatus, "TODOS", new { @class = "select-multiple", id = "idEstatusPedidoEspecial", data_val = "false" })
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Estatus</label>
+                                    @Html.DropDownListFor(x => x.idEstatusPedidoEspecial, listEstatus, "TODOS", new { @class = "select-multiple", id = "idEstatusPedidoEspecial", data_val = "false" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Rango de Fechas</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-calendar"></i>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Rango de Fechas</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
                                         </div>
+                                        <input type="text" id="rangePedidosEspeciales" class="form-control daterange-cus">
+                                        @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                                        @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
                                     </div>
-                                    <input type="text" id="rangePedidosEspeciales" class="form-control daterange-cus">
-                                    @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
-                                    @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="form-group">
+                                    <label>Codigo de barras</label>
+                                    @Html.TextBoxFor(x => x.codigoBarras, null, new { @class = "form-control", @id = "codigoBarrasTicket" })
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>Codigo de barras</label>
-                                @Html.TextBoxFor(x=>x.codigoBarras, null, new { @class = "form-control", @id = "codigoBarrasTicket" })
-                            </div>
-                        </div>
-                    </div>
 
                         <div class="text-right" style="margin-top:15px;">
                             <button type="button" id="btnLimpiarForm" class="btn btn-danger btn-icon icon-left">Limpiar</button>
@@ -105,7 +105,7 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body" id="resultPedidosEspeciales">
-                   
+
                 </div>
 
             </div>
@@ -127,11 +127,85 @@
                 </button>
             </div>
             <div class="modal-body" id="detallePedidoEspecial">
-                
+
             </div>
+        </div>
     </div>
 </div>
- </div>
+
+<div class="modal fade bd-example-modal-xl" id="modalDevolucionPedidosEspeciales" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Devolver productos pedidos especiales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-md-right">
+                    <div class="badge-outline col-red"><h3>Total a Devolver: <span class="divSubTotal">$0.0</span></h3></div>
+                </div>
+                <input id="idPedidoEspecial" value="0" type="hidden" />
+                <br />
+                <div id="devolucionPedidoEspecial">
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Escriba el Motivo de la Devolución:</label>
+                            <input id="motivoDevolucion" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name">Total a Devolver</div>
+                            <div class="invoice-detail-value divSubTotal">$0.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-success" id="btnRealizarDevolucion" type="button">Realizar Devolucion</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Detalle de Tickets *@
+<div class="modal fade bd-example-modal-lg" id="modalVerTicketsPedidoEspecial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Detalle de Tickets: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ticketsPedidoEspecial"></div>
+               
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="btnCancelarDetalleTickets" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

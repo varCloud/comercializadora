@@ -32,10 +32,18 @@ as
 				declare @status					int = 200,
 						@mensaje				varchar(255) = '',
 						@error_line				varchar(255) = '',
-						@error_procedure		varchar(255) = ''
+						@error_procedure		varchar(255) = '',						 
+						@diasDevoluciones int=0,
+						@fechaActual date
+
 			end  --declaraciones 
 
 			begin -- principal
+
+			
+					select @diasDevoluciones= valor from ConfiguracionesPedidosEspeciales where idConfig=1 and activo=1
+
+					select @fechaActual=dbo.FechaActual()
 				
 			
 					SELECT	
@@ -56,7 +64,13 @@ as
 					u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoPaterno nombreUsuario,
 					e.descripcion estatusPedidoEspecial,
 					'NO' facturado,
-					liquidado
+					liquidado,
+					case when 
+					(cast(@fechaActual as date) between cast(fechaEntrega as date) and cast(DATEADD(day,@diasDevoluciones,fechaEntrega) as date))
+					and pe.idEstatusPedidoEspecial in(4,6) 
+					and not exists(select 1 from FacturasPedidosEspeciales where idPedidoEspecial=pe.idPedidoEspecial and idEstatusFactura=1 ) 
+					then cast(1 as bit) else cast(0 as bit) end puede_devolver,
+					case when exists(select 1 from TicketsPedidosEspeciales where idPedidoEspecial=pe.idPedidoEspecial) then CAST(1 AS BIT) ELSE CAST(0 AS BIT) end existe_ticket
 					into #pedidosEspeciales
 					FROM	PedidosEspeciales pe
 								join Clientes c

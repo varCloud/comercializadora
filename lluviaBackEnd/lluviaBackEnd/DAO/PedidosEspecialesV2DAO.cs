@@ -989,5 +989,77 @@ namespace lluviaBackEnd.DAO
 
         #endregion
 
+        #region Devoluciones
+
+        public Notificacion<string> RealizaDevolucionPedidoEspecial(List<ProductosDevueltosPedidoEspecial> productos, Int64 idPedidoEspecial,float montoDevuelto,int idUsuario,string motivoDevolucion)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@motivoDevolucion", motivoDevolucion);
+                parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                parameters.Add("@montoDevuelto", montoDevuelto);
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@xmlProductos", SerializeProductosDevueltos(productos));
+                notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_DEVOLUCION_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public string SerializeProductosDevueltos(List<ProductosDevueltosPedidoEspecial> productos)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosDevueltosPedidoEspecial>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, productos);
+            }
+
+            return stringBuilder.ToString();
+
+        }
+
+        public Notificacion<dynamic> ObtieneTicketsPedidoEspecial(Int64 idPedidoEspecial)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_TICKETS_PEDIDO_ESPECIAL", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtieneDetalleTicketPedidoEspecial(Int64 idPedidoEspecial,int idTipoTicketPedidoEspecial,int idTicketPedidoEspecial)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                parameters.Add("@idTipoTicketPedidoEspecial", idTipoTicketPedidoEspecial);
+                parameters.Add("@idTicketPedidoEspecial", idTicketPedidoEspecial==0? (object)null : idTicketPedidoEspecial);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_DETALLE_TICKET_PEDIDO_ESPECIAL", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        #endregion
+
     }
 }

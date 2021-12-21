@@ -33,6 +33,11 @@ begin
 	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)', 1)
 end
 
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por devolucion de pedido especial)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por devolucion de pedido especial)', 1)
+end
+
 
 --delete CatTipoMovimientoInventario where idTipoMovInventario > 21
 
@@ -147,8 +152,24 @@ insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Atendidos/Inc
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Rechazados por el Administrador')
 insert into CatEstatusPedidoEspecialDetalle (descripcion) values ('Cancelados')
 
+GO
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'CatTipoTicketPedidosEspeciales' and xtype = 'u')
+	drop table CatTipoTicketPedidosEspeciales
 
+CREATE TABLE 
+	CatTipoTicketPedidosEspeciales 
+		(
+			idTipoTicketPedidoEspecial	int primary key identity(1,1),
+			tipoTicket varchar(100)
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON CatTipoTicketPedidosEspeciales TO PUBLIC
+GO
 
+INSERT INTO CatTipoTicketPedidosEspeciales(tipoTicket)
+values('Ticket Original'),('Ticket Devoluciòn')
+
+GO
 
 
 --------------------------------------------
@@ -583,76 +604,58 @@ ALTER TABLE PedidosEspecialesRetiroEfectivoPedidosEspeciales ADD FOREIGN KEY (id
 GO
 
 
-
-
-
--- PedidosEspecialesDevoluciones
-
-IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesDevoluciones' and xtype = 'u')
-	drop table PedidosEspecialesDevoluciones
+--tickets pedidos especiales
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'TicketsPedidosEspeciales' and xtype = 'u')
+	drop table TicketsPedidosEspeciales
 
 CREATE TABLE 
-	PedidosEspecialesDevoluciones 
+	TicketsPedidosEspeciales 
 		(
-			idDevolucion			bigint primary key identity(1,1),
-			idVenta					int,
-			idUsuario				int,
-			idCliente				int,
-			cantidad				float,
-			fechaAlta				datetime,
-			montoTotal				money,
-			idFactFormaPago			int,
-			idEstacion				int,
-			observaciones			varchar(255)
+			idTicketPedidoEspecial		bigint primary key identity(1,1),
+			idTipoTicketPedidoEspecial	int,
+			idPedidoEspecial			bigint,
+			idUsuario					int,			
+			cantidad					float,
+			monto						money,
+			comisionBancaria			money,
+			montoIVA					money,
+			montoTotal					money,
+			fechaAlta					datetime,			
+			observaciones				varchar(255)
 		)
 GO
-GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesDevoluciones TO PUBLIC
+GRANT SELECT, INSERT, UPDATE, DELETE ON TicketsPedidosEspeciales TO PUBLIC
 GO
 
-ALTER TABLE PedidosEspecialesDevoluciones ADD FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta)
-GO
-
-ALTER TABLE PedidosEspecialesDevoluciones ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
-GO
-
-ALTER TABLE PedidosEspecialesDevoluciones ADD FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente)
-GO
-
-ALTER TABLE PedidosEspecialesDevoluciones ADD FOREIGN KEY (idFactFormaPago) REFERENCES FactCatFormaPago (id)
-GO
-
-ALTER TABLE PedidosEspecialesDevoluciones ADD FOREIGN KEY (idEstacion) REFERENCES Estaciones (idEstacion)
-GO
-
-
--- PedidosEspecialesDevolucionesDetalle
-
-IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesDevolucionesDetalle' and xtype = 'u')
-	drop table PedidosEspecialesDevolucionesDetalle
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'TicketsPedidosEspecialesDetalle' and xtype = 'u')
+	drop table TicketsPedidosEspecialesDetalle
 
 CREATE TABLE 
-	PedidosEspecialesDevolucionesDetalle 
+	TicketsPedidosEspecialesDetalle 
 		(
-			idDevolucionDetalle					bigint primary key identity(1,1),
-			idVenta								int,
-			idProducto							int,
+			idTicketPedidoEspecialDetalle		bigint primary key identity(1,1),
+			idTicketPedidoEspecial				bigint,			
+			idPedidoEspecial					bigint,
+			idPedidoEspecialDetalle				bigint,
+			idProducto							int,			
 			cantidad							float,
 			monto								money,
-			idDevolucion						bigint,
-			montoDevueltoComisionBancaria		money
+			montoComision						money,
+			montoIVA							money,
+			montoTotal						    money,
+			precioVenta							money,
+			precioIndividual					money,
+			precioMenudeo					    money,
+			precioRango							money,
+			cantidadActualInvGeneral			float,	
+			cantidadAnteriorInvGeneral			float,
+			fechaAlta							datetime,
 		)
 GO
-GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesDevolucionesDetalle TO PUBLIC
+GRANT SELECT, INSERT, UPDATE, DELETE ON TicketsPedidosEspecialesDetalle TO PUBLIC
 GO
 
-ALTER TABLE PedidosEspecialesDevolucionesDetalle ADD FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta)
-GO
 
-ALTER TABLE PedidosEspecialesDevolucionesDetalle ADD FOREIGN KEY (idProducto) REFERENCES Productos (idProducto)
-GO
-
-ALTER TABLE PedidosEspecialesDevolucionesDetalle ADD FOREIGN KEY (idDevolucion) REFERENCES PedidosEspecialesDevoluciones (idDevolucion)
-GO
 
 
 

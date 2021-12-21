@@ -1989,6 +1989,7 @@ namespace lluviaBackEnd.Utilerias
             return dic;
         }
 
+        #region ticketsPedidosEspeciales
         public static byte[] GeneraTicketPDFPedidoEspecial(PedidosEspeciales pedido)
         {
             byte[] content = null;
@@ -2183,6 +2184,432 @@ namespace lluviaBackEnd.Utilerias
             }
             return content;
         }
+
+        public static byte[] GeneraTicketPedidoEspecial(Notificacion<dynamic> ticket)
+        {
+            byte[] content = null;
+
+            //string pathPdfTickets = ObtnerFolderTickets() + @"/";
+            string rutaPDF = string.Empty;
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            //string cabeceraTablas = "bgcolor='#404040' style='font-weight:bold; text-align:center; color:white'";
+            Document document = new Document(PageSize.A4, 0, 0, 10, 0);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Pedido Especial: ";
+
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "";
+                float monto = 0;
+                float montoIVA = 0;
+                float montoAhorro = 0;
+
+                html +=
+                  @"<table  width='100%'>
+                    <tr>
+                        <td width='35%'>
+                            <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
+                                <tr>
+                                    <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
+                                </tr>                                
+                                
+                                <tr><td style='color:black; text-align:center;'>************************************************************************** </td></tr>
+                                <tr><td style='color:black; text-align:center;'>**                          PEDIDO ESPECIAL                             ** </td></tr>
+                                <tr><td style='color:black; text-align:center;'>************************************************************************** </td></tr>
+                                <tr><td style='color:black; text-align:center;'><br><br></td></tr>
+                                
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>                                            
+                                            <td style='color:black; text-align:center;'># Pedido: " + ticket.Modelo[0].idPedidoEspecial.ToString() + @"</td>
+                                            <td>" + ticket.Modelo[0].fechaTicket.ToString() + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td></td>
+                                            <td>Hora: " + ticket.Modelo[0].horaTicket.ToString() + @"</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='50%'>Descripcion</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Cantidad</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Precio</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>";
+
+
+                for (int i = 0; i < ticket.Modelo.Count; i++)
+                {
+                    monto += Convert.ToSingle(ticket.Modelo[i].monto);
+                    montoIVA += Convert.ToSingle(ticket.Modelo[i].montoIVA);
+                    montoAhorro += Convert.ToSingle(ticket.Modelo[i].ahorro);
+
+                    html += @"   <tr>
+                                                    <td style='color:black; '> 
+                                                        <table>
+                                                          <tr>
+                                                            <td width='60%'>" + ticket.Modelo[i].descProducto.ToString() + @"</td>
+                                                            <td width='15%'>" + ticket.Modelo[i].cantidad.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + (Convert.ToSingle(ticket.Modelo[i].monto) + Convert.ToSingle(ticket.Modelo[i].ahorro)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                                          </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+
+                    if (ticket.Modelo[i].cantidad > 0) //ahorro
+                    {
+                        html += @"   <tr>
+                                                        <td style='color:black; '> 
+                                                            <table>
+                                                              <tr>
+                                                                <td width='60%'>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Descuento por mayoreo" + @"</td>
+                                                                <td width='15%'></td>
+                                                                <td width='15%' style='color:black; text-align:right;'>" + "-" + (ticket.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                                <td width='10%' style='color:black; text-align:left;'></td>
+                                                              </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>";
+                    }
+
+                }
+
+
+                html += @"
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SUBTOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                //if (montoIVA > 0)
+                //{
+                //    html += @"   <tr>
+                //                    <td style='color:black; '> 
+                //                        <table>
+                //                            <tr>
+                //                            <td width='65%'>I.V.A:</td>
+                //                            <td width='25%' style='color:black; text-align:right;'>" + (montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                //                            <td width='10%' style='color:black; text-align:left;'></td>
+                //                            </tr>
+                //                        </table>
+                //                    </td>
+                //                </tr>";
+                //}
+
+                html += @" <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>TOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (monto + montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                if (montoAhorro > 0)
+                {
+                    html += @"
+                                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                                <tr><td style='color:black; text-align:center;'>******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @" ******* </td></tr>
+                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+                }
+                else
+                {
+                    html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+
+                }
+
+
+                html += @"
+                            </table>
+                        </td>
+                        <td width='65%'>                                        
+                        </td> 
+                   </tr>
+                </table>";
+
+
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Ticket: " + ticket.Modelo[0].idPedidoEspecial.ToString());
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Visualizacion de Ticket");
+                document.CloseDocument();
+
+                document.Close();
+                content = memStream.ToArray();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return content;
+        }
+
+        public static byte[] GeneraTicketDevolucionPedidoEspecial(Notificacion<dynamic> ticketDevolucion)
+        {
+            byte[] content = null;
+
+            string rutaPDF = string.Empty;
+            string TamañoLetra = "10px";
+            string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
+            Document document = new Document(PageSize.A4, 0, 0, 10, 0);
+            MemoryStream memStream = new MemoryStream();
+            MemoryStream memStreamReader = new MemoryStream();
+            PdfWriter PDFWriter = PdfWriter.GetInstance(document, memStream);
+            ItextEvents eventos = new ItextEvents();
+            eventos.TituloCabecera = "Ticket de Devolución: ";
+            string nombreArchivo = string.Empty;
+            string path = Utils.ObtnerFolderCodigos() + @"/";
+            string tipo_cabecera = "DEVOLUCIÓN";
+            string tipo_totales = "DEVUELTO";
+            string tipo_desripcion = "Devueltos";
+            string tipo_descripcion_articulos = "DEVUELTOS";
+            float montoComisionBancaria = 0;
+
+            try
+            {
+                DateTime fechaActual = System.DateTime.Now;
+                DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
+                string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
+                string html = "";
+                float monto = 0;
+                float cantidadTotalDeArticulos = 0;
+
+                html +=
+                  @"<table  width='100%'>
+                    <tr>
+                        <td width='35%'>
+                            <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
+                                <tr>
+                                    <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
+                                </tr>                                
+                                
+                                <tr><td style='color:black; text-align:center;'>****************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>*************** TICKET DE " + tipo_cabecera + @" ***************</td></tr>
+                                <tr><td style='color:black; text-align:center;'>****************************************************************</td></tr>
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>                                            
+                                            <td style='color:black; text-align:center;'>Ticket: " + ticketDevolucion.Modelo[0].idPedidoEspecial.ToString() + @"</td>
+                                            <td>Fecha:" + ticketDevolucion.Modelo[0].fechaTicket.ToString() + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td></td>
+                                            <td>Hora: " + ticketDevolucion.Modelo[0].horaTicket.ToString() + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan=""2"">Cliente: " + ticketDevolucion.Modelo[0].nombreCliente.ToString().ToUpper() + @"</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='7%'>#</td>
+                                            <td width='36%'>Descripcion</td>
+                                            <td width='17%' style='color:black; text-align:center;'>Art. " + tipo_desripcion + @"</td>
+                                            <td width='15%' style='color:black; text-align:center;'>Precio Unitario</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Precio</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>";
+
+
+                for (int i = 0; i < ticketDevolucion.Modelo.Count; i++)
+                {
+                    monto += Convert.ToSingle(ticketDevolucion.Modelo[i].monto);
+                    cantidadTotalDeArticulos += Convert.ToSingle(ticketDevolucion.Modelo[i].cantidad);
+                    html += @"   <tr>
+                                                    <td style='color:black; '> 
+                                                        <table>
+                                                          <tr>
+                                                            <td width='7%'>" + (i + 1).ToString() + @"</td>
+                                                            <td width='33%'>" + ticketDevolucion.Modelo[i].descProducto.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + ticketDevolucion.Modelo[i].cantidad.ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:center;'>" + Convert.ToSingle(ticketDevolucion.Modelo[i].precioVenta).ToString() + @"</td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + (ticketDevolucion.Modelo[i].monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                                          </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>";
+
+
+
+                    montoComisionBancaria += Convert.ToSingle(ticketDevolucion.Modelo[i].montoComisionBancaria);
+                }
+
+
+
+                html += @"
+                                <tr><td style='color:black; '>____________________________________________________</td></tr>
+
+                                <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                          <tr>
+                                            <td width='65%'>SUBTOTAL:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+
+                if (montoComisionBancaria > 0)
+                {
+                    html += @"   <tr>
+                                    <td style='color:black; '> 
+                                        <table>
+                                            <tr>
+                                            <td width='65%'>COMISIÓN BANCARIA:</td>
+                                            <td width='25%' style='color:black; text-align:right;'>" + (montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                            <td width='10%' style='color:black; text-align:left;'></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>";
+                }
+
+                html += @"   <tr>
+                                <td style='color:black; '> 
+                                    <table>
+                                        <tr><td style='color:black;'>____________________________________________________</td></tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                        <td width='60%'>TOTAL " + tipo_totales + @":</td>
+                                        <td width='15%'> </td>
+                                        <td width='15%' style='color:black; text-align:right;'>" + (monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                        <td width='10%' style='color:black; text-align:left;'></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>";
+
+                //html += @" <tr>
+                //                    <td style='color:black; '> 
+                //                        <table>
+                //                          <tr><td style='color:black;'>____________________________________________________</td></tr>
+                //                          <tr>
+                //                            <td width='55%'>TOTAL DEVUELTO:</td>
+                //                            <td width='25%' style='color:black; text-align:right;'>" + (monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                //                            <td width='00%' style='color:black; text-align:left;'> </td>
+                //                          </tr>
+                //                        </table>
+                //                    </td>
+                //                </tr>";
+
+
+               
+
+                html += @"      <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>  CANTIDAD DE ARTICULOS " + tipo_descripcion_articulos + @":  " + (cantidadTotalDeArticulos).ToString() + @"          </td></tr>";
+
+
+
+
+                html += @"
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>_________________________________________________</td></tr>
+                                <tr><td style='color:black; text-align:center;'>FIRMA DEL CLIENTE </td></tr>";
+
+                // se agrega el codigo de barras en el ticket 
+                nombreArchivo = ticketDevolucion.Modelo[0].codigoBarras.ToString();
+                Utilerias.Utils.GenerarCodigoBarras(ticketDevolucion.Modelo[0].codigoBarras.ToString(), nombreArchivo);
+
+
+                html += @"
+                          <tr>
+                            <td style='text-align:center;'  align='center' >
+                                <div  align='center' style='text-align:center;' >
+                                    <br>
+                                    <img src='" + Path.Combine(path, "barras_" + nombreArchivo + "_.jpg") + @"' width = '90' height = '30' align='center' style='text-align:center;' />
+                                </div>
+                            </td>
+                         </tr>
+                         ";
+
+
+                html += @"
+                            </table>
+                        </td>
+                        <td width='65%'>                                        
+                        </td> 
+                   </tr>
+                </table>";
+
+
+                document.Open();
+                foreach (IElement E in HTMLWorker.ParseToList(new StringReader(html.ToString()), new StyleSheet()))
+                {
+                    document.Add(E);
+                }
+                document.AddAuthor("LLUVIA");
+                document.AddTitle("Ticket: " + ticketDevolucion.Modelo[0].idPedidoEspecial.ToString());
+                document.AddCreator("Victor Adrian Reyes");
+                document.AddSubject("Ticket de Devolución");
+                document.CloseDocument();
+                document.Close();
+                content = memStream.ToArray();
+                DeleteFile(Path.Combine(path, "barras_" + nombreArchivo + "_.jpg"));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return content;
+        }
+
+
+
+        #endregion
 
         public static byte[] GeneraPDFCuentasPorCobrar(Cliente cliente, Notificacion<dynamic> ctas)
         {

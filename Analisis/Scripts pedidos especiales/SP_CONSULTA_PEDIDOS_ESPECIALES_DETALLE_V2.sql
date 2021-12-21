@@ -117,7 +117,9 @@ as
 								invActual.cantidadActual cantidadActualInvAlmacen,
 								dbo.LineaProductoFraccion(p.idLineaProducto,p.idProducto) fraccion,
 								p.idLineaProducto,
+								ped.montoComisionBancaria,
 								@idTicketMayoreo as idTicketMayoreo
+
 						from	PedidosEspecialesDetalle ped
 									join Productos p 
 										on p.idProducto = ped.idProducto
