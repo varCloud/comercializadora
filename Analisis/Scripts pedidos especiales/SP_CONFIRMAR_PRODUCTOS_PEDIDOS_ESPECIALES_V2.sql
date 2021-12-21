@@ -417,9 +417,10 @@ as
 								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	
-											select	p.idProducto,  (p.cantidadAtendida - cantidadAceptada) as noAceptados
+											select	p.idProducto,  (sum(p.cantidadAtendida) - sum(cantidadAceptada)) as noAceptados
 											from	#productos p
 											where	(p.cantidadAtendida - cantidadAceptada)	> 0
+											group by p.idProducto
 										 )rechazados on rechazados.idProducto = temp.idProducto
 									join InventarioDetalle actuales
 										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
@@ -609,13 +610,14 @@ as
 					where	u.idPasillo = 1000
 						and	u.idRaq = 1000
 						and u.idPiso = 1000
+						and	t.cantidadAceptada > 0
 					
 					
-					update	InventarioDetalle
-					set		cantidad = a.cantidadActual,
+					update	InventarioDetalle 
+					set		cantidad -= a.cantidadAceptada, 
 							fechaActualizacion = dbo.FechaActual()
 					from	(
-								select	id.idInventarioDetalle, id.idProducto,  (id.cantidad - t.cantidadAceptada ) as cantidadActual
+								select	id.idInventarioDetalle, id.idProducto,  sum(t.cantidadAceptada) as cantidadAceptada
 								from	InventarioDetalle id
 											join #productos t
 												on id.idProducto = t.idProducto
@@ -625,17 +627,25 @@ as
 								where	u.idPasillo = 1000
 									and	u.idRaq = 1000
 									and u.idPiso = 1000
+									and	t.cantidadAceptada > 0
+								group by id.idInventarioDetalle, id.idProducto
 							)A
 					where	InventarioDetalle.idInventarioDetalle = a.idInventarioDetalle
+						and	InventarioDetalle.idProducto = a.idProducto
 
 
 					
 					-- actualizamos inventario general
 					insert into InventarioGeneralLog(idProducto,cantidad,cantidadDespuesDeOperacion,fechaAlta,idTipoMovInventario)
-					select	ig.idProducto, t.cantidadAceptada, ( ig.cantidad - t.cantidadAceptada ) as cantidadDespuesDeOperacion, @fecha as fechaAlta, cast(1 as bit) as idTipoMovInventario
+					select	ig.idProducto, a.cantidadAceptada, ( ig.cantidad - a.cantidadAceptada ) as cantidadDespuesDeOperacion, @fecha as fechaAlta, cast(1 as bit) as idTipoMovInventario
 					from	InventarioGeneral ig
-								join #productos t
-									on t.idProducto = ig.idProducto
+								join	(
+											select	t.idProducto, sum(t.cantidadAceptada) as cantidadAceptada
+											from	#productos t
+											group by t.idProducto
+										)a 
+									on ig.idProducto = a.idProducto
+					where	ig.idProducto = a.idProducto
 
 					update	InventarioGeneral
 					set		cantidad = a.total
@@ -646,6 +656,19 @@ as
 								group by idProducto
 							)a
 					where	InventarioGeneral.idProducto = a.idProducto
+
+
+					-- se actualiza la cantidad actual de inventario de los productos afectados
+					update	PedidosEspecialesDetalle
+					set		PedidosEspecialesDetalle.cantidadActualInvGeneral = a.cantidadActualInvGeneral							
+					from	(
+								select	distinct p.idProducto, ig.cantidad as cantidadActualInvGeneral
+								from	#productos p
+											join InventarioGeneral  ig
+												on p.idProducto = ig.idProducto
+							)A
+					where	PedidosEspecialesDetalle.idProducto = a.idProducto
+						and	PedidosEspecialesDetalle.idPedidoEspecial = @idPedidoEspecial
 
 
 					-- se aplica primero la comision

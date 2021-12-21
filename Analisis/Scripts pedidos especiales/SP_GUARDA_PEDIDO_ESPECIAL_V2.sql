@@ -339,7 +339,7 @@ as
 							end
 								
 						end
-					else
+					else  --if ( @tipoRevision = 1 )  --ticket
 						begin
 							
 							select @idUbicacion = null
@@ -355,26 +355,28 @@ as
 					----------------------------------------------------------------------------------------------------------------------------------------------------------
 					
 					if(coalesce(@idPedidoEspecial,0)=0) 
-					begin
-					-- inserta en tablas fisicas
-						insert into 
-							PedidosEspeciales
-								(
-									idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idEstatusPedidoEspecial,
-									idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo
-								)
+						begin
+						-- inserta en tablas fisicas
+							insert into 
+								PedidosEspeciales
+									(
+										idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idEstatusPedidoEspecial,
+										idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo
+									)
 
-						select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 
-								@idUsuario as idUsuario, @idEstatusPedidoEspecial as idEstatusPedidoEspecial,@idEstacion as idEstacion, 
-								null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi, @idPedidoEspecialMayoreo_
+							select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 
+									@idUsuario as idUsuario, @idEstatusPedidoEspecial as idEstatusPedidoEspecial,@idEstacion as idEstacion, 
+									null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi, @idPedidoEspecialMayoreo_
 
-						select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
-                    end
+							select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
+						end
 					else
-					begin
-						update PedidosEspeciales set idCliente=@idCliente,cantidad=@totalProductos,idUsuario=@idUsuario,montoTotal=@montoTotal,
-						idEstatusPedidoEspecial=@idEstatusPedidoEspecial,idEstacion=@idEstacion
-					end
+						begin
+							update PedidosEspeciales set idCliente=@idCliente,cantidad=@totalProductos,idUsuario=@idUsuario,montoTotal=@montoTotal,
+							idEstatusPedidoEspecial=@idEstatusPedidoEspecial,idEstacion=@idEstacion
+						end
+
+
 					-- se inserta el detalle de los productos que se vendieron
 					insert into
 						PedidosEspecialesDetalle
@@ -397,14 +399,14 @@ as
 									on pro.idProducto = p.idProducto
 
 
-					update p set codigoBarras= 
-					cast((RIGHT('000000' + Ltrim(Rtrim(idPedidoEspecial)),6)) as varchar) + 
-					cast((RIGHT('00' + Ltrim(Rtrim(DAY(fechaAlta))),2)) as varchar)  + 
-					cast((RIGHT('00' + Ltrim(Rtrim(month(fechaAlta))),2)) as varchar)  + 
-					cast((RIGHT('00' + Ltrim(Rtrim(year(fechaAlta))),2)) as varchar)  + 
-					cast((RIGHT('000' + Ltrim(Rtrim(idUsuario)),3)) as varchar)  +
-					cast((RIGHT('00' + Ltrim(Rtrim(ROUND(((99 - 1) * RAND() + 1), 0))),2)) as varchar)  
-					from PedidosEspeciales p where idpedidoespecial=@idpedidoespecial
+					update p set codigoBarras=	cast((RIGHT('000000' + Ltrim(Rtrim(idPedidoEspecial)),6)) as varchar) + 
+												cast((RIGHT('00' + Ltrim(Rtrim(DAY(fechaAlta))),2)) as varchar)  + 
+												cast((RIGHT('00' + Ltrim(Rtrim(month(fechaAlta))),2)) as varchar)  + 
+												cast((RIGHT('00' + Ltrim(Rtrim(year(fechaAlta))),2)) as varchar)  + 
+												cast((RIGHT('000' + Ltrim(Rtrim(idUsuario)),3)) as varchar)  +
+												cast((RIGHT('00' + Ltrim(Rtrim(ROUND(((99 - 1) * RAND() + 1), 0))),2)) as varchar)  
+					from	PedidosEspeciales p 
+					where	idpedidoespecial = @idpedidoespecial
 
 					if ( @tipoRevision = 1 ) -- ticket
 						begin
@@ -420,6 +422,7 @@ as
 									idInventarioDetalle, id.idProducto, p.idAlmacen, id.cantidad, fechaAlta, 
 									id.idUbicacion, fechaActualizacion, cast(0 as float) as cantidadDescontada, 
 									cast(0 as float) as cantidadFinal
+									,ub.idpasillo, ub.idraq, ub.idpiso
 							into	#tempExistencias 
 							from	Usuarios u
 										inner join Almacenes a
@@ -435,8 +438,11 @@ as
 								and	p.idAlmacen = a.idAlmacen
 								and id.cantidad > 0
 								and	ub.idPiso not in (9) -- se pidio que no se vendieran productos que estuvieran en el piso #9
+								and ub.idPiso not in (1000) -- que no sean ubicaciones de resguardo
+								and ub.idPasillo not in (1000) -- que no sean ubicaciones de resguardo
+								and ub.idRaq not in (1000) -- que no sean ubicaciones de resguardo
 
-
+								
 							if not exists ( select 1 from #tempExistencias)
 								begin
 									select @mensaje = 'No se realizo el pedido especial, no se cuenta con suficientes existencias en el inventario.'
@@ -504,8 +510,8 @@ as
 															update	#tempExistencias 
 															set		cantidadDescontada = @cantidadDest
 															where	idProducto = @idProducto
-																and idInventarioDetalle = @idInventarioDetalle
 																and	idAlmacen = @idAlmacen
+																and idInventarioDetalle = @idInventarioDetalle
 
 															select	@cantidadProductos = @cantidadProductos - @cantidadDest						
 														end
@@ -518,7 +524,7 @@ as
 						
 								update	#tempExistencias
 								set		cantidadFinal = cantidad - cantidadDescontada
-
+								
 								-- si el inventario de los productos vendidos queda negativo se paso de productos = rollback
 								if  exists	( select 1 from #tempExistencias where cantidadFinal < 0 )
 								begin
@@ -546,10 +552,10 @@ as
 								set		fechaUltimaActualizacion = dbo.FechaActual(),
 										InventarioGeneral.cantidad = InventarioGeneral.cantidad - a.cantidad
 								from	(
-											select idProducto, cantidad from #totProductos
+											select idProducto, sum(cantidad) as cantidad from #totProductos group by idProducto
 										)A
 								where InventarioGeneral.idProducto = A.idProducto
-
+																	
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -566,10 +572,11 @@ as
 								set		fechaUltimaActualizacion = dbo.FechaActual(),
 										InventarioGeneral.cantidad = InventarioGeneral.cantidad + a.cantidad
 								from	(
-											select idProducto, cantidad from #totProductos
+											select idProducto, sum(cantidad) as cantidad from #totProductos group by idProducto
 										)A
 								where InventarioGeneral.idProducto = A.idProducto
 
+								
 
 
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -585,7 +592,7 @@ as
 								from	#tempExistencias
 								where	cantidadDescontada > 0
 
-
+								
 								-- se actualiza inventario detalle
 								update	InventarioDetalle
 								set		InventarioDetalle.cantidad = InventarioDetalle.cantidad - a.cantidadDescontada, 
@@ -599,7 +606,7 @@ as
 								where	InventarioDetalle.idUbicacion = a.idUbicacion
 									and	InventarioDetalle.idProducto = a.idProducto 
 
-									
+
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								--- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -609,13 +616,14 @@ as
 										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial
 								from	
 										(
-											select	idProducto, cantidadDescontada, idUbicacion
+											select	idProducto, @idUbicacion as idUbicacion, sum(cantidadDescontada) as cantidadDescontada
 											from	#tempExistencias
-											where	cantidadDescontada > 0.0
-											group by idProducto, cantidadDescontada, idUbicacion
+											where	cantidadDescontada > 0
+											group by idProducto
 										)  tempExistencias
 											join InventarioDetalle id
-												on id.idProducto = tempExistencias.idProducto and id.idUbicacion = tempExistencias.idUbicacion
+												on	id.idProducto = tempExistencias.idProducto 
+												and	id.idUbicacion = tempExistencias.idUbicacion
 											
 
 								-- se actualiza inventario detalle
