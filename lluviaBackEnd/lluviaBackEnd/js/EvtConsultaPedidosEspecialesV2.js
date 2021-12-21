@@ -101,9 +101,20 @@ function onSuccessPedidosEspeciales(data) {
                 '                   <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesVentas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Acciones</button>' +
                 '                       <div class="dropdown-menu">' +
                 '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');"><i class="fas fa-eye"></i>Ver Detalle</a>' +
-                '                           <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Tickets</a>';
+                '                           <a class="dropdown-item has-icon" href="javascript:imprimirTicketPedidoEspecial(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket </a>';
+                if (dato.existe_ticket==true)
+                    html +='                <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Tickets</a>';
             if (dato.puede_devolver == true)
                 html += '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
+            if (
+                (dato.idEstatusPedidoEspecial == 6) || // pagado
+                (dato.idEstatusPedidoEspecial == 7)    // a credito
+            ) {
+                html += '           <a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecialProductos(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Ticket Productos</a>';
+            }
+
+            html += '    <a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>';
+
             html += '                       </div>' +
                 '                           </div>' +
                 '           </td>'
