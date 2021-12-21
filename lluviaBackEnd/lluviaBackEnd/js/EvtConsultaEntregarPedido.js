@@ -24,10 +24,10 @@ function onSuccessResultConsultaEntregarPedido(data) {
 
 
 
-function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
+function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
     $.ajax({
-        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
-        data: { idPedidoEspecial: idPedidoEspecial },
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicket"),
+        data: { idPedidoEspecial: idPedidoEspecial, idTipoTicketPedidoEspecial: idTipoTicketPedidoEspecial, idTicketPedidoEspecial: idTicketPedidoEspecial },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -38,14 +38,13 @@ function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
             console.log(data);
             OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
-            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
         },
         error: function (xhr, status) {
             OcultarLoader();
             MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
             console.log(xhr);
             console.log(status);
-            //console.log(data);
+            console.log(data);
         }
     });
 }
@@ -100,9 +99,9 @@ function InitDataTableConsultaEntregarPedidos() {
 }
 
 
-function imprimirTicketPedidoEspecial(idPedidoEspecial) {
+function imprimirTicketAlmacenes(idPedidoEspecial) {
     $.ajax({
-        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketAlmacenes"),
         data: { idPedidoEspecial: idPedidoEspecial },
         method: 'post',
         dataType: 'json',

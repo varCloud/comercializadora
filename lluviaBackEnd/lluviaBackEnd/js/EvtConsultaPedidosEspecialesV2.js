@@ -100,20 +100,24 @@ function onSuccessPedidosEspeciales(data) {
                 '               <div class="dropdown d-inline">' +
                 '                   <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesVentas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Acciones</button>' +
                 '                       <div class="dropdown-menu">' +
-                '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');"><i class="fas fa-eye"></i>Ver Detalle</a>' +
-                '                           <a class="dropdown-item has-icon" href="javascript:imprimirTicketPedidoEspecial(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket </a>';
+                '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');"><i class="fas fa-eye"></i>Ver Detalle</a>';
+                if (
+                    (dato.idEstatusPedidoEspecial == 6) || // pagado
+                    (dato.idEstatusPedidoEspecial == 7)    // a credito
+                ) {
+                    html += '<a class="dropdown-item has-icon" href="javascript:ImprimeTicket(' + dato.idPedidoEspecial + ',1,0);"><i class="fas fa-print"></i>Ticket Original</a>';
+                }
+            html +='<a class="dropdown-item has-icon" href="javascript:imprimirTicketAlmacenes(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket Almacen </a>';
+            html += '<a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Almacen</a>';
                 if (dato.existe_ticket==true)
-                    html +='                <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Tickets</a>';
+                    html += '                <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
             if (dato.puede_devolver == true)
                 html += '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
-            if (
-                (dato.idEstatusPedidoEspecial == 6) || // pagado
-                (dato.idEstatusPedidoEspecial == 7)    // a credito
-            ) {
-                html += '           <a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecialProductos(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Ticket Productos</a>';
-            }
 
-            html += '    <a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>';
+            if (dato.puede_facturar == true)
+                html += '                           <a class="dropdown-item has-icon" href="javascript:FacturarPedidoEspecial(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
+
+            
 
             html += '                       </div>' +
                 '                           </div>' +
@@ -511,37 +515,9 @@ function downloadPDF(pdf, nombre) {
     downloadLink.click();
 }
 
-
-
-function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
+function imprimirTicketAlmacenes(idPedidoEspecial) {
     $.ajax({
-        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
-        data: { idPedidoEspecial: idPedidoEspecial },
-        method: 'post',
-        dataType: 'html',
-        async: true,
-        beforeSend: function (xhr) {
-            ShowLoader();
-        },
-        success: function (data) {
-            console.log(data);
-            OcultarLoader();
-            MuestraToast('success', "Se envio el ticket a la impresora.");
-            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
-        },
-        error: function (xhr, status) {
-            OcultarLoader();
-            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
-            console.log(xhr);
-            console.log(status);
-            //console.log(data);
-        }
-    });
-}
-
-function imprimirTicketPedidoEspecial(idPedidoEspecial) {
-    $.ajax({
-        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketAlmacenes"),
         data: { idPedidoEspecial: idPedidoEspecial },
         method: 'post',
         dataType: 'json',
@@ -559,7 +535,9 @@ function imprimirTicketPedidoEspecial(idPedidoEspecial) {
     });
 }
 
-
+function FacturarPedidoEspecial(idPedidoEspecial) {
+    alert("facturar pedido" + idPedidoEspecial);
+}
 $(document).ready(function () {
 
     //InitDataTableCierres();

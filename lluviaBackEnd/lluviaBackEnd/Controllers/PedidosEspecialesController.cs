@@ -462,27 +462,27 @@ namespace lluviaBackEnd.Controllers
         //  Visualizacion de Ticket 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public ActionResult VerTicket(int idPedidoEspecial)
-        {
-            Notificacion<String> notificacion = new Notificacion<string>();
-            try
-            {
-                Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
-                pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
-                pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
+        //public ActionResult VerTicket(int idPedidoEspecial)
+        //{
+        //    Notificacion<String> notificacion = new Notificacion<string>();
+        //    try
+        //    {
+        //        Notificacion<List<PedidosEspeciales>> pedidos = new Notificacion<List<PedidosEspeciales>>();
+        //        pedidos = new PedidosEspecialesDAO().ObtenerPedidosEspeciales(new Models.PedidosEspeciales { idPedidoEspecial = idPedidoEspecial });
+        //        pedidos.Modelo[0].lstPedidosInternosDetalle = new PedidosEspecialesDAO().ObtenerProductosPedidoEspecial(pedidos.Modelo[0].idPedidoEspecial);
 
-                notificacion.Estatus = 200;
-                notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDFPedidoEspecial(pedidos.Modelo[0]));
-                ViewBag.pdfBase64 = pdfCodigos;
-                ViewBag.title = "Pedido Especial: " + idPedidoEspecial.ToString(); ;
-                return View();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        notificacion.Estatus = 200;
+        //        notificacion.Mensaje = "Ticket generado correctamente.";
+        //        string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDFPedidoEspecial(pedidos.Modelo[0]));
+        //        ViewBag.pdfBase64 = pdfCodigos;
+        //        ViewBag.title = "Pedido Especial: " + idPedidoEspecial.ToString(); ;
+        //        return View();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
     }
 

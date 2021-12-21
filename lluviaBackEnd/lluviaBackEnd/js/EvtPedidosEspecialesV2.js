@@ -664,7 +664,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 
             if (data.Estatus == 200) {
 
-                imprimirTicketPedidoEspecial(data.Modelo.idPedidoEspecial);
+                imprimirTicketAlmacenes(data.Modelo.idPedidoEspecial);
                 ActualizarProductosAlmacen();
                 limpiarTicket();
                 $("#listProductos").focus();
@@ -3048,9 +3048,9 @@ $(document).ready(function () {
 
 
 
-function imprimirTicketPedidoEspecial(idPedidoEspecial) {
+function imprimirTicketAlmacenes(idPedidoEspecial) {
     $.ajax({
-        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketAlmacenes"),
         data: { idPedidoEspecial: idPedidoEspecial },
         method: 'post',
         dataType: 'json',
