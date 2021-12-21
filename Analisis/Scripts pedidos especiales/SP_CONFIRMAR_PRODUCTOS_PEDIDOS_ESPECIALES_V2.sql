@@ -68,7 +68,8 @@ as
 						@diasCredito				int = 0,
 						@idFactMetodoPago			int = 0,
 						@idPedidoEspecialMayoreo_	int = 0,
-						@idUbicacionResguardo		int = 0
+						@idUbicacionResguardo		int = 0,
+						@idTicketPedidoEspecial		int = 0
 
 				create table 
 					#cantidadSolicitada 
@@ -773,6 +774,40 @@ as
 									(@saldoInicial - @montoPagado) as SaldoDespuesOperacion, @idAbonoCliente as idAbonoCliente
 
 						end
+
+
+					-- se inserta los tickets del pedido especial
+					insert into 
+						TicketsPedidosEspeciales 
+							(
+								idTipoTicketPedidoEspecial,idPedidoEspecial,idUsuario,cantidad,monto,comisionBancaria,
+								montoTotal,fechaAlta,observaciones,montoIVA
+							)
+					select	cast(1 as int) as idTipoTicketPedidoEspecial, idPedidoEspecial,idUsuario,cantidad,montoTotal,
+							@montoComision as comisionBancaria,montoTotal,fechaAlta,observaciones,@montoIVA as montoIVA
+					from	PedidosEspeciales
+					where	idPedidoEspecial = @idPedidoEspecial
+
+					select	@idTicketPedidoEspecial = max(idTicketPedidoEspecial) 
+					from	TicketsPedidosEspeciales
+					where	idPedidoEspecial = @idPedidoEspecial
+						and	idTipoTicketPedidoEspecial = cast(1 as int)
+
+
+
+					insert into
+						TicketsPedidosEspecialesDetalle
+							(
+								idTicketPedidoEspecial,idPedidoEspecial,idPedidoEspecialDetalle,idProducto,cantidad,monto,montoComision,montoTotal,
+								precioVenta,precioIndividual,precioMenudeo,precioRango,cantidadActualInvGeneral,cantidadAnteriorInvGeneral,fechaAlta,
+								montoIVA	
+							)
+					select 	@idTicketPedidoEspecial as idTicketPedidoEspecial,idPedidoEspecial,idPedidoEspecialDetalle,idProducto,cantidad,monto,
+							coalesce(montoComisionBancaria, 0),monto,precioVenta,precioIndividual,precioMenudeo,precioRango,cantidadActualInvGeneral,
+							cantidadAnteriorInvGeneral,fechaAlta,coalesce(montoIVA, 0.0)
+					from	PedidosEspecialesDetalle
+					where	idPedidoEspecial = @idPedidoEspecial
+						and	cantidad > 0
 
 
 
