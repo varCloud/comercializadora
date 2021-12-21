@@ -1460,13 +1460,6 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        //int indiceProducto = 0;
-        //int paginaActual = 0;
-        //int productosporPagina = 30;
-        //int paginas = 0;
-        //int indexProducto = 0;
-        //Boolean control = false;
-
         void pd_PrintPageTicketOriginal(object sender, PrintPageEventArgs e, Notificacion<dynamic> ticket)
         {
             try
@@ -2059,6 +2052,25 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult VerTicket(Int64 idPedidoEspecial, int idTipoTicketPedidoEspecial, int idTicketPedidoEspecial = 0)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial);
+                string pdf = "";
+                if (idTipoTicketPedidoEspecial == 1) //ticket original
+                    pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket));
+                if (idTipoTicketPedidoEspecial == 2) //ticket devolucion
+                    pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDevolucionPedidoEspecial(ticket));                
+                return Json(pdf, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         #endregion
 

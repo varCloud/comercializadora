@@ -468,6 +468,50 @@ function ImprimeTicket(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPed
     });
 }
 
+function VerTicket(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/VerTicket"),
+        data: { idPedidoEspecial: idPedidoEspecial, idTipoTicketPedidoEspecial: idTipoTicketPedidoEspecial, idTicketPedidoEspecial: idTicketPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Cargando...");
+        },
+        success: function (data) {
+            OcultarLoader();
+            downloadPDF(data, "Ticket" + idPedidoEspecial + ".pdf");
+            console.log(data);
+
+
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast("error", "Hubo un problema al generar el pdf, contactese con el administrador del sistema");
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+}
+
+function downloadPDF(pdf, nombre) {
+    //abrir en otra pestaña
+    let pdfWindow = window.open("")
+    pdfWindow.document.write(
+        "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+        encodeURI(pdf) + "'></iframe>"
+    )
+    return;
+    //descargar
+    const linkSource = `data:application/pdf;base64,${pdf}`;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = nombre;
+    downloadLink.click();
+}
+
+
 
 function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
     $.ajax({

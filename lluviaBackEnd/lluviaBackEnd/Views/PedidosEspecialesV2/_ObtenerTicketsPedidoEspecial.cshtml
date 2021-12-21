@@ -68,13 +68,13 @@ else
                                         default:
                                             break;
                                     }
-                                    <tr>
-                                        <td><div class="@badge">@item.tipoTicket</div></td>
-                                        <td>@item.fechaTicket</td>
-                                        <th>@item.monto.ToString("C", new CultureInfo("en-US"))</th>
-                                        <td><a href="#" target="_blank" class="btn btn-primary">Ver</a></td>
-                                        <td><a href="javascript:ImprimeTicket(@item.idPedidoEspecial, @item.idTipoTicketPedidoEspecial,@item.idTicketPedidoEspecial);" class="btn btn-primary">Imprimir</a></td>
-                                    </tr>
+                            <tr>
+                                <td><div class="@badge">@item.tipoTicket</div></td>
+                                <td>@item.fechaTicket</td>
+                                <th>@item.monto.ToString("C", new CultureInfo("en-US"))</th>
+                                <td><a href="javascript:VerTicket(@item.idPedidoEspecial, @item.idTipoTicketPedidoEspecial,@item.idTicketPedidoEspecial);" class="btn btn-primary">Ver</a></td>
+                                <td><a href="javascript:ImprimeTicket(@item.idPedidoEspecial, @item.idTipoTicketPedidoEspecial,@item.idTicketPedidoEspecial);" class="btn btn-primary">Imprimir</a></td>
+                            </tr>
                                 }
                             </tbody>
                         </table>
