@@ -111,7 +111,8 @@ as
 								ped.notificado,
 								invActual.cantidadActual cantidadActualInvAlmacen,
 								dbo.LineaProductoFraccion(p.idLineaProducto,p.idProducto) fraccion,
-								p.idLineaProducto
+								p.idLineaProducto,
+								ped.montoComisionBancaria
 						from	PedidosEspecialesDetalle ped
 									join Productos p 
 										on p.idProducto = ped.idProducto

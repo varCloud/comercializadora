@@ -292,6 +292,7 @@
     <Compile Include="Models\PedidosEspecialesV2.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />
+    <Compile Include="Models\ProductosDevueltosPedidoEspecial.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
     <Compile Include="Models\Estacion.cs" />
@@ -1342,6 +1343,7 @@
     <Content Include="Views\PedidosEspecialesV2\VerTicketAlmacenes.cshtml" />
     <Content Include="Views\FacturaPedidosEspeciales\FacturaPedidosEspeciales.cshtml" />
     <Content Include="Views\FacturaPedidosEspeciales\_ObtenerFacturasPE.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\_ObtenerTicketsPedidoEspecial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
