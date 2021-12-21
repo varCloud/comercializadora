@@ -121,6 +121,7 @@ function onSuccessPedidosEspeciales(data) {
     }
 }
 
+
 function completarCeros(valor) {
     return ('00' + valor).slice(-2);
 }
@@ -452,6 +453,53 @@ function ImprimeTicket(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPed
             console.log(xhr);
             console.log(status);
             console.log(data);
+        }
+    });
+}
+
+
+function ImprimeTicketPedidoEspecialProductos(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+            //setTimeout(() => { eliminaArchivo(data.Modelo.archivo); }, 3000);
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            //console.log(data);
+        }
+    });
+}
+
+function imprimirTicketPedidoEspecial(idPedidoEspecial) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/imprimirTicketPedidoEspecial"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            MuestraToast("info", data.Mensaje);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
         }
     });
 }

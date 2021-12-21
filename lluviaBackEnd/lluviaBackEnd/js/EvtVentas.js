@@ -1526,7 +1526,7 @@ $("#idCliente").on("change", function () {
     var data = ObtenerCliente(idCliente);
     var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
     var descuento = parseFloat(0.0);
-
+    console.log(data);
     if (idCliente != 1) {
         descuento = parseFloat(data.Modelo.tipoCliente.descuento).toFixed(2);;
     }

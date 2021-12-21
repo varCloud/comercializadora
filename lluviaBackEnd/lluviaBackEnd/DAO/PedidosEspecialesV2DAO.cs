@@ -22,7 +22,7 @@ namespace lluviaBackEnd.DAO
         private IDbConnection db = null;
 
 
-        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion, int idPedidoEspecial)
+        public Notificacion<PedidosEspecialesV2> GuardarPedidoEspecial(List<Producto> productos, int tipoRevision, int idCliente, int idUsuario, int idEstatusPedidoEspecial, int idEstacion, int idPedidoEspecial, int idPedidoEspecialMayoreo_)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -38,6 +38,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idEstatusPedidoEspecial", idEstatusPedidoEspecial);
                     parameters.Add("@idEstacion", idEstacion);
                     parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                    parameters.Add("@idPedidoEspecialMayoreo_", idPedidoEspecialMayoreo_);
 
                     var result = db.QueryMultiple("SP_GUARDA_PEDIDO_ESPECIAL_V2", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
@@ -144,12 +145,8 @@ namespace lluviaBackEnd.DAO
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-
                     parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial == 0 ? (object)null : pedidosEspecialesV2.idPedidoEspecial);
-                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaIni);
-                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaFin);
-
-                    var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_ESPECIALES_ID_V2", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)
                     {

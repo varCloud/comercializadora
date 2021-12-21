@@ -28,6 +28,8 @@ namespace lluviaBackEnd.Models
         public bool puedeEntregar { get; set; }
         public bool ticketVistaPrevia { get; set; }
         public int idPedidoEspecialMayoreo { get; set; }
+        public int idEstatusPedidoEspecial { get; set; }
+        public int idTicketMayoreo { get; set; }        
         public List<lluviaBackEnd.Models.Producto> lstProductos { get; set; }
 
     }

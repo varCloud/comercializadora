@@ -326,8 +326,7 @@ namespace lluviaBackEnd.Utilerias
                 mmsg.To.Add(emailUSuario); // cuenta Email a la cual sera dirigido el correo
                 if (!string.IsNullOrEmpty(correoCopia))
                     mmsg.Bcc.Add(correoCopia);
-                mmsg.Bcc.Add("sapitopicador@gmail.com");
-                mmsg.Bcc.Add("graciela.guizar @gmail.com");
+                mmsg.Bcc.Add(WebConfigurationManager.AppSettings["correoCCFacturas"].ToString());
                 mmsg.Subject = asunto; //Asunto del correo
                 mmsg.SubjectEncoding = System.Text.Encoding.UTF8; //cambiamos el tipo de texto a UTF8
                 mmsg.Body = cuerpo; //Cuerpo del mensaje

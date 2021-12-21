@@ -30,7 +30,8 @@ create proc [dbo].[SP_GUARDA_PEDIDO_ESPECIAL_V2]
 	@idUsuario					int,
 	@idEstatusPedidoEspecial	int,
 	@idEstacion					int,
-	@idPedidoEspecial			int=0
+	@idPedidoEspecial			int=0,
+	@idPedidoEspecialMayoreo_	int=0
 
 as
 
@@ -152,6 +153,7 @@ as
 
 				
 				select @fecha = coalesce(@fecha, dbo.FechaActual())
+				select @idPedidoEspecialMayoreo_ = coalesce(@idPedidoEspecialMayoreo_, 0)
 
 				--si el idPedidoEspecial viene diferente de 0 y se encuentra en cotizacion borramos el detalle para que se inserten los nuevos productos
 				if exists(select 1 from PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial and idEstatusPedidoEspecial=2 and @idPedidoEspecial>0)
@@ -221,14 +223,14 @@ as
 					-- primero precios individual y menudeo
 					update	#pedidos
 					set		costo =	case
-										when (@totalProductos ) >= 6 then cantidad * precioMenudeo
+										when ( ((@totalProductos) >= 6) or (@idPedidoEspecialMayoreo_ > 0) ) then cantidad * precioMenudeo
 										else cantidad * precioIndividual
 									end,
 							precioVenta =	case
-												when (@totalProductos) >= 6 then precioMenudeo
+												when  ( ((@totalProductos) >= 6) or (@idPedidoEspecialMayoreo_ > 0) )  then precioMenudeo
 												else precioIndividual
 											end
-
+											
 					-- se actualiza el precio de venta y el precio del rango con que se hizo la venta en caso q exista un precio de rango
 					update	#pedidos
 					set		#pedidos.precioVenta = a.precioRango,
@@ -287,7 +289,7 @@ as
 
 					
 					-- si todo bien
-						select	@montoTotal = Round(sum(montoVenta+montoIva+montoComisionBancaria),2,0) 
+						select	@montoTotal = Round(sum(costo+montoIva+montoComisionBancaria),2,0) 
 						from	#pedidos
 
 
@@ -315,16 +317,27 @@ as
 								and idPasillo = @idPasilloResguardo --27
 								and idRaq = @idRaqResguardo --26
 								and idPiso = @idPisoResguardo --10
+								 
 
-
-							if not exists ( select 1 from InventarioDetalle where idUbicacion = @idUbicacion )
+							if exists	(
+											select	p.idProducto, p.idAlmacen, @idUbicacion as idUbicacion, id.idUbicacion as idUbicacionInventarioDetalle
+											from	#pedidos p
+														left join InventarioDetalle id
+															on	id.idProducto = p.idProducto
+															and	id.idUbicacion = @idUbicacion
+											where	id.idUbicacion is null
+										)
 							begin
 								insert into InventarioDetalle ( idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion )
-								select	idProducto, 0 as cantidad, @fecha as fechaAlta, @idUbicacion as idUbicacion, @fecha as fechaActualizacion
-								from	#pedidos
-								group by idProducto
+								select	p.idProducto, cast(0 as float) as cantidad, @fecha, @idUbicacion as idUbicacion, @fecha
+								from	#pedidos p
+											left join InventarioDetalle id
+												on	id.idProducto = p.idProducto
+												and	id.idUbicacion = @idUbicacion
+								where	id.idUbicacion is null
+								group by p.idProducto
 							end
-
+								
 						end
 					else
 						begin
@@ -348,12 +361,12 @@ as
 							PedidosEspeciales
 								(
 									idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idEstatusPedidoEspecial,
-									idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi
+									idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo
 								)
 
 						select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 
 								@idUsuario as idUsuario, @idEstatusPedidoEspecial as idEstatusPedidoEspecial,@idEstacion as idEstacion, 
-								null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi
+								null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi, @idPedidoEspecialMayoreo_
 
 						select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
                     end
@@ -373,8 +386,10 @@ as
 							)
 					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
 							@fecha as fechaAlta, p.cantidad, costo as monto, cast(0 as int) as cantidadActualInvGeneral, ig.cantidad as cantidadAnteriorInvGeneral, 
-							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, p.cantidad as cantidadAceptada, 
-							p.cantidad as cantidadAtendida, 0 as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
+							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, 
+							cast(0 as float) as cantidadAceptada, 
+							p.cantidad as cantidadAtendida, 
+							cast(0 as float) as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
 					from	#pedidos p
 								join InventarioGeneral ig
 									on ig.idProducto = p.idProducto
@@ -584,13 +599,13 @@ as
 								where	InventarioDetalle.idUbicacion = a.idUbicacion
 									and	InventarioDetalle.idProducto = a.idProducto 
 
-
+									
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								--- origen
 								---------------------------------------------------------------------------------------------------------------------------------------------------------
 								-- se inserta el InventarioDetalleLog
 								insert into InventarioDetalleLog (idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoEspecial)
-								select	id.idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
+								select	@idUbicacion as idUbicacion, id.idProducto, tempExistencias.cantidadDescontada, id.cantidad + tempExistencias.cantidadDescontada, 
 										cast(18 as int) as idTipoMovInventario, @idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial
 								from	
 										(
