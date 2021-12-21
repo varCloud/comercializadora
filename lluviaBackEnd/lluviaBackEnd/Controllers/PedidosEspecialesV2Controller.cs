@@ -1363,7 +1363,7 @@ namespace lluviaBackEnd.Controllers
                 notificacion = new Notificacion<Ventas>();
                 notificacion.Mensaje = "Se envio el ticket a la impresora.";
                 notificacion.Estatus = 200;
-                bool ticketVistaPrevia = true; 
+                bool ticketVistaPrevia = false; 
 
                 this.idPedidoEspecial = idPedidoEspecial;
 
