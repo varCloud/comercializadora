@@ -357,6 +357,43 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+
+        public Notificacion<PedidosEspecialesV2> GuardarIVAPedido(PedidosEspecialesV2 pedido)
+        {
+            Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idPedidoEspecial", pedido.idPedidoEspecial);
+                    parameters.Add("@idCliente", pedido.idCliente);
+                    parameters.Add("@idFactFormaPago", pedido.idFactFormaPago);
+                    parameters.Add("@idFactUsoCFDI", pedido.idFactUsoCFDI);
+                    var result = db.QueryMultiple("SP_GUARDA_IVA_PEDIDO_ESPECIAL_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.ReadSingle<PedidosEspecialesV2>(); ;
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = pedido;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
         //public Notificacion<List<PedidosEspecialesV2>> ConsultaPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
         //{
         //    Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();

@@ -287,6 +287,21 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult GuardarIVAPedido(PedidosEspecialesV2 pedido)
+        {
+            try
+            {
+                Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+                notificacion = new PedidosEspecialesV2DAO().GuardarIVAPedido(pedido);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /************** REIMPRIMIR TICKETS ALMACENES********************/
 
@@ -584,6 +599,14 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesPedidosEspeciales();
                 Notificacion<dynamic> usuarios = new PedidosEspecialesV2DAO().ObtenerUsuariosPedidosEspeciales();
                 Notificacion<dynamic> estatus = new PedidosEspecialesV2DAO().ObtenerEstatusPedidosEspeciales();
+
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
+
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
                 var listClientes = new List<SelectListItem>();
                 foreach (var cliente in clientes.Modelo)
