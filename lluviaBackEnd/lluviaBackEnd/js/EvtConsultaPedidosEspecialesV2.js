@@ -86,7 +86,7 @@ function onSuccessPedidosEspeciales(data) {
                 liquidado = '<div class="badge badge-danger badge-shadow">NO</div>';
 
             html += '<tr>' +
-                '             <td class="details-control" idPedidoEspecial="'+dato.idPedidoEspecial+'" ></td>' +
+                '             <td class="" idPedidoEspecial="'+dato.idPedidoEspecial+'" ></td>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
                 '             <td>' + dato.nombreCliente + '</td>' +
