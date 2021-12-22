@@ -5,6 +5,11 @@
     List<SelectListItem> listClientes = (List<SelectListItem>)ViewBag.listClientes;
     List<SelectListItem> listUsuarios = (List<SelectListItem>)ViewBag.listUsuarios;
     List<SelectListItem> listEstatus = (List<SelectListItem>)ViewBag.listEstatus;
+
+    List<lluviaBackEnd.Models.FormaPago> lstFormasPago = ViewBag.lstFormasPago;
+    List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
+    List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.listClientes;
+    List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.listUsuarios;
 }
 
 @model lluviaBackEnd.Models.Filtro
@@ -192,7 +197,7 @@
             </div>
             <div class="modal-body">
                 <div id="ticketsPedidoEspecial"></div>
-               
+
 
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
@@ -206,6 +211,112 @@
         </div>
     </div>
 </div>
+
+
+
+
+@*Modal facturacion *@
+<div class="modal fade bd-example-modal-lg" id="ModalFacturar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalPrevioVenta">Facturar Pedido: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <div class="section-title"><strong>Cliente: </strong></div>
+                        <input type="hidden" id="idVentaIVA" name="idVentaIVA" value="0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.idClienteFact, lstClientes, new { id = "idClienteFact", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="nombreCliente">
+                                    <address>
+                                        <strong></strong><br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-title"><strong>Forma de Pago: </strong></div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.formaPago, new SelectList(lstFormasPago, "id", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+                        </div>
+
+
+                        <div id="divUsoCFDI">
+                            <div class="section-title"><strong>Uso del CFDI: </strong></div>
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.usoCFDI, new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-5 text-right">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total de la Venta:</strong></div>
+                            <div class="invoice-detail-value" id="previoTotal"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Subtotal:</strong></div>
+                            <div class="invoice-detail-value" id="previoSubTotal" style="color: #3232ba"><h4>$15</h4></div>
+                        </div>
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>I.V.A.</strong></div>
+                            <div class="invoice-detail-value" id="previoIVA"><h4>$15</h4></div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Total</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="previoFinal"><h4>$15</h4></div>
+                        </div>
+                        <br />
+                        <div class="invoice-detail-item">
+                            <div class="invoice-detail-name"><strong>Cambio</strong></div>
+                            <div class="invoice-detail-value invoice-detail-value-lg" id="cambio" style="color: #ff4d4d"><h4>$0.0</h4></div>
+                        </div>
+                        <br />
+                        <div class="section-title"><strong>Efectivo: </strong></div>
+                        <span class="float-right text-muted">
+                            <input id="efectivo" type="text" placeholder="Introduzca la cantidad ($) que está recibiendo" class="form-control" onkeypress="return esDecimal(this, event);">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" id="cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="btnGuardarIVA" class="btn btn-success">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

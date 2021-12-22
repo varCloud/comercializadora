@@ -115,7 +115,7 @@ function onSuccessPedidosEspeciales(data) {
                 html += '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
 
             if (dato.puede_facturar == true)
-                html += '                           <a class="dropdown-item has-icon" href="javascript:FacturarPedidoEspecial(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
+                html += '                           <a class="dropdown-item has-icon" href="javascript:modalFacturar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
 
             
 
@@ -538,6 +538,298 @@ function imprimirTicketAlmacenes(idPedidoEspecial) {
 function FacturarPedidoEspecial(idPedidoEspecial) {
     alert("facturar pedido" + idPedidoEspecial);
 }
+
+
+function modalFacturar(idPedidoEspecial) {
+
+    limpiaModalIVA();
+    var data = ConsultaPedido(idPedidoEspecial);
+
+    // ACUTALIZACION PARA FACTURAR TARJETA de CREDITO Y DEBITO
+    // EL TEMA DE COMISIONES  NOS PEGA EN ESTA PARTE YA QUE COBRAMOS COMISIONES POR DESLIZAR LA TARJETA
+    // Y CUANDO SE FACTURA DESDE EL MODULO DE VENTAS SE CONDONAN COMISIONES ES POR ESTO QUE HAY QUE CANCELAR VENTA
+    if (data.Modelo[0].idFactFormaPago == 4 || data.Modelo[0].idFactFormaPago == 18) {
+        MuestraToast('warning', "Debe primero cancelar este pedido, ya que se han cobrado comisiones por uso de TC/TD");
+        return;
+    }
+
+    var montoTotal = parseFloat(data.Modelo[0].montoTotal).toFixed(2);
+    var montoIVA = parseFloat(data.Modelo[0].montoTotal * 0.16).toFixed(2);
+    //var montoFinal = parseFloat(montoTotal) + parseFloat(montoIVA);
+    var idCliente = parseInt(data.Modelo[0].idCliente);
+
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(montoTotal).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4><strike>$" + parseFloat(montoTotal).toFixed(2) + "</strike></h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(montoIVA).toFixed(2) + "</h4>";
+
+    $('#idVentaIVA').val(idPedidoEspecial);
+    $('#idClienteFact').val(idCliente).trigger('change');
+    $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
+
+}
+
+
+function limpiaModalIVA() {
+
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    document.getElementById("nombreCliente").innerHTML = row_;
+
+    document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoIVA").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    $('#efectivo').val('');
+    $('#idClienteFact').val("0");
+    $('#formaPago').val("1").trigger('change');
+    $('#usoCFDI').val("3").trigger('change');
+    $('#idVentaIVA').val(0);
+
+}
+
+
+function ConsultaPedido(idPedidoEspecial) {
+
+    var result = '';
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ConsultaDatosTicketPedidoEspecialV2"),
+        data: { idPedidoEspecial: idPedidoEspecial },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            OcultarLoader();
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+    return result;
+}
+
+
+
+$("#idClienteFact").on("change", function () {
+
+    $("#divUsoCFDI").hide();
+    $("#btnGuardarIVA").hide();
+    $("#efectivoFactura").hide();
+    $('#efectivo').val('');
+    document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+
+    var idCliente = parseFloat($('#idClienteFact').val());
+    var data = ObtenerCliente(idCliente);
+    var nombre = data.Modelo.nombres + "  " + data.Modelo.apellidoPaterno + "  " + data.Modelo.apellidoMaterno;
+
+    // para los datos del cliente
+    var row_ = "<address>" +
+        "    <strong></strong><br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "    <br>" +
+        "</address>";
+
+    if ((data.Modelo.idCliente != 0) && (idCliente != 0)) {
+        row_ = "<address>" +
+            "    <strong>Datos del Cliente:</strong><br>" +
+            "    Nombre: " + nombre.toUpperCase() + "<br>" +
+            "    Telefono: " + data.Modelo.telefono + "<br>" +
+            "    E-mail: " + data.Modelo.correo + "<br>" +
+            "    RFC: " + data.Modelo.rfc + "<br>" +
+            "    Tipo de Cliente: " + data.Modelo.tipoCliente.descripcion + "<br>" +
+            "</address>";
+    }
+
+    document.getElementById("nombreCliente").innerHTML = row_;
+
+    if ((data.Modelo.idCliente != 0) && (idCliente != 0)) {
+        if (!validarEmail(data.Modelo.correo)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
+            return false;
+        }
+
+        if (!validarRFC(data.Modelo.rfc)) {
+            MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
+            return false;
+        }
+    }
+    else {
+        MuestraToast('warning', "No es posible facturar a  este cliente");
+        return false;
+    }
+
+    $("#divUsoCFDI").show();
+    $("#btnGuardarIVA").show();
+    $("#efectivoFactura").show();
+
+
+});
+
+
+function ObtenerCliente(idCliente) {
+    var result = "";//{ "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
+    $.ajax({
+        url: rootUrl("/Clientes/ObtenerCliente"),
+        data: { idCliente: idCliente },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+            console.log("Antes_")
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+    return result;
+}
+
+
+$("#efectivo").on("keyup", function () {
+
+    if (event.keyCode === 13) {
+
+        event.preventDefault();
+        document.getElementById("btnGuardarIVA").click();
+
+    }
+    else {
+
+        var cambio_ = parseFloat(0).toFixed(2);
+        var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+        var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+        if (parseFloat(efectivo_) > parseFloat(total_)) {
+            cambio_ = efectivo_ - total_;
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(cambio_).toFixed(2) + "</h4>";
+        }
+        else {
+            document.getElementById("cambio").innerHTML = "<h4>$" + parseFloat(0).toFixed(2) + "</h4>";
+        }
+    }
+
+});
+
+
+$('#btnGuardarIVA').click(function (e) {
+    
+    var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
+    var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
+
+    if ($('#idClienteFact').val() == "0") {
+        MuestraToast('warning', "Debe seleccionar un Cliente.");
+        return;
+    }
+
+    if ($('#efectivo').val() == "") {
+        MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
+        return;
+    }
+
+    if (parseFloat(efectivo_) < parseFloat(total_)) {
+        MuestraToast('warning', "El efectivo no alcanza a cubrir el costo del iva faltante: " + total_.toString());
+        return;
+    }
+
+    if ($('#idClienteFact').val() == "1") {
+        MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idClienteFact").find("option:selected").text());
+        return;
+    }
+
+    //var montoIVA = parseFloat(document.getElementById("previoIVA").innerHTML.replace("<h4>$", "").replace("</h4>", "")).toFixed(2);
+    var idPedidoEspecial = $('#idVentaIVA').val();
+    var idCliente = $('#idClienteFact').val();
+    var formaPago = $('#formaPago').val();
+    var usoCFDI = $('#usoCFDI').val();
+    
+    GuardarIVAPedido(idPedidoEspecial, idCliente, formaPago, usoCFDI);
+
+});
+
+
+function GuardarIVAPedido(idPedidoEspecial, idCliente, formaPago, usoCFDI) {
+
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/GuardarIVAPedido"),
+        data: { idPedidoEspecial: idPedidoEspecial, idCliente: idCliente, idFactFormaPago: formaPago, idFactUsoCFDI: usoCFDI },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+
+            if (data.Estatus == 200) {
+                facturaPedidoEspecial(idPedidoEspecial);
+            }
+
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+
+}
+
+
+
+function facturaPedidoEspecial(idPedidoEspecial) {
+    $.ajax({
+        url: pathDominio + "api/WsFactura/GenerarFactura",
+        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Facturando Venta.");
+        },
+        success: function (data) {
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+            window.location.href = rootUrl("/PedidosEspecialesV2/ConsultarPedidosEspeciales");
+        },
+        error: function (xhr, status) {
+            //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            console.log('Disculpe, existió un problema');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+
 $(document).ready(function () {
 
     //InitDataTableCierres();

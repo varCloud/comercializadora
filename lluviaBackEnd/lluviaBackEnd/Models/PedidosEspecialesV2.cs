@@ -29,7 +29,12 @@ namespace lluviaBackEnd.Models
         public bool ticketVistaPrevia { get; set; }
         public int idPedidoEspecialMayoreo { get; set; }
         public int idEstatusPedidoEspecial { get; set; }
-        public int idTicketMayoreo { get; set; }        
+        public int idTicketMayoreo { get; set; }
+        public int idFactMetodoPago { get; set; }
+        public int idFactFormaPago { get; set; }
+        public int idFactUsoCFDI { get; set; }
+        public int idEstatusFactura { get; set; }
+        public float montoIVA { get; set; }
         public List<lluviaBackEnd.Models.Producto> lstProductos { get; set; }
 
     }

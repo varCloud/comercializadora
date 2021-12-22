@@ -13,6 +13,10 @@ namespace lluviaBackEnd.Models
         public Int64 idUsuario { get; set; }
         public int idEstatusPedidoEspecial { get; set; }
         public string codigoBarras { get; set; }
+        public int formaPago { get; set; }
+        public int usoCFDI { get; set; }
+        public int idClienteFact { get; set; }
+
 
     }
 }
