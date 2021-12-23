@@ -81,10 +81,11 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
-                //ventas.tipoConsulta = 2;
-                //ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
+                //pedidosEspecialesV2.idPedidoEspecial = 0;
+                //pedidosEspecialesV2.fechaIni = new DateTime(1900, 01, 01);
+                //pedidosEspecialesV2.fechaFin = new DateTime(1900, 01, 01);
 
-                notificacion = new PedidosEspecialesV2DAO().ObtenerEntregarPedidos(pedidosEspecialesV2);
+                notificacion = new PedidosEspecialesV2DAO().ConsultaPedidosEspeciales(pedidosEspecialesV2);
 
                 if (notificacion.Modelo != null)
                 {

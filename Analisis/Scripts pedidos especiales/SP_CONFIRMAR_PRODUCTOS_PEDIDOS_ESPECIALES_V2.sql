@@ -574,7 +574,7 @@ as
 								)
 						select	u.idAlmacen as idAlmacenOrigen, ubicacionDestino.idAlmacenOrigen as idAlmacenDestino, idl.idProducto, noAceptados.noAceptados as cantidad, idl.idPedidoEspecial,
 								idl.idUsuario, @fecha as fechaAlta, cast(6 as int) as idEstatusPedidoEspecialDetalle, -- 6	Rechazados por el Administrador
-								noAceptados.observaciones, noAceptados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionDestino.idUbicacionOrigen as idUbicacionDestino
+								noAceptados.observaciones, noAceptados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionRegresar.idUbicacion as idUbicacionDestino
 						from	InventarioDetalleLog idl
 									join Ubicacion u
 										on u.idUbicacion = idl.idUbicacion
@@ -592,11 +592,44 @@ as
 												where	cantidadAceptada <> cantidadSolicitada										
 											)noAceptados
 												on noAceptados.idProducto = idl.idProducto
+									join	(
+												select	p.idProducto, p.idAlmacenOrigen, u.idUbicacion
+												from	#productos p
+															join InventarioDetalle id
+																on id.idProducto = id.idProducto
+															join Ubicacion u
+																on	u.idUbicacion = id.idUbicacion
+																and	u.idAlmacen = p.idAlmacenOrigen
+												where	u.idPasillo = 0
+													and u.idRaq = 0
+													and u.idPiso = 0
+												group by p.idProducto, p.idAlmacenOrigen, u.idUbicacion															
+											)ubicacionRegresar
+												on ubicacionRegresar.idProducto = idl.idProducto
 						where	idl.idPedidoEspecial = @idPedidoEspecial
 							and	idl.idTipoMovInventario = 18
 
+							
+
+
+											
+
 					end -- if ( @hayRechazos = cast(1 as bit) or @hayNoAceptados = cast(1 as bit) )
 
+					
+					-- insertamos los movimientos de mercancia para los productos aceptados
+					insert into		
+						PedidosEspecialesMovimientosDeMercancia 
+							(
+								idAlmacenOrigen,idAlmacenDestino,idProducto,cantidad,idPedidoEspecial,idUsuario,fechaAlta,
+								idEstatusPedidoEspecialDetalle,observaciones,cantidadAtendida,idUbicacionOrigen,idUbicacionDestino
+							)					
+					select	idAlmacenOrigen, idAlmacenDestino, idProducto, cantidadAceptada cantidad, @idPedidoEspecial as idPedidoEspecial, @idUsuario as idUsuario , @fecha as fechaAlta,
+							cast(4 as int) as idEstatusPedidoEspecialDetalle,  --4	Aceptados
+							observaciones,cantidadAtendida, @idUbicacionResguardo as idUbicacionOrigen, null as idUbicacionDestino							 
+					from	#productos
+					where	cantidadAceptada > 0
+					
 					
 					-- se actualiza inventario detalle para la salida de mercancia (venta) de los productos aceptados					
 					insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
