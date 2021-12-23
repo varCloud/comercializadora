@@ -817,7 +817,7 @@ as
 								montoTotal,fechaAlta,observaciones,montoIVA
 							)
 					select	cast(1 as int) as idTipoTicketPedidoEspecial, idPedidoEspecial,idUsuario,cantidad,montoTotal,
-							@montoComision as comisionBancaria,montoTotal,fechaAlta,observaciones,@montoIVA as montoIVA
+							@montoComision as comisionBancaria,montoTotal,@fecha as fechaAlta,observaciones,@montoIVA as montoIVA
 					from	PedidosEspeciales
 					where	idPedidoEspecial = @idPedidoEspecial
 
@@ -837,7 +837,7 @@ as
 							)
 					select 	@idTicketPedidoEspecial as idTicketPedidoEspecial,idPedidoEspecial,idPedidoEspecialDetalle,idProducto,cantidad,monto,
 							coalesce(montoComisionBancaria, 0),monto,precioVenta,precioIndividual,precioMenudeo,precioRango,cantidadActualInvGeneral,
-							cantidadAnteriorInvGeneral,fechaAlta,coalesce(montoIVA, 0.0)
+							cantidadAnteriorInvGeneral,@fecha as fechaAlta,coalesce(montoIVA, 0.0)
 					from	PedidosEspecialesDetalle
 					where	idPedidoEspecial = @idPedidoEspecial
 						and	cantidad > 0
