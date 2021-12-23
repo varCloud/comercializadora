@@ -81,10 +81,11 @@ namespace lluviaBackEnd.Controllers
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
-                //ventas.tipoConsulta = 2;
-                //ventas.idAlmacen = UsuarioActual.idRol == 1 ? 0 : UsuarioActual.idAlmacen;
+                //pedidosEspecialesV2.idPedidoEspecial = 0;
+                //pedidosEspecialesV2.fechaIni = new DateTime(1900, 01, 01);
+                //pedidosEspecialesV2.fechaFin = new DateTime(1900, 01, 01);
 
-                notificacion = new PedidosEspecialesV2DAO().ObtenerEntregarPedidos(pedidosEspecialesV2);
+                notificacion = new PedidosEspecialesV2DAO().ConsultaPedidosEspeciales(pedidosEspecialesV2);
 
                 if (notificacion.Modelo != null)
                 {
@@ -280,6 +281,21 @@ namespace lluviaBackEnd.Controllers
                 //pedido = notificacion;
                 return Json(notificacion, JsonRequestBehavior.AllowGet);
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GuardarIVAPedido(PedidosEspecialesV2 pedido)
+        {
+            try
+            {
+                Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
+                notificacion = new PedidosEspecialesV2DAO().GuardarIVAPedido(pedido);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -567,6 +583,14 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<dynamic> clientes = new PedidosEspecialesV2DAO().ObtenerClientesPedidosEspeciales();
                 Notificacion<dynamic> usuarios = new PedidosEspecialesV2DAO().ObtenerUsuariosPedidosEspeciales();
                 Notificacion<dynamic> estatus = new PedidosEspecialesV2DAO().ObtenerEstatusPedidosEspeciales();
+
+                Notificacion<List<FormaPago>> formasPago = new Notificacion<List<FormaPago>>();
+                formasPago = new VentasDAO().ObtenerFormasPago();
+                ViewBag.lstFormasPago = formasPago.Modelo;
+
+                Notificacion<List<UsoCFDI>> usoCFDI = new Notificacion<List<UsoCFDI>>();
+                usoCFDI = new VentasDAO().ObtenerUsoCFDI();
+                ViewBag.lstUsoCFDI = usoCFDI.Modelo;
 
                 var listClientes = new List<SelectListItem>();
                 foreach (var cliente in clientes.Modelo)

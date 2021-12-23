@@ -81,7 +81,7 @@ as
 				if ( @valido = 1 )
 					begin
 
-						select	ROW_NUMBER() OVER(ORDER BY idPedidoEspecial) AS id, 
+						select	ROW_NUMBER() OVER(ORDER BY p.idPedidoEspecial) AS id, 
 								p.idPedidoEspecial,
 								c.idCliente,
 								c.nombres + ' ' + c.apellidoPaterno + ' ' + c.apellidoMaterno as nombreCliente,
@@ -100,16 +100,22 @@ as
 								case
 									when idEstatusPedidoEspecial = 3 then cast(1 as bit) -- En resguardo
 									else cast(0 as bit)
-								end as puedeEntregar
+								end as puedeEntregar,
+								p.idFactMetodoPago,
+								p.idFactFormaPago,
+								p.idFactUsoCFDI,
+								coalesce(f.idEstatusFactura, 0) as idEstatusFactura
 						from	PedidosEspeciales p
 									join Clientes c
 										on c.idCliente = p.idCliente
 									join Usuarios u
 										on u.idUsuario = p.idUsuario
+								left join FacturasPedidosEspeciales f
+									on f.idPedidoEspecial = p.idPedidoEspecial
 
 						where	p.idPedidoEspecial =		case
-																when @idPedidoEspecial = 0 then idPedidoEspecial
-																when @idPedidoEspecial is null then idPedidoEspecial
+																when @idPedidoEspecial = 0 then p.idPedidoEspecial
+																when @idPedidoEspecial is null then p.idPedidoEspecial
 																else @idPedidoEspecial
 															end
 
