@@ -743,6 +743,23 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<dynamic> ObtenerPedidosEspecialesDetalleBitacora(Int64 idPedidoEspecial)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idPedidoEspecial", idPedidoEspecial);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_PEDIDOS_ESPECIALES_DETALLE_BITACORA_V2", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
         public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, 
                                                                      int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
                                                                      int aplicaIVA, int idFactFormaPago, int idFactUsoCFDI)

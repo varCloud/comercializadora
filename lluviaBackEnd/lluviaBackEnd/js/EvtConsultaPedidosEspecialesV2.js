@@ -27,6 +27,7 @@ function onSuccessPedidosEspeciales(data) {
             '<table class="table table-striped" id = "tblPedidosEspeciales">' +
             '    <thead>' +
             '     <tr>' +
+            '         <th></th>' +
             '         <th>No. pedido especial</th>' +
             '         <th>Fecha</th>' +
             '         <th>Cliente</th>' +
@@ -85,6 +86,7 @@ function onSuccessPedidosEspeciales(data) {
                 liquidado = '<div class="badge badge-danger badge-shadow">NO</div>';
 
             html += '<tr>' +
+                '             <td class="" idPedidoEspecial="'+dato.idPedidoEspecial+'" ></td>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
                 '             <td>' + dato.nombreCliente + '</td>' +
@@ -109,15 +111,14 @@ function onSuccessPedidosEspeciales(data) {
                 }
             html +='<a class="dropdown-item has-icon" href="javascript:imprimirTicketAlmacenes(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket Almacen </a>';
             html += '<a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Almacen</a>';
-                if (dato.existe_ticket==true)
-                    html += '                <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
+            if (dato.existe_ticket==true)
+                    html += ' <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
             if (dato.puede_devolver == true)
-                html += '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
+                html += '<a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
 
             if (dato.puede_facturar == true)
-                html += '                           <a class="dropdown-item has-icon" href="javascript:modalFacturar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
-
-            
+                //html += ' <a class="dropdown-item has-icon" href="javascript:FacturarPedidoEspecial(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
+                html += ' <a class="dropdown-item has-icon" href="javascript:modalFacturar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
 
             html += '                       </div>' +
                 '                           </div>' +
@@ -133,9 +134,44 @@ function onSuccessPedidosEspeciales(data) {
         if (tblPedidosEspeciales != null)
             tblPedidosEspeciales.destroy();
         InitDataTablePedidosEspeciales();
+       
     }
 }
 
+function initClickDetalle() {
+    $('#tblPedidosEspeciales tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = tblPedidosEspeciales.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            //  console.log(obtenerDetalleBitacora($(this).attr("idPedido")));
+            $.ajax({
+                url: rootUrl("/Bitacora/_DetalleBitacora"),
+                data: { idPedidoInterno: $(this).attr("idPedido") },
+                method: 'post',
+                dataType: 'html',
+                async: true,
+                beforeSend: function (xhr) {
+                    ShowLoader();
+                },
+                success: function (view) {
+                    OcultarLoader();
+                    row.child(view).show();
+                    tr.addClass('shown');
+                },
+                error: function (xhr, status) {
+                    OcultarLoader();
+                }
+            });
+
+        }
+    });
+}
 
 function completarCeros(valor) {
     return ('00' + valor).slice(-2);
@@ -171,6 +207,8 @@ function InitDataTablePedidosEspeciales() {
             tblPedidosEspeciales.table().container()
         );
     }
+
+    initClickDetalle();
 }
 
 function MostrarDetalle(idPedidoEspecial) {
@@ -185,6 +223,7 @@ function MostrarDetalle(idPedidoEspecial) {
             ShowLoader("Cargando...");
         },
         success: function (data) {
+            console.log("data detalle pedido especial" , data )
             OcultarLoader();
             var html = "";
             var result = JSON.parse(data);
@@ -197,6 +236,9 @@ function MostrarDetalle(idPedidoEspecial) {
                 html += '<th>Producto</th>';
                 html += '<th>Almacen</th>';
                 html += '<th>Cantidad</th>';
+                html += '<th>Cantidad Atendida</th>';
+                html += '<th>Cantidad Rechazada</th>';
+                html += '<th>Cantidad Aceptada</th>';
                 html += '<th>Monto</th>';
                 html += '<th>Precio Venta</th>';
                 html += '<th>Estatus</th>';
@@ -236,7 +278,10 @@ function MostrarDetalle(idPedidoEspecial) {
                         '             <td>' + dato.idPedidoEspecialDetalle + '</td>' +
                         '             <td>' + dato.descripcion + '</td>' +
                         '             <td>' + dato.Almacen + '</td>' +
-                        '             <td>' + dato.cantidad + '</td>' +
+                        '             <td> <div class="badge badge-warning badge-shadow">' + dato.cantidad + '</div></td>' +
+                        '             <td> <div class="badge badge-info badge-shadow">' + dato.cantidadAtendida + '</div></td>' +
+                        '             <td> <div class="badge badge-danger badge-shadow">' + dato.cantidadRechazada + '</div></td>' +
+                        '             <td>  <div class="badge badge-success badge-shadow">' + dato.cantidadAceptada + '</div></td>' +
                         '             <td>' + formatoMoneda(dato.monto) + '</td>' +
                         '             <td>' + formatoMoneda(dato.precioVenta) + '</td>' +
                         '             <td>' + estatus + '</td>' +

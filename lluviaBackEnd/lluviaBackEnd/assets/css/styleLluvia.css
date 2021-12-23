@@ -1,3 +1,14 @@
 ﻿.readonly {
     pointer-events: none;
 }
+
+
+td.details-control {
+    background: url('../../assets/img/details_open.png') no-repeat center center !important;
+    cursor: pointer !important;
+}
+
+tr.shown td.details-control {
+    background: url('../../assets/img/details_close.png') no-repeat center center !important;
+}
+
