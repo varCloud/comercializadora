@@ -1,17 +1,281 @@
-﻿
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models
+
 @{
-    Layout = null;
+    ViewBag.Title = "CierreCajas";
+    string titulo = "";
 }
 
-<!DOCTYPE html>
+@model Notificacion<dynamic>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>CierreCajas</title>
-</head>
-<body>
-    <div> 
+<style>
+    .clearfix {
+        margin-bottom: 0px;
+    }
+</style>
+
+<section class="section">
+    <div class="section-body">
+        <div class="row mt-sm-12">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>@Html.Raw(Convert.ToBoolean(Model.Modelo[0].cajaCerrada) ? "Caja cerrada" : "Cierre de cajas")</h4>
+                        @if (Convert.ToBoolean(Model.Modelo[0].cajaCerrada))
+                        {
+                            <div class="card-header-action">
+                                <div class="badge badge-info badge-shadow">Efectivo entregado en cierre: @Convert.ToSingle(Model.Modelo[0].EfectivoEntregadoEnCierre).ToString("C", new CultureInfo("en-US"))</div>
+                            </div>
+                        }
+
+
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+
+                                    @foreach (var item in Model.Modelo)
+                                    {
+
+                                        <p class="clearfix">
+                                            <span class="float-left"><strong>@item.descripcion</strong></span>
+                                        </p>
+                                        <hr style="margin-top:0px" />
+
+                                        if (Convert.ToInt32(item.idAlmacen) == 0)
+                                        {
+                                            titulo = "Abonos";
+                                        }
+                                        else
+                                        {
+                                            titulo = "Ventas";
+                                        }
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; @titulo contado</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasContado).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; @titulo tarjeta de crèdito</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTC).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; @titulo transferencias bancarias</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTransferencias).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; @titulo otras formas de pago</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasOtrasFormasPago).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        if (Convert.ToInt32(item.idAlmacen) > 0)
+                                        {
+                                            <p class="clearfix">
+                                                <span class="float-left">&nbsp;&nbsp; @titulo credito</span>
+                                                <span class="float-right text-muted">@Convert.ToSingle(item.VentasCredito).ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+
+                                            <p class="clearfix">
+                                                <span class="float-left">&nbsp;&nbsp; @titulo devoluciones</span>
+                                                <span class="float-right text-muted">@Convert.ToSingle(item.MontoDevoluciones).ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        }
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; <strong>Total efectivo</strong></span>
+                                            <span class="float-right text-muted"><strong>@Convert.ToSingle(item.TotalEfectivo).ToString("C", new CultureInfo("en-US"))</strong></span>
+                                        </p>
+                                        <br />
+
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <div class="form-group">
+
+                                    <p class="clearfix">
+                                        <span class="float-left"><strong>Resumen General</strong></span>
+                                    </p>
+                                    <hr style="margin-top:0px" />
+
+                                    @foreach (var item in Model.Modelo)
+                                    {
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp; @item.descripcionSaldo</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasContado).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Efectivo</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasContado).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Credito o transferencias</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTC).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                    }
+
+                                    <br />
+
+                                    <p class="clearfix">
+                                        <span class="float-left">Ingresos efectivo</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(Model.Modelo[0].MontoIngresosEfectivo).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left">Retiros efectivo</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(Model.Modelo[0].MontoRetirosEfectivo).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left"><strong>Saldo final en caja efectivo</strong></span>
+                                        <span class="float-right text-muted"><strong>@Convert.ToSingle(Model.Modelo[0].MontoCierreEfectivo).ToString("C", new CultureInfo("en-US"))</strong></span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left">Saldo final en caja efectivo tarjeta de crèdito y transferencias</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(Model.Modelo[0].MontoCierreTC).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+                                    <br />
+                                    <p class="clearfix">
+                                        <span class="float-left">No. devoluciones</span>
+                                        <span class="float-right text-muted">@Convert.ToInt32(Model.Modelo[0].noDevoluciones)</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left"><strong>Tickets</strong></span>
+                                    </p>
+                                    <hr style="margin-top:0px" />
+
+                                    <p class="clearfix">
+                                        <span class="float-left">&nbsp;&nbsp;Efectivo</span>
+                                        <span class="float-right text-muted">@Convert.ToInt32(Model.Modelo[0].NoTicketsEfectivo)</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left">&nbsp;&nbsp;Crèdito</span>
+                                        <span class="float-right text-muted">@Convert.ToInt32(Model.Modelo[0].NoTicketsCredito)</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left">&nbsp;&nbsp;En resguardo</span>
+                                        <span class="float-right text-muted">@Convert.ToInt32(Model.Modelo[0].NoPedidosEnResguardo)</span>
+                                    </p>
+
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+
+                        @if (Convert.ToBoolean(Model.Modelo[0].cajaCerrada) == false)
+                        {
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-lg-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Efectivo: </span>
+                                        </div>
+                                        <input id="efectivoEntregadoEnCierre" name="efectivoEntregadoEnCierre" type="text" class="form-control" onkeypress="return esDecimal(this, event);">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-6 text-right">
+                                    <div class="text-right"><button class="btn btn-primary" id="btnCierreCajasPedidosEspeciales">Realizar cierre de cajas</button></div>
+                                </div>
+
+                            </div>
+
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+</section>
+
+@*Modal Autorizar Cierre *@
+<div class="modal fade bd-example-modal-lg" id="ModalAutorizarCierre" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Autorizar Cierre de Caja</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6">
+
+                        <div class="form-group">
+                            <label>Usuario: </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                                <input id="usuarioAutoriza" name="usuarioAutoriza" class="form-control pwstrength" data-indicator="pwindicator">
+                            </div>
+                            <div id="pwindicator" class="pwindicator">
+                                <div class="bar"></div>
+                                <div class="label"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contraseña: </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                </div>
+                                <input id="contrasenaAutoriza" name="contrasenaAutoriza" type="password" class="form-control pwstrength" data-indicator="pwindicator">
+                            </div>
+                            <div id="pwindicator" class="pwindicator">
+                                <div class="bar"></div>
+                                <div class="label"></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="text-right" style="margin-top:15px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button> &nbsp;&nbsp;
+                            <button class="btn btn-success" id="btnAutorizarCierre" type="button">Autorizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/js/page/sweetalert.js"></script>
+    <script src="~/js/index.js"></script>
+    <script src="~/js/evtCierreCajasPedidosEspeciales.js"></script>
+}

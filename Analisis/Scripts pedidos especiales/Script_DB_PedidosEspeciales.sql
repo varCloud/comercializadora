@@ -38,6 +38,12 @@ begin
 	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por devolucion de pedido especial)', 1)
 end
 
+if not exists ( select 1 from CatEstatusRetiros where descripcion like 'Pendiente' )
+begin
+	insert into CatEstatusRetiros (idEstatusRetiro,descripcion) values (4,'Pendiente')
+end
+
+
 
 --delete CatTipoMovimientoInventario where idTipoMovInventario > 21
 
@@ -486,34 +492,25 @@ GO
 
 
 
--- PedidosEspecialesCierresPedidosEspeciales
+-- PedidosEspecialesCierres
 
-IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesCierresPedidosEspeciales' and xtype = 'u')
-	drop table PedidosEspecialesCierresPedidosEspeciales
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesCierres' and xtype = 'u')
+	drop table PedidosEspecialesCierres
 
 CREATE TABLE 
-	PedidosEspecialesCierresPedidosEspeciales	
+	PedidosEspecialesCierres	
 		(
-			idCierrePedidoEspecial				bigint primary key IDENTITY(1, 1),
-			monto								money,
+			idCierrePedidoEspecial				bigint primary key IDENTITY(1, 1),			
 			idUsuario							int,
 			idEstacion							int,
 			fechaAlta							datetime,		
 			idEstatusRetiro						int,		--este cat ya existe
 			montoAutorizado						money,
 			idUsuarioAut						int,
-			MontoRetiroEfectivo					money,
-			MontoTotalPedidosEspeciales			money,
-			MontoCierreDia						money,
-			MontoApertura						money,
-			MontoIngresoEfectivo				money,
-			MontoTotalPedidosContado			money,
-			MontoTotalPedidosTarjeta			money,
-			MontoTotalPedidosTransferencias		money,
-			MontoTotalPedidosOtros				money,
-			MontoTotalPedidosCancelados			money,
-			MontoTotalPedidosDevueltos			money,
-			TotalPedidos						int,	
+			MontoIngresosEfectivo				money,
+			MontoRetirosEfectivo				money,
+			MontoCierreEfectivo					money,
+			MontoCierreTC						money,
 			EfectivoEntregadoEnCierre			money,
 			noDevoluciones						int,
 			NoTicketsEfectivo					int,
@@ -521,86 +518,45 @@ CREATE TABLE
 			NoPedidosEnResguardo				int,
 		)
 GO
-GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesCierresPedidosEspeciales TO PUBLIC
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesCierres TO PUBLIC
 GO
 	
-ALTER TABLE PedidosEspecialesCierresPedidosEspeciales ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
+ALTER TABLE PedidosEspecialesCierres ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
 GO
 
-ALTER TABLE PedidosEspecialesCierresPedidosEspeciales ADD FOREIGN KEY (idEstacion) REFERENCES Estaciones (idEstacion)
-GO
-
---ALTER TABLE PedidosEspecialesCierresPedidosEspeciales ADD FOREIGN KEY (idEstatusRetiro) REFERENCES CatEstatusRetiros (idEstatusRetiro)
---GO
-
-ALTER TABLE PedidosEspecialesCierresPedidosEspeciales ADD FOREIGN KEY (idUsuarioAut) REFERENCES Usuarios (idUsuario)
+ALTER TABLE PedidosEspecialesCierres ADD FOREIGN KEY (idEstacion) REFERENCES Estaciones (idEstacion)
 GO
 
 
+-- PedidosEspecialesCierresDetalle
 
-
--- PedidosEspecialesCierresPedidosEspecialesDetalle
-
-IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesCierresPedidosEspecialesDetalle' and xtype = 'u')
-	drop table PedidosEspecialesCierresPedidosEspecialesDetalle
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesCierresDetalle' and xtype = 'u')
+	drop table PedidosEspecialesCierresDetalle
 
 CREATE TABLE 
-	PedidosEspecialesCierresPedidosEspecialesDetalle 
+	PedidosEspecialesCierresDetalle 
 		(
-			idCierrePedidoEspecial		bigint primary key IDENTITY(1, 1),
+			idCierreDetallePedidoEspecial		bigint primary key IDENTITY(1, 1),
+			idCierrePedidoEspecial	bigint,
 			idAlmacen					int,
-			VentasContado				int,
-			VentasTC					int,
-			VentasCredito				int,
-			MontoDevoluciones			money,
-			IngresoPorPagos				money
+			descripcion					varchar(250),
+			VentasContado				money default 0,
+			NoVentasContado				int default 0,
+			VentasTC					money default 0,
+			NoVentasTC					int default 0,
+			VentasTransferencias		money default 0,
+			NoVentasTransferencias		int default 0,
+			VentasOtrasFormasPago		money default 0,
+			NoVentasOtrasFormasPago		int default 0,
+			VentasCredito				money default 0,
+			NoVentasCredito				int default 0,
+			MontoDevoluciones			money default 0,
+			NoDevoluciones				int default 0,
+			TotalEfectivo			    money default 0,
+			TotalCreditoTransferencias  money default 0,
 		)
 GO
-GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesCierresPedidosEspecialesDetalle TO PUBLIC
-GO
-
-ALTER TABLE PedidosEspecialesCierresPedidosEspecialesDetalle ADD FOREIGN KEY (idAlmacen) REFERENCES Almacenes (idAlmacen)
-GO
-
-
-
-	
-
-	
-
-
-
--- PedidosEspecialesRetiroEfectivoPedidosEspeciales
-
-IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspecialesRetiroEfectivoPedidosEspeciales' and xtype = 'u')
-	drop table PedidosEspecialesRetiroEfectivoPedidosEspeciales
-
-CREATE TABLE 
-	PedidosEspecialesRetiroEfectivoPedidosEspeciales 
-		(
-			idRetiroPedidoEspecial			bigint primary key IDENTITY(1, 1),
-			montoRetiro						money,
-			idUsuario						int,
-			idEstacion						int,
-			fechaAlta						datetime,
-			idEstatusRetiro					int,
-			montoAutorizado					money,
-			idUsuarioAut					int,
-		)
-GO
-GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesRetiroEfectivoPedidosEspeciales TO PUBLIC
-GO
-	
-ALTER TABLE PedidosEspecialesRetiroEfectivoPedidosEspeciales ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
-GO
-
-ALTER TABLE PedidosEspecialesRetiroEfectivoPedidosEspeciales ADD FOREIGN KEY (idEstacion) REFERENCES Estaciones (idEstacion)
-GO
-
---ALTER TABLE PedidosEspecialesRetiroEfectivoPedidosEspeciales ADD FOREIGN KEY (idEstatusRetiro) REFERENCES CatEstatusRetiros (idEstatusRetiro)
---GO
-
-ALTER TABLE PedidosEspecialesRetiroEfectivoPedidosEspeciales ADD FOREIGN KEY (idUsuarioAut) REFERENCES Usuarios (idUsuario)
+GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspecialesCierresDetalle TO PUBLIC
 GO
 
 
@@ -746,22 +702,22 @@ go
 
 
 ------------------------------------------------------------------------------------------------------------------
-select * from PedidosEspeciales
-select * from PedidosEspecialesDetalle
-select * from PedidosEspecialesLog
-select * from PedidosEspecialesCuentasPorCobrar
-select * from PedidosEspecialesAbonosCuentasPorCobrar
-select * from PedidosEspecialesMovimientosDeMercancia
-select * from PedidosEspecialesCierresPedidosEspeciales
-select * from PedidosEspecialesCierresPedidosEspecialesDetalle
-select * from PedidosEspecialesRetiroEfectivoPedidosEspeciales
-select * from PedidosEspecialesDevoluciones
-select * from PedidosEspecialesDevolucionesDetalle
-select * from ConfiguracionesPedidosEspeciales
-select * from CatEstatusPedidoEspecial
-select * from CatTipoPagoPedidoEspecial
-select * from CatEstatusCuentaPorCobrar
-select * from CatEstatusPedidoEspecialDetalle
+--select * from PedidosEspeciales
+--select * from PedidosEspecialesDetalle
+--select * from PedidosEspecialesLog
+--select * from PedidosEspecialesCuentasPorCobrar
+--select * from PedidosEspecialesAbonosCuentasPorCobrar
+--select * from PedidosEspecialesMovimientosDeMercancia
+--select * from PedidosEspecialesCierresPedidosEspeciales
+--select * from PedidosEspecialesCierresPedidosEspecialesDetalle
+--select * from PedidosEspecialesRetiroEfectivoPedidosEspeciales
+--select * from PedidosEspecialesDevoluciones
+--select * from PedidosEspecialesDevolucionesDetalle
+--select * from ConfiguracionesPedidosEspeciales
+--select * from CatEstatusPedidoEspecial
+--select * from CatTipoPagoPedidoEspecial
+--select * from CatEstatusCuentaPorCobrar
+--select * from CatEstatusPedidoEspecialDetalle
 ------------------------------------------------------------------------------------------------------------------
 
 

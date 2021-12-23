@@ -1061,5 +1061,79 @@ namespace lluviaBackEnd.DAO
 
         #endregion
 
+        #region Cierre
+        public Notificacion<dynamic> ObtieneCierreDia(int idUsuario,int idEstacion,DateTime fecha)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@idEstacion", idEstacion);
+                parameters.Add("@fecha", fecha==DateTime.MinValue? (object)null : fecha);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_CIERRE_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<dynamic> ObtieneConfiguracionPedidosEspeciales(EnumTipoConfig tipoConfig)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idConfig", tipoConfig==0 ? (object) null : tipoConfig);               
+                notificacion = ConstructorDapper.Consultar("SP_OBTENER_CONFIGURACION_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public Notificacion<string> ValidaCierreCajas(int idUsuario)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);
+                notificacion = ConstructorDapper.Ejecutar("SP_VALIDA_CIERRE_CAJAS_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<string> RealizaCierreEstacion(int idUsuario,int idEstacion, float efectivoEntregadoEnCierre)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@idEstacion", idEstacion);
+                parameters.Add("@efectivoEntregadoEnCierre", efectivoEntregadoEnCierre);             
+                notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_CIERRE_PEDIDOS_ESPECIALES", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+
+        #endregion
+
     }
 }

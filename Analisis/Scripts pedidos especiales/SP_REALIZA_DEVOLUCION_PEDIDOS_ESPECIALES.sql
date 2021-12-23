@@ -55,6 +55,16 @@ BEGIN
 
 			delete #ProductosRecibidos where coalesce(productosDevueltos,0)=0
 
+			if not exists (select 1 from PedidosEspecialesIngresosEfectivo where idUsuario = @idUsuario and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idTipoIngreso=1)
+			begin				
+				raiserror ('Por poder realizar una devoluciòn, se requiere que se realize la apertura de cajas.', 11, -1)
+			end
+
+			if exists (select 1 from PedidosEspecialesCierres where idUsuario = @idUsuario and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idEstatusRetiro in (1,2)) 
+			begin
+				raiserror ('No se puede realizar la devoluciòn, ya que existe un cierre de cajas de hoy', 11, -1)
+			end	
+
 			
 			if not exists(select 1 from PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial)
 				select 'El pedido especial no existe'

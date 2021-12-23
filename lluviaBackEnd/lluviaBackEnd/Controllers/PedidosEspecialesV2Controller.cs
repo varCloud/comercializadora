@@ -546,23 +546,6 @@ namespace lluviaBackEnd.Controllers
         }
 
         /************** REIMPRIMIR TICKET  GENERAL********************/
-
-
-        public ActionResult CierreCajas()
-        {
-            try
-            {
-                Sesion usuario = Session["UsuarioActual"] as Sesion;
-                ViewBag.mostrarEfectivoEntregado = false;
-                return View();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
         public ActionResult Cotizaciones()
         {
             try
@@ -2041,6 +2024,69 @@ namespace lluviaBackEnd.Controllers
                 if (idTipoTicketPedidoEspecial == 2) //ticket devolucion
                     pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDevolucionPedidoEspecial(ticket));                
                 return Json(pdf, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region CierreCajas
+
+        public ActionResult CierreCajas()
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Notificacion<dynamic> cierreDia = new PedidosEspecialesV2DAO().ObtieneCierreDia(usuario.idUsuario, usuario.idEstacion, DateTime.MinValue);
+                return View(cierreDia);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult ObtenerConfiguracionPedidosEspeciales(EnumTipoConfig tipoConfig)
+        {
+            try
+            {
+                Notificacion<dynamic> notificacion = new PedidosEspecialesV2DAO().ObtieneConfiguracionPedidosEspeciales(tipoConfig);
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ValidarContrasena(string usuario, string contrasena)
+        {
+            try
+            {
+                Notificacion<Sesion> n = new VentasDAO().ValidaUsuario(usuario, contrasena, EnumTipoValidaUsr.AutorizarCierre);
+                return Json(n, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult RealizaCierreEstacion(float efectivoEntregadoEnCierre)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new Notificacion<string>();
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                notificacion = new PedidosEspecialesV2DAO().RealizaCierreEstacion(UsuarioActual.idUsuario,UsuarioActual.idEstacion, efectivoEntregadoEnCierre);
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
