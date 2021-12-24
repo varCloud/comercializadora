@@ -1116,7 +1116,7 @@ namespace lluviaBackEnd.DAO
         #endregion
 
         #region Cierre
-        public Notificacion<dynamic> ObtieneCierreDia(int idUsuario,int idEstacion,DateTime fecha)
+        public Notificacion<dynamic> ObtieneCierreDia(int idUsuario,int idEstacion,DateTime fecha,Int64 idCierrePedidoEspecial)
         {
             Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
             try
@@ -1125,6 +1125,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@idUsuario", idUsuario);
                 parameters.Add("@idEstacion", idEstacion);
                 parameters.Add("@fecha", fecha==DateTime.MinValue? (object)null : fecha);
+                parameters.Add("@idCierrePedidoEspecial", idCierrePedidoEspecial == 0 ? (object)null : idCierrePedidoEspecial);
                 notificacion = ConstructorDapper.Consultar("SP_CONSULTA_CIERRE_PEDIDOS_ESPECIALES", parameters);
             }
             catch (Exception ex)

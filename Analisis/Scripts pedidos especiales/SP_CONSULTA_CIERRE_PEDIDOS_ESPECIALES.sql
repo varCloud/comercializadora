@@ -15,7 +15,8 @@ status			200 = ok
 CREATE proc [dbo].[SP_CONSULTA_CIERRE_PEDIDOS_ESPECIALES]
 @idUsuario int,
 @idEstacion int,
-@fecha datetime=null
+@fecha datetime=null,
+@idCierrePedidoEspecial bigint=null
 
 as
 
@@ -29,7 +30,7 @@ as
 						@mensaje				varchar(255) = '',
 						@error_line				varchar(255) = '',
 						@error_procedure		varchar(255) = '',
-						@idCierrePedidoEspecial bigint,
+						--@idCierrePedidoEspecial bigint,
 						@idEstatusRetiro int=4--pendiente;
 			end  --declaraciones 
 
@@ -242,6 +243,8 @@ as
 				select  
 					ped.idCierrePedidoEspecial, 
 					CONVERT(VARCHAR(10),ped.fechaAlta,103) + ' ' + CONVERT(VARCHAR(20),ped.fechaAlta,114) fechaAlta,
+					CONVERT(VARCHAR(10),ped.fechaAlta,103) fechaTicket,
+					CONVERT(VARCHAR(20),ped.fechaAlta,114) horaTicket,
 					MontoIngresosEfectivo,
 					MontoRetirosEfectivo,
 					MontoCierreEfectivo,
@@ -262,9 +265,17 @@ as
 					det.VentasCredito,
 					det.MontoDevoluciones,
 					det.TotalEfectivo,
-					det.TotalCreditoTransferencias
+					det.TotalCreditoTransferencias,
+					us.nombre + ' ' + us.apellidoPaterno + ' ' + us.apellidoMaterno + ' ' nombreUsuario,
+					suc.descripcion descripcionSucursal,
+					al.descripcion descripcionAlmacen,
+					est.nombre + ' ' + cast(est.idEstacion as varchar) nombreEstacion
 					from PedidosEspecialesCierres ped
 				join PedidosEspecialesCierresDetalle det on ped.idCierrePedidoEspecial=ped.idCierrePedidoEspecial
+				join Usuarios us on ped.idUsuario=us.idUsuario
+				join Almacenes al on us.idAlmacen=al.idAlmacen
+				join Estaciones est on ped.idEstacion=est.idEstacion
+				join CatSucursales suc on al.idSucursal=suc.idSucursal
 				where ped.idCierrePedidoEspecial=@idCierrePedidoEspecial
 					
 		end -- reporte de estatus

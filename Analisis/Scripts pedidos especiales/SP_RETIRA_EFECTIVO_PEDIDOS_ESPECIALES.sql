@@ -38,6 +38,13 @@ as
 
 			begin -- principal
 
+				if exists (select 1 from PedidosEspecialesCierres where idUsuario = @idUsuario and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idEstatusRetiro in (1,2)) 
+				begin
+						select @mensaje = 'No se puede retirar efectivo, ya que existe un cierre de cajas de hoy.'						
+						raiserror (@mensaje, 11, -1)
+				
+				end
+
 				-- si todo bien
 				-- caso 1 = exceso de efectivo
 				if ( @caso = 1)

@@ -91,12 +91,12 @@
 function ImprimeTicketCierreCajas() {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ImprimeTicketCierreCajas"),
-        data: {  },
+        data: { idCierrePedidoEspecial:0 },
         method: 'post',
         dataType: 'html',
         async: true,
         beforeSend: function (xhr) {
-            ShowLoader();
+            ShowLoader("Imprimiendo ticket...");
         },
         success: function (data) {
             OcultarLoader();
@@ -169,11 +169,18 @@ function HacerCierre() {
         },
         success: function (data) {
             var result = JSON.parse(data); 
-            OcultarLoader();
-            MuestraToast(result.Estatus == 200 ? 'success' : 'error', result.Mensaje);
+            OcultarLoader();           
             if (result.Estatus) {
-                //ImprimeTicketRetiro(data.Modelo.idRetiro, 2);
-                location.href = rootUrl("PedidosEspecialesV2/CierreCajas/");
+                ImprimeTicketCierreCajas();
+                swal({
+                    title: "Mensaje",
+                    text: result.Mensaje,
+                    type: result.Estatus == 200 ? 'success' : 'error'
+                }).then(function () {
+                    window.location.href = rootUrl("/PedidosEspecialesV2/CierreCajas");        
+                    //"http://" + window.location.host + "/Ventas/ConsultaVentas";
+                });
+              
             }
         
             

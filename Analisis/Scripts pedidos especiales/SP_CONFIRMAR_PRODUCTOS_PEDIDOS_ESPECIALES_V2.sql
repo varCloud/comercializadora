@@ -132,6 +132,22 @@ as
 						raiserror (@mensaje, 11, -1)					
 					end
 				end
+
+				if not exists (select 1 from PedidosEspecialesIngresosEfectivo where idUsuario = @idUsuarioEntrega and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idTipoIngreso=1)
+				begin	
+						select @mensaje = 'Por poder realizar una devoluciòn, se requiere que se realize la apertura de cajas.'
+						select @valido = cast(0 as bit)
+						raiserror (@mensaje, 11, -1)
+				
+				end
+
+				if exists (select 1 from PedidosEspecialesCierres where idUsuario = @idUsuarioEntrega and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idEstatusRetiro in (1,2)) 
+				begin
+						select @mensaje = 'No se puede realizar la devoluciòn, ya que existe un cierre de cajas de hoy.'
+						select @valido = cast(0 as bit)
+						raiserror (@mensaje, 11, -1)
+				
+				end
 			
 			
 				begin -- inicio transaccion
@@ -816,7 +832,7 @@ as
 								idTipoTicketPedidoEspecial,idPedidoEspecial,idUsuario,cantidad,monto,comisionBancaria,
 								montoTotal,fechaAlta,observaciones,montoIVA
 							)
-					select	cast(1 as int) as idTipoTicketPedidoEspecial, idPedidoEspecial,idUsuario,cantidad,montoTotal,
+					select	cast(1 as int) as idTipoTicketPedidoEspecial, idPedidoEspecial,@idUsuarioEntrega,cantidad,montoTotal,
 							@montoComision as comisionBancaria,montoTotal,@fecha as fechaAlta,observaciones,@montoIVA as montoIVA
 					from	PedidosEspeciales
 					where	idPedidoEspecial = @idPedidoEspecial

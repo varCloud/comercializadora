@@ -23,9 +23,12 @@
                         <h4>@Html.Raw(Convert.ToBoolean(Model.Modelo[0].cajaCerrada) ? "Caja cerrada" : "Cierre de cajas")</h4>
                         @if (Convert.ToBoolean(Model.Modelo[0].cajaCerrada))
                         {
-                            <div class="card-header-action">
-                                <div class="badge badge-info badge-shadow">Efectivo entregado en cierre: @Convert.ToSingle(Model.Modelo[0].EfectivoEntregadoEnCierre).ToString("C", new CultureInfo("en-US"))</div>
-                            </div>
+                    <div class="card-header-action">
+                        <div class="badge badge-info badge-shadow">Efectivo entregado en cierre: @Convert.ToSingle(Model.Modelo[0].EfectivoEntregadoEnCierre).ToString("C", new CultureInfo("en-US"))</div>
+                        <a href="javascript:ImprimeTicketCierreCajas();" class="btn btn-primary">
+                            Imprimir Ticket
+                        </a>
+                    </div>
                         }
 
 
@@ -108,8 +111,7 @@
 
                                         <p class="clearfix">
                                             <span class="float-left">&nbsp;&nbsp; @item.descripcionSaldo</span>
-                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasContado).ToString("C", new CultureInfo("en-US"))</span>
-                                        </p>
+                                         </p>
 
                                         <p class="clearfix">
                                             <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Efectivo</span>
