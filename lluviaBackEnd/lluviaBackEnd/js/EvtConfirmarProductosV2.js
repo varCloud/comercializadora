@@ -294,10 +294,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
                 $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
                 return;
             }
-
-            montoTotal = $('#efectivo').val();
         
         }
+
+        montoPagado = $('#efectivo').val();
         
     }
 
@@ -662,6 +662,7 @@ function chkChangeTipoPago(chk) {
 
         document.getElementById("formaPago").disabled = false;
         $('#dvEfectivo').css('display', '');
+        $('#efectivo').val('');
         RevisarInputEfectivo(chk);
 
         document.getElementById("chkCredito").checked = false;
@@ -675,6 +676,7 @@ function chkChangeTipoPago(chk) {
     if (chk == 'chkCredito') {
 
         document.getElementById("formaPago").disabled = true;
+        $('#efectivo').val('');
         $('#dvEfectivo').css('display', 'none');
 
         document.getElementById("chkLiquidado").checked = false;
@@ -690,6 +692,7 @@ function chkChangeTipoPago(chk) {
 
         document.getElementById("formaPago").disabled = false;
         $('#dvEfectivo').css('display', '');
+        $('#efectivo').val('');
         RevisarInputEfectivo(chk);
 
         document.getElementById("chkLiquidado").checked = false;
