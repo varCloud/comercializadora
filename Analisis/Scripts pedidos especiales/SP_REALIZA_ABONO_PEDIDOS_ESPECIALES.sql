@@ -30,7 +30,16 @@ BEGIN
 			declare  	@tran_name varchar(32) = 'REALIZA_ABONO_ESPECIAL',
 						@tran_count int = @@trancount,
 						@tran_scope bit = 0
-						
+			
+			if not exists (select 1 from PedidosEspecialesIngresosEfectivo where idUsuario = @idUsuario and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idTipoIngreso=1)
+			begin				
+				raiserror ('Por poder realizar un abono, se requiere que se realize la apertura de cajas.', 11, -1)
+			end
+
+			if exists (select 1 from PedidosEspecialesCierres where idUsuario = @idUsuario and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idEstatusRetiro in (1,2)) 
+			begin
+				raiserror ('No se puede realizar el abono, ya que existe un cierre de cajas de hoy', 11, -1)
+			end	
 			
 			if not exists(select 1 from PedidosEspecialesCuentasPorCobrar where idCliente=@idCliente)
 				RAISERROR('El cliente no tiene adeudos', 15, 217)			

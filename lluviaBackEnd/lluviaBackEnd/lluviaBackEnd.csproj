@@ -1089,6 +1089,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\EvtAperturaCaja.js" />
     <Content Include="js\evtCierreCajas.js" />
+    <Content Include="js\evtCierreCajasPedidosEspeciales.js" />
     <Content Include="js\EvtCompras.js" />
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
