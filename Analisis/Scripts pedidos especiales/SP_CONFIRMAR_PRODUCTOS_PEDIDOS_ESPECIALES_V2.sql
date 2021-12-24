@@ -135,7 +135,7 @@ as
 
 				if not exists (select 1 from PedidosEspecialesIngresosEfectivo where idUsuario = @idUsuarioEntrega and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idTipoIngreso=1)
 				begin	
-						select @mensaje = 'Por poder realizar una devoluciòn, se requiere que se realize la apertura de cajas.'
+						select @mensaje = 'Por poder entregar los productos , se requiere que se realize la apertura de cajas.'
 						select @valido = cast(0 as bit)
 						raiserror (@mensaje, 11, -1)
 				
@@ -143,7 +143,7 @@ as
 
 				if exists (select 1 from PedidosEspecialesCierres where idUsuario = @idUsuarioEntrega and cast(fechaAlta as date)=cast(dbo.FechaActual() as date) and idEstatusRetiro in (1,2)) 
 				begin
-						select @mensaje = 'No se puede realizar la devoluciòn, ya que existe un cierre de cajas de hoy.'
+						select @mensaje = 'No se puede realizar la entrega de productos, ya que existe un cierre de cajas de hoy.'
 						select @valido = cast(0 as bit)
 						raiserror (@mensaje, 11, -1)
 				

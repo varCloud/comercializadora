@@ -113,8 +113,8 @@ as
 
 						--Ventas crèdito
 						update PedidosEspecialesCierresDetalle set 
-						VentasCredito=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idEstatusPedidoEspecial in(7) and idTipoTicketPedidoEspecial=1),
-						NoVentasCredito=(select ISNULL(sum(cantidad),0) from #productosVendidos where idEstatusPedidoEspecial in(7) and idTipoTicketPedidoEspecial=1)
+						VentasCredito=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1),
+						NoVentasCredito=(select ISNULL(sum(cantidad),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1)
 						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
 
 						--MontoDevoluciones
@@ -271,7 +271,7 @@ as
 					al.descripcion descripcionAlmacen,
 					est.nombre + ' ' + cast(est.idEstacion as varchar) nombreEstacion
 					from PedidosEspecialesCierres ped
-				join PedidosEspecialesCierresDetalle det on ped.idCierrePedidoEspecial=ped.idCierrePedidoEspecial
+				join PedidosEspecialesCierresDetalle det on ped.idCierrePedidoEspecial=det.idCierrePedidoEspecial
 				join Usuarios us on ped.idUsuario=us.idUsuario
 				join Almacenes al on us.idAlmacen=al.idAlmacen
 				join Estaciones est on ped.idEstacion=est.idEstacion
