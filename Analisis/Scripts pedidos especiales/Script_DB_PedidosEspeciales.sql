@@ -733,8 +733,15 @@ insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values (
 
 
 -- rol de taxi
-insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
+if not exists ( select 1 from CatRoles  where descripcion like '%Taxi%')
+begin
+	insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
+end
 
+if not exists ( select 1 from CatRoles  where descripcion like '%Ruta%')
+begin
+	insert into CatRoles  (descripcion, activo) values ( 'Ruta', cast(1 as bit) )
+end
 
 
 -- se agregan columnas en inventario detalle log para los movimientos de mercancia de pedidos especiales
