@@ -297,7 +297,12 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         
         }
 
-        montoPagado = $('#efectivo').val();
+        if ($('#efectivo').val() == "") {
+            montoPagado = parseFloat(0.0);
+        }
+        else {
+            montoPagado = $('#efectivo').val();
+        }
         
     }
 
