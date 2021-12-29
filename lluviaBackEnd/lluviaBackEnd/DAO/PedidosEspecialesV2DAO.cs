@@ -979,6 +979,29 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
+
+        public Notificacion<dynamic> ObtenerIngresosEfectivo(IngresoEfectivo ingresoEfectivo)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idTipoIngreso", ingresoEfectivo.idTipoIngreso == 0 ? (object)null : ingresoEfectivo.idTipoIngreso);
+                parameters.Add("@fecha", ingresoEfectivo.fechaAlta == DateTime.MinValue ? (object)null : ingresoEfectivo.fechaAlta);
+                parameters.Add("@idIngresoPedidoEspecial", ingresoEfectivo.idIngreso == 0 ? (object)null : ingresoEfectivo.idIngreso);
+                parameters.Add("@idUsuario", ingresoEfectivo.idUsuario == 0 ? (object)null : ingresoEfectivo.idUsuario);
+                parameters.Add("@idAlmacen", ingresoEfectivo.idAlmacen == 0 ? (object)null : ingresoEfectivo.idAlmacen);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_INGRESOS_EFECTIVO_PEDIDOS_ESPECIALES", parameters);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
         #endregion
 
         #region RetiroExcesoEfectivo
