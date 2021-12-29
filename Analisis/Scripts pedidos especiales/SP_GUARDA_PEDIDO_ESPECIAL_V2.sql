@@ -54,14 +54,12 @@ as
 						@ini							int = 0, 
 						@fin							int = 0,
 						@fecha							datetime,
-						--@cantProductosLiq				float = 0,
 						@idComisionBancaria				int = 0,
 						@porcentajeComisionBancaria		money = 0.0,
 						@tolerancia						money = 1.0,
 						@montoAgregarProductos			money = 0,
 						@ini_							int = 0,
 						@fin_							int = 0,
-						--@idPedidoEspecial				int = 0,
 						@idAlmacenSolicita				int = 0,
 						@idUbicacion					int = 0,
 						@idRaqResguardo					int = 0,
@@ -201,7 +199,6 @@ as
 						coalesce(p.precioIndividual, 0) as precioIndividual, 
 						coalesce(p.precioMenudeo, 0) as precioMenudeo, 
 						cast(0 as money) as precioRango, 
-						--@aplicaIVA as aplicaIVA ,  
 						cast(0 as money) as montoIva, 
 						cast(0 as money) as montoComisionBancaria,
 						cast(0 as money) as montoVenta, 
@@ -301,9 +298,9 @@ as
 												select	idUbicacion
 												from	Ubicacion 
 												where	idAlmacen = @idAlmacenSolicita
-													and idPasillo = @idPasilloResguardo --27
-													and idRaq = @idRaqResguardo --26
-													and idPiso = @idPisoResguardo --10
+													and idPasillo = @idPasilloResguardo --1000
+													and idRaq = @idRaqResguardo --1000
+													and idPiso = @idPisoResguardo --1000
 											)
 							begin 						
 								insert into Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) values (@idAlmacenSolicita, @idPasilloResguardo, @idRaqResguardo, @idPisoResguardo)
@@ -314,9 +311,9 @@ as
 							select	@idUbicacion = idUbicacion
 							from	Ubicacion 
 							where	idAlmacen = @idAlmacenSolicita
-								and idPasillo = @idPasilloResguardo --27
-								and idRaq = @idRaqResguardo --26
-								and idPiso = @idPisoResguardo --10
+								and idPasillo = @idPasilloResguardo --1000
+								and idRaq = @idRaqResguardo --1000
+								and idPiso = @idPisoResguardo --1000
 								 
 
 							if exists	(
@@ -441,7 +438,9 @@ as
 								and ub.idPiso not in (1000) -- que no sean ubicaciones de resguardo
 								and ub.idPasillo not in (1000) -- que no sean ubicaciones de resguardo
 								and ub.idRaq not in (1000) -- que no sean ubicaciones de resguardo
-
+								and ub.idPiso not in (0) -- que no sean ubicaciones sin acomodar
+								and ub.idPasillo not in (0) -- que no sean ubicaciones sin acomodar
+								and ub.idRaq not in (0) -- que no sean ubicaciones sin acomodar								
 								
 							if not exists ( select 1 from #tempExistencias)
 								begin
