@@ -1101,6 +1101,7 @@
     <Content Include="js\evtCotizaciones.js" />
     <Content Include="js\EvtDashboard.js" />
     <Content Include="js\EvtFacturasPedidosEspeciales.js" />
+    <Content Include="js\evtIngresosRetirosEfectivo.js" />
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
@@ -1345,6 +1346,7 @@
     <Content Include="Views\FacturaPedidosEspeciales\FacturaPedidosEspeciales.cshtml" />
     <Content Include="Views\FacturaPedidosEspeciales\_ObtenerFacturasPE.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_ObtenerTicketsPedidoEspecial.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\_IngresosRetirosEfectivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

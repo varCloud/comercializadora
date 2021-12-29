@@ -1266,6 +1266,301 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ImprimirTicketIngresoEfectivo(int idIngresoEfectivo)
+        {
+            Notificacion<Ventas> notificacion;
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Se envio el ticket a la impresora.";
+                notificacion.Estatus = 200;
+                bool ticketVistaPrevia = false;
+
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
+                {
+                    if (ticketVistaPrevia)
+                    {
+                        notificacion.Mensaje = "Abriendo Ticket.";
+                        string nombreImpresora = string.Empty;
+                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                        {
+                            if (strPrinter.Contains("PDF"))
+                            {
+                                nombreImpresora = strPrinter;
+                            }
+                        }
+
+                        if (nombreImpresora == string.Empty)
+                        {
+                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                            notificacion.Estatus = -1;
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        }
+                        else
+                        {
+                            pd.PrinterSettings = new PrinterSettings
+                            {
+                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                                PrintToFile = true,
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + idIngresoEfectivo.ToString() + "_preview.pdf"
+                            };
+                        }
+                    }
+                    else
+                    {
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    }
+                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtenerIngresosEfectivo(new IngresoEfectivo { idIngreso= idIngresoEfectivo });
+                    pd.PrintPage += (_sender, args) => pd_PrintPageIngresoEfectivo(null, args, _notificacion);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    pd.Print();
+                    pd.Dispose();
+                    this.indexProducto = 0;
+                    this.paginaActual = 0;
+                }
+
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Ventas>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+
+        void pd_PrintPageIngresoEfectivo(object sender, PrintPageEventArgs e, Notificacion<dynamic> ticketIngreso)
+        {
+
+            try
+            {
+                string titulo = string.Empty;
+
+                if ((EnumTipoIngresoEfectivo)ticketIngreso.Modelo[0].idTipoIngreso == EnumTipoIngresoEfectivo.AperturaCajas)
+                {
+                    titulo = "\nCOMPROBANTE DE " + "\n" + "APERTURA DE CAJAS" + "\n" + " PEDIDOS ESPECIALES";
+                }
+                else
+                {
+                    titulo = "\nCOMPROBANTE DE " + "\n" + "INGRESO DE EFECTIVO" + "\n" + "PEDIDOS ESPECIALES";
+                }
+
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+
+                int ancho = 258;
+                int espaciado = 14;
+
+                //Configuración Global
+                GraphicsUnit units = GraphicsUnit.Pixel;
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+                //Configuración Texto
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;//Cetrado
+                StringFormat izquierda = new StringFormat();
+                izquierda.Alignment = StringAlignment.Near; //Izquierda
+                StringFormat derecha = new StringFormat();
+                derecha.Alignment = StringAlignment.Far; //Izquierda
+
+                //Tipo y tamaño de letra
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
+
+                //Color de texto
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+                //Se pinta logo 
+                Rectangle logo = new Rectangle(80, 15, 280, 81);
+                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                e.Graphics.DrawString(titulo, Bold, drawBrush, datos, centrado);
+
+                Rectangle datosDescripcion = new Rectangle(5, 160, 280, 82);
+                Rectangle datosTikcet = new Rectangle(120, 160, 180, 82);
+
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosDescripcion, izquierda);
+                datosDescripcion.Y += 14;
+                datosTikcet.Y += 14;
+
+                e.Graphics.DrawString("Usuario: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(ticketIngreso.Modelo[0].nombreUsuario.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (ticketIngreso.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Fecha: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(ticketIngreso.Modelo[0].fechaAlta.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (ticketIngreso.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Sucursal: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(ticketIngreso.Modelo[0].Sucursal.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (ticketIngreso.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                e.Graphics.DrawString("Almacen: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString(ticketIngreso.Modelo[0].Almacen.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                if (ticketIngreso.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+                //e.Graphics.DrawString("Estación: ", font, drawBrush, datosDescripcion, izquierda);
+                //e.Graphics.DrawString(notificacion.Modelo[0].nombreEstacion.ToString(), font, drawBrush, datosTikcet, izquierda);
+
+                //if (notificacion.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                //{
+                //    datosDescripcion.Y += espaciado + 10;
+                //    datosTikcet.Y += espaciado + 10;
+                //}
+                //else
+                //{
+                //    datosDescripcion.Y += espaciado;
+                //    datosTikcet.Y += espaciado;
+                //}
+
+
+                e.Graphics.DrawString("Monto: ", font, drawBrush, datosDescripcion, izquierda);
+                e.Graphics.DrawString("" + Convert.ToSingle(ticketIngreso.Modelo[0].monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, datosTikcet, izquierda);
+
+                if (ticketIngreso.Modelo[0].nombreUsuario.ToString().Length >= 27)
+                {
+                    datosDescripcion.Y += espaciado + 10;
+                    datosTikcet.Y += espaciado + 10;
+                }
+                else
+                {
+                    datosDescripcion.Y += espaciado;
+                    datosTikcet.Y += espaciado;
+                }
+
+
+                Rectangle datosfooter1 = new Rectangle(5, datosDescripcion.Y, 280, 82);
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado + 50;
+
+
+                //e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                //datosfooter1.Y += espaciado;
+
+                //Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 5, 280, 82);
+
+                //e.Graphics.DrawString("  AUTORIZO  ", font, drawBrush, datosfooter2, centrado);
+                //datosfooter1.Y += espaciado;
+                //datosfooter2.Y += espaciado;
+
+                // para mas espaciado al final del ticket
+                //e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y + 30, centrado);
+                //datosfooter1.Y += espaciado;
+                //datosfooter2.Y += espaciado;
+            }
+            catch (InvalidPrinterException ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                ticketIngreso.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                ticketIngreso.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                ticketIngreso.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                ticketIngreso.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+        }
+
+        public ActionResult _IngresosRetirosEfectivo()
+        {
+            try
+            {
+                return PartialView();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult ValidaCajaAbierta()
+        {
+            try
+            {
+                Sesion usuario = (Sesion)Session["UsuarioActual"];
+                Boolean cajaAbierta=new PedidosEspecialesV2DAO().ValidaAperturaCajas(usuario.idUsuario).Estatus == 200 ? true : false;
+                return Json(cajaAbierta,JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
+
+
         #endregion
 
         #region RetiroExcesoEfectivo
@@ -1616,7 +1911,7 @@ namespace lluviaBackEnd.Controllers
 
                 int posXFooter = 285;
                 montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
-                suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
+                suCambio = montoPagado==0? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
 
@@ -2249,7 +2544,7 @@ namespace lluviaBackEnd.Controllers
 
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
                     e.Graphics.DrawString("COMPROBANTE POR CIERRE DE CAJA DEL DIA", Bold, drawBrush, datos, centrado);
-  
+
                     postTicketY = datos.Y + espaciado + espaciado + espaciado;
                     Rectangle datosEnca = new Rectangle(0, postTicketY, 295, 82);
                     e.Graphics.DrawString("  Ticket cierre: " + ticket.Modelo[0].idCierrePedidoEspecial.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
@@ -2306,7 +2601,7 @@ namespace lluviaBackEnd.Controllers
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
 
-                    e.Graphics.DrawString(" " + titulo + " tarjeta de crèdito" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(" " + titulo + " tarjeta de crédito" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
@@ -2324,7 +2619,7 @@ namespace lluviaBackEnd.Controllers
                     if (Convert.ToInt32(ticket.Modelo[i].idAlmacen) > 0)
                     {
 
-                        e.Graphics.DrawString(" " + titulo + " credito" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString(" " + titulo + " crédito" + " \n", font, drawBrush, datosProducto, izquierda);
                         e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasCredito).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosPrecio.Y += espaciado;
@@ -2383,7 +2678,7 @@ namespace lluviaBackEnd.Controllers
                         datosProducto.Y += espaciado;
                         datosPrecio.Y += espaciado;
 
-                        e.Graphics.DrawString("  " + "Credito o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString("  " + "Crédito o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
                         e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosPrecio.Y += espaciado;
@@ -2408,7 +2703,7 @@ namespace lluviaBackEnd.Controllers
 
 
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
-                if (indexProducto == ticket.Modelo.Count +ticket.Modelo.Count +2)
+                if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 2)
                 {
                     e.Graphics.DrawString("Ingresos efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoIngresosEfectivo).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
@@ -2443,7 +2738,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 5)
                 {
-                    e.Graphics.DrawString("Saldo final en caja efectivo tarjeta de crèdito y transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString("Saldo final en caja tarjeta de crédito y transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoCierreTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado + 10;
                     datosPrecio.Y += espaciado + 10;
@@ -2487,7 +2782,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 9)
                 {
-                    e.Graphics.DrawString(" Crèdito" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(" Crédito" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToInt32(ticket.Modelo[0].NoTicketsCredito) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
@@ -2620,9 +2915,9 @@ namespace lluviaBackEnd.Controllers
                 //datosfooter1.Y += espaciado;
                 //if (this.insertaPagina(datosfooter1.Y, ref e)) return;
 
-                if (this.insertaPagina(datosfooter1.Y, ref e)) return;               
+                if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto >= ticket.Modelo.Count + ticket.Modelo.Count + 12)
-                {                   
+                {
                     e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
                     datosfooter1.Y += espaciado + 50;
                     indexProducto++;
@@ -2635,7 +2930,7 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     indexProducto++;
                 }
-                
+
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto >= ticket.Modelo.Count + ticket.Modelo.Count + 14)
@@ -2654,7 +2949,7 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
                     indexProducto++;
-                }        
+                }
 
             }
             catch (InvalidPrinterException ex)

@@ -126,7 +126,7 @@ as
 						--Total
 						update p set 
 							TotalEfectivo= dbo.redondear(VentasContado-MontoDevoluciones),
-							TotalCreditoTransferencias=(VentasTC + VentasTransferencias + VentasOtrasFormasPago + VentasCredito)
+							TotalCreditoTransferencias=(VentasTC + VentasTransferencias + VentasOtrasFormasPago)
 						from PedidosEspecialesCierresDetalle p where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
 
 						drop table #productosVendidos;
@@ -147,7 +147,7 @@ as
 					and activo=1
 
 					insert into PedidosEspecialesCierresDetalle(idCierrePedidoEspecial,idAlmacen,descripcion)
-					select @idCierrePedidoEspecial,@idAlmacen,'Ingresos por pagos crèdito'
+					select @idCierrePedidoEspecial,@idAlmacen,'Ingresos por pagos crédito'
 
 					--abonos de contado
 					update PedidosEspecialesCierresDetalle set 
@@ -200,7 +200,7 @@ as
 					where idCierrePedidoEspecial=@idCierrePedidoEspecial
 
 					update PedidosEspecialesCierres set 
-					NoTicketsEfectivo=(select count(1) from TicketsPedidosEspeciales t join PedidosEspeciales ped on t.idPedidoEspecial=ped.idPedidoEspecial where t.idTipoTicketPedidoEspecial=1 and ped.idFactFormaPago=1 and t.idUsuario=@idUsuario and casT(t.fechaAlta as date)=cast(@fecha as date))
+					NoTicketsEfectivo=(select count(1) from TicketsPedidosEspeciales t join PedidosEspeciales ped on t.idPedidoEspecial=ped.idPedidoEspecial where t.idTipoTicketPedidoEspecial=1 and ped.idFactFormaPago=1 and ped.idEstatusPedidoEspecial in (4,6) and t.idUsuario=@idUsuario and casT(t.fechaAlta as date)=cast(@fecha as date))
 					where idCierrePedidoEspecial=@idCierrePedidoEspecial
 
 					update PedidosEspecialesCierres set 

@@ -2357,7 +2357,7 @@ namespace lluviaBackEnd.Utilerias
                 }
 
                 montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
-                suCambio = montoPagado - monto - montoIVA - montoComisionBancaria;
+                suCambio = montoPagado==0 ? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
                 //suCambioAgregarProductos = montoPagadoAgregarProductos - montoAgregarProductos;
 
                 html += @" <tr>
