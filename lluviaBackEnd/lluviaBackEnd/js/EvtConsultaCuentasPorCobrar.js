@@ -90,7 +90,7 @@ function InitDataTableCuentasPorCobrar() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2]
+                        columns: [0, 1, 2 ,3 ,4]
                     },
                 },
             ],
