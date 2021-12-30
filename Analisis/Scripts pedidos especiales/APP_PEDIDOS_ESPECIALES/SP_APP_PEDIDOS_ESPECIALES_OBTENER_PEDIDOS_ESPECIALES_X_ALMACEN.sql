@@ -25,6 +25,7 @@ BEGIN
 			from PedidosEspeciales  PE join  PedidosEspecialesDetalle PED
 			on PE.idPedidoEspecial = PED.idPedidoEspecial and PED.idAlmacenDestino = @idAlmacen
 			and PED.idEstatusPedidoEspecialDetalle = coalesce(@idEstatusPedidoEspecialDetalle, PED.idEstatusPedidoEspecialDetalle)
+			where PE.idEstatusPedidoEspecial <> 2
 			group by PED.idPedidoEspecial, PED.idAlmacenDestino ,case when PED.idEstatusPedidoEspecialDetalle <> 1 then 'Atendido' else 'Solicitado' end) PED 
 		ON PE.idPedidoEspecial = PED.idPedidoEspecial
 
