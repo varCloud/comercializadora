@@ -69,7 +69,8 @@ as
 						@idFactMetodoPago			int = 0,
 						@idPedidoEspecialMayoreo_	int = 0,
 						@idUbicacionResguardo		int = 0,
-						@idTicketPedidoEspecial		int = 0
+						@idTicketPedidoEspecial		int = 0,
+						@liquidado					bit = cast(0 as bit)
 
 				create table 
 					#cantidadSolicitada 
@@ -211,7 +212,14 @@ as
 						left join #cantidadAceptada cac
 							on cac.id = p_.id
 
-													   
+				-- el pedido esta liquidado si tiene los siguientes status
+				-- 4	Entregado y pagado
+				-- 6	Pagado
+				if ( @idEstatusPedidoEspecial in (4,6) )
+					begin
+						select @liquidado = cast(1 as bit)
+					end
+
 				select	@idCliente = idCliente,
 						@idUsuario = idUsuario,
 						@idPedidoEspecialMayoreo_ = idTicketMayoreo
@@ -240,6 +248,7 @@ as
 				if ( ( @aCredito = cast(1 as bit) ) or ( @aCreditoConAbono = cast(1 as bit) ) )
 					begin	
 						select @idFactMetodoPago = 2  --2	PPD	Pago en parcialidades o diferido
+						select @idFactFormaPago = formaPago from FactCatFormaPago where id = 100
 					end
 				else
 					begin
@@ -288,7 +297,8 @@ as
 						idFactMetodoPago = @idFactMetodoPago,
 						idFactFormaPago = @idFactFormaPago,
 						idFactUsoCFDI = @idFactUsoCFDI,
-						montoPagado = @montoPagado
+						montoPagado = @montoPagado,
+						liquidado = @liquidado
 				where	idPedidoEspecial = @idPedidoEspecial
 
 
@@ -377,9 +387,9 @@ as
 						from	#productos p
 									left join Ubicacion u
 										on p.idAlmacenOrigen = u.idAlmacen
-						where	u.idPasillo = 0
-							and	u.idRaq = 0
-							and u.idPiso = 0
+						where	u.idPasillo = 1001
+							and	u.idRaq = 1001
+							and u.idPiso = 1001
 
 							
 						-- si no existe insertamos la ubicacion sin acomodar
@@ -388,7 +398,7 @@ as
 									)
 						begin
 							insert into Ubicacion (idAlmacen, idPasillo, idRaq, idPiso)
-							select idAlmacenOrigen, 0,0,0 from #tempUbicacionesDevoluciones_
+							select idAlmacenOrigen, 1001,1001,1001 from #tempUbicacionesDevoluciones_
 						end
 						
 						
@@ -417,7 +427,7 @@ as
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (
 											select	p.idProducto,  p.cantidadRechazada												
@@ -431,7 +441,7 @@ as
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.noAceptados, actuales.cantidad + rechazados.noAceptados as cantidadActual,
 								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
-								@idUsuarioEntrega as idUsuario, cast(@fecha as date) as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	
 											select	p.idProducto,  (sum(p.cantidadAtendida) - sum(cantidadAceptada)) as noAceptados
@@ -486,9 +496,9 @@ as
 													 )rechazados on rechazados.idProducto = temp.idProducto
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
-													and	u.idPasillo = 0
-													and u.idRaq = 0
-													and u.idPiso = 0
+													and	u.idPasillo = 1001
+													and u.idRaq = 1001
+													and u.idPiso = 1001
 												join InventarioDetalle actuales
 													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
@@ -538,9 +548,9 @@ as
 													 )rechazados on rechazados.idProducto = temp.idProducto
 												join Ubicacion u
 													on	u.idAlmacen = temp.idAlmacenOrigen
-													and	u.idPasillo = 0
-													and u.idRaq = 0
-													and u.idPiso = 0
+													and	u.idPasillo = 1001
+													and u.idRaq = 1001
+													and u.idPiso = 1001
 												join InventarioDetalle actuales
 													on actuales.idProducto = temp.idProducto and actuales.idUbicacion = u.idUbicacion 
 								)A
@@ -616,9 +626,9 @@ as
 															join Ubicacion u
 																on	u.idUbicacion = id.idUbicacion
 																and	u.idAlmacen = p.idAlmacenOrigen
-												where	u.idPasillo = 0
-													and u.idRaq = 0
-													and u.idPiso = 0
+												where	u.idPasillo = 1001
+													and u.idRaq = 1001
+													and u.idPiso = 1001
 												group by p.idProducto, p.idAlmacenOrigen, u.idUbicacion															
 											)ubicacionRegresar
 												on ubicacionRegresar.idProducto = idl.idProducto

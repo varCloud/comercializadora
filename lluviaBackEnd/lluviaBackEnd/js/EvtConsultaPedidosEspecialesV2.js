@@ -85,6 +85,15 @@ function onSuccessPedidosEspeciales(data) {
             else
                 liquidado = '<div class="badge badge-danger badge-shadow">NO</div>';
 
+            var facturado = "";
+
+            if (dato.facturado == "SI")
+                facturado = '<div class="badge badge-success badge-shadow">SI</div>';
+            else
+                facturado = '<div class="badge badge-danger badge-shadow">NO</div>';
+
+
+
             html += '<tr>' +
                 '             <td class="" idPedidoEspecial="'+dato.idPedidoEspecial+'" ></td>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
@@ -94,7 +103,7 @@ function onSuccessPedidosEspeciales(data) {
                 '             <td>' + dato.cantidad + '</td>' +
                 '             <td>' + formatoMoneda(dato.montoTotal) + '</td>' +
                 '             <td>' + estatus + '</td>' +
-                '             <td>' + dato.facturado + '</td>' +
+                '             <td>' + facturado + '</td>' +
                 '             <td>' + liquidado + '</td>' +
                 '             <td>' + dato.codigoBarras + '</td>' +
                 '             <td>' + dato.observaciones + '</td>' +

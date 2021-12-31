@@ -56,3 +56,11 @@ select * from [dbo].[CatPasillo] where idPasillo = 1001
 select * from [dbo].[CatRaq] where idRaq = 1001
 select * from [dbo].[CatPiso] where idPiso = 1001
 */
+
+if not exists ( select 1 from Ubicacion where idPasillo = 1001 and idRaq = 1001 and idPiso = 1001 )
+begin
+	insert into Ubicacion (idAlmacen, idPasillo,idRaq,idPiso) 
+	select idAlmacen, 1001,1001,1001 from Almacenes 
+end
+
+select * from Ubicacion where idPasillo = 1001

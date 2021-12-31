@@ -187,7 +187,7 @@ GO
 
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'PedidosEspeciales' and xtype = 'u')
 	drop table PedidosEspeciales
-
+	
 CREATE TABLE 
 	PedidosEspeciales 
 		(
@@ -213,7 +213,8 @@ CREATE TABLE
 			idFactUsoCFDI					int,
 			montoPagado						money,
 			idUsuarioCancelacion			int,
-			fechaCancelacion				datetime
+			fechaCancelacion				datetime,
+			esRevisionHandHeld				bit
 		)
 GO
 GRANT SELECT, INSERT, UPDATE, DELETE ON PedidosEspeciales TO PUBLIC

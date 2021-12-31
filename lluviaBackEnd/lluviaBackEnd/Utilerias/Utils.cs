@@ -2356,8 +2356,14 @@ namespace lluviaBackEnd.Utilerias
                                 </tr>";
                 }
 
-                montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
-                suCambio = montoPagado==0 ? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
+                if ( (ticket.Modelo[0].descFormaPago.ToString()) == "Crédito") {
+                    montoPagado = 0;
+                    suCambio = 0;
+                }
+                else {
+                    montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
+                    suCambio = montoPagado == 0 ? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
+                }
                 //suCambioAgregarProductos = montoPagadoAgregarProductos - montoAgregarProductos;
 
                 html += @" <tr>

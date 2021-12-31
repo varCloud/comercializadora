@@ -64,7 +64,8 @@ as
 						@idUbicacion					int = 0,
 						@idRaqResguardo					int = 0,
 						@idPisoResguardo				int = 0,
-						@idPasilloResguardo				int = 0
+						@idPasilloResguardo				int = 0,
+						@esRevisionHandHeld				bit = cast(0 as bit)
 
 					
 				create table
@@ -339,7 +340,8 @@ as
 					else  --if ( @tipoRevision = 1 )  --ticket
 						begin
 							
-							select @idUbicacion = null
+							select	@idUbicacion = null,
+									@esRevisionHandHeld = cast(1 as bit)
 
 						end
 
@@ -358,19 +360,26 @@ as
 								PedidosEspeciales
 									(
 										idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idEstatusPedidoEspecial,
-										idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo
+										idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo,esRevisionHandHeld
 									)
 
 							select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 
 									@idUsuario as idUsuario, @idEstatusPedidoEspecial as idEstatusPedidoEspecial,@idEstacion as idEstacion, 
-									null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi, @idPedidoEspecialMayoreo_
+									null as observaciones, null as codigoBarras, null as idTipoPago, null as idUsuarioEntrega, null as numeroUnidadTaxi, 
+									@idPedidoEspecialMayoreo_, @esRevisionHandHeld as esRevisionHandHeld
 
 							select @idPedidoEspecial = max(idPedidoEspecial)  from PedidosEspeciales
 						end
 					else
 						begin
-							update PedidosEspeciales set idCliente=@idCliente,cantidad=@totalProductos,idUsuario=@idUsuario,montoTotal=@montoTotal,
-							idEstatusPedidoEspecial=@idEstatusPedidoEspecial,idEstacion=@idEstacion
+							update	PedidosEspeciales 
+							set		idCliente = @idCliente,
+									cantidad = @totalProductos,
+									idUsuario = @idUsuario,
+									montoTotal = @montoTotal,
+									idEstatusPedidoEspecial = @idEstatusPedidoEspecial,
+									idEstacion = @idEstacion
+							where	idPedidoEspecial = @idPedidoEspecial
 						end
 
 
@@ -441,6 +450,10 @@ as
 								and ub.idPiso not in (0) -- que no sean ubicaciones sin acomodar
 								and ub.idPasillo not in (0) -- que no sean ubicaciones sin acomodar
 								and ub.idRaq not in (0) -- que no sean ubicaciones sin acomodar								
+								and ub.idPiso not in (1001) -- que no sean ubicaciones de devolucion de pedido especial
+								and ub.idPasillo not in (1001) -- que no sean ubicaciones de devolucion de pedido especial
+								and ub.idRaq not in (1001) -- que no sean ubicaciones de devolucion de pedido especial
+
 								
 							if not exists ( select 1 from #tempExistencias)
 								begin
