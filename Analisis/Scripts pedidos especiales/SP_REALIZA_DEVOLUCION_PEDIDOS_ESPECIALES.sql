@@ -26,7 +26,8 @@ BEGIN
 						@tran_count int = @@trancount,
 						@tran_scope bit = 0,
 						@idTipoTicketPedidoEspecial int=2, --ticket devolucion
-						@fechaActual datetime=dbo.fechaActual();
+						@fechaActual datetime=dbo.fechaActual(),
+						@Mensaje varchar(500);
 
 			IF OBJECT_ID('tempdb..#ProductosRecibidos') IS NOT NULL
 				DROP TABLE #ProductosRecibidos
@@ -67,18 +68,18 @@ BEGIN
 
 			
 			if not exists(select 1 from PedidosEspeciales where idPedidoEspecial=@idPedidoEspecial)
-				select 'El pedido especial no existe'
+				raiserror ('El pedido especial no existe', 11, -1)
 
 			if exists ( select 1 from FacturasPedidosEspeciales where idPedidoEspecial = @idPedidoEspecial and idEstatusFactura = 1 )
 			begin
-				select 'No puede hacer una devolucion en un pedido especial facturado.'
+				raiserror ('No puede hacer una devolucion en un pedido especial facturado.', 11, -1)
 			end
 
 			if not exists (select 1 from PedidosEspeciales where idPedidoEspecial = @idPedidoEspecial and idEstatusPedidoEspecial in (4,6) )
 			begin
 				declare @estatus varchar(100)
-				select @estatus=e.descripcion from PedidosEspeciales p join CatEstatusPedidoEspecial e on p.idEstatusPedidoEspecial=e.idEstatusPedidoEspecial where idPedidoEspecial=@idPedidoEspecial
-				select 'No puede hacer una devolucion en un pedido especial ' + @estatus
+				select @estatus='No puede hacer una devolucion en un pedido especial ' + e.descripcion from PedidosEspeciales p join CatEstatusPedidoEspecial e on p.idEstatusPedidoEspecial=e.idEstatusPedidoEspecial where idPedidoEspecial=@idPedidoEspecial
+				raiserror (@estatus, 11, -1)
 			end
 
 			if exists (select 1
@@ -86,7 +87,7 @@ BEGIN
 				on PR.idPedidoEspecialDetalle = PD.idPedidoEspecialDetalle and PD.idPedidoEspecial=@idPedidoEspecial
 				where PD.idPedidoEspecialDetalle is null)
 			begin
-				select 'El pedido contiene productos que no corresponden al pedido especial'				
+				raiserror ('El pedido contiene productos que no corresponden al pedido especial', 11, -1)				
 			end		
 			
 			if @tran_count = 0
@@ -106,7 +107,7 @@ BEGIN
 
 				if exists ( select 1 from #ProductosRecibidos where (cantidad - productosDevueltos) < 0 )
 				begin
-					select 'No puede regresar mas productos de los que se vendieron.'	
+					raiserror ('No puede regresar mas productos de los que se vendieron.', 11, -1)	
 				end
 
 				BEGIN-- DECLARACIONES
@@ -134,13 +135,14 @@ BEGIN
 				from #ProductosRecibidos
 
 				select @montoTotal=@monto+@comisionBancaria
-
-				if(@montoDevuelto!=@monto)
-				begin
-				 select 'El monto total no coincide con lo que se le cobro al cliente ' + cast(@montoDevuelto as varchar) + ' monto total: ' + cast(@montoTotal as varchar)							
+				
+				if(@montoDevuelto!=@montoTotal)
+				begin				 
+				 select @Mensaje='El monto total no coincide con lo que se le cobro al cliente ' + cast(@montoDevuelto as varchar) + ' monto total: ' + cast(@montoTotal as varchar)							
+				 raiserror (@Mensaje, 11, -1)
 				end
 
-				select @idAlmacen=idAlmacen from Usuarios where idUsuario=@idUsuario
+				--select @idAlmacen=idAlmacen from Usuarios where idUsuario=@idUsuario
 
 
 				INSERT INTO ticketspedidosespeciales (idTipoTicketPedidoEspecial,idPedidoEspecial,idUsuario,cantidad,monto,comisionBancaria,montoIVA,montoTotal,fechaAlta,observaciones)
@@ -155,7 +157,7 @@ BEGIN
 
 					select @cantidadDevuelta=productosDevueltos from #ProductosRecibidos where idPedidoEspecialDetalle=@idPedidoEspecialDetalle
 
-					select @idProducto=idProducto 
+					select @idProducto=idProducto,@idAlmacen=idAlmacenDestino 
 					from PedidosEspecialesDetalle where idPedidoEspecialDetalle=@idPedidoEspecialDetalle
 
 					select @cantidadActualInvGeneral=cantidad from InventarioGeneral where idProducto=@idProducto
@@ -166,21 +168,28 @@ BEGIN
 					update InventarioGeneral set cantidad=dbo.redondear(cantidad+@cantidadDevuelta) where idProducto=@idProducto
 
 
-					if not exists(select 1 from Ubicacion where idAlmacen=@idAlmacen and idPasillo = 0 and idRaq = 0 and idPiso = 0)
+					if not exists(select 1 from Ubicacion where idAlmacen=@idAlmacen and idPasillo = 1001 and idRaq = 1001 and idPiso = 1001)
 					begin
 						insert into Ubicacion (idAlmacen, idPasillo, idRaq, idPiso)
-						select @idAlmacen, 0,0,0	
+						select @idAlmacen, 1001,1001,1001	
 					end
 
-					select @idUbicacion=idUbicacion from Ubicacion where idAlmacen=@idAlmacen and idPasillo = 0 and idRaq = 0 and idPiso = 0
+					select @idUbicacion=idUbicacion from Ubicacion where idAlmacen=@idAlmacen and idPasillo = 1001 and idRaq = 1001 and idPiso = 1001
 
 					insert into InventarioDetalleLog(idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idPedidoEspecial)
 					select @idUbicacion,@idProducto,@cantidadDevuelta,dbo.redondear(cantidad+@cantidadDevuelta),@idTipoMovInventario,@idUsuario,@fechaActual,@idPedidoEspecial 
 					from InventarioDetalle where idProducto=@idProducto and idUbicacion=@idUbicacion
 
-
-					update InventarioDetalle set cantidad=dbo.redondear(cantidad+@cantidadDevuelta) where idProducto=@idProducto and idUbicacion=@idUbicacion
-
+					if not exists(select 1 from inventarioDetalle where idUbicacion=@idUbicacion and idProducto=@idProducto)
+					begin
+						insert into InventarioDetalle(idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
+						select @idProducto,@cantidadDevuelta,@fechaActual,@idUbicacion,@fechaActual
+					end
+					else
+					begin
+						update InventarioDetalle set cantidad=dbo.redondear(cantidad+@cantidadDevuelta),fechaActualizacion=@fechaActual where idProducto=@idProducto and idUbicacion=@idUbicacion
+					end	
+					
 					update a set 
 					cantidad=dbo.redondear(a.cantidad-@cantidadDevuelta),
 					monto=dbo.redondear(dbo.redondear(a.cantidad-@cantidadDevuelta) * a.precioVenta),

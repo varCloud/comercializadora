@@ -263,6 +263,7 @@ as
 					det.VentasTransferencias,
 					det.VentasOtrasFormasPago,
 					det.VentasCredito,
+					COALESCE(det.VentasTC,0) + COALESCE(det.VentasTransferencias,0) VentasTDCTransferencias,
 					det.MontoDevoluciones,
 					det.TotalEfectivo,
 					det.TotalCreditoTransferencias,

@@ -540,10 +540,16 @@ function abrirModalGuardarPedidoEspecial(tipo) {
         //document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
     
         if (tipo === 2) { //cotizacion
+            if ($('#idPedidoEspecial').val() > 0) {
+                $('#TituloModalPedidoEspecial').html('Guardar cambios cotizaciòn');
+            }
+            else {
+                $('#TituloModalPedidoEspecial').html('Generar Cotizaciòn');
+            }
             $('#divCotizar').css('display', 'block');
             $('#buttonCerrar').css('display', 'none');
             $('#divTipoRevision').css('display', 'none');
-            $('#TituloModalPedidoEspecial').html('Generar Cotizaciòn');
+            
         }
         $('#ModalGuardarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
     }
@@ -600,7 +606,7 @@ $('#btnCotizar').click(function (e) {
 
     swal({
         title: 'Mensaje',
-        text: '¿Esta seguro que desea hacer guardar este pedido especial como una cotización?',
+        text: $("#idPedidoEspecial").val() > 0 ? '¿Esta seguro que desea guardar los cambios de esta cotización?' :'¿Esta seguro que desea hacer guardar este pedido especial como una cotización?',
         icon: 'info',
         buttons: ["No", "Sí"],
         dangerMode: true,

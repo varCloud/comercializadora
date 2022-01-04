@@ -346,6 +346,11 @@
                                     <button id="btnGeneraCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>
                                 }
 
+                                @if (Model.idPedidoEspecial > 0 && Model.idEstatusPedidoEspecial==2)
+                                {
+                                    <button id="btnGeneraCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar cambios cotización</button>
+                                }
+
                             </div>
                         </div>
 

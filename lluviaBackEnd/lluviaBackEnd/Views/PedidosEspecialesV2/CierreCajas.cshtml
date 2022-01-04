@@ -111,7 +111,7 @@
 
                                         <p class="clearfix">
                                             <span class="float-left">&nbsp;&nbsp; @item.descripcionSaldo</span>
-                                         </p>
+                                        </p>
 
                                         <p class="clearfix">
                                             <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Efectivo</span>
@@ -119,9 +119,23 @@
                                         </p>
 
                                         <p class="clearfix">
-                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Crédito o transferencias</span>
-                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTC).ToString("C", new CultureInfo("en-US"))</span>
+                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; TDC o transferencias</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTDCTransferencias).ToString("C", new CultureInfo("en-US"))</span>
                                         </p>
+
+                                        <p class="clearfix">
+                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Otras formas de pago</span>
+                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasOtrasFormasPago).ToString("C", new CultureInfo("en-US"))</span>
+                                        </p>
+
+                                        if (Convert.ToInt32(item.idAlmacen) > 0)
+                                        {
+                                            <p class="clearfix">
+                                                <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Ventas a crédito </span>
+                                                <span class="float-right text-muted">@Convert.ToSingle(item.VentasCredito).ToString("C", new CultureInfo("en-US"))</span>
+                                            </p>
+                                        }
+
 
                                     }
 

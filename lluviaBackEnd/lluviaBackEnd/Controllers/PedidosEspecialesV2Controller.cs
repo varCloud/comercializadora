@@ -1314,7 +1314,7 @@ namespace lluviaBackEnd.Controllers
                     {
                         pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
-                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtenerIngresosEfectivo(new IngresoEfectivo { idIngreso= idIngresoEfectivo });
+                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtenerIngresosEfectivo(new IngresoEfectivo { idIngreso = idIngresoEfectivo });
                     pd.PrintPage += (_sender, args) => pd_PrintPageIngresoEfectivo(null, args, _notificacion);
                     pd.PrintController = new StandardPrintController();
                     pd.DefaultPageSettings.Margins.Left = 10;
@@ -1550,15 +1550,15 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuario = (Sesion)Session["UsuarioActual"];
-                Boolean cajaAbierta=new PedidosEspecialesV2DAO().ValidaAperturaCajas(usuario.idUsuario).Estatus == 200 ? true : false;
-                return Json(cajaAbierta,JsonRequestBehavior.AllowGet);
+                Boolean cajaAbierta = new PedidosEspecialesV2DAO().ValidaAperturaCajas(usuario.idUsuario).Estatus == 200 ? true : false;
+                return Json(cajaAbierta, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-        
+
 
 
         #endregion
@@ -1911,7 +1911,7 @@ namespace lluviaBackEnd.Controllers
 
                 int posXFooter = 285;
                 montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
-                suCambio = montoPagado==0? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
+                suCambio = montoPagado == 0 ? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
 
@@ -2426,7 +2426,7 @@ namespace lluviaBackEnd.Controllers
                 notificacion = new Notificacion<Ventas>();
                 notificacion.Mensaje = "Se envio el ticket a la impresora.";
                 notificacion.Estatus = 200;
-                bool ticketVistaPrevia = false;
+                bool ticketVistaPrevia = true;
 
                 //PrintDocument pd = new PrintDocument();
                 using (PrintDocument pd = new PrintDocument())
@@ -2678,10 +2678,24 @@ namespace lluviaBackEnd.Controllers
                         datosProducto.Y += espaciado;
                         datosPrecio.Y += espaciado;
 
-                        e.Graphics.DrawString("  " + "Crédito o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        e.Graphics.DrawString("  " + "TDC o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTDCTransferencias).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                         datosProducto.Y += espaciado;
                         datosPrecio.Y += espaciado;
+
+                        e.Graphics.DrawString("  " + "Otras formas de pago" + " \n", font, drawBrush, datosProducto, izquierda);
+                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasOtrasFormasPago).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        datosProducto.Y += espaciado;
+                        datosPrecio.Y += espaciado;
+
+                        if (Convert.ToInt32(ticket.Modelo[i].idAlmacen) > 0)
+                        {
+                            e.Graphics.DrawString("  " + "Ventas a crédito" + " \n", font, drawBrush, datosProducto, izquierda);
+                            e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasCredito).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                            datosProducto.Y += espaciado;
+                            datosPrecio.Y += espaciado;
+
+                        }
 
                         indexProducto++;
                         if (datosProducto.Y >= 1092)
