@@ -58,20 +58,29 @@ as
 					select @idCierrePedidoEspecial=idCierrePedidoEspecial from PedidosEspecialesCierres where idUsuario=@idUsuario and cast(fechaAlta as date)=cast(@fecha as date)
 
 
-					select a.idAlmacen,REPLACE(REPLACE(a.Descripcion,'Tienda',''),'Almacen','') nombre,0 cierre 
-					into #AlmacenesLineaProducto
-					from AlmacenesXLineaProducto l
-					join Almacenes a on l.idAlmacen=a.idAlmacen
-					where l.activo=1 and l.idAlmacen in (3,4,5)
-					group by a.idAlmacen,a.Descripcion
+					--select a.idAlmacen,REPLACE(REPLACE(a.Descripcion,'Tienda',''),'Almacen','') nombre,0 cierre 
+					--into #AlmacenesLineaProducto
+					--from AlmacenesXLineaProducto l
+					--join Almacenes a on l.idAlmacen=a.idAlmacen
+					--where l.activo=1 and l.idAlmacen in (3,4,5)
+					--group by a.idAlmacen,a.Descripcion
 
-					declare @idAlmacen int,@nombreAlmacen varchar(250)
+					--declare @idAlmacen int,@nombreAlmacen varchar(250)
 
-					while exists(select 1 from #AlmacenesLineaProducto where cierre=0)
+					 select idCategoria,descripcion,0 cierre 
+					into #Categorias
+					from categorias
+
+					declare @idCategoria int,@nombreCategoria varchar(250)
+
+					while exists(select 1 from #Categorias where cierre=0)
 					begin
 
-						select @idAlmacen=min(idAlmacen) from #AlmacenesLineaProducto where cierre=0
-						select @nombreAlmacen=nombre from #AlmacenesLineaProducto where idAlmacen=@idAlmacen
+						--select @idAlmacen=min(idAlmacen) from #AlmacenesLineaProducto where cierre=0
+						--select @nombreAlmacen=nombre from #AlmacenesLineaProducto where idAlmacen=@idAlmacen
+
+						select @idCategoria=min(idCategoria) from #Categorias where cierre=0
+						select @nombreCategoria=descripcion from #Categorias where idCategoria=@idCategoria
 
 						--consultamos todos los pedidos realizados 
 						select p.idFactFormaPago,p.idEstatusPedidoEspecial,t.idTipoTicketPedidoEspecial,det.cantidad,det.montoTotal
@@ -79,65 +88,68 @@ as
 						from TicketsPedidosEspeciales t
 						join PedidosEspeciales p on t.idPedidoEspecial=p.idPedidoEspecial
 						join TicketsPedidosEspecialesDetalle det on t.idTicketPedidoEspecial=det.idTicketPedidoEspecial
+						join PedidosEspecialesDetalle pdet on det.idPedidoEspecialDetalle=pdet.idPedidoEspecialDetalle
 						where cast(t.fechaAlta as date)=cast(@fecha as date) and t.idUsuario=@idUsuario
-						and dbo.ExisteProductoEnAlmancen(@idAlmacen,det.idProducto)=1
+						and pdet.idAlmacenDestino in (select idAlmacen from AlmacenesPorCategorias where idCategoria=@idCategoria)
+						--and dbo.ExisteProductoEnAlmancen(@idAlmacen,det.idProducto)=1
 
 
 
 						insert into PedidosEspecialesCierresDetalle(idCierrePedidoEspecial,idAlmacen,descripcion)
-						select @idCierrePedidoEspecial,@idAlmacen,'Ventas ' + @nombreAlmacen
+						select @idCierrePedidoEspecial,@idCategoria,'Ventas ' + @nombreCategoria
 
 						--ventas de contado
 						update PedidosEspecialesCierresDetalle set 
 						VentasContado=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idFactFormaPago=1 and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1),
 						NoVentasContado=(select ISNULL(sum(cantidad),0) from #productosVendidos where idFactFormaPago=1 and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--ventas de tarjeta de credito
 						update PedidosEspecialesCierresDetalle set 
 						VentasTC=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idFactFormaPago in (4,18) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1),
 						NoVentasTC=(select ISNULL(sum(cantidad),0) from #productosVendidos where idFactFormaPago in (4,18) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--Ventas transferencias bancarias
 						update PedidosEspecialesCierresDetalle set 
 						VentasTransferencias=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idFactFormaPago in (3) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1),
 						NoVentasTransferencias=(select ISNULL(sum(cantidad),0) from #productosVendidos where idFactFormaPago in (3) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--Ventas otras formas de pago
 						update PedidosEspecialesCierresDetalle set 
 						VentasOtrasFormasPago=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idFactFormaPago not in (1,4,18,3) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1),
 						NoVentasOtrasFormasPago=(select ISNULL(sum(cantidad),0) from #productosVendidos where idFactFormaPago not in (1,4,18,3) and idEstatusPedidoEspecial in(4,6) and idTipoTicketPedidoEspecial=1)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--Ventas crèdito
 						update PedidosEspecialesCierresDetalle set 
 						VentasCredito=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1),
 						NoVentasCredito=(select ISNULL(sum(cantidad),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--MontoDevoluciones
 						update PedidosEspecialesCierresDetalle set 
 						MontoDevoluciones=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idTipoTicketPedidoEspecial=2),
 						NoDevoluciones=(select ISNULL(sum(cantidad),0) from #productosVendidos where idTipoTicketPedidoEspecial=2)
-						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						--Total
 						update p set 
 							TotalEfectivo= dbo.redondear(VentasContado-MontoDevoluciones),
 							TotalCreditoTransferencias=(VentasTC + VentasTransferencias + VentasOtrasFormasPago)
-						from PedidosEspecialesCierresDetalle p where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+						from PedidosEspecialesCierresDetalle p where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 						drop table #productosVendidos;
 
-						update #AlmacenesLineaProducto set cierre=1 where idAlmacen=@idAlmacen
+						--update #AlmacenesLineaProducto set cierre=1 where idAlmacen=@idAlmacen
+						update #Categorias set cierre=1 where idCategoria=@idCategoria
 
 					end
 
 					--------Abonos
 
-					select @idAlmacen=0
+					select @idCategoria=0
 
 					--consultamos todos los abonos
 					select idFactFormaPago,montoTotal
@@ -147,37 +159,37 @@ as
 					and activo=1
 
 					insert into PedidosEspecialesCierresDetalle(idCierrePedidoEspecial,idAlmacen,descripcion)
-					select @idCierrePedidoEspecial,@idAlmacen,'Ingresos por pagos crédito'
+					select @idCierrePedidoEspecial,@idCategoria,'Ingresos por pagos crédito'
 
 					--abonos de contado
 					update PedidosEspecialesCierresDetalle set 
 					VentasContado=(select ISNULL(sum(montoTotal),0) from #abonosPedidosEspeciales where idFactFormaPago=1 ),
 					NoVentasContado=(select ISNULL(count(1),0) from #abonosPedidosEspeciales where idFactFormaPago=1 )
-					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 					--abonos de tarjeta de credito
 					update PedidosEspecialesCierresDetalle set 
 					VentasTC=(select ISNULL(sum(montoTotal),0) from #abonosPedidosEspeciales where idFactFormaPago in (4,18) ),
 					NoVentasTC=(select ISNULL(count(1),0) from #abonosPedidosEspeciales where idFactFormaPago in (4,18) )
-					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 					--abonos transferencias bancarias
 					update PedidosEspecialesCierresDetalle set 
 					VentasTransferencias=(select ISNULL(sum(montoTotal),0) from #abonosPedidosEspeciales where idFactFormaPago in (3)),
 					NoVentasTransferencias=(select ISNULL(count(1),0) from #abonosPedidosEspeciales where idFactFormaPago in (3))
-					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 					--abonos otras formas de pago
 					update PedidosEspecialesCierresDetalle set 
 					VentasOtrasFormasPago=(select ISNULL(sum(montoTotal),0) from #abonosPedidosEspeciales where idFactFormaPago not in (1,4,18,3)),
 					NoVentasOtrasFormasPago=(select ISNULL(count(1),0) from #abonosPedidosEspeciales where idFactFormaPago not in (1,4,18,3))
-					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+					where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 					--total de ingresos por pagos crèdito
 					update p set 
-						TotalEfectivo= VentasContado,
+						TotalEfectivo= VentasContado-MontoDevoluciones,
 						TotalCreditoTransferencias=(VentasTC + VentasTransferencias + VentasOtrasFormasPago)
-					from PedidosEspecialesCierresDetalle p where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idAlmacen
+					from PedidosEspecialesCierresDetalle p where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
 
 					update PedidosEspecialesCierres set 
 					MontoIngresosEfectivo=(select ISNULL(sum(monto),0) from PedidosEspecialesIngresosEfectivo where idUsuario=@idUsuario and cast(fechaAlta as date)=cast(@fecha as date))

@@ -842,10 +842,13 @@ as
 								idTipoTicketPedidoEspecial,idPedidoEspecial,idUsuario,cantidad,monto,comisionBancaria,
 								montoTotal,fechaAlta,observaciones,montoIVA
 							)
-					select	cast(1 as int) as idTipoTicketPedidoEspecial, idPedidoEspecial,@idUsuarioEntrega,cantidad,montoTotal,
-							@montoComision as comisionBancaria,montoTotal,@fecha as fechaAlta,observaciones,@montoIVA as montoIVA
-					from	PedidosEspeciales
-					where	idPedidoEspecial = @idPedidoEspecial
+					select	cast(1 as int) as idTipoTicketPedidoEspecial, @idPedidoEspecial,@idUsuarioEntrega, sum(cantidad),sum(coalesce(monto,0)),
+							sum(coalesce(montoComisionBancaria, 0)),sum(coalesce(monto,0)) + sum(coalesce(montoComisionBancaria, 0)) + sum(coalesce(montoIVA, 0)),@fecha as fechaAlta,'' observaciones,sum(coalesce(montoIVA, 0))
+					from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
+					--from	PedidosEspeciales
+					--where	idPedidoEspecial = @idPedidoEspecial
+					
+					
 
 					select	@idTicketPedidoEspecial = max(idTicketPedidoEspecial) 
 					from	TicketsPedidosEspeciales
@@ -862,7 +865,7 @@ as
 								montoIVA	
 							)
 					select 	@idTicketPedidoEspecial as idTicketPedidoEspecial,idPedidoEspecial,idPedidoEspecialDetalle,idProducto,cantidad,monto,
-							coalesce(montoComisionBancaria, 0),monto,precioVenta,precioIndividual,precioMenudeo,precioRango,cantidadActualInvGeneral,
+							coalesce(montoComisionBancaria, 0),monto + coalesce(montoComisionBancaria, 0) + coalesce(montoIVA, 0) ,precioVenta,precioIndividual,precioMenudeo,precioRango,cantidadActualInvGeneral,
 							cantidadAnteriorInvGeneral,@fecha as fechaAlta,coalesce(montoIVA, 0.0)
 					from	PedidosEspecialesDetalle
 					where	idPedidoEspecial = @idPedidoEspecial

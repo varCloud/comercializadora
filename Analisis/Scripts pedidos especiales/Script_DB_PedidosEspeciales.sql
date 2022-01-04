@@ -682,8 +682,43 @@ GO
 ALTER TABLE PedidosEspecialesRetirosExcesoEfectivo ADD FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario)
 GO
 
+----Categorias
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'Categorias' and xtype = 'u')
+	drop table Categorias
 
+CREATE TABLE 
+	Categorias 
+		(
+			idCategoria			int primary key identity(1,1),
+			descripcion			varchar(255),
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON Categorias TO PUBLIC
+GO
 
+insert into Categorias(descripcion) values('Jarcieria'),('Liquidos'),('Traperos')
+
+----AlmacenesPorCategorias
+IF EXISTS (SELECT * FROM sysobjects WHERE NAME like 'AlmacenesPorCategorias' and xtype = 'u')
+	drop table AlmacenesPorCategorias
+
+CREATE TABLE 
+	AlmacenesPorCategorias 
+		(
+			contador			int primary key identity(1,1),
+			idAlmacen			int,
+			idCategoria			int
+		)
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON AlmacenesPorCategorias TO PUBLIC
+GO
+
+insert into AlmacenesPorCategorias(idAlmacen,idCategoria) values(1,1)--Almacen General
+insert into AlmacenesPorCategorias(idAlmacen,idCategoria) values(2,2)--Almacen Liquidos
+insert into AlmacenesPorCategorias(idAlmacen,idCategoria) values(3,2)--Tienda Liquidos
+insert into AlmacenesPorCategorias(idAlmacen,idCategoria) values(4,1)--Tienda Jarciería
+insert into AlmacenesPorCategorias(idAlmacen,idCategoria) values(5,3)--Almacen Trapeadores
+GO
 
 insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values ('Dias para poder hacer complementos/devoluciones.', 30, cast(1 as bit) )
 insert into ConfiguracionesPedidosEspeciales (descripcion,valor,activo) values ('Requiere autorizacion para cierre de modulo de Pedidos Especiales.', 1, cast(1 as bit) )
