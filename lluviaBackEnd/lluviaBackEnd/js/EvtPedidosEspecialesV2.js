@@ -53,8 +53,8 @@ function InitSelect2Productos(idAlmacen) {
             //
             //console.log(idAlmacen);
             //console.log(result);
-            arrayProductos = [];
-            arrayProductos = result.Modelo;
+            //arrayProductos = [];
+            //arrayProductos = result.Modelo;
 
             var i;
             for (i = 0; i < result.Modelo.length; i++) {
@@ -139,6 +139,33 @@ function InitSelect2Productos(idAlmacen) {
             OcultarLoader();
         }
     });
+
+}
+
+function InitarrayProductos() {
+    
+    $("#listProductos").val('');
+    var result = '';
+    $.ajax({
+        url: rootUrl("/Productos/ObtenerTodosLosProductos"),
+        data: { idProducto: 0, idUsuario: 0, activo: true },
+        method: 'post',
+        dataType: 'json',
+        async: false,
+        beforeSend: function (xhr) {
+        },
+        success: function (data) {
+            result = data;
+        },
+        error: function (xhr, status) {
+            console.log('hubo un problema pongase en contacto con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+
+    arrayProductos = [];
+    arrayProductos = result.Modelo;
 
 }
 
@@ -2545,6 +2572,7 @@ function validaTipoMedida(txt, evt) {
 
 
 $(document).ready(function () {
+    InitarrayProductos();
     //ValidaAperturaCajas();
     arrayPreciosRangos = ObtenerPrecios_(0);
     //InitSelect2Productos();
