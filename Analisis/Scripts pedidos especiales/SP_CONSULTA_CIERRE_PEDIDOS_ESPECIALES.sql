@@ -83,7 +83,7 @@ as
 						select @nombreCategoria=descripcion from #Categorias where idCategoria=@idCategoria
 
 						--consultamos todos los pedidos realizados 
-						select p.idFactFormaPago,p.idEstatusPedidoEspecial,t.idTipoTicketPedidoEspecial,det.cantidad,det.montoTotal
+						select p.idFactFormaPago,p.idEstatusPedidoEspecial,t.idTipoTicketPedidoEspecial,det.cantidad,det.montoTotal,P.idPedidoEspecial
 						into #productosVendidos
 						from TicketsPedidosEspeciales t
 						join PedidosEspeciales p on t.idPedidoEspecial=p.idPedidoEspecial
@@ -93,8 +93,9 @@ as
 						and pdet.idAlmacenDestino in (select idAlmacen from AlmacenesPorCategorias where idCategoria=@idCategoria)
 						--and dbo.ExisteProductoEnAlmancen(@idAlmacen,det.idProducto)=1
 
-
-
+						--select * from #productosVendidos
+						
+						
 						insert into PedidosEspecialesCierresDetalle(idCierrePedidoEspecial,idAlmacen,descripcion)
 						select @idCierrePedidoEspecial,@idCategoria,'Ventas ' + @nombreCategoria
 
@@ -127,7 +128,9 @@ as
 						VentasCredito=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1),
 						NoVentasCredito=(select ISNULL(sum(cantidad),0) from #productosVendidos where idEstatusPedidoEspecial in(5,7) and idTipoTicketPedidoEspecial=1)
 						where idCierrePedidoEspecial=@idCierrePedidoEspecial and idAlmacen=@idCategoria
-
+						
+						
+						
 						--MontoDevoluciones
 						update PedidosEspecialesCierresDetalle set 
 						MontoDevoluciones=(select ISNULL(sum(montoTotal),0) from #productosVendidos where idTipoTicketPedidoEspecial=2),
@@ -216,7 +219,7 @@ as
 					where idCierrePedidoEspecial=@idCierrePedidoEspecial
 
 					update PedidosEspecialesCierres set 
-					NoTicketsCredito=(select count(1) from TicketsPedidosEspeciales t join PedidosEspeciales ped on t.idPedidoEspecial=ped.idPedidoEspecial where t.idTipoTicketPedidoEspecial=1 and ped.idEstatusPedidoEspecial=7 and t.idUsuario=@idUsuario and casT(t.fechaAlta as date)=cast(@fecha as date))
+					NoTicketsCredito=(select count(1) from TicketsPedidosEspeciales t join PedidosEspeciales ped on t.idPedidoEspecial=ped.idPedidoEspecial where t.idTipoTicketPedidoEspecial=1 and ped.idEstatusPedidoEspecial in(5,7) and t.idUsuario=@idUsuario and casT(t.fechaAlta as date)=cast(@fecha as date))
 					where idCierrePedidoEspecial=@idCierrePedidoEspecial
 
 					update PedidosEspecialesCierres set 
