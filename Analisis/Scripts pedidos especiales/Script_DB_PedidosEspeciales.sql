@@ -43,6 +43,11 @@ begin
 	insert into CatEstatusRetiros (idEstatusRetiro,descripcion) values (4,'Pendiente')
 end
 
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)',	-1)
+end
+
 
 
 --delete CatTipoMovimientoInventario where idTipoMovInventario > 21
