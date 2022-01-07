@@ -23,9 +23,9 @@ begin
 	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial aceptado)',	1)
 end
 
-if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)' )
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por pedido especial cancelado)' )
 begin
-	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)',	1)
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia por pedido especial cancelado)',	1)
 end
 
 if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia por sobrante de pedido especial)' )
@@ -48,7 +48,10 @@ begin
 	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)',	-1)
 end
 
-
+if not exists ( select 1 from CatTipoMovimientoInventario where descripcion like 'Actualizacion de Inventario(carga de mercancia rechazada por el administrador a peticion del cliente)' )
+begin
+	insert into CatTipoMovimientoInventario (descripcion,operacion) values ('Actualizacion de Inventario(carga de mercancia rechazada por el administrador a peticion del cliente)',	1)
+end
 
 --delete CatTipoMovimientoInventario where idTipoMovInventario > 21
 
