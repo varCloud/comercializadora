@@ -426,7 +426,7 @@ as
 						-- rechazados
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
-								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
+								24 as idTipoMovInventario, -- 24	Actualizacion de Inventario(carga de mercancia rechazada por el administrador a peticion del cliente)
 								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (
@@ -440,7 +440,7 @@ as
 						-- no aceptados
 						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 						select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.noAceptados, actuales.cantidad + rechazados.noAceptados as cantidadActual,
-								20 as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
+								24 as idTipoMovInventario, -- 24	Actualizacion de Inventario(carga de mercancia rechazada por el administrador a peticion del cliente)
 								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	

@@ -65,7 +65,7 @@ as
 								on a.idAlmacen = d.idAlmacenOrigen
 							join Ubicacion u
 								on u.idAlmacen = a.idAlmacen
-				where	d.idPedidoEspecial = 196
+				where	d.idPedidoEspecial = @idPedidoEspecial
 					and	u.idPasillo = 1000
 					and	u.idPiso = 1000
 					and	u.idRaq = 1000
@@ -118,10 +118,10 @@ as
 				----------------------------------------------------------------------------------------------------------------------------------
 				-- se quitan los productos que se encuentran en ubicacion de resguardo
 				----------------------------------------------------------------------------------------------------------------------------------
-				insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+				insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 				select	distinct @idUbicacionResguardo as idUbicacionResguardo, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad - rechazados.cantidadRechazada as cantidadActual,
-						cast (3 as int ) as idTipoMovInventario, -- 3	Cancelacion
-						@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+						cast (23 as int ) as idTipoMovInventario, -- 23	Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)
+						@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 				from	#tempUbicacionesDevoluciones_ temp
 							join	(
 										select	idPedidoEspecialDetalle, idProducto, cantidad as cantidadRechazada
@@ -152,10 +152,10 @@ as
 				----------------------------------------------------------------------------------------------------------------------------------
 				-- se envian los productos a la ubicacion de devolucion de pedido especial
 				----------------------------------------------------------------------------------------------------------------------------------
-				insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta)
+				insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
 				select	distinct temp.idUbicacionRegresar, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad + rechazados.cantidadRechazada as cantidadActual,
-						cast (3 as int ) as idTipoMovInventario, -- 3	Cancelacion
-						@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta
+						cast (20 as int ) as idTipoMovInventario, -- 20	Actualizacion de Inventario(carga de mercancia por pedido especial rechazado)
+						@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 				from	#tempUbicacionesDevoluciones_ temp
 							join	(
 										select	idPedidoEspecialDetalle, idProducto, cantidad as cantidadRechazada
@@ -194,7 +194,7 @@ as
 						)
 				select	u.idAlmacen as idAlmacenOrigen, ubicacionDestino.idAlmacenOrigen as idAlmacenDestino, idl.idProducto, rechazados.cantidadRechazada as cantidad, idl.idPedidoEspecial,
 						idl.idUsuario, @fecha as fechaAlta, cast(7 as int) as idEstatusPedidoEspecialDetalle, -- 7	Cancelados	
-						rechazados.observaciones, rechazados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionDestino.idUbicacionOrigen as idUbicacionDestino
+						rechazados.observaciones, rechazados.cantidadAtendida, idl.idUbicacion as idUbicacionOrigen, ubicacionRegresar.idUbicacionRegresar as idUbicacionDestino
 				from	InventarioDetalleLog idl
 							join Ubicacion u
 								on u.idUbicacion = idl.idUbicacion
@@ -212,9 +212,13 @@ as
 										where	idPedidoEspecial = @idPedidoEspecial											
 									)rechazados
 										on rechazados.idProducto = idl.idProducto
+							join	(
+										select idProducto, idAlmacenOrigen,	idUbicacionRegresar from #tempUbicacionesDevoluciones_
+									)ubicacionRegresar
+										on ubicacionRegresar.idProducto = rechazados.idProducto
 				where	idl.idPedidoEspecial = @idPedidoEspecial
 					and	idl.idTipoMovInventario = 18
-
+					
 
 				-- acualizamos estatus de pedido especial
 				update	PedidosEspeciales
@@ -223,7 +227,8 @@ as
 
 				-- acualizamos estatus de pedido especial detalle
 				update	PedidosEspecialesDetalle
-				set		idEstatusPedidoEspecialDetalle = 7 -- 7	Cancelados
+				set		idEstatusPedidoEspecialDetalle = 7, -- 7	Cancelados
+						cantidadRechazada = cantidadAtendida
 				where	idPedidoEspecial = @idPedidoEspecial
 				
 
