@@ -19,7 +19,7 @@
     //Boolean esDevolucion = ViewBag.venta.esDevolucion;
     //Boolean esAgregarProductos = ViewBag.venta.esAgregarProductos;
 
-            lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
+    lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>> notificacion = new lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ticket>>();
 
 
     //if (idVenta > 0)
@@ -61,8 +61,10 @@
 
                     <div class="card-header">
                         <h4>Agregar Productos al Pedido Especial: </h4>
-                        <div class="card-header-action" id="actionVenta">
-
+                        <div class="card-header-action">
+                            <a href="javascript:AbrirModalIngresoEfectivo(2);" class="btn btn-icon btn-success" data-toggle="tooltip" title="Ingreso de Efectivo"><i class="fas fa-ticket-alt"></i> Ingreso de efectivo</a>
+                            <a href="javascript:AbrirModalRetiroExcesoEfectivo();" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Retiro De Exceso de Efectivo"><i class="fas fa-dollar-sign"> </i> Retiro de exceso de efectivo</a>
+                            <a href="@Url.Action("CierreCajas", "PedidosEspecialesV2")" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Cierre de cajas"><i class="fas fa-donate"> </i> Cierre de cajas</a>
                         </div>
                     </div>
 
@@ -94,7 +96,7 @@
                                     @Html.HiddenFor(x => comisionBancaria)
                                     @Html.HiddenFor(x => idPedidoEspecialMayoreo_)
                                     @*@Html.HiddenFor(x => esDevolucion)
-                                    @Html.HiddenFor(x => esAgregarProductos)*@
+                                        @Html.HiddenFor(x => esAgregarProductos)*@
                                     @Html.HiddenFor(x => idClienteDevolucion)
                                     @Html.HiddenFor(x => Model.idPedidoEspecial, new { id = "idPedidoEspecial" })
                                     @Html.HiddenFor(x => Model.idCliente, new { id = "idClienteCotizacion" })
@@ -194,7 +196,7 @@
                                         <th>Producto</th>
                                         <th>Almacen</th>
                                         <th class="text-center">Precio</th>
-                                        <th class="text-center">Cantidad</th>                                     
+                                        <th class="text-center">Cantidad</th>
                                         <th class="text-center">Total</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Acciones  @*@(esDevolucion == true ? "Devolver Artículos" : "Acciones")*@ </th>
@@ -346,7 +348,7 @@
                                     <button id="btnGeneraCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar Cotización</button>
                                 }
 
-                                @if (Model.idPedidoEspecial > 0 && Model.idEstatusPedidoEspecial==2)
+                                @if (Model.idPedidoEspecial > 0 && Model.idEstatusPedidoEspecial == 2)
                                 {
                                     <button id="btnGeneraCotizacion" class="btn btn-info btn-icon icon-left"><i class="fas fa-save"></i> Guardar cambios cotización</button>
                                 }
@@ -1118,7 +1120,7 @@
         </div>
     </div>
 </div>
-
+@Html.Action("_IngresosRetirosEfectivo", "PedidosEspecialesV2")
 
 @section scripts {
 
@@ -1135,5 +1137,6 @@
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/index.js"></script>
     <script src="~/js/EvtPedidosEspecialesV2.js"></script>
+    <script src="~/js/evtIngresosRetirosEfectivo.js"></script>
 
 }

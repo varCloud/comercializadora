@@ -13,6 +13,10 @@ var arrayProductosVentaComplemento = [];
 var ultimoCambio = parseFloat(0);
 var PuedeRealizarVenta = true;
 
+function ValidarAperturaCaja() {
+    return true;
+}
+
 $("#idAlmacenExistencia").on("change", function () {
     ActualizarProductosAlmacen();        
 });
@@ -1923,31 +1927,31 @@ function calculaTotales(conReseteoCampos) {
 //    $('#ModalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
 //}
 
-$('#btnRetirarExcesoEfectivo').click(function (e) {
+//$('#btnRetirarExcesoEfectivo').click(function (e) {
 
-    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
+//    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+//    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+//    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
 
-    if ($('#montoARetirar').val() == "") {
-        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
-        return
-    }
+//    if ($('#montoARetirar').val() == "") {
+//        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
+//        return
+//    }
 
-    if (((cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0) {
-        var cantidadPorRetirar = parseFloat(0).toFixed(2);
-        if ((parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2)) < 0)
-            cantidadPorRetirar = parseFloat(0);
-        else
-            cantidadPorRetirar = parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2);
+//    if (((cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0) {
+//        var cantidadPorRetirar = parseFloat(0).toFixed(2);
+//        if ((parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2)) < 0)
+//            cantidadPorRetirar = parseFloat(0);
+//        else
+//            cantidadPorRetirar = parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2);
 
-        MuestraToast('warning', "Solo tiene : $" + (cantidadPorRetirar).toString() + " para retirar.");
-        return
-    }
-    // si todo bien
-    retirarExcesoEfectivo(montoARetirar_);
+//        MuestraToast('warning', "Solo tiene : $" + (cantidadPorRetirar).toString() + " para retirar.");
+//        return
+//    }
+//     si todo bien
+//    retirarExcesoEfectivo(montoARetirar_);
 
-});
+//});
 
 //$('#btnCierreDia').click(function (e) {
 

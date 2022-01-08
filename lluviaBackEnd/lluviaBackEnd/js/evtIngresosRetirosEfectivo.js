@@ -1,8 +1,12 @@
-﻿$(document).ready(function () {
- 
-    if (!ValidaCajaAbierta()) {
-        AbrirModalIngresoEfectivo(1);
+﻿var cantidadEfectivo = parseFloat(0);
+$(document).ready(function () {
+   
+    if (ValidarAperturaCaja()) {
+        if (!ValidaCajaAbierta()) {
+            AbrirModalIngresoEfectivo(1);
+        }
     }
+
 
     $("#montoIngresoEfectivo").on("keyup", function (event) {
         if (event.keyCode === 13) {
@@ -59,6 +63,25 @@
             }
         });
     })
+
+    $('#btnRetirarExcesoEfectivo').click(function (e) {
+
+        //var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
+        var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
+
+        if ($('#montoARetirar').val() == "") {
+            MuestraToast('warning', "Debe seleccionar un monto para retirar.");
+            return
+        }
+
+        if ((cantidadEfectivo - montoARetirar_) < 0.0) {
+            MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo).toString() + " para retirar.");
+            return
+        }
+        // si todo bien
+        retirarExcesoEfectivo(montoARetirar_);
+
+    });
 
 
 });
@@ -207,6 +230,7 @@ function ConsultRetiros() {
 }
 
 function ConsultaInfoCierre() {
+    cantidadEfectivo = 0;
     $('#AperturaCaja').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">$0</span></p>");
     $('#IngresosEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">$0</span></p>");
     $('#pedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">$0</span></p>");
@@ -227,6 +251,7 @@ function ConsultaInfoCierre() {
             var result = JSON.parse(data);
             console.log(result);
             if (result.Estatus === 200) {
+                cantidadEfectivo = parseFloat(result.Modelo[0].efectivoDisponible);
                 $('#AperturaCaja').html("<p class=\"clearfix\"> <span class=\"float-left\">Apertura de Caja: </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].montoApertura) + "</span></p>");
                 $('#IngresosEfectivo').html("<p class=\"clearfix\"> <span class=\"float-left\">Ingresos de Efectivo (Solicitud): </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].montoIngresosEfectivo) + "</span></p>");
                 $('#pedidosEspecialesDelDia').html("<p class=\"clearfix\"> <span class=\"float-left\">Ventas del día: </span><span class=\"float-right text-muted\">" + formatoMoneda(result.Modelo[0].totalPedidosEspeciales) + "</span></p>");
@@ -246,24 +271,7 @@ function ConsultaInfoCierre() {
     });
 }
 
-$('#btnRetirarExcesoEfectivo').click(function (e) {
 
-    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
-
-    if ($('#montoARetirar').val() == "") {
-        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
-        return
-    }
-
-    if ((cantidadEfectivo - montoARetirar_) < 0.0) {
-        MuestraToast('warning', "Solo tiene : $" + (cantidadEfectivo).toString() + " para retirar.");
-        return
-    }
-    // si todo bien
-    retirarExcesoEfectivo(montoARetirar_);
-
-});
 
 function retirarExcesoEfectivo(montoRetiro) {
 
