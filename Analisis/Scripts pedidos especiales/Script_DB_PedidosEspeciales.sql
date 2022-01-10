@@ -738,11 +738,8 @@ begin
 	insert into CatRoles  (descripcion, activo) values ( 'Taxi', cast(1 as bit) )
 end
 
-if not exists ( select 1 from CatRoles  where descripcion like '%Ruta%')
-begin
-	insert into CatRoles  (descripcion, activo) values ( 'Ruta', cast(1 as bit) )
-end
-
+update CatRoles set descripcion = 'Ruteo' where descripcion like 'Encargado Ruteo'
+go
 
 -- se agregan columnas en inventario detalle log para los movimientos de mercancia de pedidos especiales
 if not exists (select 1 FROM sys.columns where Name = N'idPedidoEspecial' AND Object_ID = Object_ID(N'InventarioDetalleLog'))
@@ -750,7 +747,6 @@ BEGIN
 	alter table InventarioDetalleLog add idPedidoEspecial bigint
 END
 go
-
 
 ------------------------------------------------------------------------------------------------------------------
 --select * from PedidosEspeciales
