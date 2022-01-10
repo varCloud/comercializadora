@@ -25,7 +25,7 @@ else
                 <div class="card-header">
                     <h4 id="TitleNoTicket">Número de Ticket : @idPedidoEspecial </h4>
                     <div class="card-header-action">
-                        <a href="" target="_blank" class="btn btn-success"> Ver todo </a>
+                        <a href="@Url.Action("VerTodosTicketsPedidoEspecial", "PedidosEspecialesV2", new {idPedidoEspecial = @idPedidoEspecial})" target="_blank" class="btn btn-success"> Ver todos </a>
                     </div>
                 </div>
                 <div class="card-body">

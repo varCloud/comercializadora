@@ -561,6 +561,51 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+
+        public ActionResult VerTodosTicketsPedidoEspecial(int idPedidoEspecial)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                // tickets de almacenes
+                Notificacion<List<dynamic>> almacenes = new Notificacion<List<dynamic>>();
+                almacenes = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
+                
+                // consultar cantidad tickets normales y devoluciones
+                List<Notificacion<dynamic>> normales = new List<Notificacion<dynamic>>();
+                List<Notificacion<dynamic>> devoluciones = new List<Notificacion<dynamic>>();
+                Notificacion<dynamic> numTicketsNormalesDevoluciones = new Notificacion<dynamic>();
+                numTicketsNormalesDevoluciones = new PedidosEspecialesV2DAO().ObtieneTicketsPedidoEspecial(idPedidoEspecial);
+
+                for (int i = 0; i < numTicketsNormalesDevoluciones.Modelo.Count; i++)
+                {
+                    Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial, 0);
+
+                    if (numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial == 1) // normal
+                    {
+                        normales.Add(ticket);
+                    }
+                    if (numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial == 2) // devolucion
+                    {
+                        devoluciones.Add(ticket);
+                    }
+                }
+
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDFPedidosEspeciales(idPedidoEspecial, almacenes, normales, devoluciones));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idPedidoEspecial.ToString();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         /************** REIMPRIMIR TICKET  GENERAL********************/
         public ActionResult Cotizaciones()
         {
