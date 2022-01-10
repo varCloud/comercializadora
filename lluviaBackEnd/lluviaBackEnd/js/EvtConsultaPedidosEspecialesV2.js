@@ -4,6 +4,10 @@ var tblPedidosEspeciales;
 var tblPedidosEspecialesDet;
 var tblDevolucionesPedidosEspeciales;
 
+function ValidarAperturaCaja() {
+    return false;
+}
+
 //busqueda
 function onBeginSubmitPedidosEspeciales() {
     ShowLoader('Buscando...');
@@ -913,6 +917,11 @@ $(document).ready(function () {
         var totalProductosDevueltos = parseFloat(0);
         var totalProductosOriginales = parseFloat(0);
         var montoDevuelto = parseFloat($(".divSubTotal").html().replace('$', ''));
+
+        if (!ValidaCajaAbierta()) {
+            AbrirModalIngresoEfectivo(1);
+            return;
+        }
 
         // si todo bien
         var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');

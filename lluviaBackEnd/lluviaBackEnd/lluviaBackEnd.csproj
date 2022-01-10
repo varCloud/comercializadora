@@ -1347,6 +1347,7 @@
     <Content Include="Views\FacturaPedidosEspeciales\_ObtenerFacturasPE.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_ObtenerTicketsPedidoEspecial.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_IngresosRetirosEfectivo.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\VerTodosTicketsPedidoEspecial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

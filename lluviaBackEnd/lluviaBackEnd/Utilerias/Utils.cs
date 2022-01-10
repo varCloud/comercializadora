@@ -1331,7 +1331,59 @@ namespace lluviaBackEnd.Utilerias
             }
 
         }
-                
+
+
+        public static byte[] GeneraTodosTicketsPDFPedidosEspeciales(int idPedidoEspecial, Notificacion<List<dynamic>> ticketAlmacenes, List<Notificacion<dynamic>> normales, List<Notificacion<dynamic>> devoluciones)
+        {
+            try
+            {
+                byte[] content = null;
+
+                MemoryStream pdfCompleto = new MemoryStream();
+                PdfCopyFields copy = new PdfCopyFields(pdfCompleto);
+
+                // ticket almacenes
+                content = Utilerias.Utils.GeneraTicketDespachadoresPDF(ticketAlmacenes);
+                var msPrincipal = new MemoryStream(Utilerias.Utils.GeneraTicketDespachadoresPDF(ticketAlmacenes));                
+                msPrincipal.Position = 0;
+                copy.AddDocument(new PdfReader(msPrincipal));
+                msPrincipal.Dispose();
+
+                // tickets normales
+                if (normales.Count > 0)
+                {
+                    foreach (Notificacion<dynamic> ticket in normales)
+                    {
+                        var msNormal = new MemoryStream(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket));
+                        msNormal.Position = 0;
+                        copy.AddDocument(new PdfReader(msNormal));
+                        msNormal.Dispose();
+                    }
+                }
+
+                // tickets devoluciones
+                if (devoluciones.Count > 0)
+                {
+                    foreach (Notificacion<dynamic> ticket in devoluciones)
+                    {
+                        var msDevoluciones = new MemoryStream(Utilerias.Utils.GeneraTicketDevolucionPedidoEspecial(ticket));
+                        msDevoluciones.Position = 0;
+                        copy.AddDocument(new PdfReader(msDevoluciones));
+                        msDevoluciones.Dispose();
+                    }
+                }
+
+                copy.Close();
+                content = pdfCompleto.ToArray();
+                return content;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
         public static byte[] GeneraTicketCancelacionPDF(List<Ticket> tickets)
         {
             byte[] content = null;

@@ -4,6 +4,10 @@ var tblCuentasPorCobrar;
 var tblCuentasPorCobrarDet;
 var totalAdeudo = parseFloat(0);
 
+function ValidarAperturaCaja() {
+    return false;
+}
+
 //busqueda
 function onBeginSubmitCuentasPorCobrar() {
     ShowLoader('Buscando...');
@@ -445,6 +449,11 @@ $(document).ready(function () {
 
     $("#btnAbonar").click(function (evt) {
         evt.preventDefault();
+
+        if (!ValidaCajaAbierta()) {
+            AbrirModalIngresoEfectivo(1);
+            return;
+        }
         
         if ($('#montoAbonar').val() == "") {
             MuestraToast('warning', "Debe escribir el monto a abonar.");            

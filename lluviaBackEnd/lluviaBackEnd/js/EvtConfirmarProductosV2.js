@@ -1,6 +1,9 @@
 ﻿var arrayPreciosRangos = [];
 var arrayProductos = [];
 
+function ValidarAperturaCaja() {
+    return true;
+}
 
 $('#btnCancelar').click(function (e) {
 
