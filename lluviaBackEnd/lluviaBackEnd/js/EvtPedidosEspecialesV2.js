@@ -2581,7 +2581,6 @@ $(document).ready(function () {
     arrayPreciosRangos = ObtenerPrecios_(0);
     //InitSelect2Productos();
     $('#idAlmacenExistencia').val("4").trigger('change');
-    ActualizarProductosAlmacen();
     InitSelect2(); // los demas select2
     actualizaTicketVenta();
     initInputsTabla();
