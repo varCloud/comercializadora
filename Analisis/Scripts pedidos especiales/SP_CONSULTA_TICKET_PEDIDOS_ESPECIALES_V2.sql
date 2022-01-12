@@ -151,6 +151,7 @@ as
 												on c.idCliente = pe.idCliente
 								where	ped.idPedidoEspecial = @idPedidoEspecial
 									and	ped.idAlmacenDestino = @ini
+								order by ped.idPedidoEspecialDetalle
 
 
 								select @ini = min(idAlmacenDestino) from #almacenes where idAlmacenDestino > @ini

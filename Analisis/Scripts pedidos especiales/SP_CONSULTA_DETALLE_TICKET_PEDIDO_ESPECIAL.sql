@@ -75,7 +75,7 @@ as
 								on p.idFactFormaPago = formaPago.id
 				where	tp.idTicketPedidoEspecial=@idTicketPedidoEspecial
 					and	ped.cantidad > 0
-
+				order by ped.idTicketPedidoEspecialDetalle
 
 				end
 
@@ -109,3 +109,8 @@ as
 		
 
 	end  -- principal
+
+go
+
+grant exec on SP_CONSULTA_DETALLE_TICKET_PEDIDO_ESPECIAL to public
+go

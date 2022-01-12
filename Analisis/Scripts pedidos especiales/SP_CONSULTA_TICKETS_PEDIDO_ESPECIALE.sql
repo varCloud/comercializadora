@@ -83,3 +83,8 @@ as
 		
 
 	end  -- principal
+
+go
+
+grant exec on SP_CONSULTA_TICKETS_PEDIDO_ESPECIAL to public
+go
