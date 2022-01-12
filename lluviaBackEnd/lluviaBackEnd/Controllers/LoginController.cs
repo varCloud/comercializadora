@@ -84,7 +84,11 @@ namespace lluviaBackEnd.Controllers
                         {
                             controladorAccion = "Bitacora/Bitacoras/";
                         }
-                        
+                        else if (n.Modelo.idRol == (int)EnumRoles.Cajero_Pedidos_Especiales)
+                        {
+                            controladorAccion = "PedidosEspecialesV2/PedidosEspeciales/";
+                        }
+
                     }                  
 
                 }

@@ -168,7 +168,7 @@
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PedidosEspeciales && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             string abrir = string.Empty;
-                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero_Pedidos_Especiales)
                             {
                                 abrir = "display: block;";
                             }
@@ -192,7 +192,7 @@
                         {
                             string disponible = string.Empty;
                             string abrir = string.Empty;
-                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero)
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero || Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Cajero_Pedidos_Especiales)
                             {
                                 disponible = "display: none;";
                                 abrir = "display: block;";
