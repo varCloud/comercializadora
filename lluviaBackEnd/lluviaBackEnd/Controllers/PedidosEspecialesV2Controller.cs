@@ -347,29 +347,32 @@ namespace lluviaBackEnd.Controllers
                 notificacion.Mensaje = "Imprimiedo tickets por almacen.";
                 notificacion.Estatus = 200;
                 //PrintDocument pd = new PrintDocument();
-                foreach (var pedidoEspecial in listPedidosEspeciales.Modelo)
+                for (int i = 0; i < copias; i++)
                 {
-                    using (PrintDocument pd = new PrintDocument())
+                    foreach (var pedidoEspecial in listPedidosEspeciales.Modelo)
                     {
-                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
-                        pd.PrinterSettings.Copies = copias;
-
-                        //Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
-                        //PaperSize ps = new PaperSize("", 285, 540);
-                        pd.PrintPage += (_sender, args) => pd_PrintPage(null, args, pedidoEspecial);
-                        pd.PrintController = new StandardPrintController();
-                        pd.DefaultPageSettings.Margins.Left = 10;
-                        pd.DefaultPageSettings.Margins.Right = 0;
-                        pd.DefaultPageSettings.Margins.Top = 0;
-                        pd.DefaultPageSettings.Margins.Bottom = 0;
-                        //pd.DefaultPageSettings.PaperSize = ps;
-                        pd.Print();
-                        pd.Dispose();
-                        this.indexProducto = 0;
-                        this.paginaActual = 0;
+                        using (PrintDocument pd = new PrintDocument())
+                        {
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
+                            //pd.PrinterSettings.Copies = copias;
+                            //Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
+                            //PaperSize ps = new PaperSize("", 285, 540);
+                            pd.PrintPage += (_sender, args) => pd_PrintPage(null, args, pedidoEspecial);
+                            pd.PrintController = new StandardPrintController();
+                            pd.DefaultPageSettings.Margins.Left = 10;
+                            pd.DefaultPageSettings.Margins.Right = 0;
+                            pd.DefaultPageSettings.Margins.Top = 0;
+                            pd.DefaultPageSettings.Margins.Bottom = 0;
+                            //pd.DefaultPageSettings.PaperSize = ps;
+                            pd.Print();
+                            pd.Dispose();
+                            this.indexProducto = 0;
+                            this.paginaActual = 0;
+                        }
+                        Thread.Sleep(100);
+                        totalProductos.Add(pedidoEspecial);
                     }
                     Thread.Sleep(100);
-                    totalProductos.Add(pedidoEspecial);
                 }
 
 
