@@ -664,6 +664,12 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
     var productos = [];
     var idCliente = $('#idCliente').val();
     var idPedidoEspecial = $('#idPedidoEspecial').val();
+    var copias = parseInt(1);
+
+    if (tipoRevision == 2) //revision por handHeld
+    {
+        copias = parseInt(2);
+    }
 
     // si todo bien
     var tblVtas = document.getElementById('tablaRepVentas');
@@ -700,14 +706,16 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
 
             if (data.Estatus == 200) {
-
-                imprimirTicketAlmacenes(data.Modelo.idPedidoEspecial);
+                imprimirTicketAlmacenes(data.Modelo.idPedidoEspecial, copias);
                 ActualizarProductosAlmacen();
                 limpiarTicket();
                 $("#listProductos").focus();
-
             }
+
             $('#ModalGuardarPedidoEspecial').modal('hide');            
+            $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
+            $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
+
         },
         error: function (xhr, status) {
             OcultarLoader();            
@@ -3085,11 +3093,10 @@ $(document).ready(function () {
 });
 
 
-
-function imprimirTicketAlmacenes(idPedidoEspecial) {
+function imprimirTicketAlmacenes(idPedidoEspecial, copias) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/imprimirTicketAlmacenes"),
-        data: { idPedidoEspecial: idPedidoEspecial },
+        data: { idPedidoEspecial: idPedidoEspecial, copias: copias },
         method: 'post',
         dataType: 'json',
         async: true,

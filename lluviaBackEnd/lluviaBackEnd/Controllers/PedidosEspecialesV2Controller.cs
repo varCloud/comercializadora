@@ -315,14 +315,14 @@ namespace lluviaBackEnd.Controllers
         Boolean control = false;
 
         [HttpPost]
-        public JsonResult imprimirTicketAlmacenes(Int64 idPedidoEspecial)
+        public JsonResult imprimirTicketAlmacenes(Int64 idPedidoEspecial, Int16 copias = 0)
         {
             try
             {
                 Notificacion<List<dynamic>> result = new Notificacion<List<dynamic>>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 result = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
-                var response = ImprimirTicketAlamacenes(result);
+                var response = ImprimirTicketAlamacenes(result, copias);
                 VerTicketAlmacenes(idPedidoEspecial);
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
@@ -333,12 +333,15 @@ namespace lluviaBackEnd.Controllers
         }
 
 
-        public Notificacion<String> ImprimirTicketAlamacenes(dynamic listPedidosEspeciales)
+        public Notificacion<String> ImprimirTicketAlamacenes(dynamic listPedidosEspeciales, Int16 copias)
         {
             Notificacion<String> notificacion;
             List<dynamic> totalProductos = new List<dynamic>();
             try
             {
+                if (copias == 0 ) {
+                    copias = 1;
+                }
 
                 notificacion = new Notificacion<String>();
                 notificacion.Mensaje = "Imprimiedo tickets por almacen.";
@@ -349,6 +352,7 @@ namespace lluviaBackEnd.Controllers
                     using (PrintDocument pd = new PrintDocument())
                     {
                         pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
+                        pd.PrinterSettings.Copies = copias;
 
                         //Notificacion<List<Ticket>> _notificacion = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = this.idVenta });
                         //PaperSize ps = new PaperSize("", 285, 540);
