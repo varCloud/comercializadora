@@ -2300,6 +2300,9 @@ namespace lluviaBackEnd.Utilerias
                                             <td colspan=""2"">Cliente: " + ticket.Modelo[0].nombreCliente.ToString().ToUpper() + @"</td>
                                           </tr>
                                           <tr>
+                                            <td colspan=""2"">Dirección: " + ticket.Modelo[0].direccion.ToString() + @"</td>
+                                          </tr>
+                                          <tr>
                                             <td colspan=""2"">Forma de Pago: " + ticket.Modelo[0].descFormaPago.ToString() + @"</td>
                                           </tr>
                                         </table>
@@ -2580,6 +2583,9 @@ namespace lluviaBackEnd.Utilerias
                                           </tr>
                                           <tr>
                                             <td colspan=""2"">Cliente: " + ticketDevolucion.Modelo[0].nombreCliente.ToString().ToUpper() + @"</td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan=""2"">Dirección: " + ticketDevolucion.Modelo[0].direccion.ToString() + @"</td>
                                           </tr>
                                         </table>
                                     </td>

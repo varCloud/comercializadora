@@ -100,6 +100,7 @@ namespace lluviaBackEnd.Models
         public float adeudo { get; set; }
 
         public int diasTranscurridos { get; set; }
+        public string direccion { get; set; }
 
     }
 }

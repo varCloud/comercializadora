@@ -59,7 +59,8 @@ as
 						u.idUsuario, u.nombre + ' ' + u.apellidoPaterno + ' ' + u.apellidoMaterno as nombreUsuario,
 						ped.cantidadActualInvGeneral, ped.cantidadAnteriorInvGeneral, tp.fechaAlta, ped.precioVenta, ped.idPedidoEspecialDetalle,
 						p.idFactFormaPago as formaPago, formaPago.descripcion as descFormaPago, p.codigoBarras, p.montoPagado,
-						tp.idTipoTicketPedidoEspecial,CONVERT(VARCHAR(10),tp.fechaAlta,103) fechaTicket, CONVERT(VARCHAR(20),tp.fechaAlta,114) horaTicket
+						tp.idTipoTicketPedidoEspecial,CONVERT(VARCHAR(10),tp.fechaAlta,103) fechaTicket, CONVERT(VARCHAR(20),tp.fechaAlta,114) horaTicket,
+						upper( (coalesce(calle, 'N/A') + ' ' + coalesce(numeroExterior, 'S/N') + ', Colonia: ' + coalesce(colonia, 'N/A') + ', CP: ' + coalesce(cp, 'N/A') + ', Municipio: ' + coalesce(municipio, 'N/A')  + ', Estado: ' + coalesce(estado, 'N/A') ) ) as direccion
 						into #TicketsPedidosEspecialesDetalle
 				from	TicketsPedidosEspeciales tp 
 							inner join TicketsPedidosEspecialesDetalle ped

@@ -1863,6 +1863,8 @@ namespace lluviaBackEnd.Controllers
 
                     e.Graphics.DrawString("  Cliente: " + ticket.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
+                    e.Graphics.DrawString("  Dirección: " + ticket.Modelo[0].direccion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 28;
                     e.Graphics.DrawString("  Forma de Pago: " + ticket.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
 
@@ -2190,7 +2192,8 @@ namespace lluviaBackEnd.Controllers
 
                     e.Graphics.DrawString("  Cliente: " + ticketDevolucion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-
+                    e.Graphics.DrawString("  Dirección: " + ticketDevolucion.Modelo[0].direccion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 28;
                     e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
                     e.Graphics.DrawString("#     Descripcion                                 Art.          Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
