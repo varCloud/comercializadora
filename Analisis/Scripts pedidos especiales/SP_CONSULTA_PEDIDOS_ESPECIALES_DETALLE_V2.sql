@@ -103,7 +103,7 @@ as
 								p.precioMenudeo,
 								ped.precioRango,
 								ped.precioVenta,
-								ped.idTicketMayoreo,
+								--ped.idTicketMayoreo, /*no existe el campo*/
 								ped.observaciones,
 								p.ultimoCostoCompra,
 								coalesce ( (ped.cantidadAceptada + ped.cantidadRechazada), 0) as cantidadSolicitada, 

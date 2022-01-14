@@ -18,7 +18,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE SP_APP_PEDIDOS_ESPECIALES_OBTENER_NOTIFICACIONES
+create PROCEDURE SP_APP_PEDIDOS_ESPECIALES_OBTENER_NOTIFICACIONES
 @idEstatusPedidoEspecialDetalle int = null, -- 1	Solcitados 2	Atendidos 3	Rechazados 4	Aceptados
 @idAlmacenOrigen int = null, -- los obtiene del web service que regresa los pedidos internos
 @idAlmacenDestino int = null-- los obtiene del web service que regresa los pedidos internos

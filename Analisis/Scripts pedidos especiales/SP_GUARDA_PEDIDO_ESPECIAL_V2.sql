@@ -1,4 +1,4 @@
-USE [DB_A57E86_lluviadesarrollo]
+--USE [DB_A57E86_lluviadesarrollo]
 GO
 /****** Object:  StoredProcedure [dbo].[SP_GUARDA_PEDIDO_ESPECIAL_V2]    Script Date: 20/09/2021 02:42:12 p. m. ******/
 SET ANSI_NULLS ON
@@ -360,7 +360,7 @@ as
 								PedidosEspeciales
 									(
 										idCliente,cantidad,fechaAlta,montoTotal,idUsuario,idEstatusPedidoEspecial,
-										idEstacion,observaciones,codigoBarras,idTipoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo,esRevisionHandHeld
+										idEstacion,observaciones,codigoBarras,idFactMetodoPago,idUsuarioEntrega,numeroUnidadTaxi,idTicketMayoreo,esRevisionHandHeld
 									)
 
 							select	@idCliente as idCliente, @totalProductos as cantidad, @fecha as fechaAlta, @montoTotal as montoTotal, 

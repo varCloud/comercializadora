@@ -43,6 +43,7 @@ namespace HowToUploadFilesToFTP
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnStartIIS = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.lblDescargando = new System.Windows.Forms.Label();
@@ -53,7 +54,6 @@ namespace HowToUploadFilesToFTP
             this.txtDownloadPath = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtFileToDownload = new System.Windows.Forms.TextBox();
-            this.btnStartIIS = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -108,7 +108,7 @@ namespace HowToUploadFilesToFTP
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(116, 20);
             this.txtPassword.TabIndex = 5;
-            this.txtPassword.Text = "T12345678t";
+            this.txtPassword.Text = "lluvia2021$";
             // 
             // label3
             // 
@@ -125,7 +125,7 @@ namespace HowToUploadFilesToFTP
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(313, 20);
             this.txtAddress.TabIndex = 7;
-            this.txtAddress.Text = "ftp.site4now.net";
+            this.txtAddress.Text = "win5230.site4now.net";
             this.txtAddress.TextChanged += new System.EventHandler(this.txtAddress_TextChanged);
             // 
             // label4
@@ -199,6 +199,16 @@ namespace HowToUploadFilesToFTP
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Download A File";
             this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
+            // 
+            // btnStartIIS
+            // 
+            this.btnStartIIS.Location = new System.Drawing.Point(133, 257);
+            this.btnStartIIS.Name = "btnStartIIS";
+            this.btnStartIIS.Size = new System.Drawing.Size(75, 23);
+            this.btnStartIIS.TabIndex = 20;
+            this.btnStartIIS.Text = "Start IIS";
+            this.btnStartIIS.UseVisualStyleBackColor = true;
+            this.btnStartIIS.Click += new System.EventHandler(this.btnStartIIS_Click);
             // 
             // button1
             // 
@@ -290,16 +300,6 @@ namespace HowToUploadFilesToFTP
             this.txtFileToDownload.Size = new System.Drawing.Size(313, 20);
             this.txtFileToDownload.TabIndex = 10;
             this.txtFileToDownload.Text = "/Deploys/deployLluvia.zip";
-            // 
-            // btnStartIIS
-            // 
-            this.btnStartIIS.Location = new System.Drawing.Point(133, 257);
-            this.btnStartIIS.Name = "btnStartIIS";
-            this.btnStartIIS.Size = new System.Drawing.Size(75, 23);
-            this.btnStartIIS.TabIndex = 20;
-            this.btnStartIIS.Text = "Start IIS";
-            this.btnStartIIS.UseVisualStyleBackColor = true;
-            this.btnStartIIS.Click += new System.EventHandler(this.btnStartIIS_Click);
             // 
             // Form1
             // 

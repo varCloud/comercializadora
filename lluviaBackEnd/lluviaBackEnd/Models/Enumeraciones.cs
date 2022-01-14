@@ -129,7 +129,7 @@ namespace lluviaBackEnd.Models
         Picker,
         Almacenista,
         Usuario_de_Compras,
-        Cajero_Pedidos_Especiales =15
+        Cajero_Pedidos_Especiales =11
     }
 
     public enum EnumEstadoCompras
