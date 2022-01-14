@@ -94,7 +94,7 @@ as
 								p.idEstacion,
 								p.observaciones,
 								p.codigoBarras,
-								p.idTipoPago,
+								--p.idTipoPago,
 								p.idUsuarioEntrega,
 								p.numeroUnidadTaxi,
 								case
