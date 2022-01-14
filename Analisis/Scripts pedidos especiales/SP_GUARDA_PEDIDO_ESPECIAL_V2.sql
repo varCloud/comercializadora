@@ -389,12 +389,12 @@ as
 							(
 								idPedidoEspecial,idProducto,idAlmacenOrigen,idAlmacenDestino,fechaAlta,cantidad,monto,
 								cantidadActualInvGeneral,cantidadAnteriorInvGeneral,precioIndividual,precioMenudeo,precioRango,precioVenta,
-								idTicketMayoreo,observaciones,ultimoCostoCompra,cantidadAceptada,cantidadAtendida,cantidadRechazada,
+								/*idTicketMayoreo,*/observaciones,ultimoCostoCompra,cantidadAceptada,cantidadAtendida,cantidadRechazada,
 								idEstatusPedidoEspecialDetalle,notificado
 							)
 					select	@idPedidoEspecial as idPedidoEspecial, p.idProducto, @idAlmacenSolicita as idAlmacenOrigen, idAlmacen as idAlmacenDestino , 
 							@fecha as fechaAlta, p.cantidad, costo as monto, cast(0 as int) as cantidadActualInvGeneral, ig.cantidad as cantidadAnteriorInvGeneral, 
-							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,0 as idTicketMayoreo, null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, 
+							pro.precioIndividual,pro.precioMenudeo,precioRango,precioVenta,/*0 as idTicketMayoreo,*/ null as observaciones, pro.ultimoCostoCompra as ultimoCostoCompra, 
 							cast(0 as float) as cantidadAceptada, 
 							p.cantidad as cantidadAtendida, 
 							cast(0 as float) as cantidadRechazada, 1 as idEstatusPedidoEspecialDetalle, cast(0 as bit) as notificado
