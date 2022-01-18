@@ -1670,6 +1670,256 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+        public ActionResult AbrirCajon()
+        {
+            Notificacion<Retiros> notificacion;
+            try
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Abriendo Cajón del Dinero.";
+                notificacion.Estatus = 200;
+                PrintDocument pd = new PrintDocument();
+                pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString();
+                PaperSize ps = new PaperSize("", 285, 540);
+                pd.PrintPage += new PrintPageEventHandler(pd_PrintAbreCajon);
+                pd.PrintController = new StandardPrintController();
+                pd.Print();
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        void pd_PrintAbreCajon(object sender, PrintPageEventArgs e)
+        {
+            Notificacion<List<Retiros>> notificacion = new Notificacion<List<Retiros>>();
+            try
+            {
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+                Rectangle datos = new Rectangle(5, 0, 0, 0);
+                e.Graphics.DrawString(" ", Bold, drawBrush, datos, centrado);
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+            }
+            catch (Exception ex)
+            {
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+            }
+
+        }
+
+
+        public ActionResult ImprimeTicketRetiro(Retiros retiro)
+        {
+            Notificacion<Retiros> notificacion = new Notificacion<Retiros>();
+            try
+            {
+
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                notificacion.Mensaje = "Se envio el ticket a la impresora.";
+                notificacion.Estatus = 200;
+                bool ticketVistaPrevia = true;
+
+                //PrintDocument pd = new PrintDocument();
+                using (PrintDocument pd = new PrintDocument())
+                {
+                    if (ticketVistaPrevia)
+                    {
+                        notificacion.Mensaje = "Abriendo Ticket.";
+                        string nombreImpresora = string.Empty;
+                        foreach (String strPrinter in PrinterSettings.InstalledPrinters)
+                        {
+                            if (strPrinter.Contains("PDF"))
+                            {
+                                nombreImpresora = strPrinter;
+                            }
+                        }
+
+                        if (nombreImpresora == string.Empty)
+                        {
+                            notificacion.Mensaje = "No se encontro impresora PDF para previsualizar ticket.";
+                            notificacion.Estatus = -1;
+                            pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                        }
+                        else
+                        {
+                            pd.PrinterSettings = new PrinterSettings
+                            {
+                                PrinterName = nombreImpresora, //"Microsoft XPS Document Writer",
+                                PrintToFile = true,
+                                PrintFileName = System.Web.HttpContext.Current.Server.MapPath("~") + "\\Tickets\\" + retiro.idRetiro.ToString() + "_preview.pdf"
+                            };
+                        }
+                    }
+                    else
+                    {
+                        pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
+                    }
+                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtenerRetirosEfectivo(retiro);
+                    pd.PrintPage += (_sender, args) => pd_PrintPageRetiro(null, args, _notificacion);
+                    pd.PrintController = new StandardPrintController();
+                    pd.DefaultPageSettings.Margins.Left = 10;
+                    pd.DefaultPageSettings.Margins.Right = 0;
+                    pd.DefaultPageSettings.Margins.Top = 0;
+                    pd.DefaultPageSettings.Margins.Bottom = 0;
+                    pd.Print();
+                    pd.Dispose();
+                    this.indexProducto = 0;
+                    this.paginaActual = 0;
+                }
+
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                notificacion = new Notificacion<Retiros>();
+                notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                notificacion.Estatus = -1;
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        void pd_PrintPageRetiro(object sender, PrintPageEventArgs e, Notificacion<dynamic> retiro)
+        {
+
+            try
+            {
+                string titulo = string.Empty;
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                titulo = "\nCOMPROBANTE DE RETIRO" + "\n" + "POR EXCESO DE EFECTIVO" + "\n" + " PEDIDOS ESPECIALES"; ;
+
+                //Logos
+                Image newImage = Image.FromFile(System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg");
+
+                int ancho = 258;
+                int espaciado = 14;
+
+                //Configuración Global
+                GraphicsUnit units = GraphicsUnit.Pixel;
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.InterpolationMode = InterpolationMode.High;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+                //Configuración Texto
+                StringFormat centrado = new StringFormat();
+                centrado.Alignment = StringAlignment.Center;//Cetrado
+                StringFormat izquierda = new StringFormat();
+                izquierda.Alignment = StringAlignment.Near; //Izquierda
+                StringFormat derecha = new StringFormat();
+                derecha.Alignment = StringAlignment.Far; //Izquierda
+
+                //Tipo y tamaño de letra
+                Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
+                Font Bold = new Font("Arial", 6.8F, FontStyle.Bold, GraphicsUnit.Point);
+                Font BoldWester = new Font("Arial", 13, FontStyle.Bold, GraphicsUnit.Point);
+
+                //Color de texto
+                SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+                //Se pinta logo 
+                Rectangle logo = new Rectangle(80, 15, 280, 81);
+                e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
+
+                Rectangle datos = new Rectangle(5, 110, ancho, 82);
+                e.Graphics.DrawString(titulo, Bold, drawBrush, datos, centrado);
+
+
+                Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
+                Rectangle datosPrecio = new Rectangle(220, 240, 48, 82);
+
+                Rectangle datosEnca = new Rectangle(0, 160, 280, 82);
+
+                Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
+
+                e.Graphics.DrawString("  Usuario: " + retiro.Modelo[0].nombreUsuario.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Fecha: " + retiro.Modelo[0].fechaAlta.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Sucursal: " + retiro.Modelo[0].descripcionSucursal.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Almacen: " + retiro.Modelo[0].descripcionAlmacen.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("  Estacion: " + retiro.Modelo[0].nombreEstacion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosEnca, izquierda);
+                datosEnca.Y += 14;
+
+
+                e.Graphics.DrawString("  MONTO RETIRO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString(Convert.ToSingle(retiro.Modelo[0].montoRetiro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, 266, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+
+                e.Graphics.DrawString("================================================" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado + 50;
+
+
+                e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosfooter1, izquierda);
+                datosfooter1.Y += espaciado;
+
+                Rectangle datosfooter2 = new Rectangle(0, datosfooter1.Y + 5, 280, 82);
+
+                e.Graphics.DrawString("  AUTORIZO  ", font, drawBrush, datosfooter2, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+                // para mas espaciado al final del ticket
+                e.Graphics.DrawString("-", font, drawBrush, 0, datosfooter2.Y + 30, centrado);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+
+            }
+            catch (InvalidPrinterException ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                retiro.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                retiro.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //notificacion = new Notificacion<Ventas>();
+                retiro.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
+                retiro.Estatus = -1;
+                //return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+
+        }
         #endregion
 
         #region devoluciones

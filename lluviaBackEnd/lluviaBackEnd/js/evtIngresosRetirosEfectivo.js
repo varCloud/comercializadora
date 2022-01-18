@@ -1,6 +1,6 @@
 ﻿var cantidadEfectivo = parseFloat(0);
 $(document).ready(function () {
-   
+    
     if (ValidarAperturaCaja()) {
         if (!ValidaCajaAbierta()) {
             AbrirModalIngresoEfectivo(1);
@@ -211,7 +211,7 @@ function ConsultRetiros() {
                         '             <td>' + dato.nombreUsuario + '</td>' +
                         '             <td>' + dato.nombreEstacion + '</td>' +
                         '             <td>' + dato.fechaAlta + '</td>' +
-                        '             <td class="text-center"><a href="javascript:ImprimeTicketRetiro(@c.idRetiro,1)" data-toggle="tooltip" title="" data-original-title="Reimprimir Ticket"><i class="fas fa-print"></i></a> </td>' +
+                        '             <td class="text-center"><a href="javascript:ImprimeTicketRetiro(' + dato.idRetiro+')" data-toggle="tooltip" title="" data-original-title="Reimprimir Ticket"><i class="fas fa-print"></i></a> </td>' +
                         '</tr>';
                 });
                 html += ' </tbody>' +
@@ -290,7 +290,7 @@ function retirarExcesoEfectivo(montoRetiro) {
             var result = JSON.parse(data);
             MuestraToast(result.Estatus == 200 ? 'success' : 'error', result.Mensaje);
             $('#ModalRetiroExcesoEfectivo').modal('hide');
-            //ImprimeTicketRetiro(data.Modelo.idRetiro, 1);
+            ImprimeTicketRetiro(result.id);
             //ConsultExcesoEfectivo();
         },
         error: function (xhr, status) {
@@ -302,10 +302,10 @@ function retirarExcesoEfectivo(montoRetiro) {
     });
 }
 
-function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
+function ImprimeTicketRetiro(idRetiro) {
     $.ajax({
-        url: rootUrl("/Ventas/ImprimeTicketRetiro"),
-        data: { idRetiro: idRetiro, idCliente: idRetiro, tipoRetiro: tipoRetiro },
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketRetiro"),
+        data: { idRetiro: idRetiro},
         method: 'post',
         dataType: 'html',
         async: true,
@@ -329,3 +329,28 @@ function ImprimeTicketRetiro(idRetiro, tipoRetiro) {
 
 
 //Fin de retiros de efectivo
+
+//Abrir cajon
+function AbrirCajonDinero() {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/AbrirCajon"),
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader("Abriendo Cajón...");
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al intentar abrir el cajón del dinero.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
