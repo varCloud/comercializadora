@@ -2049,17 +2049,14 @@ namespace lluviaBackEnd.Controllers
                 //List<Ticket> lstTickets = notificacion.Modelo;
                 //if (this.paginaActual< _lstTickets.Count())
                 //    lstTickets = _lstTickets[this.paginaActual];
-                float monto = 0;
-                float montoIVA = 0;
-                float montoComisionBancaria = 0;
-                float montoAhorro = 0;
-                float montoPagado = 0;
-                float suCambio = 0;
-
-                //float montoPagadoAgregarProductos = 0;
-                //float montoAgregarProductos = 0;
-                //float suCambioAgregarProductos = 0;
-                float cantidadTotalDeArticulos = 0;
+           
+                float TotalMonto = 0;
+                float TotalIVA = 0;
+                float TotalComisionBancaria = 0;
+                float TotalAhorro = 0;
+                float TotalPagado = 0;
+                float Cambio = 0;
+                float cantidadTotalArticulos = 0;
 
                 int ancho = 258;
                 int espaciado = 14;
@@ -2205,17 +2202,27 @@ namespace lluviaBackEnd.Controllers
                     }
 
 
-                    monto = monto + Convert.ToSingle(ticket.Modelo[i].monto);
-                    montoIVA = montoIVA + Convert.ToSingle(ticket.Modelo[i].montoIVA);
-                    montoComisionBancaria = montoComisionBancaria + Convert.ToSingle(ticket.Modelo[i].montoComisionBancaria);
-                    montoAhorro = montoAhorro + Convert.ToSingle(ticket.Modelo[i].ahorro);
-                    cantidadTotalDeArticulos = cantidadTotalDeArticulos + Convert.ToSingle(ticket.Modelo[i].cantidad);
+                    //monto = monto + Convert.ToSingle(ticket.Modelo[i].monto);
+                    //montoIVA = montoIVA + Convert.ToSingle(ticket.Modelo[i].montoIVA);
+                    //montoComisionBancaria = montoComisionBancaria + Convert.ToSingle(ticket.Modelo[i].montoComisionBancaria);
+                    //montoAhorro = montoAhorro + Convert.ToSingle(ticket.Modelo[i].ahorro);
+                    //cantidadTotalDeArticulos = cantidadTotalDeArticulos + Convert.ToSingle(ticket.Modelo[i].cantidad);
 
                 }
 
                 int posXFooter = 285;
-                montoPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
-                suCambio = montoPagado == 0 ? 0 : montoPagado - monto - montoIVA - montoComisionBancaria;
+                for (int i = 0; i < ticket.Modelo.Count; i++)
+                {
+                    TotalMonto = TotalMonto + Convert.ToSingle(ticket.Modelo[i].monto);
+                    TotalIVA = TotalIVA + Convert.ToSingle(ticket.Modelo[i].montoIVA);
+                    TotalComisionBancaria = TotalComisionBancaria + Convert.ToSingle(ticket.Modelo[i].montoComisionBancaria);
+                    TotalAhorro = TotalAhorro + Convert.ToSingle(ticket.Modelo[i].ahorro);
+                    cantidadTotalArticulos = cantidadTotalArticulos + Convert.ToSingle(ticket.Modelo[i].cantidad);
+
+                }
+
+                TotalPagado = Convert.ToSingle(ticket.Modelo[0].montoPagado);
+                Cambio = TotalPagado == 0 ? 0 : TotalPagado - TotalMonto - TotalIVA - TotalComisionBancaria;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 295, 15);
 
@@ -2232,7 +2239,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticket.Modelo.Count + 1)
                 {
                     e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString(TotalMonto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2243,8 +2250,9 @@ namespace lluviaBackEnd.Controllers
                 {
                     //if (montoComisionBancaria > 0)
                     //{
+                    
                     e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((TotalComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2255,8 +2263,9 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticket.Modelo.Count + 3)
                 //if (montoIVA > 0)
                 {
+                   
                     e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((TotalIVA).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2267,7 +2276,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticket.Modelo.Count + 4)
                 {
                     e.Graphics.DrawString("  TOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((monto + montoIVA + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((TotalMonto + TotalIVA + TotalComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2286,7 +2295,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticket.Modelo.Count + 6)
                 {
                     e.Graphics.DrawString("  RECIBIDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoPagado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((TotalPagado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2296,7 +2305,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticket.Modelo.Count + 7)
                 {
                     e.Graphics.DrawString("  SU CAMBIO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((suCambio).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((Cambio).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2307,7 +2316,7 @@ namespace lluviaBackEnd.Controllers
                 {
                     datosfooter1.Y += espaciado;
                     Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
-                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: " + cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS COMPRADOS: " + cantidadTotalArticulos.ToString(), font, drawBrush, totalArt, centrado);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
                 }
@@ -2315,11 +2324,11 @@ namespace lluviaBackEnd.Controllers
 
                 if (indexProducto == ticket.Modelo.Count + 9)
                 {
-                    if (montoAhorro > 0)
+                    if (TotalAhorro > 0)
                     {
                         datosfooter1.Y += espaciado;
                         Rectangle datosAhorro = new Rectangle(0, datosfooter1.Y, 280, 82);
-                        e.Graphics.DrawString("******* USTED AHORRO:  " + (montoAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
+                        e.Graphics.DrawString("******* USTED AHORRO:  " + (TotalAhorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " *******", font, drawBrush, datosAhorro, centrado);
                         datosfooter1.Y += espaciado;
                         indexProducto++;
 
@@ -2477,9 +2486,7 @@ namespace lluviaBackEnd.Controllers
                 }
 
 
-                float monto = 0;
-                float montoComisionBancaria = 0;
-                float cantidadTotalDeArticulos = 0;
+                
 
                 for (int i = indexProducto; i < ticketDevolucion.Modelo.Count; i++)
                 {
@@ -2489,9 +2496,6 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(Convert.ToSingle(ticketDevolucion.Modelo[i].precioVenta).ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((Convert.ToSingle(ticketDevolucion.Modelo[i].monto)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-                    monto += Convert.ToSingle(ticketDevolucion.Modelo[i].monto);
-                    montoComisionBancaria += Convert.ToSingle(ticketDevolucion.Modelo[i].montoComisionBancaria);
-                    cantidadTotalDeArticulos += Convert.ToSingle(ticketDevolucion.Modelo[i].cantidad);
 
                     if (ticketDevolucion.Modelo[i].descProducto.ToString().Length >= 23)
                     {
@@ -2519,6 +2523,17 @@ namespace lluviaBackEnd.Controllers
                     }
                 }
 
+                float montoTotal = 0;
+                float TotalComisionBancaria = 0;
+                float cantidadTotalArticulos = 0;
+                for (int i = 0; i < ticketDevolucion.Modelo.Count; i++)
+                {
+                    montoTotal += Convert.ToSingle(ticketDevolucion.Modelo[i].monto);
+                    TotalComisionBancaria += Convert.ToSingle(ticketDevolucion.Modelo[i].montoComisionBancaria);
+                    cantidadTotalArticulos += Convert.ToSingle(ticketDevolucion.Modelo[i].cantidad);
+                }
+
+
                 int posXFooter = 285;
 
                 Rectangle datosfooter1 = new Rectangle(0, datosProducto.Y, 280, 82);
@@ -2535,7 +2550,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticketDevolucion.Modelo.Count + 1)
                 {
                     e.Graphics.DrawString("  SUBTOTAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString(monto.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString(montoTotal.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2547,7 +2562,7 @@ namespace lluviaBackEnd.Controllers
                     //if (montoComisionBancaria > 0)
                     //{
                     e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((TotalComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
 
@@ -2558,7 +2573,7 @@ namespace lluviaBackEnd.Controllers
                 if (indexProducto == ticketDevolucion.Modelo.Count + 3)
                 {
                     e.Graphics.DrawString("  TOTAL DEVUELTO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                    e.Graphics.DrawString((monto + montoComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                    e.Graphics.DrawString((montoTotal + TotalComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado * 2;
                     indexProducto++;
                 }
@@ -2591,7 +2606,7 @@ namespace lluviaBackEnd.Controllers
                     datosfooter1.Y += espaciado;
                     datosfooter1.Y += espaciado;
                     Rectangle totalArt = new Rectangle(5, datosfooter1.Y, ancho, 82);
-                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS DEVUELTOS: " + cantidadTotalDeArticulos.ToString(), font, drawBrush, totalArt, centrado);
+                    e.Graphics.DrawString("  CANTIDAD DE ARTICULOS DEVUELTOS: " + cantidadTotalArticulos.ToString(), font, drawBrush, totalArt, centrado);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
                 }
