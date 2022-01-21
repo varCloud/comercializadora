@@ -92,12 +92,12 @@
 
                             <div class="col-12 col-sm-12 col-lg-5">
                                 <div class="form-group">
-                                    <label>Producto</label>
+                                    <label>Producto:</label>
                                     @*@Html.HiddenFor(x => idVenta)*@
                                     @Html.HiddenFor(x => comisionBancaria)
                                     @Html.HiddenFor(x => idPedidoEspecialMayoreo_)
                                     @*@Html.HiddenFor(x => esDevolucion)
-                                        @Html.HiddenFor(x => esAgregarProductos)*@
+                        @Html.HiddenFor(x => esAgregarProductos)*@
                                     @Html.HiddenFor(x => idClienteDevolucion)
                                     @Html.HiddenFor(x => Model.idPedidoEspecial, new { id = "idPedidoEspecial" })
                                     @Html.HiddenFor(x => Model.idCliente, new { id = "idClienteCotizacion" })
@@ -143,6 +143,10 @@
                             </div>
 
                         </div>
+                    </div>
+
+                    <div class="card-footer" style="text-align:right">
+                        <span>D: Disponible, E: En existencia, S/A: Sin acomodar, R: Resguardo, B: Bloqueo, ME: Precio menudeo, MA: Precio mayoreo</span>
                     </div>
                 </div>
             </div>
