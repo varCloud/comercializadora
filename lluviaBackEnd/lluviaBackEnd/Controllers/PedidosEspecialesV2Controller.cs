@@ -586,7 +586,7 @@ namespace lluviaBackEnd.Controllers
 
                 for (int i = 0; i < numTicketsNormalesDevoluciones.Modelo.Count; i++)
                 {
-                    Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial, 0);
+                    Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial, 0, true);
 
                     if (numTicketsNormalesDevoluciones.Modelo[i].idTipoTicketPedidoEspecial == 1) // normal
                     {
@@ -1958,7 +1958,7 @@ namespace lluviaBackEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult ImprimeTicket(Int64 idPedidoEspecial, int idTipoTicketPedidoEspecial, int idTicketPedidoEspecial = 0)
+        public ActionResult ImprimeTicket(Int64 idPedidoEspecial, int idTipoTicketPedidoEspecial, int idTicketPedidoEspecial = 0, Boolean ticketFinal = true)
         {
             Notificacion<Ventas> notificacion;
             try
@@ -2006,9 +2006,9 @@ namespace lluviaBackEnd.Controllers
                     {
                         pd.PrinterSettings.PrinterName = WebConfigurationManager.AppSettings["impresora"].ToString(); // @"\\DESKTOP-M7HANDH\EPSON";
                     }
-                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial);
+                    Notificacion<dynamic> _notificacion = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial, ticketFinal);
                     if (idTipoTicketPedidoEspecial == 1)
-                        pd.PrintPage += (_sender, args) => pd_PrintPageTicketOriginal(null, args, _notificacion); //ticket original
+                        pd.PrintPage += (_sender, args) => pd_PrintPageTicketOriginal(null, args, _notificacion, ticketFinal); //ticket original
                     if (idTipoTicketPedidoEspecial == 2) //ticket devoluciones
                         pd.PrintPage += (_sender, args) => pd_PrintPageDevoluciones(null, args, _notificacion);
                     pd.PrintController = new StandardPrintController();
@@ -2042,7 +2042,7 @@ namespace lluviaBackEnd.Controllers
 
         }
 
-        void pd_PrintPageTicketOriginal(object sender, PrintPageEventArgs e, Notificacion<dynamic> ticket)
+        void pd_PrintPageTicketOriginal(object sender, PrintPageEventArgs e, Notificacion<dynamic> ticket, Boolean ticketFinal)
         {
             try
             {
@@ -2356,7 +2356,12 @@ namespace lluviaBackEnd.Controllers
                 {
                     datosfooter1.Y += espaciado;
                     datosfooter2 = new Rectangle(0, datosfooter1.Y, 280, 82);
-                    e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                    if ( ticketFinal ){
+                        e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
+                    }
+                    else { 
+                        e.Graphics.DrawString("******  ESTE TICKEET ES SOLO INFORMATIVO  ******", font, drawBrush, datosfooter2, centrado);
+                    }
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
                 }
@@ -2653,12 +2658,12 @@ namespace lluviaBackEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult VerTicket(Int64 idPedidoEspecial, int idTipoTicketPedidoEspecial, int idTicketPedidoEspecial = 0)
+        public ActionResult VerTicket(Int64 idPedidoEspecial, int idTipoTicketPedidoEspecial, int idTicketPedidoEspecial = 0, Boolean ticketFinal = true)
         {
             try
             {
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
-                Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial);
+                Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial, ticketFinal);
                 string pdf = "";
                 if (idTipoTicketPedidoEspecial == 1) //ticket original
                     pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket));

@@ -64,7 +64,7 @@ else
                                                             <a class="dropdown-item has-icon" href="@Url.Action("ConfirmarProductos", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial, idCliente = item.idCliente})"><i class="fas fa-check"></i> Entregar</a>
                                                         }
 
-                                                        @*<a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecialProductos(@item.idPedidoEspecial);"><i class="fas fa-print"></i>Ticket Productos</a>*@
+                                                        <a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecial(@item.idPedidoEspecial, 1, 0, false);"><i class="fas fa-print"></i>Ticket Productos</a>
                                                         <a class="dropdown-item has-icon" href="javascript:imprimirTicketAlmacenes(@item.idPedidoEspecial);"><i class="fas fa-print"></i>Imprimir Ticket Almacenes </a>
                                                         
                                                         <a class="dropdown-item has-icon" href="@Url.Action("VerTicketAlmacenes", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>
