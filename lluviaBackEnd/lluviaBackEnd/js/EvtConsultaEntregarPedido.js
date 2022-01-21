@@ -24,10 +24,10 @@ function onSuccessResultConsultaEntregarPedido(data) {
 
 
 
-function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
+function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial, ticketFinal) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ImprimeTicket"),
-        data: { idPedidoEspecial: idPedidoEspecial, idTipoTicketPedidoEspecial: idTipoTicketPedidoEspecial, idTicketPedidoEspecial: idTicketPedidoEspecial },
+        data: { idPedidoEspecial: idPedidoEspecial, idTipoTicketPedidoEspecial: idTipoTicketPedidoEspecial, idTicketPedidoEspecial: idTicketPedidoEspecial, ticketFinal: ticketFinal },
         method: 'post',
         dataType: 'html',
         async: true,

@@ -325,37 +325,37 @@ namespace lluviaBackEnd.DAO
         }
 
 
-        public Notificacion<List<Ticket>> ObtenerTicketsPedidoEspecialV2(Ticket ticket)
-        {
-            Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
-            try
-            {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@idPedidoEspecial", ticket.idPedidoEspecial);
-                    var result = db.QueryMultiple("SP_CONSULTA_TICKET_PEDIDO_ESPECIALV2", parameters, commandType: CommandType.StoredProcedure);
-                    var r1 = result.ReadFirst();
-                    if (r1.status == 200)
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = result.Read<Ticket>().ToList();
-                    }
-                    else
-                    {
-                        notificacion.Estatus = r1.status;
-                        notificacion.Mensaje = r1.mensaje;
-                        notificacion.Modelo = new List<Ticket> { ticket };
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return notificacion;
-        }
+        //public Notificacion<List<Ticket>> ObtenerTicketsPedidoEspecialV2(Ticket ticket)
+        //{
+        //    Notificacion<List<Ticket>> notificacion = new Notificacion<List<Ticket>>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            var parameters = new DynamicParameters();
+        //            parameters.Add("@idPedidoEspecial", ticket.idPedidoEspecial);
+        //            var result = db.QueryMultiple("SP_CONSULTA_TICKET_PEDIDO_ESPECIALV2", parameters, commandType: CommandType.StoredProcedure);
+        //            var r1 = result.ReadFirst();
+        //            if (r1.status == 200)
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = result.Read<Ticket>().ToList();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = r1.status;
+        //                notificacion.Mensaje = r1.mensaje;
+        //                notificacion.Modelo = new List<Ticket> { ticket };
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
 
 
         public Notificacion<PedidosEspecialesV2> GuardarIVAPedido(PedidosEspecialesV2 pedido)
@@ -1118,7 +1118,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<dynamic> ObtieneDetalleTicketPedidoEspecial(Int64 idPedidoEspecial,int idTipoTicketPedidoEspecial,int idTicketPedidoEspecial)
+        public Notificacion<dynamic> ObtieneDetalleTicketPedidoEspecial(Int64 idPedidoEspecial,int idTipoTicketPedidoEspecial,int idTicketPedidoEspecial, Boolean ticketFinal)
         {
             Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
             try
@@ -1127,6 +1127,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@idPedidoEspecial", idPedidoEspecial);
                 parameters.Add("@idTipoTicketPedidoEspecial", idTipoTicketPedidoEspecial);
                 parameters.Add("@idTicketPedidoEspecial", idTicketPedidoEspecial==0? (object)null : idTicketPedidoEspecial);
+                parameters.Add("@ticketFinal", ticketFinal);
                 notificacion = ConstructorDapper.Consultar("SP_CONSULTA_DETALLE_TICKET_PEDIDO_ESPECIAL", parameters);
             }
             catch (Exception ex)
