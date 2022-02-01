@@ -370,9 +370,10 @@ function MostrarDetalleDevolucion(idPedidoEspecial) {
                             '             <td>' + dato.cantidad + '</td>' +
                             '             <td>' + formatoMoneda(dato.monto) + '</td>';
                         if (dato.fraccion)
-                            html += '<td><input class="esDevolucion" type="text" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
+                            html += '<td><input class="esDevolucion" type="text" onchange="fnActualizaDevolucion(this)" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
+                            //html += '<td><input class="esDevolucion" type="text" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
                         else
-                            html += '<td><input class="esDevolucion" type="text" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
+                            html += '<td><input class="esDevolucion" type="text" onchange="fnActualizaDevolucion(this)" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
                         html +='<td style="display: none;">' + dato.idPedidoEspecialDetalle + '</td>' +
                                 '<td style="display: none;">' + dato.montoComisionBancaria + '</td>' +
                                 '</tr>';
@@ -387,25 +388,25 @@ function MostrarDetalleDevolucion(idPedidoEspecial) {
                 if (tblDevolucionesPedidosEspeciales != null)
                     tblDevolucionesPedidosEspeciales.destroy();
                 InitDataTablePedidosEspecialesDevolucion();
-                
-                $('#tblDevolucionesPedidosEspeciales input').on('change', function () {
+
+                //$('.esDevolucion input').on('change', function () {
                     
-                    var thisInput = $(this);
-                    var cell = $(this).closest('td');
-                    var row = cell.closest('tr');
-                    var rowIndex = row[0].rowIndex;
-                    var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
+                //    var thisInput = $(this);
+                //    var cell = $(this).closest('td');
+                //    var row = cell.closest('tr');
+                //    var rowIndex = row[0].rowIndex;
+                //    var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
 
-                    if ((parseFloat(thisInput.val())) > (parseFloat(tblDevoluciones.rows[rowIndex].cells[4].innerHTML))) {
-                        MuestraToast('warning', "No puede regresar mas de lo que compro.");
-                        document.execCommand('undo');
-                        return;
-                    }
+                //    if ((parseFloat(thisInput.val())) > (parseFloat(tblDevoluciones.rows[rowIndex].cells[4].innerHTML))) {
+                //        MuestraToast('warning', "No puede regresar mas de lo que compro.");
+                //        document.execCommand('undo');
+                //        return;
+                //    }
 
-                    actualizarSubTotalDevoluciones();
+                //    actualizarSubTotalDevoluciones();
 
 
-                });
+                //});
                 $('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });
             }
             else
@@ -421,6 +422,22 @@ function MostrarDetalleDevolucion(idPedidoEspecial) {
         }
     });
 
+}
+
+function fnActualizaDevolucion(input) {    
+    var thisInput = $(input);
+    var cell = $(input).closest('td');
+    var row = cell.closest('tr');
+    var rowIndex = row[0].rowIndex;
+    var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
+
+    if ((parseFloat(thisInput.val())) > (parseFloat(tblDevoluciones.rows[rowIndex].cells[4].innerHTML))) {
+        MuestraToast('warning', "No puede regresar mas de lo que compro.");
+        document.execCommand('undo');
+        return;
+    }
+
+    actualizarSubTotalDevoluciones();
 }
 
 
@@ -456,8 +473,22 @@ function InitDataTablePedidosEspecialesDevolucion() {
 }
 
 function actualizarSubTotalDevoluciones() {
+    var cantidadTotalDevelta = parseFloat(0);
+    var comisionBancariaDevuelta = parseFloat(0);
+    tblDevolucionesPedidosEspeciales.rows().iterator('row', function (context, index) {
+        let node = $(this.row(index).node());        
+        const cantidadDevelta = parseFloat(node[0].cells[6].children[0].value);
+        const cantidadInicial = parseFloat(node[0].cells[4].innerHTML);
+        const precioVenta = parseFloat(node[0].cells[3].innerHTML.replace('$', ''));
+        const comisionBancaria = parseFloat(node[0].cells[8].innerHTML);
+        cantidadTotalDevelta += cantidadDevelta * precioVenta;
+        //                                              cantidad devuelta                                   monto comision                              cantidad restante
+        comisionBancariaDevuelta += (cantidadDevelta) * ((comisionBancaria) / (cantidadInicial))
+        console.log(comisionBancariaDevuelta);
 
-    var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
+    });
+
+    /*var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
     var rCount = tblDevoluciones.rows.length;
     var cantidadTotalDevelta = parseFloat(0);
     var comisionBancariaDevuelta = parseFloat(0);
@@ -473,7 +504,7 @@ function actualizarSubTotalDevoluciones() {
             comisionBancariaDevuelta += (cantidadDevelta) * ((comisionBancaria) / (cantidadInicial))
             console.log(comisionBancariaDevuelta);
         }
-    }
+    }*/
 
     //document.getElementById("divSubTotal").innerHTML = "<h4>$" + parseFloat(cantidadDevelta).toFixed(2) + "</h4>";
     $(".divSubTotal").html("$" + parseFloat(cantidadTotalDevelta + comisionBancariaDevuelta).toFixed(2));
@@ -924,7 +955,7 @@ $(document).ready(function () {
         }
 
         // si todo bien
-        var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
+       /* var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
         var rCount = tblDevoluciones.rows.length;
 
         if (rCount >= 2) {            
@@ -939,7 +970,20 @@ $(document).ready(function () {
                 };
                 productos.push(row_);
             }
-        }
+        }*/
+
+        tblDevolucionesPedidosEspeciales.rows().iterator('row', function (context, index) {
+            let node = $(this.row(index).node());
+            totalProductosDevueltos += parseFloat(node[0].cells[6].children[0].value);
+            totalProductosOriginales += parseFloat(node[0].cells[4].innerHTML);
+            var row_ = {
+                idProducto: parseInt(node[0].cells[0].innerHTML),
+                cantidad: parseFloat(node[0].cells[4].innerHTML),
+                productosDevueltos: parseFloat(node[0].cells[6].children[0].value),
+                idPedidoEspecialDetalle: parseInt(node[0].cells[7].innerHTML),
+            };
+            productos.push(row_);          
+        });
 
         if (totalProductosDevueltos <= 0) {
             MuestraToast('warning', "Debe seleccionar al menos un producto para devolver.");
