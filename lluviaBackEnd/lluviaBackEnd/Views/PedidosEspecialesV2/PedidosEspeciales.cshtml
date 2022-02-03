@@ -97,7 +97,7 @@
                                     @Html.HiddenFor(x => comisionBancaria)
                                     @Html.HiddenFor(x => idPedidoEspecialMayoreo_)
                                     @*@Html.HiddenFor(x => esDevolucion)
-                        @Html.HiddenFor(x => esAgregarProductos)*@
+            @Html.HiddenFor(x => esAgregarProductos)*@
                                     @Html.HiddenFor(x => idClienteDevolucion)
                                     @Html.HiddenFor(x => Model.idPedidoEspecial, new { id = "idPedidoEspecial" })
                                     @Html.HiddenFor(x => Model.idCliente, new { id = "idClienteCotizacion" })
@@ -105,6 +105,9 @@
                                     @*<input type="hidden" id="vaConDescuento" name="vaConDescuento" value="0">*@
                                     @*<select id="idProducto"></select>*@
                                     <input type="text" class="form-control" id="listProductos" name="listProductos" placeholder="Escriba el nombre del producto">
+                                </div>
+                                <div style="text-align:center; font-size:12px">
+                                    <span><b>D:</b> Disponible, <b>E:</b> En existencia, <b>S/A:</b> Sin acomodar, <b>R:</b> Resguardo, <b>B:</b> Bloqueo, <b>ME:</b> Precio menudeo, <b>MA:</b> Precio mayoreo</span>
                                 </div>
                             </div>
 
@@ -143,10 +146,6 @@
                             </div>
 
                         </div>
-                    </div>
-
-                    <div class="card-footer" style="text-align:right">
-                        <span>D: Disponible, E: En existencia, S/A: Sin acomodar, R: Resguardo, B: Bloqueo, ME: Precio menudeo, MA: Precio mayoreo</span>
                     </div>
                 </div>
             </div>
