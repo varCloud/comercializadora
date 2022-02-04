@@ -20,6 +20,7 @@ namespace lluviaBackEnd.Models
         public int id { get; set; }
         public string categoria { get; set; }
         public float total { get; set; }
+        public float totalPE { get; set; }
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
 

@@ -63,6 +63,7 @@ namespace lluviaBackEnd.Controllers
                 Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(sesion);
                 if (n.Modelo.usuarioValido)
                 {
+                    n.Modelo.macAdress = sesion.macAdress;
                     Session["UsuarioActual"] = n.Modelo;
                     n.Modelo.configurado = WebConfigurationManager.AppSettings["configurado"].ToString();
 

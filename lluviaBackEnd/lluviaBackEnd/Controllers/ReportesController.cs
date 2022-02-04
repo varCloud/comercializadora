@@ -382,8 +382,8 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-               
-                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                //OBTENER TODOS LOS CAJEROS
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0 , idRol:3);
                 List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
                 lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
                 lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });                

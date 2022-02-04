@@ -37,10 +37,23 @@
                         <div class="row">
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <div class="form-group">
+                                    @{ 
+                                        decimal sumTotalEfectivo = 0.0M;
+                                        decimal sumTotalTCredito = 0.0M;
+                                        decimal sumTotalOtras = 0.0M;
+                                        decimal sumTotalTransferencias = 0.0M;
+                                        decimal sumTotalDevoluciones = 0.0M;
+                                        decimal sumTotalVentasACredito = 0.0M;
+                                    }
 
                                     @foreach (var item in Model.Modelo)
                                     {
-
+                                        sumTotalEfectivo += item.TotalEfectivo;
+                                        sumTotalTCredito += item.VentasTC;
+                                        sumTotalOtras += item.VentasOtrasFormasPago;
+                                        sumTotalTransferencias += item.VentasTransferencias;
+                                        sumTotalDevoluciones += item.MontoDevoluciones;
+                                        sumTotalVentasACredito += item.VentasCredito;
                                         <p class="clearfix">
                                             <span class="float-left"><strong>@item.descripcion</strong></span>
                                         </p>
@@ -106,39 +119,55 @@
                                     </p>
                                     <hr style="margin-top:0px" />
 
-                                    @foreach (var item in Model.Modelo)
-                                    {
+                                    @*@foreach (var item in Model.Modelo)
+        {*@
 
-                                        <p class="clearfix">
-                                            <span class="float-left">&nbsp;&nbsp; @item.descripcionSaldo</span>
-                                        </p>
+                                    @*<p class="clearfix">
+            <span class="float-left">&nbsp;&nbsp; Ventas Total Efectivo</span>
+        </p>*@
 
-                                        <p class="clearfix">
-                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Efectivo</span>
-                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasContado).ToString("C", new CultureInfo("en-US"))</span>
-                                        </p>
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL Efectivo</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalEfectivo).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
 
-                                        <p class="clearfix">
-                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; TDC o transferencias</span>
-                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasTDCTransferencias).ToString("C", new CultureInfo("en-US"))</span>
-                                        </p>
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL TC & TD</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalTCredito).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
 
-                                        <p class="clearfix">
-                                            <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Otras formas de pago</span>
-                                            <span class="float-right text-muted">@Convert.ToSingle(item.VentasOtrasFormasPago).ToString("C", new CultureInfo("en-US"))</span>
-                                        </p>
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL Otras formas de pago</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalOtras).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
 
-                                        if (Convert.ToInt32(item.idAlmacen) > 0)
-                                        {
-                                            <p class="clearfix">
-                                                <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Ventas a crédito </span>
-                                                <span class="float-right text-muted">@Convert.ToSingle(item.VentasCredito).ToString("C", new CultureInfo("en-US"))</span>
-                                            </p>
-                                        }
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL Transferencias</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalTransferencias).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL Ventas a Crédito</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalVentasACredito).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+
+                                    <p class="clearfix">
+                                        <span class="float-left"> TOTAL Devoluciones</span>
+                                        <span class="float-right text-muted">@Convert.ToSingle(sumTotalDevoluciones).ToString("C", new CultureInfo("en-US"))</span>
+                                    </p>
+
+                                    @*if (Convert.ToInt32(item.idAlmacen) > 0)
+        {
+            <p class="clearfix">
+                <span class="float-left">&nbsp;&nbsp;&nbsp;&nbsp; Ventas a crédito </span>
+                <span class="float-right text-muted">@Convert.ToSingle(item.VentasCredito).ToString("C", new CultureInfo("en-US"))</span>
+            </p>
+        }*@
 
 
-                                    }
-
+                                    @*}*@
+                                    <br />
+                                    <hr style="margin-top:0px" />
                                     <br />
 
                                     <p class="clearfix">

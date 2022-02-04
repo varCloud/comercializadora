@@ -94,5 +94,7 @@ idProducto
 ,cantidadUnidadCompra from Productos where activo = 1
 
 
-
---select * from ProductosCostoCompra
+IF NOT EXISTS( SELECT 1	FROM INFORMATION_SCHEMA.COLUMNS   WHERE TABLE_NAME = 'ComprasDetalle'   AND COLUMN_NAME = 'fechaAlta')
+BEGIN
+	ALTER TABLE ComprasDetalle ADD fechaAlta datetime DEFAULT [dbo].[FechaActual]() ;
+END

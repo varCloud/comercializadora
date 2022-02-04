@@ -974,6 +974,7 @@
     <Content Include="assets\css\app.min.css" />
     <Content Include="assets\css\components.css" />
     <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\graficoPE.css" />
     <Content Include="assets\css\jquery-ui.css" />
     <Content Include="assets\css\jquery-ui.min.css" />
     <Content Include="assets\css\loader-lluvia.css" />
@@ -1133,6 +1134,7 @@
     <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
+    <Content Include="js\graficoPE.js" />
     <Content Include="js\Index.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

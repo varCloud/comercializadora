@@ -1,8 +1,10 @@
 ﻿using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -114,8 +116,34 @@ namespace lluviaBackEnd.Controllers
                             grafico.Mensaje = "No existe información para mostrar";
                         }
 
-                    }
+                        List<string> _categorias = new List<string>();
+                        List<float> _ventas = new List<float>();
+                        List<float> _ventasPE = new List<float>();
 
+                        List<Dictionary<string,object>> _series = new List<Dictionary<string, object>> ();
+                        Dictionary<string, object> _serie = new Dictionary<string, object>();
+                        
+
+                        categorias.Modelo.ForEach(x => {
+                            _categorias.Add(x.categoria);
+                            _ventas.Add(x.total);
+                            _ventasPE.Add(x.totalPE);
+                            });
+                        _serie.Add("name", "Ventas");
+                        _serie.Add("data", _ventas);
+                        _series.Add(_serie);
+                        _serie = new Dictionary<string, object>();
+                        _serie.Add("name", "Ventas PE");
+                        _serie.Add("data", _ventasPE);
+                        _series.Add(_serie);
+                        Debug.Write(JsonConvert.SerializeObject(_series));
+                        Debug.Write(JsonConvert.SerializeObject(_categorias));
+
+                        ViewBag.categoriasPE = _categorias;
+                        ViewBag.seriesPE = _series;
+                    }
+                                        
+        
 
                 }
 

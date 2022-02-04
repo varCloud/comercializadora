@@ -72,7 +72,7 @@ namespace lluviaBackEnd.DAO
             return lstUsuarios;
         }
 
-        public List<SelectListItem> ObtenerUsuarios(int idUsuario)
+        public List<SelectListItem> ObtenerUsuarios(int idUsuario , int idAlmacen = 0 , int idRol = 0)
         {
             List<SelectListItem> lstUsuarios = new List<SelectListItem>();
             try
@@ -80,8 +80,10 @@ namespace lluviaBackEnd.DAO
                 using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     db.Open();
-                    db.CreateParameters(1);
+                    db.CreateParameters(3);
                     db.AddParameters(0, "@idUsuario", idUsuario);
+                    db.AddParameters(1, "@idAlmacen", idAlmacen);
+                    db.AddParameters(2, "@idRol", idRol);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_USUARIOS]");
                     while (db.DataReader.Read())
                     {
