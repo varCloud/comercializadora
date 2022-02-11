@@ -339,9 +339,35 @@ function calculaTotales(conReseteoCampos) {
 
 }
 
+function ImprimeTicketAbonos(idAbonoCliente) {
+    $.ajax({
+        url: rootUrl("/PedidosEspecialesV2/ImprimeTicketAbono"),
+        data: { idAbonoCliente: idAbonoCliente},
+        method: 'post',
+        dataType: 'html',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader();
+        },
+        success: function (data) {
+            console.log(data);
+            OcultarLoader();
+            MuestraToast('success', "Se envio el ticket a la impresora.");
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            MuestraToast('error', "Ocurrio un error al enviar el ticket a la impresora.");
+            console.log(xhr);
+            console.log(status);
+            console.log(data);
+        }
+    });
+}
+
+
 
 $(document).ready(function () {
-
+    //ImprimeTicketAbonos(114);
     //InitDataTableCierres();
     InitSelect2();
     //InitRangePicker('rangePedidosEspeciales', 'fechaIni', 'fechaFin');
@@ -464,7 +490,7 @@ $(document).ready(function () {
         var monto = parseFloat($('#montoAbonar').val());
         var idCliente = parseInt($('#idCliente').val());
         var totalAdeudo = parseFloat($("#totalAdeudo").html().replace('<h4>$', '').replace('</h4>', ''));
-        var efectivo = parseFloat($('#efectivo').val()).toFixed(2);
+        var efectivo = parseFloat($('#efectivo').val());
         var total = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
         var IVA = 0;//parseFloat($("#previoIVA").html().replace('<h4>$', '').replace('</h4>', ''));
         var comision = parseFloat($("#previoComisionBancaria").html().replace('<h4>$', '').replace('</h4>', ''));
@@ -516,6 +542,7 @@ $(document).ready(function () {
         abono.idFactFormaPago = formaPago;
         abono.idFactUsoCFDI = usoCFDI;
         abono.idPedidoEspecial = idPedidoEspecial;
+        abono.montoRecibido = efectivo;
        
         console.log(JSON.stringify(abono));
        
@@ -538,6 +565,7 @@ $(document).ready(function () {
                     MuestraToast("success", "Se ha realizado de manera correcta el abono");                   
                     $('#modalDetalleCuentasPorCobrar').modal('hide');
                     $("#btnBuscarCuentasPorCobrar").click();
+                    ImprimeTicketAbonos(result.id);
                 }
                 else
                     MuestraToast("error", result.Mensaje);
