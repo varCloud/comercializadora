@@ -12,6 +12,7 @@ namespace lluviaBackEnd.Models
         public float montoAbono { get; set; }
         public float montoIVA { get; set; }
         public float montoComision { get; set; }
+        public float montoRecibido { get; set; }
         public Boolean requiereFactura { get; set; }
         public int idFactFormaPago { get; set; }
         public int idFactUsoCFDI { get; set; }

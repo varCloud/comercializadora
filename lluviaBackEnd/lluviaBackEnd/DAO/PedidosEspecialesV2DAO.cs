@@ -912,6 +912,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@idFactFormaPago", abono.idFactFormaPago);
                 parameters.Add("@idFactUsoCFDI", abono.idFactUsoCFDI);
                 parameters.Add("@idPedidoEspecial", abono.idPedidoEspecial==0 ? (object)null :abono.idPedidoEspecial);
+                parameters.Add("@montoRecibido", abono.montoRecibido);
                 notificacion = ConstructorDapper.Ejecutar("SP_REALIZA_ABONO_PEDIDOS_ESPECIALES", parameters);
             }
             catch (Exception ex)
@@ -938,6 +939,24 @@ namespace lluviaBackEnd.DAO
 
             return notificacion;
         }
+
+        public Notificacion<dynamic> ObtieneAbonosCliente(Int64 idAbonoCliente, Int64 idCliente)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idAbonoCliente", idAbonoCliente==0?(object)null:idAbonoCliente);
+                parameters.Add("@idCliente", idCliente==0?(object)null:idCliente);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_ABONOS_CLIENTE_PEDIDO_ESPECIAL", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
 
         #endregion
