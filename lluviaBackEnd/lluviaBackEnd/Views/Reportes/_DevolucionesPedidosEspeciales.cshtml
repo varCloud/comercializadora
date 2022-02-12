@@ -1,0 +1,64 @@
+﻿@using System.Globalization;
+@model List<lluviaBackEnd.Models.PedidosEspecialesV2>
+@{
+    List<lluviaBackEnd.Models.PedidosEspecialesV2> lstVentas = ViewBag.lstVentas;
+    List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
+    List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
+}
+
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaRepDevolucionesPedidosEspeciales">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Almacen</th>
+                                    <th>Cajero</th>
+                                    <th>Folio</th>
+                                    <th>Cliente</th>
+                                    <th>Producto</th>
+                                    <th>Unidades</th>
+                                    <th>Precio Venta</th>
+                                    <th>Monto Total</th>
+                                    <th>Codigo Barras</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstVentas)
+                                {
+                                    <tr>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                        <td>@item.tienda</td>
+                                        <td>@item.nombreUsuario</td>
+                                        <td>@item.idPedidoEspecial</td>
+                                        <td>@item.nombreCliente</td>
+                                        <td>@item.producto</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.precioVenta.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.codigoBarrasTicket</td>
+                                        
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+

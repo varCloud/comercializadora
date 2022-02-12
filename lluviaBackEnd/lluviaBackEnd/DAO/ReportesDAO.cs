@@ -430,6 +430,93 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<PedidosEspecialesV2>> ObtenerVentasPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+
+            try
+            {
+                if (pedidosEspecialesV2.fechaIni == (new DateTime(0001, 01, 01)))
+                    pedidosEspecialesV2.fechaIni = new DateTime(1900, 01, 01);
+
+                if (pedidosEspecialesV2.fechaFin == (new DateTime(0001, 01, 01)))
+                    pedidosEspecialesV2.fechaFin = new DateTime(1900, 01, 01);
+
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    //parameters.Add("@idLineaProducto", pedidosEspecialesV2.idLineaProducto);
+                    parameters.Add("@idCliente", pedidosEspecialesV2.idCliente);
+                    parameters.Add("@idUsuario", pedidosEspecialesV2.idUsuario);
+                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni.ToString("yyyyMMdd"));
+                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin.ToString("yyyyMMdd"));
+
+                    var result = db.QueryMultiple("SP_CONSULTA_VENTAS_PEDIDOS_ESPECIALESV2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<PedidosEspecialesV2>().ToList();
+                        notificacion.Modelo.ForEach(p => p.rutaFactura = ConfigurationManager.AppSettings["urlDominio"].ToString() + "/" + p.rutaFactura);
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+
+
+        public Notificacion<List<PedidosEspecialesV2>> ObtenerDevolucionesPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial == 0 ? (object)null : pedidosEspecialesV2.idPedidoEspecial);
+                    parameters.Add("@idAlmacen", pedidosEspecialesV2.idAlmacen == 0 ? (object)null : pedidosEspecialesV2.idAlmacen);
+                    parameters.Add("@idUsuario", pedidosEspecialesV2.idUsuario == 0 ? (object)null : pedidosEspecialesV2.idUsuario);
+                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaIni);
+                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaFin);
+
+                    var result = db.QueryMultiple("SP_CONSULTA_DEVOLUCIONES_PEDIDOS_ESPECIALESV2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<PedidosEspecialesV2>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
     }
 }

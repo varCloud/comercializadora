@@ -1,0 +1,74 @@
+﻿@using System.Globalization;
+@model lluviaBackEnd.Models.PedidosEspecialesV2
+@{
+    List<lluviaBackEnd.Models.PedidosEspecialesV2> lstVentas = ViewBag.lstVentas;
+    List<SelectListItem> lstLineasDeProductos = (List<SelectListItem>)ViewBag.lstLineasDeProductos;
+    List<SelectListItem> lstClientes = (List<SelectListItem>)ViewBag.lstClientes;
+    List<SelectListItem> lstUsuarios = (List<SelectListItem>)ViewBag.lstUsuarios;
+}
+
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tablaRepVentasPedidosEspeciales">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Sucursal</th>
+                                    <th>Tienda</th>
+                                    <th>Cajero</th>
+                                    <th>Folio</th>
+                                    <th>Cliente</th>
+                                    <th>Código Barras</th>
+                                    <th>Línea</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Venta</th>
+                                    <th>Monto total</th>
+                                    <th>Costo Compra</th>
+                                    <th>Utilidad</th>
+                                    <th>Margen Bruto</th>
+                                    <th>Forma de Pago</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstVentas)
+                                {
+                                    float precioTotal = item.precioVenta * item.cantidad;
+                                    float costoTotal = item.ultimoCostoCompra * item.cantidad;
+                                    float gananciaTotal = item.ganancia * item.cantidad;
+                                    float margenBruto = gananciaTotal == 0 ? 0 : (gananciaTotal / precioTotal) * 100;
+                                    <tr>
+                                        <td>@item.fechaAlta.ToShortDateString() &nbsp; @item.fechaAlta.ToShortTimeString()</td>
+                                        <td>@item.sucursal</td>
+                                        <td>@item.tienda</td>
+                                        <td>@item.nombreUsuario</td>
+                                        <td>@item.idPedidoEspecial</td>
+                                        <td>@item.nombreCliente</td>
+                                        <td>@item.codigoBarrasTicket</td>
+                                        <td>@item.linea</td>
+                                        <td>@item.producto</td>
+                                        <td>@item.cantidad</td>
+                                        <td>@item.precioVenta.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@item.ultimoCostoCompra.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@gananciaTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                        <td>@Decimal.Round(Convert.ToDecimal(margenBruto), 2) %</td>
+                                        <td>@item.descripcionFactFormaPago</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

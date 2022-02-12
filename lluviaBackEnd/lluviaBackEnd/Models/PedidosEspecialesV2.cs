@@ -35,6 +35,17 @@ namespace lluviaBackEnd.Models
         public int idFactUsoCFDI { get; set; }
         public int idEstatusFactura { get; set; }
         public float montoIVA { get; set; }
+        public float precioVenta { get; set; }
+        public float ultimoCostoCompra { get; set; }
+        public float ganancia { get; set; }
+        public string rutaFactura { get; set; }
+        public string sucursal { get; set; }
+        public string tienda { get; set; }
+        public string codigoBarrasTicket { get; set; }
+        public string linea { get; set; }
+        public string producto { get; set; }
+        public string descripcionFactFormaPago { get; set; }
+        public int idLineaProducto { get; set; }
         public List<lluviaBackEnd.Models.Producto> lstProductos { get; set; }
 
     }

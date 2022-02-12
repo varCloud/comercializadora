@@ -415,6 +415,104 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        public ActionResult VentasPedidosEspeciales()
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                notificacion = new ReportesDAO().ObtenerVentasPedidosEspeciales(new Models.PedidosEspecialesV2() { idPedidoEspecial = 0 });
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(UsuarioActual.idUsuario);
+                ViewBag.lstClientes = new UsuarioDAO().ObtenerClientes(0);
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                ViewBag.lstVentas = notificacion.Modelo;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult BuscarVentasPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            try
+            {
+
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                notificacion = new ReportesDAO().ObtenerVentasPedidosEspeciales(pedidosEspecialesV2);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstVentas = notificacion.Modelo;
+                    return PartialView("_VentasPedidosEspeciales");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public ActionResult DevolucionesPedidosEspeciales()
+        {
+            try
+            {
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0);
+                List<SelectListItem> lstAlmacenes = new List<SelectListItem>();
+                lstAlmacenes = new UsuarioDAO().ObtenerAlmacenes();
+                lstAlmacenes.Insert(0, new SelectListItem { Text = "-- TODOS --", Value = "0" });
+                ViewBag.lstAlmacenes = lstAlmacenes;
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult BuscarDevolucionesPedidosEspeciales(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            try
+            {
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                notificacion = new ReportesDAO().ObtenerDevolucionesPedidosEspeciales(pedidosEspecialesV2);
+
+                if (notificacion.Modelo != null)
+                {
+                    ViewBag.lstVentas = notificacion.Modelo;
+                    return PartialView("_DevolucionesPedidosEspeciales");
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
     }
 
 

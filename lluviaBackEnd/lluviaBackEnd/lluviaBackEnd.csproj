@@ -1107,6 +1107,7 @@
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\evtReporteCierres.js" />
+    <Content Include="js\EvtReporteDevolucionesPedidosEspeciales.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
     <Content Include="js\EvtEstacionesDisponibles.js" />
@@ -1118,6 +1119,7 @@
     <Content Include="js\evtReporteMerma.js" />
     <Content Include="js\evtReporteNivelServicioProveedor.js" />
     <Content Include="js\EvtReporteDevoluciones.js" />
+    <Content Include="js\EvtReporteVentasPedidosEspeciales.js" />
     <Content Include="js\EvtRetiros.js" />
     <Content Include="js\EvtTiposClientes.js" />
     <Content Include="js\EvtClientes.js" />
@@ -1350,6 +1352,10 @@
     <Content Include="Views\PedidosEspecialesV2\_ObtenerTicketsPedidoEspecial.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_IngresosRetirosEfectivo.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\VerTodosTicketsPedidoEspecial.cshtml" />
+    <Content Include="Views\Reportes\VentasPedidosEspeciales.cshtml" />
+    <Content Include="Views\Reportes\_VentasPedidosEspeciales.cshtml" />
+    <Content Include="Views\Reportes\DevolucionesPedidosEspeciales.cshtml" />
+    <Content Include="Views\Reportes\_DevolucionesPedidosEspeciales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
