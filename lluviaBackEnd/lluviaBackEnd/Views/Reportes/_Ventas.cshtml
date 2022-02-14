@@ -31,6 +31,7 @@
                                     <th>Producto</th>
                                     <th>Cantidad</th>
                                     <th>Precio Venta</th>
+                                    <th>I.V.A.</th>
                                     <th>Monto total</th>
                                     <th>Costo Compra</th>
                                     <th>Utilidad</th>
@@ -58,6 +59,7 @@
                                     <td>@item.descripcionProducto</td>
                                     <td>@item.cantidad</td>
                                     <td>@item.precio.ToString("C", new CultureInfo("en-US"))</td>
+                                    <td>@item.montoIVA.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@item.costo.ToString("C", new CultureInfo("en-US"))</td>
                                     <td>@gananciaTotal.ToString("C", new CultureInfo("en-US"))</td>

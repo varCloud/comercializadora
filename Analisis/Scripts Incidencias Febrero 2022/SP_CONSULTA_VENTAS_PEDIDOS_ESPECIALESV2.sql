@@ -113,7 +113,7 @@ as
 					from	PedidosEspeciales p
 								join	(
 											select	idPedidoEspecial, cantidad, monto, coalesce(montoIva, 0.0) as montoIva, det.precioVenta,
-													pro.idProducto, pro.descripcion as producto, pro.ultimoCostoCompra, lp.descripcion as linea
+													pro.idProducto, pro.descripcion as producto, det.ultimoCostoCompra, lp.descripcion as linea
 											from	PedidosEspecialesDetalle det
 														join Productos pro
 															on pro.idProducto = det.idProducto
@@ -142,7 +142,8 @@ as
 								left join FactCatFormaPago formaPago 
 									on p.idFactFormaPago = formaPago.id		
 								
-					where	p.idCliente =	case
+					where	p.idEstatusPedidoEspecial in ( 4,5,6,7 )
+						and	p.idCliente =	case
 												when @idCliente is null then p.idCliente
 												when @idCliente = 0 then p.idCliente
 												else @idCliente
@@ -197,7 +198,7 @@ as
 			select	@status status,
 					@error_procedure error_procedure,
 					@error_line error_line,
-					@error_message error_message
+					@error_message mensaje
 
 
 		-- si todo bien

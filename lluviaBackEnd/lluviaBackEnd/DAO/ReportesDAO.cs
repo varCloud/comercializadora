@@ -436,17 +436,22 @@ namespace lluviaBackEnd.DAO
 
             try
             {
+                DateTime hoy = new DateTime();
+                hoy = DateTime.Now;
+
                 if (pedidosEspecialesV2.fechaIni == (new DateTime(0001, 01, 01)))
-                    pedidosEspecialesV2.fechaIni = new DateTime(1900, 01, 01);
+                {
+                    pedidosEspecialesV2.fechaIni = new DateTime(hoy.Year, hoy.Month, hoy.Day);
+                }
 
                 if (pedidosEspecialesV2.fechaFin == (new DateTime(0001, 01, 01)))
-                    pedidosEspecialesV2.fechaFin = new DateTime(1900, 01, 01);
+                {
+                    pedidosEspecialesV2.fechaFin = new DateTime(hoy.Year, hoy.Month, hoy.Day);
+                }
 
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
-
-                    //parameters.Add("@idLineaProducto", pedidosEspecialesV2.idLineaProducto);
                     parameters.Add("@idCliente", pedidosEspecialesV2.idCliente);
                     parameters.Add("@idUsuario", pedidosEspecialesV2.idUsuario);
                     parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni.ToString("yyyyMMdd"));
@@ -484,6 +489,20 @@ namespace lluviaBackEnd.DAO
 
             try
             {
+                DateTime hoy = new DateTime();
+                hoy = DateTime.Now;
+
+                if (pedidosEspecialesV2.fechaIni == (new DateTime(0001, 01, 01)))
+                {
+                    pedidosEspecialesV2.fechaIni = new DateTime(hoy.Year, hoy.Month, hoy.Day);
+                }
+
+                if (pedidosEspecialesV2.fechaFin == (new DateTime(0001, 01, 01)))
+                {
+                    pedidosEspecialesV2.fechaFin = new DateTime(hoy.Year, hoy.Month, hoy.Day);
+                }
+
+
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     var parameters = new DynamicParameters();
@@ -491,8 +510,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idPedidoEspecial", pedidosEspecialesV2.idPedidoEspecial == 0 ? (object)null : pedidosEspecialesV2.idPedidoEspecial);
                     parameters.Add("@idAlmacen", pedidosEspecialesV2.idAlmacen == 0 ? (object)null : pedidosEspecialesV2.idAlmacen);
                     parameters.Add("@idUsuario", pedidosEspecialesV2.idUsuario == 0 ? (object)null : pedidosEspecialesV2.idUsuario);
-                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaIni);
-                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaFin);
+                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni);
+                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin);
 
                     var result = db.QueryMultiple("SP_CONSULTA_DEVOLUCIONES_PEDIDOS_ESPECIALESV2", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
