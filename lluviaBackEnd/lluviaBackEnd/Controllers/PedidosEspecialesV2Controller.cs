@@ -1463,11 +1463,15 @@ namespace lluviaBackEnd.Controllers
                 e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  MONTO INICIAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
-                e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].saldoInicial).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                e.Graphics.DrawString("  SALDO ANTERIOR:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].saldoAntesOperacion).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
-                e.Graphics.DrawString("  MONTO ADEUDO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString("  ABONO:", font, drawBrush, 0, datosfooter1.Y, izquierda);
+                e.Graphics.DrawString("-" + Convert.ToSingle(ticket.Modelo[0].monto).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
+                datosfooter1.Y += espaciado;
+
+                e.Graphics.DrawString("  SALDO ACTUAL:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                 e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].saldoDespuesOperacion).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                 datosfooter1.Y += espaciado;
 
