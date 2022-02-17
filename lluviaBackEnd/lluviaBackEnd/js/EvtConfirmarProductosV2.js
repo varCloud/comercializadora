@@ -224,6 +224,15 @@ $('#chkFacturarPedido').click(function () {
         //    document.getElementById("chkFacturarPedido").checked = false;
         //    return false;
         //}
+        document.getElementById("divChkLiquidado").style.display = 'block';
+        document.getElementById("divChkCredito").style.display = 'none';
+        document.getElementById("divChkCreditoConAbono").style.display = 'none';
+
+    }
+    else {
+        document.getElementById("divChkLiquidado").style.display = 'block';
+        document.getElementById("divChkCredito").style.display = 'block';
+        document.getElementById("divChkCreditoConAbono").style.display = 'block';
     }
 
 

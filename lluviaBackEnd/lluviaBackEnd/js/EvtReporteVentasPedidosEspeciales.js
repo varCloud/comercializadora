@@ -124,10 +124,10 @@ function eliminaFila(index_) {
 
 
 $(document).ready(function () {
-    InitDataTableVentasPedidosEspeciales();
+    //InitDataTableVentasPedidosEspeciales();
     InitSelect2();
     InitRangePicker('rangeVentasPedidosEspeciales', 'fechaIni', 'fechaFin');
-    $('#rangeVentasPedidosEspeciales').val('');
+    //$('#rangeVentasPedidosEspeciales').val('');
 
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarVentasPedidosEspeciales").trigger("reset");
