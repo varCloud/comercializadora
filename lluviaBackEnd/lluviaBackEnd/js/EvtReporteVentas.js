@@ -151,7 +151,7 @@ $(document).ready(function () {
     InitSelect2();
     //InitSelect2Productos();
     InitRangePicker('rangeVentas', 'fechaIni', 'fechaFin');
-    $('#rangeVentas').val('');
+    //$('#rangeVentas').val('');
     //$('#idLineaProductoBusqueda').val('0');
     //$('#idClienteBusqueda').val('0');
     //$('#idUsuarioBusqueda').val('0');
