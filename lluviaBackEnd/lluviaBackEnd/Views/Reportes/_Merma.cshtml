@@ -1,7 +1,7 @@
 ﻿@using System.Globalization;
 @using lluviaBackEnd.Models;
 
-@model Notificacion<List<AjusteInventarioFisico>>
+@model Notificacion<List<Merma>>
 
 @if (Model.Estatus != 200)
 {
@@ -20,37 +20,33 @@ else
         <table class="table table-striped" id="tblMerma">
             <thead>
                 <tr>
-                    <th>Folio Inv. Fisico</th>
-                    <th>Fecha</th>
                     <th>Codigo de Barras</th>
                     <th>Producto</th>
                     <th>Lìnea</th>
-                    <th>Compras</th>
-                    <th>Ventas</th>
-                    <th>Inv. Sistema</th>
-                    <th>Inv. Fisico</th>
+                    <th>Inventario final mes anterior</th>
+                    <th>Compras Mensuales</th>
+                    <th>Inventario total disponible</th>
                     <th>Merma</th>
-                    <th>Costo Compra</th>
                     <th>% Merma</th>
+                    <th>Ultimo de costo de compra</th>
+                    <th>Costo de la merma</th>
                 </tr>
             </thead>
             <tbody>
 
-                @foreach (lluviaBackEnd.Models.AjusteInventarioFisico c in Model.Modelo)
+                @foreach (lluviaBackEnd.Models.Merma c in Model.Modelo)
                 {
-                    <tr>
-                        <td>@c.idInventarioFisico</td>
-                        <td>@c.fechaAlta.ToShortDateString()</td>
-                        <td>@c.producto.codigoBarras</td>
-                        <td>@c.producto.descripcion</td>
-                        <td>@c.producto.DescripcionLinea</td>
-                        <td>@c.totalCompras.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.totalVentas.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.cantidadActual</td>
-                        <td>@c.cantidadEnFisico</td>
-                        <td>@c.cantidadAAjustar</td>
-                        <td>@c.producto.costo.ToString("C", new CultureInfo("en-US"))</td>
+                    <tr>           
+                        <td>@c.codigoBarras</td>
+                        <td>@c.descripcionProducto</td>
+                        <td>@c.descripcionLinea</td>
+                        <td>@c.inventarioFinalMesAnt</td>
+                        <td>@c.totalCompras</td>
+                        <td>@c.inventarioSistema</td>
+                        <td>@c.merma</td>
                         <td>@c.porcMerma</td>
+                        <td>@c.ultCostoCompra.ToString("C", new CultureInfo("en-US"))</td>
+                        <td>@c.costoMerma.ToString("C", new CultureInfo("en-US"))</td>
                     </tr>
                 }
             </tbody>

@@ -17,7 +17,7 @@ namespace lluviaBackEnd.DAO
 
         private DBManager db = null;
 
-        public List<LineaProducto> ObtenerLineaProductos(LineaProducto lineaProducto,int idUsuario)
+        public List<LineaProducto> ObtenerLineaProductos(LineaProducto lineaProducto, int idUsuario)
         {
 
             List<LineaProducto> lstLineaProductos = new List<LineaProducto>();
@@ -131,7 +131,7 @@ namespace lluviaBackEnd.DAO
                     db.Open();
                     db.CreateParameters(2);
                     db.AddParameters(0, "@idLineaProducto", 0);
-                    db.AddParameters(1, "@idUsuario", idUsuario==0 ? (object)DBNull.Value : idUsuario);
+                    db.AddParameters(1, "@idUsuario", idUsuario == 0 ? (object)DBNull.Value : idUsuario);
                     db.ExecuteReader(System.Data.CommandType.StoredProcedure, "[SP_CONSULTA_LINEAS_PRODUCTO]");
                     while (db.DataReader.Read())
                     {
@@ -274,6 +274,36 @@ namespace lluviaBackEnd.DAO
             return lstUnidadCompra;
         }
 
+
+        public List<SelectListItem> ObtenerLineasAlmacen(int idAlmacen)
+        {
+            List<SelectListItem> lstLineasProducto = new List<SelectListItem>();
+            try
+            {
+                using (db = new DBManager(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    db.Open();
+                    db.CreateParameters(1);
+                    db.AddParameters(0, "@idAlmacen", idAlmacen == 0 ? (object)DBNull.Value : idAlmacen);
+                    db.ExecuteReader(System.Data.CommandType.StoredProcedure, "SP_OBTENER_LINEAS_ALMACEN");
+                    while (db.DataReader.Read())
+                    {
+                        lstLineasProducto.Add(
+                            new SelectListItem
+                            {
+                                Text = db.DataReader["descripcion"].ToString(),
+                                Value = db.DataReader["idLineaProducto"].ToString()
+                            });
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstLineasProducto;
+        }
 
 
     }

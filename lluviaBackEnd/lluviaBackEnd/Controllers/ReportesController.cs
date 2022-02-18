@@ -294,14 +294,15 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
-                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineaProductos(usuarioSesion.idUsuario).Where(x => x.Value != "").ToList();
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineasAlmacen(0).ToList();
                 ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
-                InventarioFisico inventarioFisico = new InventarioFisico();
+                ViewBag.listMeses = new ReportesDAO().ObtenerMeses(0);
+                ViewBag.listAnios = new ReportesDAO().ObtenerAnios();
+                /*InventarioFisico inventarioFisico = new InventarioFisico();
                 inventarioFisico.Sucursal.idSucursal = usuarioSesion.idSucursal;
-                inventarioFisico.EstatusInventarioFisico.idStatus = 3;
-                ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico), "idInventarioFisico", "Nombre").ToList();
-
-                return View(new AjusteInventarioFisico());
+                inventarioFisico.EstatusInventarioFisico.idStatus = 3;*/
+                //ViewBag.listInventarioFisico = new SelectList(new InventarioFisicoDAO().ObtenerInventarioFisico(inventarioFisico), "idInventarioFisico", "Nombre").ToList();
+                return View(new Merma());
             }
             catch (Exception ex)
             {
@@ -310,12 +311,12 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
-        public ActionResult ObtenerMerma(AjusteInventarioFisico ajusteInventario)
+        public ActionResult ObtenerMerma(Merma merma)
         {
             try
             {
 
-                return PartialView("_Merma", new ReportesDAO().ObtenerMerma(ajusteInventario));
+                return PartialView("_Merma", new ReportesDAO().ObtenerMerma(merma));
 
             }
             catch (Exception ex)
@@ -324,6 +325,19 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ObtenerMesesAnio(int anio)
+        {
+            try
+            {               
+                return Json(new ReportesDAO().ObtenerMeses(anio), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
 
         // DEOLUCIONES DE VENTAS
