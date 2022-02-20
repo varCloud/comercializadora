@@ -164,7 +164,7 @@ function MostrarDetalle(idCliente) {
                 $("#detalleCuentasPorCobrar").html(html);
                 $("#tituloModal").html("Realizar abono");
                 $("#idCliente").val(idCliente);
-                $("#totalAdeudo").html("<h4>$" + totalAdeudo+"</h4>");
+                $("#totalAdeudo").html("<h4>$" + roundToTwo(totalAdeudo)+"</h4>");
                 $("#montoAbonar").val("");
                 if (tblCuentasPorCobrarDet != null)
                     tblCuentasPorCobrarDet.destroy();

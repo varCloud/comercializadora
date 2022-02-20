@@ -353,17 +353,53 @@ namespace lluviaBackEnd.DAO
             return d;
         }
 
-        public Notificacion<List<AjusteInventarioFisico>> ObtenerMerma(AjusteInventarioFisico ajusteInventarioFisico)
+        //public Notificacion<List<AjusteInventarioFisico>> ObtenerMerma(AjusteInventarioFisico ajusteInventarioFisico)
+        //{
+        //    Notificacion<List<AjusteInventarioFisico>> notificacion = new Notificacion<List<AjusteInventarioFisico>>();
+        //    try
+        //    {
+        //        using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+        //        {
+        //            DynamicParameters parameters = new DynamicParameters();
+        //            parameters.Add("@idInventarioFisico", ajusteInventarioFisico.idInventarioFisico == 0 ? (object)null : ajusteInventarioFisico.idInventarioFisico);
+        //            parameters.Add("@idLinea", string.IsNullOrEmpty(ajusteInventarioFisico.producto.idLineaProducto) ? (object)null : ajusteInventarioFisico.producto.idLineaProducto);
+        //            parameters.Add("@idAlmacen", ajusteInventarioFisico.producto.idAlmacen == 0 ? (object)null : ajusteInventarioFisico.producto.idAlmacen);
+
+        //            var result = db.QueryMultiple("SP_CONSULTA_MERMA", parameters, commandType: CommandType.StoredProcedure);
+        //            var rs1 = result.ReadFirst();
+        //            if (rs1.status == 200)
+        //            {
+        //                notificacion.Estatus = rs1.status;
+        //                notificacion.Mensaje = rs1.mensaje;
+        //                notificacion.Modelo=result.Read<AjusteInventarioFisico, Producto, AjusteInventarioFisico>(MapAjusteInventarioFisico, splitOn: "idProducto").ToList();
+        //            }
+        //            else
+        //            {
+        //                notificacion.Estatus = rs1.status;
+        //                notificacion.Mensaje = rs1.mensaje;
+        //            }
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return notificacion;
+        //}
+
+        public Notificacion<List<Merma>> ObtenerMerma(Merma filtro)
         {
-            Notificacion<List<AjusteInventarioFisico>> notificacion = new Notificacion<List<AjusteInventarioFisico>>();
+            Notificacion<List<Merma>> notificacion = new Notificacion<List<Merma>>();
             try
             {
                 using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@idInventarioFisico", ajusteInventarioFisico.idInventarioFisico == 0 ? (object)null : ajusteInventarioFisico.idInventarioFisico);
-                    parameters.Add("@idLinea", string.IsNullOrEmpty(ajusteInventarioFisico.producto.idLineaProducto) ? (object)null : ajusteInventarioFisico.producto.idLineaProducto);
-                    parameters.Add("@idAlmacen", ajusteInventarioFisico.producto.idAlmacen == 0 ? (object)null : ajusteInventarioFisico.producto.idAlmacen);
+                    parameters.Add("@mesCalculo", filtro.MesCalculo == 0 ? (object)null : filtro.MesCalculo);
+                    parameters.Add("@anioCalculo", filtro.AnioCalculo == 0 ? (object)null : filtro.AnioCalculo);
+                    parameters.Add("@idLinea", filtro.idLineaProducto == 0 ?  (object)null : filtro.idLineaProducto);
+                    parameters.Add("@idAlmacen", filtro.idAlmacen == 0 ?  (object)null : filtro.idAlmacen);
 
                     var result = db.QueryMultiple("SP_CONSULTA_MERMA", parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = result.ReadFirst();
@@ -371,7 +407,7 @@ namespace lluviaBackEnd.DAO
                     {
                         notificacion.Estatus = rs1.status;
                         notificacion.Mensaje = rs1.mensaje;
-                        notificacion.Modelo=result.Read<AjusteInventarioFisico, Producto, AjusteInventarioFisico>(MapAjusteInventarioFisico, splitOn: "idProducto").ToList();
+                        notificacion.Modelo = result.Read<Merma>().ToList();
                     }
                     else
                     {
@@ -535,6 +571,59 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
+
+
+        public List<SelectListItem> ObtenerMeses(int anio)
+        {
+            List<SelectListItem> lstMeses = new List<SelectListItem>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@anio", anio==0 ? (Object) null : anio);
+                    var result = db.QueryMultiple("SP_CONSULTA_MESES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        lstMeses = result.Read<SelectListItem>().ToList();
+                    }                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstMeses;
+        }
+
+        public List<SelectListItem> ObtenerAnios()
+        {
+            List<SelectListItem> lstAnios = new List<SelectListItem>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+
+                    var result = db.QueryMultiple("SP_CONSULTA_ANIOS", null, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        lstAnios = result.Read<SelectListItem>().ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lstAnios;
+        }
+
+
+
 
 
     }

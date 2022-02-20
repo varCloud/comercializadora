@@ -93,6 +93,20 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult LineasAlmacen(int idAlmacen)
+        {
+            try
+            {
+                return Json(new LineaProductoDAO().ObtenerLineasAlmacen(idAlmacen), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 
 
