@@ -10,6 +10,7 @@
     Notificacion<List<Categoria>> topClientes = ViewBag.topTenClientes;
     Notificacion<List<Categoria>> topProveedores = ViewBag.topTenProveedores;
     Notificacion<List<Categoria>> informacionGeneral = ViewBag.InformacionGlobal;
+    Notificacion<List<MermaMensual>> mermaMensual = ViewBag.mermaMensual;
     Sesion usuario = Session["UsuarioActual"] as Sesion;
 
     float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
@@ -36,6 +37,114 @@
 
 
 <section class="section">
+    <!-- INDICADORES GENERALES -->
+    <div class="row">
+        @if (informacionGeneral.Estatus == 200)
+        {
+            foreach (Categoria c in informacionGeneral.Modelo)
+            {
+                string icon = "fa-chart-line", bg = "l-bg-orange" ,style="";
+                switch (c.id)
+                {
+                    case 1:
+                        {
+                            icon = "fa-dollar-sign";
+                            bg = "l-bg-cyan";
+                            style = "background:linear-gradient(135deg, #00b92b, #94ec84) !important; color:#fff";
+                        }
+                        break;
+
+                    case 2:
+                        {
+                            icon = "fa-shopping-cart";
+                            bg = "l-bg-purple";
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            icon = "fa-briefcase";
+                            bg = "l-bg-green";
+                        }
+                        break;
+                }
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon @bg" style="display: flex; justify-content: center; align-items: center; @style ">
+                            <i class="fas @icon"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-right">
+                                    <h4 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@Html.Raw(c.id == 3 ? c.total.ToString() : c.total.ToString("C", new CultureInfo("en-US")))
+                                    </h4>
+                                    <span class="text-muted">@c.categoria</span>
+                                </div>
+                                <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                    &nbsp;
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (mermaMensual.Estatus == 200)
+        {
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="card card-statistic-1">
+                    <div class="info-box7-block">
+                        <div class="card-icon " style="background: linear-gradient(135deg, #ea5455, #dc354559) !important;
+    color: #fff;display: flex; justify-content: center; align-items: center;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-right">
+                                    <h4 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[0].totalCostoMerma.ToString("C2")
+                                    </h4>
+                                    <span style="color:#dc3545; font-weight:600">Merma Mes Actual</span>
+                                </div>
+                                <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                    <span class="text-success font-weight-bold">@mermaMensual.Modelo[0].promedioPorcMerma%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="card card-statistic-1">
+                    <div class="info-box7-block">
+                        <div class="card-icon " style="display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #c5ac20, #fbff09) !important; color:#fff">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-right">
+                                    <h4 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[1].totalCostoMerma.ToString("C2")
+                                    </h4>
+                                    <span style="color:#dc3545; font-weight:600">Merma Mes Anterior</span>
+                                </div>
+                                <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                    <span class="text-success font-weight-bold">@mermaMensual.Modelo[1].promedioPorcMerma%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+    <!-- GRAFICA -->
     <div class="row">
         <div class="col-12 col-sm-12 col-lg-12">
             <div class="card">
@@ -74,8 +183,9 @@
             </div>
         </div>
     </div>
+    <!-- VENTAS ESTACIONES -->
     <div class="row">
-        <div class="col-12 col-sm-12 col-lg-8">
+        <div class="col-12 col-sm-12 col-lg-4">
             <div class="card">
                 <div class="card-header">
                     <h4>Ventas de Estaciones</h4>
@@ -129,59 +239,10 @@
             </div>
         </div>
 
-        <div class="col-12 col-sm-12 col-lg-4">
 
 
-            @if (informacionGeneral.Estatus == 200)
-            {
-                foreach (Categoria c in informacionGeneral.Modelo)
-                {
-                    string icon= "fa-chart-line", bg = "l-bg-orange";
-                    switch (c.id)
-                    {
-                        case 1:
-                            {
-                                icon = "fa-dollar-sign";
-                                bg = "l-bg-cyan";
-                            }
-                            break;
-
-                        case 2:
-                            {
-                                icon = "fa-shopping-cart";
-                                bg = "l-bg-purple";
-                            }
-                            break;
-
-                        case 3:
-                            {
-                                icon = "fa-briefcase";
-                                bg = "l-bg-green";
-                            }
-                            break;
-                    }
-
-                    <div class="card card-statistic-1">
-                        <div class="card-icon @bg">
-                            <i class="fas @icon"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="padding-20">
-                                <div class="text-right">
-                                    <h3 class="font-light mb-0">
-                                        <i class="ti-arrow-up text-success"></i>@Html.Raw(c.id==3 ? c.total.ToString() : c.total.ToString("C", new CultureInfo("en-US"))) 
-                                    </h3>
-                                    <span class="text-muted">@c.categoria</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-    </div>
-
-    <div class="row">
+    <!-- TOP TEN INDICADORES -->
+  
         <div class="col-12 col-sm-6 col-lg-4">
             <div class="card">
                 <div class="card-header">

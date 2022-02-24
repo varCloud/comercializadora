@@ -36,6 +36,7 @@ namespace lluviaBackEnd.Controllers
                 ViewBag.topTenClientes = dao.ObtenerTopTen(EnumTipoReporteGrafico.Dia, EnumTipoGrafico.TopTenClientes, idEstacion);
                 ViewBag.topTenProveedores = dao.ObtenerTopTen(EnumTipoReporteGrafico.Mensuales, EnumTipoGrafico.TopTenProvedores, idEstacion);
                 ViewBag.InformacionGlobal=dao.ObtenerInformacionGlobal(EnumTipoReporteGrafico.Dia, idEstacion);
+                ViewBag.mermaMensual = dao.ObtenerMermaMensual();
                 return View();
             }
             catch (Exception ex)

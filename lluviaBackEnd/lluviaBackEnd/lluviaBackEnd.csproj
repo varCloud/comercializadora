@@ -290,6 +290,7 @@
     <Compile Include="Models\MargenBruto.cs" />
     <Compile Include="Models\ConfiguracionVenta.cs" />
     <Compile Include="Models\Merma.cs" />
+    <Compile Include="Models\MermaMensual.cs" />
     <Compile Include="Models\PedidosEspecialesV2.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />

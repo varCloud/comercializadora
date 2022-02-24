@@ -60,7 +60,7 @@ $(function () {
   if ($("#top-5-scroll").length) {
     $("#top-5-scroll")
       .css({
-        height: 315
+        height: 515
       })
       .niceScroll();
   }

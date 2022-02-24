@@ -160,6 +160,40 @@ namespace lluviaBackEnd.DAO
             return categoria;
         }
 
+        public Notificacion<List<MermaMensual>> ObtenerMermaMensual()
+        {
+            Notificacion<List<MermaMensual>> categoria = new Notificacion<List<MermaMensual>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    var rs = db.QueryMultiple("SP_DASHBOARD_MERMA", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                        categoria.Modelo = rs.Read<MermaMensual>().ToList();
+                    }
+                    else
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return categoria;
+        }
+
 
     }
 }
