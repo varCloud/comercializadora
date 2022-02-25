@@ -43,7 +43,7 @@
         {
             foreach (Categoria c in informacionGeneral.Modelo)
             {
-                string icon = "fa-chart-line", bg = "l-bg-orange" ,style="";
+                string icon = "fa-chart-line", bg = "l-bg-orange", style = "";
                 switch (c.id)
                 {
                     case 1:
@@ -58,6 +58,8 @@
                         {
                             icon = "fa-shopping-cart";
                             bg = "l-bg-purple";
+
+
                         }
                         break;
 
@@ -65,6 +67,7 @@
                         {
                             icon = "fa-briefcase";
                             bg = "l-bg-green";
+                            style = "background:linear-gradient(135deg, #e90093 0%, #e443e7 100%) !important; color:#fff";
                         }
                         break;
                 }
@@ -75,7 +78,7 @@
                         </div>
                         <div class="card-wrap">
                             <div class="padding-20">
-                                <div class="text-right">
+                                <div class="text-center">
                                     <h4 class="font-light mb-0">
                                         <i class="ti-arrow-up text-success"></i>@Html.Raw(c.id == 3 ? c.total.ToString() : c.total.ToString("C", new CultureInfo("en-US")))
                                     </h4>
@@ -91,22 +94,90 @@
             }
         }
 
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card card-statistic-1">
+                <div class="info-box7-block">
+                    <div class="card-icon " style="background: linear-gradient(135deg, #05cdd1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-center">
+                                <h4 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i>@montoTotalSemana.ToString("C", new CultureInfo("en-US"))
+                                </h4>
+                                <span style="color:#00c4ff; font-weight:900">Esta Semana</span>
+                            </div>
+                            <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card card-statistic-1">
+                <div class="info-box7-block">
+                    <div class="card-icon " style="background: linear-gradient(135deg, #0579d1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-center">
+                                <h4 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i>@montoTotalMes.ToString("C", new CultureInfo("en-US"))
+                                </h4>
+                                <span style="color:#0579d1eb; font-weight:900">Esta Mes</span>
+                            </div>
+                            <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card card-statistic-1">
+                <div class="info-box7-block">
+                    <div class="card-icon " style="background: linear-gradient(135deg, #05d1899e, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-center">
+                                <h4 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i>@montoTotalAnio.ToString("C", new CultureInfo("en-US"))
+                                </h4>
+                                <span style="color:#05d1899e; font-weight:900">Esta Año</span>
+                            </div>
+                            <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @if (mermaMensual.Estatus == 200)
         {
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="card card-statistic-1">
                     <div class="info-box7-block">
-                        <div class="card-icon " style="background: linear-gradient(135deg, #ea5455, #dc354559) !important;
-    color: #fff;display: flex; justify-content: center; align-items: center;">
+                        <div class="card-icon " style="background: linear-gradient(135deg, #ea5455, #dc354559) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                         <div class="card-wrap">
                             <div class="padding-20">
-                                <div class="text-right">
+                                <div class="text-center">
                                     <h4 class="font-light mb-0">
                                         <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[0].totalCostoMerma.ToString("C2")
                                     </h4>
-                                    <span style="color:#dc3545; font-weight:600">Merma Mes Actual</span>
+                                    <span style="color:#dc3545; font-weight:900">Merma Mes Actual</span>
                                 </div>
                                 <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
                                     <span class="text-success font-weight-bold">@mermaMensual.Modelo[0].promedioPorcMerma%</span>
@@ -125,11 +196,11 @@
                         </div>
                         <div class="card-wrap">
                             <div class="padding-20">
-                                <div class="text-right">
+                                <div class="text-center">
                                     <h4 class="font-light mb-0">
                                         <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[1].totalCostoMerma.ToString("C2")
                                     </h4>
-                                    <span style="color:#dc3545; font-weight:600">Merma Mes Anterior</span>
+                                    <span style="color:#dc3545; font-weight:900">Merma Mes Anterior</span>
                                 </div>
                                 <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
                                     <span class="text-success font-weight-bold">@mermaMensual.Modelo[1].promedioPorcMerma%</span>
@@ -160,7 +231,7 @@
                     <div id="GraficoVentasPorFecha">
                         @Html.Action("_Grafico", "DashBoard", new { tipoGrafico = lluviaBackEnd.Models.EnumTipoGrafico.VentasPorFecha, tipoReporteGrafico = lluviaBackEnd.Models.EnumTipoReporteGrafico.Semanal })
                     </div>
-                    <div class="statistic-details mt-1">
+                    @*<div class="statistic-details mt-1">
                         <div class="statistic-details-item">
                             <div class="detail-value">@montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
                             <div class="detail-name">Hoy</div>
@@ -177,7 +248,7 @@
                             <div class="detail-value">@montoTotalAnio.ToString("C", new CultureInfo("en-US"))</div>
                             <div class="detail-name">Este año</div>
                         </div>
-                    </div>
+                    </div>*@
 
                 </div>
             </div>

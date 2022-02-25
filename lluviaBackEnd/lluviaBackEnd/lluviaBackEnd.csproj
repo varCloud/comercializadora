@@ -1138,6 +1138,7 @@
     <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />
     <Content Include="js\EvtLogin.js" />
+    <Content Include="js\graficoIvaAcumulado.js" />
     <Content Include="js\graficoPE.js" />
     <Content Include="js\Index.js" />
     <Content Include="Scripts\bootstrap.js" />

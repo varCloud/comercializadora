@@ -50,6 +50,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                CrearDataGraficoIVA(tipoGrafico, tipoReporteGrafico);
                 DashboardDAO dao = new DashboardDAO();
                 Notificacion<Grafico> grafico = new Notificacion<Grafico>();
                 Sesion usuario = Session["UsuarioActual"] as Sesion;
@@ -63,13 +64,13 @@ namespace lluviaBackEnd.Controllers
                 {
                     //Notificacion<List<Estacion>> estaciones = dao.ObtenerVentasEstacion();
                     Notificacion<List<Categoria>> categorias = dao.ObtenerVentasPorFecha(tipoReporteGrafico, idEstacion);
+                   
                     grafico.Estatus = categorias.Estatus;
                     grafico.Mensaje = categorias.Mensaje;
 
                     List<Data> dataEstaciones = new List<Data>();
                     List<seriesDrilldown> SeriesDrilldown = new List<seriesDrilldown>();
-
-
+                    
                     if (categorias.Estatus == 200)
                     {
                         foreach (Categoria categoria in categorias.Modelo)
@@ -137,15 +138,13 @@ namespace lluviaBackEnd.Controllers
                         _serie.Add("name", "Ventas PE");
                         _serie.Add("data", _ventasPE);
                         _series.Add(_serie);
-                        Debug.Write(JsonConvert.SerializeObject(_series));
-                        Debug.Write(JsonConvert.SerializeObject(_categorias));
+                        //Debug.Write(JsonConvert.SerializeObject(_series));
+                        //Debug.Write(JsonConvert.SerializeObject(_categorias));
 
                         ViewBag.categoriasPE = _categorias;
                         ViewBag.seriesPE = _series;
                     }
-                                        
-        
-
+                    
                 }
 
                 if (tipoGrafico == EnumTipoGrafico.TopTenProductos || tipoGrafico == EnumTipoGrafico.TopTenClientes || tipoGrafico == EnumTipoGrafico.TopTenProvedores)
@@ -176,8 +175,7 @@ namespace lluviaBackEnd.Controllers
 
                 ViewBag.tipoGrafico = tipoGrafico;
                 ViewBag.tipoReporteGrafico = tipoReporteGrafico;
-
-
+                
                 return PartialView(grafico);
             }
             catch (Exception ex)
@@ -203,5 +201,40 @@ namespace lluviaBackEnd.Controllers
            
         }
 
+        public void CrearDataGraficoIVA(EnumTipoGrafico tipoGrafico, EnumTipoReporteGrafico tipoReporteGrafico) {
+            try
+            {
+                DashboardDAO dao = new DashboardDAO();
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                int idEstacion = 0;
+                if (usuario.idRol == 3)
+                {
+                    idEstacion = usuario.idEstacion;
+                }
+                Notificacion<Grafico> grafico = new Notificacion<Grafico>();
+                Notificacion<List<Categoria>> categorias = dao.ObtenerIvaAcumuladoPorFecha(tipoReporteGrafico, idEstacion);
+                grafico.Estatus = categorias.Estatus;
+                grafico.Mensaje = categorias.Mensaje;
+
+                List<Data> dataEstaciones = new List<Data>();
+                List<seriesDrilldown> SeriesDrilldown = new List<seriesDrilldown>();
+
+                if (categorias.Estatus == 200)
+                {
+                    List<Data> _serieGrafico = new List<Data>();
+                    categorias.Modelo.ForEach(x => {
+                        _serieGrafico.Add(new Data() { name = x.categoria, drilldown = x.categoria, y = (x.total + x.totalPE) });
+                    });
+                    
+                    Debug.Write(JsonConvert.SerializeObject(_serieGrafico));                    
+                    ViewBag.dataGraficoIVAAcumulado = _serieGrafico;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+          
+        }
     }
 }

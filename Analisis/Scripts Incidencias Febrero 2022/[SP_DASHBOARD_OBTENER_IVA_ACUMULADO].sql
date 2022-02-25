@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-ALTER proc
+alter proc
 
 	[dbo].[SP_DASHBOARD_OBTENER_IVA_ACUMULADO]
 		@idTipoReporte int,--1 semana,2 mes,3 año
@@ -17,6 +17,8 @@ ALTER proc
 as
 
 	begin -- procedimiento
+		set LANGUAGE Spanish
+
 		declare
 		@fechaIni date ='20210601',
 		@fechaFin date = getdate(),
@@ -107,7 +109,8 @@ as
 					join #CATEGORIAS c on CAST(PE.fechaAlta as date)>=c.fechaIni and  CAST(PE.fechaAlta as date)<=c.fechaFin
 					group by  c.id,c.categoria
 				  ) total on c.id=total.id
-
+																					
+		select 200 status , 'OK' mensaje
 		SELECT * from #CATEGORIAS  order by id
 		DROP TABLE #CATEGORIAS
 		

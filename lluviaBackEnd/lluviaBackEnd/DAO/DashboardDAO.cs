@@ -194,6 +194,41 @@ namespace lluviaBackEnd.DAO
             return categoria;
         }
 
+        public Notificacion<List<Categoria>> ObtenerIvaAcumuladoPorFecha(EnumTipoReporteGrafico idTipoReporte, int idEstacion = 0)
+        {
+            Notificacion<List<Categoria>> categoria = new Notificacion<List<Categoria>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idTipoReporte", idTipoReporte);
+                    parameters.Add("@idEstacion", idEstacion == 0 ? (object)null : idEstacion);
+                    var rs = db.QueryMultiple("SP_DASHBOARD_OBTENER_IVA_ACUMULADO", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                        categoria.Modelo = rs.Read<Categoria>().ToList();
+                    }
+                    else
+                    {
+                        categoria.Estatus = rs1.status;
+                        categoria.Mensaje = rs1.mensaje;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return categoria;
+        }
 
     }
 }
