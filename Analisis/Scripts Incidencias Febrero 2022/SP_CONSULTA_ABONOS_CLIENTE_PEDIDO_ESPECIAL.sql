@@ -16,7 +16,7 @@ status			200 = ok
 				-1	= error
 */
 
-ALTER proc [dbo].[SP_CONSULTA_ABONOS_CLIENTE_PEDIDO_ESPECIAL]
+alter proc [dbo].[SP_CONSULTA_ABONOS_CLIENTE_PEDIDO_ESPECIAL]
 
 @idAbonoCliente bigInt=NULL,
 @idCliente bigint=NULL
