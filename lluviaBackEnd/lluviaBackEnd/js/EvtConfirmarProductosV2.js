@@ -28,6 +28,8 @@ $('#btnCancelar').click(function (e) {
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
+
+
     document.getElementById("chkCliente").checked = true;
     document.getElementById("chkRuteo").checked = false;
     document.getElementById("chkTaxi").checked = false;

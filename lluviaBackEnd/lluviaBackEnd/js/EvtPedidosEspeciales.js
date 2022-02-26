@@ -344,9 +344,6 @@ $('#btnAgregarProducto').click(function (e) {
 
     }
 
-
-
-
     actualizaTicketPedidoEspecial();
     initInputsTabla();
 
@@ -771,17 +768,17 @@ function ObtenerCliente(idCliente) {
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
+    var uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+
     var productos = [];
     //var idCliente = $('#idCliente').val();
     var idPedidoEspecial = $('#idPedidoEspecial').val();
     var esPedidoNormal = "true";
     var descripcion = $('#descripcionPedidoInterno').val();
-
-
-    //if (descripcion == "") {
-    //    MuestraToast('warning', "Debe escribir una descripcion para el Pedido Interno");
-    //    return;
-    //}
 
 
     console.log(esPedidoNormal);

@@ -533,7 +533,8 @@ function actualizaTicketVenta() {
 
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
-     
+    
+    console.log("#idPedidoEspecial", $('#idPedidoEspecial').val());
     abrirModalGuardarPedidoEspecial(1);
    
 });
@@ -566,10 +567,7 @@ function abrirModalGuardarPedidoEspecial(tipo) {
     });
     //console.log(total);
     if (total > 0) {
-        //document.getElementById("previoTotal").innerHTML = "<h4>$" + parseFloat(total + descuento).toFixed(2) + "</h4>";
-        //document.getElementById("previoDescuentoMenudeo").innerHTML = "<h4>$" + parseFloat(descuento).toFixed(2) + "</h4>";
-        //document.getElementById("previoSubTotal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
-        //document.getElementById("previoFinal").innerHTML = "<h4>$" + parseFloat(total + descuento - descuento).toFixed(2) + "</h4>";
+
     
         if (tipo === 2) { //cotizacion
             if ($('#idPedidoEspecial').val() > 0) {
@@ -691,6 +689,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
     dataToPost = JSON.stringify({ productos: productos, tipoRevision: tipoRevision, idCliente: idCliente, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idPedidoEspecial: idPedidoEspecial, idPedidoEspecialMayoreo_: idPedidoEspecialMayoreo_});
 
     $.ajax({
+        
         url: rootUrl("/PedidosEspecialesV2/GuardarPedidoEspecial"),
         data: dataToPost,
         method: 'post',
@@ -705,7 +704,7 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
         success: function (data) {
             OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-
+            productos = [];
             if (data.Estatus == 200) {
                 if ($("#chkImprimePrevio").is(":checked")) {
                     ImprimeTicketPedidoEspecial(data.Modelo.idPedidoEspecial, 1, 0, false)
@@ -715,7 +714,8 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
                 limpiarTicket();
                 $("#listProductos").focus();
             }
-
+            clearQueryParams();
+            $('#idPedidoEspecial').val(0);
             $('#ModalGuardarPedidoEspecial').modal('hide');            
             $("#btnRevisionPorTicket").removeClass('btn-progress disabled');
             $("#btnRevisionPorHandHeld").removeClass('btn-progress disabled');
@@ -822,54 +822,7 @@ function preguntaAltaPrecios() {
         });
 }
 
-//function _facturaVenta(idVenta) {
-//    console.log("facturaVenta_" + idVenta);
-//    $.ajax({
-//        url: rootUrl("/Factura/GenerarFactura"),
-//        data: { idVenta: idVenta },
-//        method: 'post',
-//        dataType: 'json',
-//        async: true,
-//        beforeSend: function (xhr) {
-//            ShowLoader("Facturando Venta.");
-//        },
-//        success: function (data) {
-//            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-//            OcultarLoader();
-//        },
-//        error: function (xhr, status) {
-//            console.log('Disculpe, existió un problema');
-//            console.log(xhr);
-//            console.log(status);
-//            OcultarLoader();
-//        }
-//    });
-//}
 
-
-//function facturaVenta(idVenta) {
-//    console.log("facturaVenta_" + idVenta);
-//    $.ajax({
-//        url: pathDominio + "api/WsFactura/GenerarFactura",
-//        data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
-//        method: 'post',
-//        dataType: 'json',
-//        async: true,
-//        beforeSend: function (xhr) {
-//            ShowLoader("Facturando Venta.");
-//        },
-//        success: function (data) {
-//            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-//            OcultarLoader();
-//        },
-//        error: function (xhr, status) {
-//            console.log('Disculpe, existió un problema');
-//            console.log(xhr);
-//            console.log(status);
-//            OcultarLoader();
-//        }
-//    });
-//}
 
 function InitSelect2() {
     $('.select-multiple').select2({
@@ -1356,59 +1309,7 @@ function numerico(evt) {
     return true;
 }
 
-//function listenerDobleClick(element) {
-//    element.contentEditable = true;
 
-//    $(element).keydown(function (evt) {
-//        el = evt.target;
-
-//        if (evt.keyCode == 27) {
-//            document.execCommand('undo');
-//            element.contentEditable = false;
-//        }
-
-//        if (
-//            evt.keyCode != 8 || //backspace
-//            evt.keyCode != 9 || //tab
-//            evt.keyCode != 13 || //enter
-//            evt.keyCode != 37 || // left arrow 
-//            evt.keyCode != 39 || // right arrow 
-//            evt.keyCode != 46 || //delete
-//            evt.keyCode != 48 || //0
-//            evt.keyCode != 49 || //1
-//            evt.keyCode != 50 || //2
-//            evt.keyCode != 51 || //3
-//            evt.keyCode != 52 || //4
-//            evt.keyCode != 53 || //5
-//            evt.keyCode != 54 || //6
-//            evt.keyCode != 55 || //7
-//            evt.keyCode != 56 || //8
-//            evt.keyCode != 57    //9
-
-//        ) {
-//            event.preventDefault();
-//            element.contentEditable = false;
-
-//        }
-
-//        //if (
-//        //     evt.keyCode == 13 ||
-//        //    (evt.keyCode > 31 && (evt.keyCode < 48 || evt.keyCode > 57))
-//        //   )
-//        //{
-//        //    event.preventDefault();
-//        //    element.contentEditable = false;
-//        //}
-//        //else {       // si es un numero         
-//        //}
-//    });
-
-//    setTimeout(function () {
-//        if (document.activeElement !== element) {
-//            element.contentEditable = false;
-//        }
-//    }, 300);
-//}
 
 $("#efectivo").on("keyup", function (event) {
 
@@ -1445,12 +1346,7 @@ $("#cantidad").on("keyup", function (event) {
     }
 });
 
-//$("#montoARetirar").on("keyup", function (event) {
-//    if (event.keyCode === 13) {
-//        event.preventDefault();
-//        document.getElementById("btnRetirarExcesoEfectivo").click();
-//    }
-//});
+
 
 
 $("#idCliente").on("change", function () {
@@ -1564,86 +1460,6 @@ function calculaTotales(conReseteoCampos) {
 
 }
 
-//function AbrirModalConsultaExistencias() {
-//    $("#listProductosExistencia").val('');
-//    $("#idProductoExistencia").val('');
-//    $('#existencias').html('');
-//    //$("#listProductosExistencia").focus();
-//    //para abrir el modal
-//    $('#ModalExistencias').modal({ backdrop: 'static', keyboard: false, show: true });
-//}
-
-//function AbrirModalCierreCajaExcedentes() {
-//    ConsultRetiros();
-//    ConsultaInfoCierre();
-//    $('#montoARetirar').val('');
-//    $('#ModalCierreExceso').modal({ backdrop: 'static', keyboard: false, show: true });
-//}
-
-//function AbrirModalCierreDia() {
-//    //ConsultRetirosV2();
-//    ConsultaInfoCierreDia();
-//    $('#ModalCierre').modal({ backdrop: 'static', keyboard: false, show: true });
-//}
-
-//$('#btnRetirarExcesoEfectivo').click(function (e) {
-
-//    var cantidadEfectivo = parseFloat($('#cantidadEfectivo').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad en Efectivo:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-//    var cantidadRetirada = parseFloat($('#cantidadRetirada').html().replace('<p class=\"clearfix\"> <span class=\"float-left\">Cantidad Retirada del día:</span><span class=\"float-right text-muted\">$', '').replace('</span></p>', '').replace(' ', '')).toFixed(2);
-//    var montoARetirar_ = parseFloat($('#montoARetirar').val()).toFixed(2);
-
-//    if ($('#montoARetirar').val() == "") {
-//        MuestraToast('warning', "Debe seleccionar un monto para retirar.");
-//        return
-//    }
-
-//    if (((cantidadEfectivo - cantidadRetirada) - montoARetirar_) < 0.0) {
-//        var cantidadPorRetirar = parseFloat(0).toFixed(2);
-//        if ((parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2)) < 0)
-//            cantidadPorRetirar = parseFloat(0);
-//        else
-//            cantidadPorRetirar = parseFloat(cantidadEfectivo).toFixed(2) - parseFloat(cantidadRetirada).toFixed(2);
-
-//        MuestraToast('warning', "Solo tiene : $" + (cantidadPorRetirar).toString() + " para retirar.");
-//        return
-//    }
-//     si todo bien
-//    retirarExcesoEfectivo(montoARetirar_);
-
-//});
-
-//$('#btnCierreDia').click(function (e) {
-
-//    // validar si ingreso el efectivo entregado en el cierre
-
-//    if ($('#efectivoEntregadoEnCierre').val() === '') {
-//        MuestraToast('warning', "Debe seleccionar el monto entregado en el cierre.");
-//        return;
-//    }
-
-//    swal({
-//        title: 'Mensaje',
-//        text: '¿Estas seguro que desea hacer el cierre para esta Estación?',
-//        icon: 'warning',
-//        buttons: ["Cancelar", "Aceptar"],
-//        dangerMode: true,
-//    })
-//        .then((willDelete) => {
-//            if (willDelete) {
-
-//                if (RequiereAutorizacion()) {
-//                    ModalAutorizarCierre();
-//                }
-//                else {
-//                    HacerCierre();
-//                }
-
-//            } else {
-//                console.log("cancelar");
-//            }
-//        });
-
-//});
 
 function RequiereAutorizacion() {
 

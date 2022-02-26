@@ -281,7 +281,7 @@ function filter(__val__) {
 
 
 $(document).ready(function () {
-    console.log("index ready");
+
 
     toDataURL(
         pathServer,
@@ -386,4 +386,17 @@ function formatoMoneda(valor) {
     let arr = valor.toString().split('.');
     arr[0] = arr[0].replace(exp, rep);
     return '$' + (arr[1] ? arr.join('.') : arr[0]);
- }
+}
+
+
+function lluviaRedirect(vista="login",controlador="login") {
+    window.location.href = rootUrl(vista+"/"+controlador);
+}
+
+function clearQueryParams() {
+    var uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+}
