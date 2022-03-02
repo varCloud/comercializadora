@@ -525,6 +525,37 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        public ActionResult CierresPedidosEspeciales()
+        {
+            try
+            {
+                //OBTENER TODOS LOS CAJEROS
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0, idRol: 11);              
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult BuscarCierresPE(Filtro filtro)
+        {
+            try
+            {
+                List<CierrePedidosEspeciales> cierres = new ReportesDAO().ConsultaCierresPedidosEspeciales(filtro).Modelo;
+                return Json(cierres, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
     }

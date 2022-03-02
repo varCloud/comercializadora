@@ -273,6 +273,7 @@
     </Compile>
     <Compile Include="Models\AbonoCliente.cs" />
     <Compile Include="Models\AjusteInventarioFisico.cs" />
+    <Compile Include="Models\CierrePedidosEspeciales.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
     <Compile Include="Models\DetallePedidoInterno.cs" />
     <Compile Include="Models\DevolucionProveedor.cs" />
@@ -1109,6 +1110,7 @@
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\evtReporteCierres.js" />
+    <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
     <Content Include="js\EvtReporteDevolucionesPedidosEspeciales.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
@@ -1359,6 +1361,7 @@
     <Content Include="Views\Reportes\_VentasPedidosEspeciales.cshtml" />
     <Content Include="Views\Reportes\DevolucionesPedidosEspeciales.cshtml" />
     <Content Include="Views\Reportes\_DevolucionesPedidosEspeciales.cshtml" />
+    <Content Include="Views\Reportes\CierresPedidosEspeciales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1392,6 +1395,7 @@
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -622,6 +622,40 @@ namespace lluviaBackEnd.DAO
             return lstAnios;
         }
 
+        public Notificacion<List<CierrePedidosEspeciales>> ConsultaCierresPedidosEspeciales(Filtro cierre)
+        {
+            Notificacion<List<CierrePedidosEspeciales>> notificacion = new Notificacion<List<CierrePedidosEspeciales>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuario", cierre.idUsuario == 0 ? (object)null : cierre.idUsuario);                    
+                    parameters.Add("@fechaIni", cierre.fechaIni == DateTime.MinValue ? (object)null : cierre.fechaIni);
+                    parameters.Add("@fechaFin", cierre.fechaFin == DateTime.MinValue ? (object)null : cierre.fechaFin);
+                    var result = db.QueryMultiple("SP_REPORTE_CIERRES_PEDIDOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<CierrePedidosEspeciales>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = new List<CierrePedidosEspeciales>();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
 
 
 
