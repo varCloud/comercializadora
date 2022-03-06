@@ -28,148 +28,93 @@
 else
 {
     <div class="row">
-        <div class="col-md-6">
-            @*<figure class="highcharts-figure">*@
-            <div id="container"></div>
-            <p class="highcharts-description">
-            </p>
-            @*</figure>*@
-        </div>
-        <div class="col-md-6">
-            @*<figure class="highcharts-figure">*@
-            <div id="containerGraficoIva"></div>
-            <p class="highcharts-description">
-            </p>
-            @*</figure>*@
-        </div>
 
-        @*<div class="col-md-12" >
-            @{
-                switch (tipoGrafico)
-                {
-                    case EnumTipoGrafico.VentasPorFecha:
-                        {
-                            <div id="graficoVentasEstaciones"></div>
 
-                            <script type="text/javascript">
-                                    var data=@Html.Raw(Json.Encode(grafico.Modelo.data))
-                                    var series=@Html.Raw(Json.Encode(grafico.Modelo.seriesDrilldowns))
-                                        Highcharts.chart('graficoVentasEstaciones', {
-                                    chart: {
-                                        type: 'column'
-                                        },
-                                        title: {
-                                        text: @Html.Raw(Json.Encode(titulo))
-                                        },
-                                        subtitle: {
-                                        text: ''
-                                        },
-                                        accessibility: {
-                                        announceNewData: {
-                                            enabled: true
-                                            }
-                                        },
-                                        xAxis: {
-                                        type: 'category'
-                                        },
-                                        yAxis: {
-                                        title: {
-                                            text: ''
-                                            }
+        @{ switch (tipoGrafico)
+            {
+                case EnumTipoGrafico.VentasPorFecha:
+                    {
 
-                                        },
-                                        legend: {
-                                        enabled: false
-                                        },
-                                        plotOptions: {
-                                        series: {
-                                            borderWidth: 0,
-                                                dataLabels: {
-                                                enabled: true,
-                                                    format: '${point.y:.2f}'
-                                                }
-                                            }
-                                        },
 
-                                        tooltip: {
-                                        headerFormat: '<span style="font-size:11px">{point.name}</span><br>',
-                                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>${point.y:.2f}</b> M.N<br/>'
-                                        },
+                        <div class="col-md-6">
+                            @*<figure class="highcharts-figure">*@
+                            <div id="container"></div>
+                            <p class="highcharts-description">
+                            </p>
+                            @*</figure>*@
+                        </div>
+                        <div class="col-md-6">
+                            @*<figure class="highcharts-figure">*@
+                            <div id="containerGraficoIva"></div>
+                            <p class="highcharts-description">
+                            </p>
+                            @*</figure>*@
+                        </div>
+                        <script src="~/js/graficoPE.js"></script>
+                        <script src="~/js/graficoIvaAcumulado.js"></script>
 
-                                        series: [
-                                            {
-                                        name: "Estaciones",
-                                                colorByPoint: true,
-                                                data: data
-                                            }
-                                        ],
-                                        drilldown: {
-                                        series: series
-                                        }
-                                    });
-                            </script>
-                        }
-                        break;
-                    case EnumTipoGrafico.TopTenProductos:
-                        {
-                            <ul class="list-unstyled list-unstyled-border">
-                                @foreach (Categoria p in grafico.Modelo.categorias)
-                                {
-                                    <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="~/assets/img/producto.png" alt="product">
-                                        <div class="media-body">
-                                            <div class="float-right">
-                                                <div class="font-weight-600 text-muted text-small">@p.total</div>
-                                            </div>
-                                            <div class="media-title">@p.categoria</div>
+                    }
+                    break;
+
+                case EnumTipoGrafico.TopTenProductos:
+                    {
+                        <ul class="list-unstyled list-unstyled-border">
+                            @foreach (Categoria p in grafico.Modelo.categorias)
+                            {
+                                <li class="media">
+                                    <img class="mr-3 rounded" width="55" src="~/assets/img/producto.png" alt="product">
+                                    <div class="media-body">
+                                        <div class="float-right">
+                                            <div class="font-weight-600 text-muted text-small">@p.total</div>
                                         </div>
-                                    </li>
+                                        <div class="media-title">@p.categoria</div>
+                                    </div>
+                                </li>
 
-                                }
-                            </ul>
+                            }
+                        </ul>
 
-                        }
-                        break;
-                    case EnumTipoGrafico.TopTenClientes:
-                        {
-                            <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
-                                @foreach (Categoria c in grafico.Modelo.categorias)
-                                {
-                                    <li class="media">
-                                        <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cliente.png">
-                                        <div class="media-body">
-                                            <div class="mt-0 mb-1 font-weight-bold">@c.categoria</div>
-                                            <div class="text-success text-small font-600-bold">@c.total.ToString("C", new CultureInfo("en-US"))</div>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        break;
-                    case EnumTipoGrafico.TopTenProvedores:
-                        {
-                            <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
-                                @foreach (Categoria p in grafico.Modelo.categorias)
-                                {
-                                    <li class="media">
-                                        <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/proveedor.png">
-                                        <div class="media-body">
-                                            <div class="mt-0 mb-1 font-weight-bold">@p.categoria</div>
-                                            <div class="text-success text-small font-600-bold">@p.total.ToString("C", new CultureInfo("en-US"))</div>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        break;
-                }
+                    }
+                    break;
+                case EnumTipoGrafico.TopTenClientes:
+                    {
+                        <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
+                            @foreach (Categoria c in grafico.Modelo.categorias)
+                            {
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cliente.png">
+                                    <div class="media-body">
+                                        <div class="mt-0 mb-1 font-weight-bold">@c.categoria</div>
+                                        <div class="text-success text-small font-600-bold">@c.total.ToString("C", new CultureInfo("en-US"))</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    break;
+                case EnumTipoGrafico.TopTenProvedores:
+                    {
+                        <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
+                            @foreach (Categoria p in grafico.Modelo.categorias)
+                            {
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/proveedor.png">
+                                    <div class="media-body">
+                                        <div class="mt-0 mb-1 font-weight-bold">@p.categoria</div>
+                                        <div class="text-success text-small font-600-bold">@p.total.ToString("C", new CultureInfo("en-US"))</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    break;
             }
-        </div>*@
-
+        }
     </div>
+
+
 }
 
-    <script src="~/js/graficoPE.js"></script>
-    <script src="~/js/graficoIvaAcumulado.js"></script>
+
 
 

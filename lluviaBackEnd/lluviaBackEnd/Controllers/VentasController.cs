@@ -678,6 +678,7 @@ namespace lluviaBackEnd.Controllers
                 //Logos
                 if (paginaActual == 0)
                 {
+                    Sesion usuario = Session["UsuarioActual"] as Sesion;
                     //Se pinta logo 
                     //Se pinta logo 
                     int poslogoY = 15;
@@ -690,8 +691,9 @@ namespace lluviaBackEnd.Controllers
                     
 
                     //postTicketY = postTicketY + 100 + espaciado;
-                    Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
-                    e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    Rectangle datos = new Rectangle(5, postTicketY, ancho+20, 82);
+                    //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+","+usuario.domicilioEmpresa , font, drawBrush, datos);
 
                     e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
                     e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);

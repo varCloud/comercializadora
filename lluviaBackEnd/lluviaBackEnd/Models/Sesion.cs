@@ -60,5 +60,10 @@ namespace lluviaBackEnd.Models
             return new InventarioFisicoDAO().ValidaExisteInventarioFisicoActivo(sesion.idUsuario).Estatus==200 ? true : false;
         }
 
+        public string domicilioEmpresa { get; set; }
+        public string telefonoEmpresa  { get; set; }
+
+        public string rfcEmpresa { get; set; }
+
     }
 }

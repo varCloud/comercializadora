@@ -39,9 +39,33 @@
 <section class="section">
     <!-- INDICADORES GENERALES -->
     <div class="row">
+        <!-- Ventas del dia -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card card-statistic-1">
+                <div class="info-box7-block">
+                    <div class="card-icon " style="background: linear-gradient(135deg, #05cdd1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-center">
+                                <h4 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i>@montoTotalDia.ToString("C", new CultureInfo("en-US"))
+                                </h4>
+                                <span style="color:#00c4ff; font-weight:900">Ventas del dia</span>
+                            </div>
+                            <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @if (informacionGeneral.Estatus == 200)
         {
-            foreach (Categoria c in informacionGeneral.Modelo)
+            foreach (Categoria c in informacionGeneral.Modelo.FindAll(x => x.id != 1))
             {
                 string icon = "fa-chart-line", bg = "l-bg-orange", style = "";
                 switch (c.id)
@@ -106,7 +130,7 @@
                                 <h4 class="font-light mb-0">
                                     <i class="ti-arrow-up text-success"></i>@montoTotalSemana.ToString("C", new CultureInfo("en-US"))
                                 </h4>
-                                <span style="color:#00c4ff; font-weight:900">Esta Semana</span>
+                                <span style="color:#00c4ff; font-weight:900">Ventas Esta Semana</span>
                             </div>
                             <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
                                 &nbsp;
@@ -129,7 +153,7 @@
                                 <h4 class="font-light mb-0">
                                     <i class="ti-arrow-up text-success"></i>@montoTotalMes.ToString("C", new CultureInfo("en-US"))
                                 </h4>
-                                <span style="color:#0579d1eb; font-weight:900">Esta Mes</span>
+                                <span style="color:#0579d1eb; font-weight:900">Ventas Este Mes</span>
                             </div>
                             <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
                                 &nbsp;
@@ -152,7 +176,7 @@
                                 <h4 class="font-light mb-0">
                                     <i class="ti-arrow-up text-success"></i>@montoTotalAnio.ToString("C", new CultureInfo("en-US"))
                                 </h4>
-                                <span style="color:#05d1899e; font-weight:900">Esta Año</span>
+                                <span style="color:#05d1899e; font-weight:900">Ventas Este Año</span>
                             </div>
                             <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
                                 &nbsp;
@@ -256,7 +280,7 @@
     </div>
     <!-- VENTAS ESTACIONES -->
     <div class="row">
-        <div class="col-12 col-sm-12 col-lg-4">
+        <div class="col-md-12 col-sm-12 col-lg-8">
             <div class="card">
                 <div class="card-header">
                     <h4>Ventas de Estaciones</h4>

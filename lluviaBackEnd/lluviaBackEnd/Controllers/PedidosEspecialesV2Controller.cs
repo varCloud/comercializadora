@@ -2231,31 +2231,35 @@ namespace lluviaBackEnd.Controllers
                 //Logos
                 if (paginaActual == 0)
                 {
+                    Sesion usuario = Session["UsuarioActual"] as Sesion;
                     //Se pinta logo 
                     //Se pinta logo 
-                    int poslogoY = 15;
+                    int poslogoY = 5;
                     int postTicketY = 0;
                     Image newImage = Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + "\\assets\\img\\logo_lluvia_150.jpg");
                     Rectangle logo = new Rectangle(80, poslogoY, 280, 81);
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
-
                     postTicketY = (logo.Y + logo.Height + espaciado);
 
 
                     //postTicketY = postTicketY + 100 + espaciado;
-                    Rectangle datos = new Rectangle(5, postTicketY, ancho, 82);
-                    e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
+                     e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono:"+usuario.telefonoEmpresa , font, drawBrush, datos);
+                    //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
-                    e.Graphics.DrawString("Ticket PE:" + ticket.Modelo[0].idPedidoEspecial.ToString(), font, drawBrush, 40, 181, izquierda);
-                    e.Graphics.DrawString("Fecha:" + ticket.Modelo[0].fechaTicket, font, drawBrush, 150, 181, izquierda);
-                    e.Graphics.DrawString("Hora:" + ticket.Modelo[0].horaTicket, font, drawBrush, 150, 191, izquierda);
+                    postTicketY = datos.Y + espaciado + espaciado+8;
+                    e.Graphics.DrawString("Ticket PE:" + ticket.Modelo[0].idPedidoEspecial.ToString(), font, drawBrush, 5, postTicketY, izquierda);
+                    e.Graphics.DrawString("Fecha:" + ticket.Modelo[0].fechaTicket, font, drawBrush, 100, postTicketY, izquierda);
+                    e.Graphics.DrawString("Hora:" + ticket.Modelo[0].horaTicket, font, drawBrush, 100, postTicketY+10, izquierda);
 
-                    postTicketY = datos.Y + datos.Height + espaciado;
+                    postTicketY += (espaciado * 2);
                     Rectangle datosEnca = new Rectangle(0, postTicketY, 295, 82);
 
                     e.Graphics.DrawString("  Cliente: " + ticket.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-                    e.Graphics.DrawString("  Dirección: " + ticket.Modelo[0].direccion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.X += 5;
+                    e.Graphics.DrawString("Dirección: " + ticket.Modelo[0].direccion.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.X -= 5;
                     datosEnca.Y += 28;
                     e.Graphics.DrawString("  Forma de Pago: " + ticket.Modelo[0].descFormaPago.ToString() + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
@@ -2293,12 +2297,6 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].precioVenta).ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto) + Convert.ToSingle(ticket.Modelo[i].ahorro)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-
-                    /*monto += lstTickets[i].monto;
-                    montoIVA += lstTickets[i].montoIVA;
-                    montoComisionBancaria += lstTickets[i].montoComisionBancaria;
-                    montoAhorro += lstTickets[i].ahorro;
-                    */
                     if (ticket.Modelo[i].descProducto.ToString().Length >= 23)
                     {
                         datosIndex.Y += espaciado + 10;
@@ -2338,13 +2336,6 @@ namespace lluviaBackEnd.Controllers
                         e.HasMorePages = true;
                         return;
                     }
-
-
-                    //monto = monto + Convert.ToSingle(ticket.Modelo[i].monto);
-                    //montoIVA = montoIVA + Convert.ToSingle(ticket.Modelo[i].montoIVA);
-                    //montoComisionBancaria = montoComisionBancaria + Convert.ToSingle(ticket.Modelo[i].montoComisionBancaria);
-                    //montoAhorro = montoAhorro + Convert.ToSingle(ticket.Modelo[i].ahorro);
-                    //cantidadTotalDeArticulos = cantidadTotalDeArticulos + Convert.ToSingle(ticket.Modelo[i].cantidad);
 
                 }
 
@@ -2498,34 +2489,25 @@ namespace lluviaBackEnd.Controllers
                     {
                         e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
                     }
-                    else
-                    {
-                        e.Graphics.DrawString("******  ESTE TICKEET ES SOLO INFORMATIVO  ******", font, drawBrush, datosfooter2, centrado);
-                    }
+                    //else
+                    //{
+                    //    e.Graphics.DrawString("******  ESTE TICKEET ES SOLO INFORMATIVO  ******", font, drawBrush, datosfooter2, centrado);
+                    //}
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
                 }
 
-
-                //Se pinta codigo de barras en ticket
-                //Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
-
-                //datosfooter1.Y += 40;
-                //Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                //e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+                Rectangle datosLeyenda = new Rectangle(5 ,datosfooter2.Y, 280, 82);
+                e.Graphics.DrawString("*** Documento sin efectos fiscales, este ticket sólo es comprobante de compra ***", Bold, drawBrush, datosLeyenda);
 
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
 
                 // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
-                //e.Graphics.DrawImage
-                //}
-
-
-
+                e.Graphics.DrawString(" ", font, drawBrush, 0, datosfooter2.Y, izquierda);
+         
             }
             catch (InvalidPrinterException ex)
             {
