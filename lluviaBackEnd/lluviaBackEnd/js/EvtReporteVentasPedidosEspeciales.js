@@ -9,7 +9,11 @@ function onBeginSubmitVentasPedidosEspeciales() {
 
 function onSuccessResultVentasPedidosEspeciales(data) {
     $('#rowVentasPedidosEspeciales').html(data);
-    tablaVentasPedidosEspeciales.destroy();
+
+    if ($.fn.DataTable.isDataTable('#tablaRepVentasPedidosEspeciales')) {
+        tablaVentasPedidosEspeciales.destroy();
+    }
+    
     InitDataTableVentasPedidosEspeciales();
     OcultarLoader();
 }
@@ -127,7 +131,7 @@ $(document).ready(function () {
     //InitDataTableVentasPedidosEspeciales();
     InitSelect2();
     InitRangePicker('rangeVentasPedidosEspeciales', 'fechaIni', 'fechaFin');
-    //$('#rangeVentasPedidosEspeciales').val('');
+    $('#rangeVentasPedidosEspeciales').val('');
 
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarVentasPedidosEspeciales").trigger("reset");
