@@ -28,8 +28,6 @@ $('#btnCancelar').click(function (e) {
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
-
-
     document.getElementById("chkCliente").checked = true;
     document.getElementById("chkRuteo").checked = false;
     document.getElementById("chkTaxi").checked = false;
@@ -46,8 +44,10 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     document.getElementById("idUsuarioRuteo").disabled = true;
     document.getElementById("idUsuarioTaxi").disabled = true;
     document.getElementById("numeroUnidadTaxi").value = "";
+    document.getElementById("observacionesPedidoRuta").value = "";
     document.getElementById("numeroUnidadTaxi").disabled = true;
-
+    document.getElementById("divObservacionesPedidoRuta").style.display = 'none';
+   
     actualizarSubTotal();
 
     if (validarProductosAceptados()) {
@@ -270,7 +270,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var idEstatusPedidoEspecial = parseInt(0);
     var idEstatusCuentaPorCobrar = parseInt(0);
     var montoPagado = parseFloat(0);
-    //var montoTotalcantidadAbonada = parseFloat(0.0);
+    var observacionesPedidoRuta = "";
     var productos = [];
     var aCredito = parseInt(0);
     var aCreditoConAbono = parseInt(0);
@@ -375,6 +375,8 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         }
         numeroUnidadTaxi = "0";
         idUsuarioEntrega = idUsuarioRuteo;
+        idEstatusPedidoEspecial = parseInt(9);  // 9	Pedido en Ruta
+        observacionesPedidoRuta = $('#observacionesPedidoRuta').val();
     }
 
 
@@ -470,7 +472,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     dataToPost = JSON.stringify({
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
         numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoPagado: montoPagado, aCredito: aCredito,
-        aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI
+        aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI, observacionesPedidoRuta: observacionesPedidoRuta
     });
 
     //console.log(dataToPost);
@@ -627,6 +629,14 @@ function chkChangeEntregar(chk) {
         document.getElementById("numeroUnidadTaxi").value = "";
         document.getElementById("numeroUnidadTaxi").disabled = true;
 
+        document.getElementById("chkFacturarPedido").checked = false;
+        checksTipoPagoTodos('block')
+        document.getElementById("chkFacturarPedido").disabled = false;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+
+        document.getElementById("divObservacionesPedidoRuta").style.display = 'none';
+        document.getElementById("observacionesPedidoRuta").value = "";
+
     }
 
     if (chk == 'chkRuteo') {
@@ -637,12 +647,17 @@ function chkChangeEntregar(chk) {
         $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
 
-        //$('#idCliente').val("0").trigger('change');
-        //document.getElementById("idCliente").disabled = true;
-
         document.getElementById("idUsuarioRuteo").disabled = false;
         document.getElementById("numeroUnidadTaxi").value = "";
         document.getElementById("numeroUnidadTaxi").disabled = true;
+
+        document.getElementById("chkFacturarPedido").checked = false;
+        checksTipoPagoTodos('block')
+        document.getElementById("chkFacturarPedido").disabled = true;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+
+        document.getElementById("divObservacionesPedidoRuta").style.display = 'block';
+        document.getElementById("observacionesPedidoRuta").value = "";
 
     }
 
@@ -661,10 +676,26 @@ function chkChangeEntregar(chk) {
         document.getElementById("numeroUnidadTaxi").value = "";
         document.getElementById("numeroUnidadTaxi").disabled = false;
 
+        document.getElementById("chkFacturarPedido").checked = false;
+        checksTipoPagoTodos('block')
+        document.getElementById("chkFacturarPedido").disabled = false;
+        document.getElementById("divUsoCFDI").style.display = 'none';
+
+        document.getElementById("divObservacionesPedidoRuta").style.display = 'none';
+        document.getElementById("observacionesPedidoRuta").value = "";
+
     }
 
 }
 
+
+function checksTipoPagoTodos(display)
+ {
+    document.getElementById("divChkLiquidado").style.display = display;
+    document.getElementById("divChkCredito").style.display = display;
+    document.getElementById("divChkCreditoConAbono").style.display = display;
+
+}
 
 
 function chkChangeTipoPago(chk) {

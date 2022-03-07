@@ -153,6 +153,43 @@ namespace lluviaBackEnd.Controllers
         }
 
         [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
+        public ActionResult PedidosEnRuta(PedidosEspecialesV2 pedidoEspecial)
+        {
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstUsuarios = new UsuarioDAO().ObtenerUsuarios(0, 0, 5);
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public ActionResult _ObtenerPedidosEnRuta(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+                notificacion = new PedidosEspecialesV2DAO().ConsultaPedidosEnRuta(pedidosEspecialesV2);
+                ViewBag.lstPedidos = notificacion.Modelo;
+                ViewBag.mensaje = notificacion.Mensaje;
+
+                return PartialView("_ObtenerPedidosEnRuta");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PedidosEspeciales)]
         public ActionResult ConfirmarProductos(PedidosEspecialesV2 pedidoEspecial)
         {
             try
@@ -198,7 +235,7 @@ namespace lluviaBackEnd.Controllers
         [HttpPost]
         public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi,
                                                 int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
-                                                int aplicaIVA, string idMetodoPago, int idFactFormaPago, int idFactUsoCFDI)
+                                                int aplicaIVA, string idMetodoPago, int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta)
         {
             try
             {
@@ -206,7 +243,7 @@ namespace lluviaBackEnd.Controllers
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 idUsuarioEntrega = UsuarioActual.idUsuario;
                 result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar,
-                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI);
+                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI, observacionesPedidoRuta);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

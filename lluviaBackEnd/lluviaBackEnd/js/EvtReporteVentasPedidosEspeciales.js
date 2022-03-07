@@ -9,10 +9,15 @@ function onBeginSubmitVentasPedidosEspeciales() {
 
 function onSuccessResultVentasPedidosEspeciales(data) {
     $('#rowVentasPedidosEspeciales').html(data);
-    tablaVentasPedidosEspeciales.destroy();
+
+    if ($.fn.DataTable.isDataTable('#tablaRepVentasPedidosEspeciales')) {
+        tablaVentasPedidosEspeciales.destroy();
+    }
+
     InitDataTableVentasPedidosEspeciales();
     OcultarLoader();
 }
+
 function onFailureResultVentasPedidosEspeciales() {
     OcultarLoader();
     MuestraToast("error", "Ocurrio un error al consultar las ventas de pedidos especiales");

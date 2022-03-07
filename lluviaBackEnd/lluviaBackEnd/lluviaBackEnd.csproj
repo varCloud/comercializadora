@@ -1094,6 +1094,7 @@
     <Content Include="js\evtCierreCajas.js" />
     <Content Include="js\evtCierreCajasPedidosEspeciales.js" />
     <Content Include="js\EvtCompras.js" />
+    <Content Include="js\EvtConsultaPedidosEnRuta.js" />
     <Content Include="js\EvtConsultaPedidosEspeciales.js" />
     <Content Include="js\EvtConsultaBitacoras.js" />
     <Content Include="js\EvtConsultaCompras.js" />
@@ -1359,6 +1360,8 @@
     <Content Include="Views\Reportes\_VentasPedidosEspeciales.cshtml" />
     <Content Include="Views\Reportes\DevolucionesPedidosEspeciales.cshtml" />
     <Content Include="Views\Reportes\_DevolucionesPedidosEspeciales.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\PedidosEnRuta.cshtml" />
+    <Content Include="Views\PedidosEspecialesV2\_ObtenerPedidosEnRuta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
