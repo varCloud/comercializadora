@@ -235,7 +235,7 @@ namespace lluviaBackEnd.Controllers
         [HttpPost]
         public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi,
                                                 int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
-                                                int aplicaIVA, string idMetodoPago, int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta)
+                                                int aplicaIVA, string idMetodoPago, int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo)
         {
             try
             {
@@ -243,7 +243,7 @@ namespace lluviaBackEnd.Controllers
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 idUsuarioEntrega = UsuarioActual.idUsuario;
                 result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar,
-                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI, observacionesPedidoRuta);
+                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI, observacionesPedidoRuta, idUsuarioRuteo);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

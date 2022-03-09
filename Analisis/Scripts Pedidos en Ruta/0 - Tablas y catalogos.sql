@@ -13,10 +13,19 @@ begin
 end
 go
 
+
 -- columna para observaciones del pedido si este es en ruta
 if not exists ( select 1 from sys.columns where name like 'observacionesPedidoRuta' and OBJECT_ID = OBJECT_ID(N'dbo.PedidosEspeciales' ) )
 begin
 	alter table PedidosEspeciales add observacionesPedidoRuta varchar(500)
+end
+go
+
+
+-- columna para usuario de ruteo
+if not exists ( select 1 from sys.columns where name like 'idUsuarioRuteo' and OBJECT_ID = OBJECT_ID(N'dbo.PedidosEspeciales' ) )
+begin
+	alter table PedidosEspeciales add idUsuarioRuteo int
 end
 go
 
@@ -27,3 +36,5 @@ begin
 	alter table PedidosEspeciales add idUsuarioLiquida int
 end
 go
+
+

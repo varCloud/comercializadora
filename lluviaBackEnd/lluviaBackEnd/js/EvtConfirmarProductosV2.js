@@ -374,9 +374,9 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             return;
         }
         numeroUnidadTaxi = "0";
-        idUsuarioEntrega = idUsuarioRuteo;
         idEstatusPedidoEspecial = parseInt(9);  // 9	Pedido en Ruta
         observacionesPedidoRuta = $('#observacionesPedidoRuta').val();
+        idUsuarioRuteo = $('#idUsuarioRuteo').val();
     }
 
 
@@ -472,7 +472,8 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     dataToPost = JSON.stringify({
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
         numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoPagado: montoPagado, aCredito: aCredito,
-        aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI, observacionesPedidoRuta: observacionesPedidoRuta
+        aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI,
+        observacionesPedidoRuta: observacionesPedidoRuta, idUsuarioRuteo: idUsuarioRuteo
     });
 
     //console.log(dataToPost);
