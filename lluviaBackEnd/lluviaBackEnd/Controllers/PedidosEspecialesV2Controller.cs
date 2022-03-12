@@ -575,6 +575,7 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
+                Sesion usuario = (Sesion)Session["UsuarioActual"];
                 // tickets de almacenes
                 Notificacion<List<dynamic>> almacenes = new Notificacion<List<dynamic>>();
                 almacenes = new PedidosEspecialesV2DAO().consultaTicketPedidoEspecial(idPedidoEspecial);
@@ -601,7 +602,7 @@ namespace lluviaBackEnd.Controllers
 
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDFPedidosEspeciales(idPedidoEspecial, almacenes, normales, devoluciones));
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDFPedidosEspeciales(idPedidoEspecial, almacenes, normales, devoluciones, usuario));
                 ViewBag.pdfBase64 = pdfCodigos;
                 ViewBag.title = "Ticket: " + idPedidoEspecial.ToString();
                 return View();
@@ -2184,10 +2185,6 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                //List<Ticket> lstTickets = notificacion.Modelo;
-                //if (this.paginaActual< _lstTickets.Count())
-                //    lstTickets = _lstTickets[this.paginaActual];
-
                 float TotalMonto = 0;
                 float TotalIVA = 0;
                 float TotalComisionBancaria = 0;
@@ -2204,10 +2201,7 @@ namespace lluviaBackEnd.Controllers
                 Rectangle datosPrecioU = new Rectangle(205, 285, 30, 82);
                 Rectangle datosPrecio = new Rectangle(235, 285, 48, 82);
 
-                // TOTALES
-                //montoPagadoAgregarProductos = notificacion.Modelo[0].montoPagadoAgregarProductos;
-                //montoAgregarProductos = notificacion.Modelo[0].montoAgregarProductos;
-                //Configuración Global
+
                 GraphicsUnit units = GraphicsUnit.Pixel;
                 e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
                 e.Graphics.InterpolationMode = InterpolationMode.High;
@@ -2233,7 +2227,6 @@ namespace lluviaBackEnd.Controllers
                 {
                     Sesion usuario = Session["UsuarioActual"] as Sesion;
                     //Se pinta logo 
-                    //Se pinta logo 
                     int poslogoY = 5;
                     int postTicketY = 0;
                     Image newImage = Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + "\\assets\\img\\logo_lluvia_150.jpg");
@@ -2242,13 +2235,13 @@ namespace lluviaBackEnd.Controllers
                     postTicketY = (logo.Y + logo.Height + espaciado);
 
 
-                    //postTicketY = postTicketY + 100 + espaciado;
+                    
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
                      e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono:"+usuario.telefonoEmpresa , font, drawBrush, datos);
                     //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
 
                     postTicketY = datos.Y + espaciado + espaciado+8;
-                    e.Graphics.DrawString("Ticket PE:" + ticket.Modelo[0].idPedidoEspecial.ToString(), font, drawBrush, 5, postTicketY, izquierda);
+                    e.Graphics.DrawString("Ticket PE:" + ticket.Modelo[0].idPedidoEspecial.ToString(), Bold, drawBrush, 5, postTicketY, izquierda);
                     e.Graphics.DrawString("Fecha:" + ticket.Modelo[0].fechaTicket, font, drawBrush, 100, postTicketY, izquierda);
                     e.Graphics.DrawString("Hora:" + ticket.Modelo[0].horaTicket, font, drawBrush, 100, postTicketY+10, izquierda);
 
@@ -2277,7 +2270,6 @@ namespace lluviaBackEnd.Controllers
                     datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
                     datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
                     datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
-
 
                 }
                 else
@@ -2377,20 +2369,14 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + 2)
                 {
-                    //if (montoComisionBancaria > 0)
-                    //{
-
                     e.Graphics.DrawString("  COMISIÓN BANCARIA:", font, drawBrush, 0, datosfooter1.Y, izquierda);
                     e.Graphics.DrawString((TotalComisionBancaria).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")), font, drawBrush, posXFooter, datosfooter1.Y, derecha);
                     datosfooter1.Y += espaciado;
                     indexProducto++;
-
-                    //}
                 }
 
                 if (this.insertaPagina(datosfooter1.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + 3)
-                //if (montoIVA > 0)
                 {
 
                     e.Graphics.DrawString("  I.V.A:", font, drawBrush, 0, datosfooter1.Y, izquierda);
@@ -2489,10 +2475,6 @@ namespace lluviaBackEnd.Controllers
                     {
                         e.Graphics.DrawString("********  GRACIAS POR SU PREFERENCIA.  ********", font, drawBrush, datosfooter2, centrado);
                     }
-                    //else
-                    //{
-                    //    e.Graphics.DrawString("******  ESTE TICKEET ES SOLO INFORMATIVO  ******", font, drawBrush, datosfooter2, centrado);
-                    //}
                     datosfooter1.Y += espaciado;
                     datosfooter2.Y += espaciado;
                 }
@@ -2784,11 +2766,11 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Sesion usuario = (Sesion)Session["UsuarioActual"];
                 Notificacion<dynamic> ticket = new PedidosEspecialesV2DAO().ObtieneDetalleTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial, ticketFinal);
                 string pdf = "";
                 if (idTipoTicketPedidoEspecial == 1) //ticket original
-                    pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket));
+                    pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket, usuario));
                 if (idTipoTicketPedidoEspecial == 2) //ticket devolucion
                     pdf = Convert.ToBase64String(Utilerias.Utils.GeneraTicketDevolucionPedidoEspecial(ticket));
                 return Json(pdf, JsonRequestBehavior.AllowGet);

@@ -741,7 +741,7 @@ namespace lluviaBackEnd.Utilerias
             }
             return content;
         }
-        public static byte[] GeneraTicketPDF(List<Ticket> tickets)
+        public static byte[] GeneraTicketPDF(List<Ticket> tickets , Sesion usuario)
         {
             byte[] content = null;
 
@@ -788,11 +788,7 @@ namespace lluviaBackEnd.Utilerias
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
                                 </tr>                                
                                 
-                                <tr><td style='color:black; text-align:center;'>RFC:COVO781128LJ1, </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Calle Macarena #82 </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Inguambo </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Uruapan, Michoacán </td></tr>
-                                <tr><td style='color:black; text-align:center;'>C.p. 58000 </td></tr>
+                                <tr><td style='color:black; text-align:center;'>RFC: " + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono: " + usuario.telefonoEmpresa + @"</td></tr>
                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 
                                 <tr>
@@ -1045,7 +1041,8 @@ namespace lluviaBackEnd.Utilerias
 
 
                 html += @"  <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>";
+                            <tr><td style='color:black; text-align:center;'>******** GRACIAS POR SU PREFERENCIA. ******** </td></tr>
+                            <tr><td style = 'color:black; text-align:center;' ><b> *** Documento sin efectos fiscales, este ticket sólo es comprobante de compra *** </b></ td ></tr> ";
 
 
 
@@ -1277,7 +1274,7 @@ namespace lluviaBackEnd.Utilerias
         //}
 
 
-        public static byte[] GeneraTodosTicketsPDF(List<Ticket> tickets, List<List<Ticket>> ticketsDevolucion, List<List<Ticket>> ticketsComplemento)
+        public static byte[] GeneraTodosTicketsPDF(List<Ticket> tickets, List<List<Ticket>> ticketsDevolucion, List<List<Ticket>> ticketsComplemento , Sesion usuario)
         {
             try
             {
@@ -1285,10 +1282,10 @@ namespace lluviaBackEnd.Utilerias
 
                 MemoryStream pdfCompleto = new MemoryStream();
                 PdfCopyFields copy = new PdfCopyFields(pdfCompleto);
-                content = Utilerias.Utils.GeneraTicketPDF(tickets);
+                content = Utilerias.Utils.GeneraTicketPDF(tickets ,usuario);
 
                 // ticket principal
-                var msPrincipal = new MemoryStream(Utilerias.Utils.GeneraTicketPDF(tickets));
+                var msPrincipal = new MemoryStream(Utilerias.Utils.GeneraTicketPDF(tickets ,usuario));
                 msPrincipal.Position = 0;
                 copy.AddDocument(new PdfReader(msPrincipal));
                 msPrincipal.Dispose();
@@ -1333,7 +1330,7 @@ namespace lluviaBackEnd.Utilerias
         }
 
 
-        public static byte[] GeneraTodosTicketsPDFPedidosEspeciales(int idPedidoEspecial, Notificacion<List<dynamic>> ticketAlmacenes, List<Notificacion<dynamic>> normales, List<Notificacion<dynamic>> devoluciones)
+        public static byte[] GeneraTodosTicketsPDFPedidosEspeciales(int idPedidoEspecial, Notificacion<List<dynamic>> ticketAlmacenes, List<Notificacion<dynamic>> normales, List<Notificacion<dynamic>> devoluciones , Sesion usuario)
         {
             try
             {
@@ -1348,13 +1345,13 @@ namespace lluviaBackEnd.Utilerias
                 msPrincipal.Position = 0;
                 copy.AddDocument(new PdfReader(msPrincipal));
                 msPrincipal.Dispose();
-
+                
                 // tickets normales
                 if (normales.Count > 0)
                 {
                     foreach (Notificacion<dynamic> ticket in normales)
                     {
-                        var msNormal = new MemoryStream(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket));
+                        var msNormal = new MemoryStream(Utilerias.Utils.GeneraTicketPedidoEspecial(ticket,usuario ));
                         msNormal.Position = 0;
                         copy.AddDocument(new PdfReader(msNormal));
                         msNormal.Dispose();
@@ -2237,7 +2234,7 @@ namespace lluviaBackEnd.Utilerias
 
         #region ticketsPedidosEspeciales
     
-        public static byte[] GeneraTicketPedidoEspecial(Notificacion<dynamic> ticket)
+        public static byte[] GeneraTicketPedidoEspecial(Notificacion<dynamic> ticket , Sesion usuario)
         {
             byte[] content = null;
 
@@ -2257,6 +2254,7 @@ namespace lluviaBackEnd.Utilerias
 
             try
             {
+                
                 DateTime fechaActual = System.DateTime.Now;
                 DateTimeFormatInfo formatoFecha = new CultureInfo("es-ES", false).DateTimeFormat;
                 string nombreMes = formatoFecha.GetMonthName(fechaActual.Month).ToUpper();
@@ -2278,12 +2276,8 @@ namespace lluviaBackEnd.Utilerias
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
                                 </tr>                                
                                 
-                                <tr><td style='color:black; text-align:center;'>RFC:COVO781128LJ1, </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Calle Macarena #82 </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Inguambo </td></tr>
-                                <tr><td style='color:black; text-align:center;'>Uruapan, Michoacán </td></tr>
-                                <tr><td style='color:black; text-align:center;'>C.p. 58000 </td></tr>
-                                <tr><td style='color:black; text-align:center;'><br></td></tr>
+                                <tr><td style='color:black; text-align:center;'>RFC: " + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono: "+usuario.telefonoEmpresa +@"</td></tr>
+                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
                                 
                                 <tr>
                                     <td style='color:black; '> 

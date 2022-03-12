@@ -12,3 +12,9 @@ tr.shown td.details-control {
     background: url('../../assets/img/details_close.png') no-repeat center center !important;
 }
 
+.text-cantidad {
+    font-weight:600
+
+
+}
+

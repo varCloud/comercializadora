@@ -680,8 +680,7 @@ namespace lluviaBackEnd.Controllers
                 {
                     Sesion usuario = Session["UsuarioActual"] as Sesion;
                     //Se pinta logo 
-                    //Se pinta logo 
-                    int poslogoY = 15;
+                    int poslogoY = 5;
                     int postTicketY = 0;
                     Image newImage = Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + "\\assets\\img\\logo_lluvia_150.jpg");
                     Rectangle logo = new Rectangle(80, poslogoY, 280, 81);
@@ -691,15 +690,14 @@ namespace lluviaBackEnd.Controllers
                     
 
                     //postTicketY = postTicketY + 100 + espaciado;
-                    Rectangle datos = new Rectangle(5, postTicketY, ancho+20, 82);
-                    //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
-                    e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+","+usuario.domicilioEmpresa , font, drawBrush, datos);
+                    Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
+                    e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono:" + usuario.telefonoEmpresa, font, drawBrush, datos);
+                    postTicketY = datos.Y + espaciado + espaciado + 8;
+                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), Bold, drawBrush, 5, postTicketY, izquierda);
+                    e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 100, postTicketY, izquierda);
+                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 100, postTicketY+10, izquierda);
 
-                    e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), font, drawBrush, 40, 181, izquierda);
-                    e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 150, 181, izquierda);
-                    e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 150, 191, izquierda);
-
-                    postTicketY = datos.Y + datos.Height + espaciado;
+                    postTicketY += (espaciado * 2);
                     Rectangle datosEnca = new Rectangle(0, postTicketY, 295, 82);
 
                     e.Graphics.DrawString("  Cliente: " + notificacion.Modelo[0].nombreCliente.ToString().ToUpper() + " \n", font, drawBrush, datosEnca, izquierda);
@@ -740,12 +738,6 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
                     e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
-
-                    /*monto += lstTickets[i].monto;
-                    montoIVA += lstTickets[i].montoIVA;
-                    montoComisionBancaria += lstTickets[i].montoComisionBancaria;
-                    montoAhorro += lstTickets[i].ahorro;
-                    */
                     if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
                         datosIndex.Y += espaciado + 10;
@@ -956,33 +948,21 @@ namespace lluviaBackEnd.Controllers
                     datosfooter2.Y += espaciado;
                 }
 
-
-                //Se pinta codigo de barras en ticket
-                //Image imagenCodigoTicket = ByteArrayToImage(Utils.GenerarCodigoBarras(notificacion.Modelo[0].codigoBarras.ToString()));
-
-                //datosfooter1.Y += 40;
-                //Rectangle posImgCodigoTicket = new Rectangle(0, datosfooter1.Y, 400, 120);
-                //e.Graphics.DrawImage(imagenCodigoTicket, posImgCodigoTicket, 0, 0, 380.0F, 120.0F, units);
+                datosfooter1.Y += espaciado;
+                datosfooter2.Y += espaciado;
+                Rectangle datosLeyenda = new Rectangle(5, datosfooter2.Y, 280, 82);
+                e.Graphics.DrawString("*** Documento sin efectos fiscales, este ticket sólo es comprobante de compra ***", Bold, drawBrush, datosLeyenda);
 
                 datosfooter1.Y += espaciado;
                 datosfooter2.Y += espaciado;
 
                 // para mas espaciado al final del ticket
-                e.Graphics.DrawString("", font, drawBrush, 0, datosfooter2.Y, centrado);
-                datosfooter1.Y += espaciado;
-                datosfooter2.Y += espaciado;
-                //e.Graphics.DrawImage
-                //}
-
-
-
+                e.Graphics.DrawString(" ", font, drawBrush, 0, datosfooter2.Y, izquierda);
             }
             catch (InvalidPrinterException ex)
             {
-                //notificacion = new Notificacion<Ventas>();
                 notificacion.Mensaje = "Por favor revise la conexion de la impresora " + ex.Message;
                 notificacion.Estatus = -1;
-                //return Json(notificacion, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -1696,10 +1676,11 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo));
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo, usuario));
                 ViewBag.pdfBase64 = pdfCodigos;
                 ViewBag.title = "Ticket: " + idVenta.ToString(); ;
                 return View();
@@ -1715,6 +1696,7 @@ namespace lluviaBackEnd.Controllers
             Notificacion<String> notificacion = new Notificacion<string>();
             try
             {
+                Sesion usuario = (Sesion)Session["UsuarioActual"];
                 Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
                 Notificacion<List<Ticket>> numeroDevoluciones = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Devolucion);
                 Notificacion<List<Ticket>> numeroComplementos = new VentasDAO().ObtenerTicketsDevolucionComplemento(idVenta, TipoTicket.Complemento);
@@ -1742,7 +1724,7 @@ namespace lluviaBackEnd.Controllers
 
                 notificacion.Estatus = 200;
                 notificacion.Mensaje = "Ticket generado correctamente.";                
-                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, devoluciones, complementos));                
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTodosTicketsPDF(ticket.Modelo, devoluciones, complementos , usuario));                
                 ViewBag.pdfBase64 = pdfCodigos;
                 ViewBag.title = "Ticket: " + idVenta.ToString();
                 return View();

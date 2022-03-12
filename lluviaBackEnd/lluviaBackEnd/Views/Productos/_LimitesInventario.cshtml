@@ -21,13 +21,14 @@ else
             <thead>
                 <tr>
                     <th width="15%">Almacen</th>
-                    <th width="20%">Línea de Producto</th>
+                    <th width="15%">Línea de Producto</th>
                     <th width="20%">Producto</th>
-                    <th width="20%">Código Barras</th>
-                    <th width="10%">Mínimo</th>
-                    <th width="10%">Máximo</th>
+                    <th width="15%">Código Barras</th>
+                    <th width="8%">Mínimo</th>
+                    <th width="8%">Máximo</th>
                     <th width="10%">Cant. Actual</th>
-                    <th width="20%">Estatus</th>
+                    <th width="20%">Cant. Sugerida de Compra</th>
+                    <th width="15%">Estatus</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +36,9 @@ else
                 @foreach (lluviaBackEnd.Models.LimiteInvetario c in Model.Modelo)
                 {
                 <tr>
+                    @{
+                        int cantidadSugeria = c.maximo - c.cantidadInventario;
+                    }
                     <td>@c.descripcionAlmacen</td>
                     <td>@c.descripcionLineaProducto</td>
                     <td>@c.descripcion</td>
@@ -42,6 +46,7 @@ else
                     <td><input type="text" id="minimo_@c.idLimiteInventario" onkeypress="return esNumero(event)" onblur="actualizaLimiteInventario(@c.idLimiteInventario,@c.idAlmacen,@c.idProducto,@c.maximo,this.value,'minimo',@c.minimo)" style="border: none; border-color: transparent;  background: transparent; width:40px;" value="@c.minimo"></td>
                     <td><input type="text" id="maximo_@c.idLimiteInventario" onkeypress="return esNumero(event)" onblur="actualizaLimiteInventario(@c.idLimiteInventario,@c.idAlmacen,@c.idProducto,this.value,@c.minimo,'maximo',@c.maximo)" style="border: none; border-color: transparent;  background: transparent; width:40px;" value="@c.maximo"></td>
                     <td>@c.cantidadInventario</td>
+                    <td><span class="text-cantidad">@cantidadSugeria</span></td>
                     <td>
                         @{
                             switch (c.estatusInventario.idStatus)
