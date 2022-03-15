@@ -47,6 +47,8 @@ namespace lluviaBackEnd.Models
         public string descripcionFactFormaPago { get; set; }
         public int idLineaProducto { get; set; }
         public List<lluviaBackEnd.Models.Producto> lstProductos { get; set; }
+        public Boolean esPedidoEnRuta { get; set; }
+        public string observacionesPedidoRuta { get; set; }
 
     }
 }

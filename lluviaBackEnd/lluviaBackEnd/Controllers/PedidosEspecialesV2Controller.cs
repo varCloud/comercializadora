@@ -219,10 +219,12 @@ namespace lluviaBackEnd.Controllers
                 ViewBag.cliente = cliente[0];
 
                 ViewBag.comisionBancaria = usuario.comisionBancaria;
+                ViewBag.esPedidoEnRuta = pedidoEspecial.esPedidoEnRuta;
+                ViewBag.observacionesPedidoRuta =  pedidoEspecial.lstProductos[0].observacionesPedidoRuta == null ? "" : pedidoEspecial.lstProductos[0].observacionesPedidoRuta.ToString();
+                ViewBag.idUsuarioRuteoConsulta = pedidoEspecial.lstProductos[0].idUsuarioRuteo;
                 ViewBag.pedidoEspecial = pedidoEspecial;
 
                 ViewBag.cajaAbierta = new PedidosEspecialesV2DAO().ValidaAperturaCajas(usuario.idUsuario).Estatus == 200 ? true : false;
-
 
                 return View();
             }

@@ -126,7 +126,7 @@ $(document).ready(function () {
     InitSelect2Multiple();
     InitDataTableConsultaPedidosEnRuta();
     InitRangePicker('rangeConsultaPedidosEnRuta', 'fechaIni', 'fechaFin');
-    $("#btnBuscarPedidosEnRuta").trigger('click');
+    //$("#btnBuscarPedidosEnRuta").trigger('click');
 
     //$('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));

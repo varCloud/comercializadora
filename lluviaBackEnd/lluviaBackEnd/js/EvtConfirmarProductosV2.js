@@ -51,6 +51,9 @@ $('#btnGuardarPedidoEspecial').click(function (e) {
     actualizarSubTotal();
 
     if (validarProductosAceptados()) {
+
+        ValidarPedidoEnRuta();
+
         $('#ModalEntregarPedidoEspecial').modal({ backdrop: 'static', keyboard: false, show: true });
     }
     calculaTotales('true');
@@ -271,6 +274,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var idEstatusCuentaPorCobrar = parseInt(0);
     var montoPagado = parseFloat(0);
     var observacionesPedidoRuta = "";
+    var esPedidoEnRuta = $('#esPedidoEnRuta').val();
     var productos = [];
     var aCredito = parseInt(0);
     var aCreditoConAbono = parseInt(0);
@@ -365,7 +369,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         }
     }
 
-
+    
     // entregado a encargado de ruteo
     if ($("#chkRuteo").is(":checked")) {
         if (isNaN(parseInt(idUsuarioRuteo))) {
@@ -447,7 +451,11 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
     }
-
+    console.log(esPedidoEnRuta);
+    if (esPedidoEnRuta == null) {
+        esPedidoEnRuta = 'false';
+    }
+    console.log(esPedidoEnRuta);
 
     // si todo bien
     var tblProductos = document.getElementById('tblConfirmarProductos');
@@ -473,7 +481,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         productos: productos, idPedidoEspecial: idPedidoEspecial, idEstatusPedidoEspecial: idEstatusPedidoEspecial, idUsuarioEntrega: idUsuarioEntrega,
         numeroUnidadTaxi: numeroUnidadTaxi, idEstatusCuentaPorCobrar: idEstatusCuentaPorCobrar, montoPagado: montoPagado, aCredito: aCredito,
         aCreditoConAbono: aCreditoConAbono, aplicaIVA: aplicaIVA, idFactFormaPago: formaPago, idFactUsoCFDI: idFactUsoCFDI,
-        observacionesPedidoRuta: observacionesPedidoRuta, idUsuarioRuteo: idUsuarioRuteo
+        observacionesPedidoRuta: observacionesPedidoRuta, idUsuarioRuteo: idUsuarioRuteo, esPedidoEnRuta: esPedidoEnRuta
     });
 
     //console.log(dataToPost);
@@ -631,7 +639,8 @@ function chkChangeEntregar(chk) {
         document.getElementById("numeroUnidadTaxi").disabled = true;
 
         document.getElementById("chkFacturarPedido").checked = false;
-        checksTipoPagoTodos('block')
+        checksTipoPagoTodos('block');
+        checksTipoPagoChecked(false);
         document.getElementById("chkFacturarPedido").disabled = false;
         document.getElementById("divUsoCFDI").style.display = 'none';
 
@@ -653,12 +662,18 @@ function chkChangeEntregar(chk) {
         document.getElementById("numeroUnidadTaxi").disabled = true;
 
         document.getElementById("chkFacturarPedido").checked = false;
-        checksTipoPagoTodos('block')
+        checksTipoPagoTodos('block');
+        checksTipoPagoChecked(false);
         document.getElementById("chkFacturarPedido").disabled = true;
         document.getElementById("divUsoCFDI").style.display = 'none';
 
         document.getElementById("divObservacionesPedidoRuta").style.display = 'block';
         document.getElementById("observacionesPedidoRuta").value = "";
+
+        //cuando es pedido en ruta solo puede ser el pedido a credito
+        document.getElementById("divChkLiquidado").style.display = 'none';
+        document.getElementById("divChkCreditoConAbono").style.display = 'none';
+        document.getElementById("chkCredito").checked = true;
 
     }
 
@@ -678,7 +693,8 @@ function chkChangeEntregar(chk) {
         document.getElementById("numeroUnidadTaxi").disabled = false;
 
         document.getElementById("chkFacturarPedido").checked = false;
-        checksTipoPagoTodos('block')
+        checksTipoPagoTodos('block');
+        checksTipoPagoChecked(false);
         document.getElementById("chkFacturarPedido").disabled = false;
         document.getElementById("divUsoCFDI").style.display = 'none';
 
@@ -695,7 +711,12 @@ function checksTipoPagoTodos(display)
     document.getElementById("divChkLiquidado").style.display = display;
     document.getElementById("divChkCredito").style.display = display;
     document.getElementById("divChkCreditoConAbono").style.display = display;
+}
 
+function checksTipoPagoChecked(status) {
+    document.getElementById("chkLiquidado").checked = status;
+    document.getElementById("chkCredito").checked = status;
+    document.getElementById("chkCreditoConAbono").checked = status;
 }
 
 
@@ -1113,6 +1134,43 @@ function InitarrayProductos() {
 
 }
 
+function ValidarPedidoEnRuta() {
+
+    var esPedidoEnRuta = $('#esPedidoEnRuta').val();
+
+    if (esPedidoEnRuta == true || esPedidoEnRuta == 'True') {
+        
+        var idUsuarioRuteoConsulta = $('#idUsuarioRuteoConsulta').val();
+
+        document.getElementById("chkRuteo").checked = true;
+        document.getElementById("chkCliente").checked = false;
+        document.getElementById("chkTaxi").checked = false;
+
+        document.getElementById("chkRuteo").disabled = true;
+        document.getElementById("chkCliente").disabled = true;
+        document.getElementById("chkTaxi").disabled = true;
+
+        document.getElementById("numeroUnidadTaxi").value = "";
+        document.getElementById("numeroUnidadTaxi").disabled = true;
+
+        document.getElementById("idUsuarioRuteo").disabled = false;
+        $('#idUsuarioRuteo').val(idUsuarioRuteoConsulta).trigger('change');
+        document.getElementById("idUsuarioRuteo").disabled = true;
+
+        document.getElementById("chkLiquidado").checked = true;
+        document.getElementById("chkCredito").checked = false;
+        document.getElementById("chkCreditoConAbono").checked = false;
+
+        document.getElementById("chkLiquidado").disabled = true;
+        document.getElementById("chkCredito").disabled = true;
+        document.getElementById("chkCreditoConAbono").disabled = true;
+
+
+
+    }
+
+}
+
 
 $(document).ready(function () {
 
@@ -1129,7 +1187,7 @@ $(document).ready(function () {
     
 
     //document.getElementById("idCliente").disabled = true;
-    document.getElementById("idUsuarioRuteo").disabled = true;
+    //document.getElementById("idUsuarioRuteo").disabled = true;
     document.getElementById("idUsuarioTaxi").disabled = true;
     document.getElementById("numeroUnidadTaxi").disabled = true;
     //document.getElementById("montoTotal").disabled = true;
