@@ -38,3 +38,10 @@ end
 go
 
 
+-- se agrega el tipo de ticket de pedido en ruta para cuando los pedidos en ruta son liquidados 
+if not exists (select 1 from CatTipoTicketPedidosEspeciales where tipoTicket like 'Ticket Pedido en Ruta' )
+begin
+	insert into CatTipoTicketPedidosEspeciales (tipoTicket) values ('Ticket Pedido en Ruta')
+end
+go
+

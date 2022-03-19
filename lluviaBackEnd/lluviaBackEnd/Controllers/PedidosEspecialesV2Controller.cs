@@ -236,16 +236,23 @@ namespace lluviaBackEnd.Controllers
 
         [HttpPost]
         public ActionResult GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi,
-                                                int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
-                                                int aplicaIVA, string idMetodoPago, int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo)
+                                                int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono, int aplicaIVA, string idMetodoPago, 
+                                                int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo, Boolean esPedidoEnRuta)
         {
             try
             {
                 Notificacion<PedidosEspecialesV2> result = new Notificacion<PedidosEspecialesV2>();
                 Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
                 idUsuarioEntrega = UsuarioActual.idUsuario;
+                int idUsuarioLiquida = 0;
+
+                if ( idEstatusPedidoEspecial == 9 && esPedidoEnRuta) { 
+                    idUsuarioLiquida = UsuarioActual.idUsuario;
+                }
+
                 result = new PedidosEspecialesV2DAO().GuardarConfirmacion(productos, idPedidoEspecial, idEstatusPedidoEspecial, idUsuarioEntrega, numeroUnidadTaxi, idEstatusCuentaPorCobrar,
-                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI, observacionesPedidoRuta, idUsuarioRuteo);
+                                                                          montoPagado, aCredito, aCreditoConAbono, aplicaIVA, idFactFormaPago, idFactUsoCFDI, observacionesPedidoRuta, 
+                                                                           idUsuarioRuteo, esPedidoEnRuta, idUsuarioLiquida);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

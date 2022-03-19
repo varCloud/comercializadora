@@ -794,8 +794,8 @@ namespace lluviaBackEnd.DAO
         }
 
         public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, 
-                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
-                                                                     int aplicaIVA, int idFactFormaPago, int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo)
+                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono, int aplicaIVA, int idFactFormaPago, 
+                                                                     int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo, Boolean esPedidoEnRuta, int idUsuarioLiquida)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -819,6 +819,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idFactUsoCFDI", idFactUsoCFDI);
                     parameters.Add("@observacionesPedidoRuta", observacionesPedidoRuta);
                     parameters.Add("@idUsuarioRuteo", idUsuarioRuteo);
+                    parameters.Add("@esPedidoEnRuta", esPedidoEnRuta);
+                    parameters.Add("@idUsuarioLiquida", idUsuarioLiquida);
 
 
                     var result = db.QueryMultiple("SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);

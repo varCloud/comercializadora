@@ -451,7 +451,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
         return;
     }
-    console.log(esPedidoEnRuta);
+    //console.log(esPedidoEnRuta);
     if (esPedidoEnRuta == null) {
         esPedidoEnRuta = 'false';
     }
