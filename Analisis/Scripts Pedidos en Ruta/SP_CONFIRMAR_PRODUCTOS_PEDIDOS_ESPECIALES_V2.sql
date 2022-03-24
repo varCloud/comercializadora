@@ -469,6 +469,47 @@ as
 										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = temp.idUbicacionRegresar
 					
 
+						-- se sacan de resguardo los que se regresaron 
+						-- rechazados
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
+						select	distinct @idUbicacionResguardo, temp.idProducto, rechazados.cantidadRechazada, actuales.cantidad - rechazados.cantidadRechazada as cantidadActual,
+								23 as idTipoMovInventario, -- 23	Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
+						from	#tempUbicacionesDevoluciones_ temp
+									join (
+											select	p.idProducto,  p.cantidadRechazada												
+											from	#productos p
+											where	p.cantidadRechazada	> 0
+										 )rechazados on rechazados.idProducto = temp.idProducto
+									join InventarioDetalle actuales
+										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = @idUbicacionResguardo
+
+
+
+
+						-- no aceptados
+						insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
+						select	distinct @idUbicacionResguardo, temp.idProducto, rechazados.noAceptados, rechazados.cantidad - rechazados.noAceptados as cantidadActual,
+								23 as idTipoMovInventario, -- 23	Actualizacion de Inventario(salida de mercancia por cancelacion en pedido especial)
+								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
+						from	#tempUbicacionesDevoluciones_ temp
+									join (	
+											select	p.idProducto, p.idAlmacenDestino,  (sum(p.cantidadAtendida) - sum(cantidadAceptada)) as noAceptados, id.cantidad
+											from	#productos p
+														join (
+																select	pro.idProducto, ide.cantidad, ide.idUbicacion
+																from	#productos pro
+																			join InventarioDetalle ide 
+																				on	pro.idProducto = ide.idProducto
+																				and	ide.idUbicacion = @idUbicacionResguardo																	
+															 ) id
+																on	p.idProducto = id.idProducto
+																
+											where	(p.cantidadAtendida - cantidadAceptada)	> 0
+											group by p.idProducto, p.idAlmacenDestino, id.cantidad
+										 )rechazados on rechazados.idProducto = temp.idProducto 
+													and	rechazados.idAlmacenDestino = temp.idAlmacenDestino
+					
 
 						-- actualizamos InventarioDetalle
 						-- rechazados
@@ -865,7 +906,7 @@ as
 
 
 
-					if ( ( @esPedidoEnRuta = cast(1 as bit) and @idEstatusPedidoEspecial = 9 ) )  -- si es liquidacion de pedido especial en ruta 
+					if ( ( @esPedidoEnRuta = cast(0 as bit) and @idEstatusPedidoEspecial = 9 ) )  -- si es pedido especial que se va a ruta
 
 						begin
 							select @idTipoTicketPedidoEspecial = cast(3 as int)
@@ -880,16 +921,16 @@ as
 							)
 					select	@idTipoTicketPedidoEspecial as idTipoTicketPedidoEspecial, @idPedidoEspecial,@idUsuarioEntrega, sum(cantidad),sum(coalesce(monto,0)),
 							sum(coalesce(montoComisionBancaria, 0)),sum(coalesce(monto,0)) + sum(coalesce(montoComisionBancaria, 0)) + sum(coalesce(montoIVA, 0)),@fecha as fechaAlta,'' observaciones,sum(coalesce(montoIVA, 0))
-					from	PedidosEspecialesDetalle where idPedidoEspecial = @idPedidoEspecial
-					--from	PedidosEspeciales
-					--where	idPedidoEspecial = @idPedidoEspecial
+					from	PedidosEspecialesDetalle 
+					where	idPedidoEspecial = @idPedidoEspecial
+
 					
 					
 
 					select	@idTicketPedidoEspecial = max(idTicketPedidoEspecial) 
 					from	TicketsPedidosEspeciales
 					where	idPedidoEspecial = @idPedidoEspecial
-						and	idTipoTicketPedidoEspecial = cast(1 as int)
+						and	idTipoTicketPedidoEspecial = @idTipoTicketPedidoEspecial --cast(1 as int)
 
 
 
