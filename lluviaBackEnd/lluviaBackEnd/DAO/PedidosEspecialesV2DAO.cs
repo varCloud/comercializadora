@@ -428,6 +428,39 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        public Notificacion<List<PedidosEspecialesV2>> ConsultaPedidosEnRuta(PedidosEspecialesV2 pedidosEspecialesV2)
+        {
+            Notificacion<List<PedidosEspecialesV2>> notificacion = new Notificacion<List<PedidosEspecialesV2>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idUsuarioRuteo", pedidosEspecialesV2.idUsuarioRuteo);
+                    parameters.Add("@fechaIni", pedidosEspecialesV2.fechaIni == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaIni);
+                    parameters.Add("@fechaFin", pedidosEspecialesV2.fechaFin == DateTime.MinValue ? (object)null : pedidosEspecialesV2.fechaFin);
+                    var result = db.QueryMultiple("SP_CONSULTA_PEDIDOS_EN_RUTA_V2", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<PedidosEspecialesV2>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
         //public Notificacion<PedidosEspeciales> AceptarRechazarPedidoEspecial(PedidosEspeciales pedido)
         //{
         //    Notificacion<PedidosEspeciales> notificacion = new Notificacion<PedidosEspeciales>();
@@ -761,8 +794,8 @@ namespace lluviaBackEnd.DAO
         }
 
         public Notificacion<PedidosEspecialesV2> GuardarConfirmacion(List<Producto> productos, int idPedidoEspecial, int idEstatusPedidoEspecial, int idUsuarioEntrega, string numeroUnidadTaxi, 
-                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono,
-                                                                     int aplicaIVA, int idFactFormaPago, int idFactUsoCFDI)
+                                                                     int idEstatusCuentaPorCobrar, float montoPagado, bool aCredito, bool aCreditoConAbono, int aplicaIVA, int idFactFormaPago, 
+                                                                     int idFactUsoCFDI, string observacionesPedidoRuta, int idUsuarioRuteo, Boolean esPedidoEnRuta, int idUsuarioLiquida)
         {
             Notificacion<PedidosEspecialesV2> notificacion = new Notificacion<PedidosEspecialesV2>();
             try
@@ -784,6 +817,10 @@ namespace lluviaBackEnd.DAO
                     //parameters.Add("@idMetodoPago", idMetodoPago);
                     parameters.Add("@idFactFormaPago", idFactFormaPago);
                     parameters.Add("@idFactUsoCFDI", idFactUsoCFDI);
+                    parameters.Add("@observacionesPedidoRuta", observacionesPedidoRuta);
+                    parameters.Add("@idUsuarioRuteo", idUsuarioRuteo);
+                    parameters.Add("@esPedidoEnRuta", esPedidoEnRuta);
+                    parameters.Add("@idUsuarioLiquida", idUsuarioLiquida);
 
 
                     var result = db.QueryMultiple("SP_CONFIRMAR_PRODUCTOS_PEDIDOS_ESPECIALES_V2", parameters, commandType: CommandType.StoredProcedure);

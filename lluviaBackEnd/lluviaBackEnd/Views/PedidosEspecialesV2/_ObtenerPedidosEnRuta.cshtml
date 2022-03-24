@@ -1,0 +1,87 @@
+﻿@using System.Globalization;
+@model List<lluviaBackEnd.Models.PedidosEspecialesV2>
+@{
+    List<lluviaBackEnd.Models.PedidosEspecialesV2> lstPedidos = ViewBag.lstPedidos;
+    DateTime hoy = DateTime.Now;
+    lluviaBackEnd.Models.Sesion usuario = Session["UsuarioActual"] as lluviaBackEnd.Models.Sesion;
+}
+
+
+
+@if (lstPedidos == null)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@ViewBag.mensaje</h2>
+    </div>
+
+}
+else
+{
+
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tablaConsultaPedidosEnRuta">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"> # </th>
+                                        <th>Cliente</th>
+                                        <th>Monto</th>
+                                        <th># Productos</th>
+                                        <th>Usuario</th>
+                                        <th>Fecha Alta</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in lstPedidos)
+                                    {
+                                        <tr>
+                                            <td>@item.idPedidoEspecial</td>
+                                            <td>@item.nombreCliente</td>
+                                            <td>@item.montoTotal.ToString("C", new CultureInfo("en-US"))</td>
+                                            <td>@item.cantidad</td>
+                                            <td>@item.nombreUsuario</td>
+                                            <td>@item.fechaAlta</td>
+                                            <td>
+                                                <div class="dropdown d-inline">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesPedidosEnRuta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Acciones
+                                                    </button>
+                                                    <div class="dropdown-menu">
+
+                                                        <a class="dropdown-item has-icon" href="@Url.Action("ConfirmarProductos", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial, esPedidoEnRuta = true, idCliente = item.idCliente})"><i class="fas fa-dollar-sign"></i>Liquidar Pedido</a>
+                                                        @*<a class="dropdown-item has-icon" href="javascript:ImprimeTicketPedidoEspecial(@item.idPedidoEspecial, 1, 0, false);"><i class="fas fa-print"></i>Ticket </a>
+                                                        <a class="dropdown-item has-icon" href="@Url.Action("VerTicketAlmacenes", "PedidosEspecialesV2", new {idPedidoEspecial=item.idPedidoEspecial})" target="_blank"><i class="fas fa-eye"></i>Ver Ticket</a>*@
+                                                        
+                                                    </div>
+                                                </div>
+                                            </td>
+                                                                                       
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+

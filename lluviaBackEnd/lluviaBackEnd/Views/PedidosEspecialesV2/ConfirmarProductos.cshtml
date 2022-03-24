@@ -9,6 +9,10 @@
     List<lluviaBackEnd.Models.UsoCFDI> lstUsoCFDI = ViewBag.lstUsoCFDI;
     List<lluviaBackEnd.Models.Cliente> lstClientes = (List<lluviaBackEnd.Models.Cliente>)ViewBag.lstClientes;
     float comisionBancaria = ViewBag.comisionBancaria;
+    Boolean esPedidoEnRuta = ViewBag.esPedidoEnRuta;
+    string observacionesPedidoRuta = ViewBag.observacionesPedidoRuta;
+    int idUsuarioRuteoConsulta = ViewBag.idUsuarioRuteoConsulta;
+
     bool cajaAbierta = ViewBag.cajaAbierta;
     lluviaBackEnd.Models.Cliente cliente = ViewBag.cliente;
     cliente.rfc = cliente.rfc == null ? "" : cliente.rfc.ToUpper();
@@ -18,8 +22,8 @@
 }
 
 <script type="text/javascript">
-    var listClientes = @Html.Raw(Json.Encode(lstClientes));
-</script>
+        var listClientes = @Html.Raw(Json.Encode(lstClientes));
+    </script>
 
 @section Styles {
     <link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
@@ -63,6 +67,8 @@
                     </div>
                     <div class="card-body">
                         @Html.HiddenFor(x => comisionBancaria)
+                        @Html.HiddenFor(x => esPedidoEnRuta)
+                        @Html.HiddenFor(x => idUsuarioRuteoConsulta)
                         @Html.HiddenFor(x => cajaAbierta, new { id = "cajaAbierta" })
                         <div class="text-md-right">
                             <div class="badge-outline col-red"> <h3>Subtotal: <span class="divSubTotal">$0.0</span></h3></div>
@@ -275,6 +281,30 @@
                                 </div>
 
 
+                                <div id="divObservacionesPedidoRuta">
+
+                                    <div class="section-title"><strong>Observaciones (Pedido en Ruta): </strong></div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="observacionesPedidoRuta" placeholder="Observaciones del Pedido en Ruta">
+                                    </div>
+
+                                </div>
+
+                                @if (esPedidoEnRuta) {
+
+                                    <div id="divObservacionesPedidoRutaConsulta">
+
+                                        <div class="section-title"><strong>Observaciones (Pedido en Ruta): </strong> @observacionesPedidoRuta.ToString() </div>
+                                        <div class="form-group">                                        
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                }
+
+
+
+
 
                                 <div id="divFormaPago">
 
@@ -307,7 +337,7 @@
 
                             </div>
 
-                            </div>
+                        </div>
 
                     </div>
 
