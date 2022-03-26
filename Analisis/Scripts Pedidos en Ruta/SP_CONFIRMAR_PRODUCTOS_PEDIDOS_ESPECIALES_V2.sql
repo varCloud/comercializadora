@@ -949,7 +949,13 @@ as
 						and	cantidad > 0
 
 
-
+					-- si es una liquidacion de un pedido especial en ruta
+					if ( ( @esPedidoEnRuta = cast(1 as bit) and @idEstatusPedidoEspecial = 9 ) )  
+					begin
+						update	PedidosEspeciales
+						set		idEstatusPedidoEspecial = cast(6 as int) -- 6	Pagado
+						where	idPedidoEspecial = @idPedidoEspecial
+					end
 
 				begin -- commit de transaccion
 					if @tran_count = 0

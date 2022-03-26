@@ -265,7 +265,7 @@ $('#chkFacturarPedido').click(function () {
 
 $('#btnEntregarPedidoEspecial').click(function (e) {
 
-    var idUsuarioRuteo = $('#idUsuarioRuteo').val();
+    var idUsuarioRuteo = 0; //$('#idUsuarioRuteo').val();
     var idUsuarioTaxi = $('#idUsuarioTaxi').val();
     var numeroUnidadTaxi = "0";
     var idUsuarioEntrega = parseInt(0);

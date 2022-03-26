@@ -327,6 +327,7 @@ function MostrarDetalle(idPedidoEspecial) {
 function MostrarDetalleDevolucion(idPedidoEspecial) {
     $("#idPedidoEspecial").val(0);
     $(".divSubTotal").html("$0.0");
+    $("#motivoDevolucion").val("");
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ObtenerPedidosEspecialesDetalle"),
         data: { idPedidoEspecial: idPedidoEspecial },

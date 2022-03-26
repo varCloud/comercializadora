@@ -45,3 +45,29 @@ begin
 end
 go
 
+-- se agregan campos en la tabla PedidosEspecialesCierresDetalle  para el cierre de PE
+if not exists ( select 1 from sys.columns where name like 'MontoPedidosEnRuta' and OBJECT_ID = OBJECT_ID(N'dbo.PedidosEspecialesCierresDetalle' ) )
+begin
+	alter table PedidosEspecialesCierresDetalle add MontoPedidosEnRuta money
+end
+go
+
+if not exists ( select 1 from sys.columns where name like 'NoPedidosEnRuta' and OBJECT_ID = OBJECT_ID(N'dbo.PedidosEspecialesCierresDetalle' ) )
+begin
+	alter table PedidosEspecialesCierresDetalle add NoPedidosEnRuta int
+end
+go
+
+
+update PedidosEspecialesCierresDetalle set MontoPedidosEnRuta = 0.0, NoPedidosEnRuta = 0 where MontoPedidosEnRuta is null 
+go 
+
+
+if not exists ( select 1 from sys.columns where name like 'NoPedidosEnRuta' and OBJECT_ID = OBJECT_ID(N'dbo.PedidosEspecialesCierres' ) )
+begin
+	alter table PedidosEspecialesCierres add NoPedidosEnRuta int
+end
+go
+
+update PedidosEspecialesCierres set NoPedidosEnRuta = 0 where NoPedidosEnRuta is null 
+go 
