@@ -265,7 +265,7 @@ $('#chkFacturarPedido').click(function () {
 
 $('#btnEntregarPedidoEspecial').click(function (e) {
 
-    var idUsuarioRuteo = 0; //$('#idUsuarioRuteo').val();
+    var idUsuarioRuteo = $('#idUsuarioRuteo').val();
     var idUsuarioTaxi = $('#idUsuarioTaxi').val();
     var numeroUnidadTaxi = "0";
     var idUsuarioEntrega = parseInt(0);
@@ -369,10 +369,14 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         }
     }
 
-    
+    console.log((isNaN(parseInt(idUsuarioRuteo))));
+    console.log(parseInt(idUsuarioRuteo));
     // entregado a encargado de ruteo
     if ($("#chkRuteo").is(":checked")) {
-        if (isNaN(parseInt(idUsuarioRuteo))) {
+        if (
+            (isNaN(parseInt(idUsuarioRuteo))) ||
+            ((parseInt(idUsuarioRuteo)) == 0)
+            ) {
             MuestraToast('warning', "Debe elegir el usuario Encargado de Ruteo que recibe el Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
             return;
@@ -628,6 +632,9 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkRuteo").checked = false;
         document.getElementById("chkTaxi").checked = false;
 
+        document.getElementById("dvEfectivo").style.display = 'block';
+        document.getElementById("efectivo").value = "";
+
         $('#idUsuarioRuteo').val("").trigger('change');
         document.getElementById("idUsuarioRuteo").disabled = true;
 
@@ -653,6 +660,9 @@ function chkChangeEntregar(chk) {
 
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkTaxi").checked = false;
+
+        document.getElementById("dvEfectivo").style.display = 'none';
+        document.getElementById("efectivo").value = "";
 
         $('#idUsuarioTaxi').val("").trigger('change');
         document.getElementById("idUsuarioTaxi").disabled = true;
@@ -681,6 +691,9 @@ function chkChangeEntregar(chk) {
 
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkRuteo").checked = false;
+
+        document.getElementById("dvEfectivo").style.display = 'block';
+        document.getElementById("efectivo").value = "";
 
         $('#idUsuarioRuteo').val("").trigger('change');
         document.getElementById("idUsuarioRuteo").disabled = true;

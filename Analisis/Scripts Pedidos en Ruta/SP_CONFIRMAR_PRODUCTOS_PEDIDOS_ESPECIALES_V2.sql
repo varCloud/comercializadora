@@ -477,14 +477,12 @@ as
 								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (
-											select	p.idProducto,  p.cantidadRechazada												
+											select	distinct p.idProducto,  p.cantidadRechazada												
 											from	#productos p
 											where	p.cantidadRechazada	> 0
 										 )rechazados on rechazados.idProducto = temp.idProducto
 									join InventarioDetalle actuales
 										on actuales.idProducto = temp.idProducto and actuales.idUbicacion = @idUbicacionResguardo
-
-
 
 
 						-- no aceptados
@@ -494,10 +492,10 @@ as
 								@idUsuarioEntrega as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 						from	#tempUbicacionesDevoluciones_ temp
 									join (	
-											select	p.idProducto, p.idAlmacenDestino,  (sum(p.cantidadAtendida) - sum(cantidadAceptada)) as noAceptados, id.cantidad
+											select	distinct p.idProducto, p.idAlmacenOrigen,  (sum(p.cantidadAtendida) - sum(p.cantidadAceptada)) as noAceptados, id.cantidad
 											from	#productos p
 														join (
-																select	pro.idProducto, ide.cantidad, ide.idUbicacion
+																select	distinct pro.idProducto, ide.cantidad, ide.idUbicacion
 																from	#productos pro
 																			join InventarioDetalle ide 
 																				on	pro.idProducto = ide.idProducto
@@ -506,9 +504,9 @@ as
 																on	p.idProducto = id.idProducto
 																
 											where	(p.cantidadAtendida - cantidadAceptada)	> 0
-											group by p.idProducto, p.idAlmacenDestino, id.cantidad
+											group by p.idProducto, p.idAlmacenOrigen, id.cantidad
 										 )rechazados on rechazados.idProducto = temp.idProducto 
-													and	rechazados.idAlmacenDestino = temp.idAlmacenDestino
+													and	rechazados.idAlmacenOrigen = temp.idAlmacenOrigen
 					
 
 						-- actualizamos InventarioDetalle
@@ -724,10 +722,15 @@ as
 						begin
 
 							insert	into InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idVenta, idPedidoEspecial)
-							select	u.idUbicacion, id.idProducto, t.cantidadAceptada, (id.cantidad - t.cantidadAceptada ) as cantidadActual, cast(1 as int) as idTipoMovInventario, --1 Venta
-									@idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial										
+							select	distinct u.idUbicacion, id.idProducto, t.cantidadAceptada, (id.cantidad - t.cantidadAceptada ) as cantidadActual, cast(1 as int) as idTipoMovInventario, --1 Venta
+									@idUsuario as idUsuario, @fecha as fechaAlta, cast(0 as int) as idVenta, @idPedidoEspecial as idPedidoEspecial
 							from	InventarioDetalle id
-										join #productos t
+										join	(
+													select	pro.idProducto, pro.idAlmacenOrigen,
+															sum(pro.cantidadAceptada) as cantidadAceptada
+													from	#productos pro
+													group by pro.idProducto, pro.idAlmacenOrigen
+												) t
 											on id.idProducto = t.idProducto
 										join Ubicacion u	
 											on	u.idUbicacion = id.idUbicacion 
