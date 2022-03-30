@@ -786,12 +786,8 @@ namespace lluviaBackEnd.Utilerias
                             <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
                                 <tr>
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
-                                </tr>                                
-                                
-                                <tr><td style='color:black; text-align:center;'>RFC: " + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono: " + usuario.telefonoEmpresa + @"</td></tr>
-                                <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                
-                                <tr>
+                                </tr>" + Utilerias.Utils.ObtieneDatosEmpresaHTML(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa) +
+                                @"<tr>
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>                                            
@@ -2274,12 +2270,8 @@ namespace lluviaBackEnd.Utilerias
                             <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
                                 <tr>
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
-                                </tr>                                
-                                
-                                <tr><td style='color:black; text-align:center;'>RFC: " + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono: "+usuario.telefonoEmpresa +@"</td></tr>
-                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                
-                                <tr>
+                                </tr>" + Utilerias.Utils.ObtieneDatosEmpresaHTML(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa) +
+                                @"<tr>
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>                                            
@@ -2787,12 +2779,8 @@ namespace lluviaBackEnd.Utilerias
                             <table width='100%' height='100%'   style='font-size:6.8px;font-family:Arial;color:7b7b7b;'" + @"  CELLPADDING='0' >
                                 <tr>
                                     <td><img src='" + System.Web.HttpContext.Current.Server.MapPath("~") + "\\assets\\img\\logo_lluvia_150.jpg" + @"' width = '78' height = '63' align='center' /></td>
-                                </tr>                                
-                                
-                                <tr><td style='color:black; text-align:center;'>RFC: " + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono: " + usuario.telefonoEmpresa + @"</td></tr>
-                                 <tr><td style='color:black; text-align:center;'><br></td></tr>
-                                
-                                <tr>
+                                </tr>" + Utilerias.Utils.ObtieneDatosEmpresaHTML(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa) +
+                                @"<tr>
                                     <td style='color:black; '> 
                                         <table>
                                           <tr>                                            
@@ -3198,6 +3186,22 @@ namespace lluviaBackEnd.Utilerias
             return resultado;
         }
 
+
+        public static string ObtieneDatosEmpresaHTML(string rfcEmpresa, string domicilioEmpresa, string telefonoEmpresa) {
+
+            return  @"<tr><td style='color:black; text-align:center;'>RFC: " + rfcEmpresa.ToUpper() + @"</td></tr>" +
+                    @"<tr><td style='color:black; text-align:center;'>" + domicilioEmpresa + @" </td></tr>" +
+                    @"<tr><td style='color:black; text-align:center;'>Telefono: " + telefonoEmpresa + @"</td></tr>" +
+                    @"<tr><td style='color:black; text-align:center;'><br></td></tr>";
+
+
+        }
+
+        public static string ObtieneDatosEmpresa(string rfcEmpresa, string domicilioEmpresa, string telefonoEmpresa) {
+
+            return "        RFC: " + rfcEmpresa.ToUpper() + "\n" + domicilioEmpresa + "\n" + "      Telefono: " + telefonoEmpresa;
+
+        }
 
 
     }

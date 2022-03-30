@@ -282,10 +282,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat($("#previoFinal").html().replace('<h4>$', '').replace('</h4>', ''));
     var aplicaIVA = parseInt(0);
-    //var idMetodoPago = parseInt(1);
-    //var idFactFormaPago = parseInt(0);
     var idFactUsoCFDI = parseInt(0);
-    //var cantidadAbonada_ = parseFloat(0); 
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
     $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
@@ -369,8 +366,6 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         }
     }
 
-    console.log((isNaN(parseInt(idUsuarioRuteo))));
-    console.log(parseInt(idUsuarioRuteo));
     // entregado a encargado de ruteo
     if ($("#chkRuteo").is(":checked")) {
         if (
@@ -459,7 +454,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     if (esPedidoEnRuta == null) {
         esPedidoEnRuta = 'false';
     }
-    console.log(esPedidoEnRuta);
+    //console.log(esPedidoEnRuta);
 
     // si todo bien
     var tblProductos = document.getElementById('tblConfirmarProductos');
@@ -508,7 +503,16 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             if (data.Estatus == 200) {
 
-                ImprimeTicketPedidoEspecial(idPedidoEspecial,1,0);
+                if (
+                    (idEstatusPedidoEspecial == 9) &&
+                    (esPedidoEnRuta == 'false' || esPedidoEnRuta == 'False')
+                ) {
+                    ImprimeTicketPedidoEspecial(idPedidoEspecial, 3, 0);
+                }
+                else {
+                    ImprimeTicketPedidoEspecial(idPedidoEspecial,1,0);
+                }
+
 
                 if ($("#chkFacturarPedido").is(":checked")) {
                     facturaPedidoEspecial(idPedidoEspecial, idUsuarioEntrega);
@@ -632,6 +636,8 @@ function chkChangeEntregar(chk) {
         document.getElementById("chkRuteo").checked = false;
         document.getElementById("chkTaxi").checked = false;
 
+        document.getElementById("divFormaPago").style.display = 'block';
+
         document.getElementById("dvEfectivo").style.display = 'block';
         document.getElementById("efectivo").value = "";
 
@@ -660,6 +666,8 @@ function chkChangeEntregar(chk) {
 
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkTaxi").checked = false;
+
+        document.getElementById("divFormaPago").style.display = 'none';
 
         document.getElementById("dvEfectivo").style.display = 'none';
         document.getElementById("efectivo").value = "";
@@ -691,6 +699,8 @@ function chkChangeEntregar(chk) {
 
         document.getElementById("chkCliente").checked = false;
         document.getElementById("chkRuteo").checked = false;
+
+        document.getElementById("divFormaPago").style.display = 'block';
 
         document.getElementById("dvEfectivo").style.display = 'block';
         document.getElementById("efectivo").value = "";

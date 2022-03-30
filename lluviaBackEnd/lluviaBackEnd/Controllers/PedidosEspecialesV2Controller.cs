@@ -2287,13 +2287,13 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
                     postTicketY = (logo.Y + logo.Height + espaciado);
 
+                    postTicketY = postTicketY + espaciado;
 
-                    
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
-                     e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono:"+usuario.telefonoEmpresa , font, drawBrush, datos);
-                    //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                     //e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa+", "+usuario.domicilioEmpresa+" Telefono:"+usuario.telefonoEmpresa , font, drawBrush, datos);
+                    e.Graphics.DrawString( Utilerias.Utils.ObtieneDatosEmpresa(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa) , font, drawBrush, datos, centrado);
 
-                    postTicketY = datos.Y + espaciado + espaciado+8;
+                    postTicketY = datos.Y + espaciado + espaciado+35;
                     e.Graphics.DrawString("Ticket PE:" + ticket.Modelo[0].idPedidoEspecial.ToString(), Bold, drawBrush, 5, postTicketY, izquierda);
                     e.Graphics.DrawString("Fecha:" + ticket.Modelo[0].fechaTicket, font, drawBrush, 100, postTicketY, izquierda);
                     e.Graphics.DrawString("Hora:" + ticket.Modelo[0].horaTicket, font, drawBrush, 100, postTicketY+10, izquierda);
@@ -2867,13 +2867,13 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
                     postTicketY = (logo.Y + logo.Height + espaciado);
 
-
+                    postTicketY = postTicketY + espaciado;
 
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
-                    e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono:" + usuario.telefonoEmpresa, font, drawBrush, datos);
-                    //e.Graphics.DrawString("RFC:" + "COVO781128LJ1" + ",\n" + "Calle Macarena #82" + '\n' + "Inguambo" + '\n' + "Uruapan, Michoacán" + '\n' + "C.p. 58000", font, drawBrush, datos, centrado);
+                    //e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono:" + usuario.telefonoEmpresa, font, drawBrush, datos);
+                    e.Graphics.DrawString(Utilerias.Utils.ObtieneDatosEmpresa(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa), font, drawBrush, datos, centrado);
 
-                    postTicketY = datos.Y + espaciado + espaciado + 8;
+                    postTicketY = datos.Y + espaciado + espaciado + 35;
                     e.Graphics.DrawString("Ticket Pedido en Ruta:" + ticket.Modelo[0].idPedidoEspecial.ToString(), Bold, drawBrush, 5, postTicketY, izquierda);
                     e.Graphics.DrawString("Fecha:" + ticket.Modelo[0].fechaTicket, font, drawBrush, 160, postTicketY, izquierda);
                     e.Graphics.DrawString("Hora:" + ticket.Modelo[0].horaTicket, font, drawBrush, 160, postTicketY + 10, izquierda);

@@ -687,12 +687,13 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawImage(newImage, logo, 0, 0, 380.0F, 120.0F, units);
 
                     postTicketY = (logo.Y + logo.Height + espaciado);
-                    
 
-                    //postTicketY = postTicketY + 100 + espaciado;
+
+                    postTicketY = postTicketY + espaciado;
                     Rectangle datos = new Rectangle(5, postTicketY, ancho, 90);
-                    e.Graphics.DrawString("RFC:" + usuario.rfcEmpresa + ", " + usuario.domicilioEmpresa + " Telefono:" + usuario.telefonoEmpresa, font, drawBrush, datos);
-                    postTicketY = datos.Y + espaciado + espaciado + 8;
+                    e.Graphics.DrawString( Utilerias.Utils.ObtieneDatosEmpresa(usuario.rfcEmpresa, usuario.domicilioEmpresa, usuario.telefonoEmpresa), font, drawBrush, datos, centrado);
+
+                    postTicketY = datos.Y + espaciado + espaciado + 35;
                     e.Graphics.DrawString("Ticket:" + notificacion.Modelo[0].idVenta.ToString(), Bold, drawBrush, 5, postTicketY, izquierda);
                     e.Graphics.DrawString("Fecha:" + notificacion.Modelo[0].fechaAlta.ToString("dd-MM-yyyy"), font, drawBrush, 100, postTicketY, izquierda);
                     e.Graphics.DrawString("Hora:" + notificacion.Modelo[0].fechaAlta.ToShortTimeString(), font, drawBrush, 100, postTicketY+10, izquierda);
