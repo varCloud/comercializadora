@@ -981,7 +981,7 @@ namespace PrintDocumentolluvia
                 comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
                 comprobante.Emisor.RegimenFiscal = 621;                
                 */
-                comprobante.MetodoPago = "PPD";
+               // comprobante.MetodoPago = "PPD";
                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
@@ -1148,8 +1148,8 @@ namespace PrintDocumentolluvia
                 oPagos.Pago = lstPagos.ToArray();
 
                 oComprobante.Complemento = new ComprobanteComplemento();
-                oComprobante.Complemento.Pagos = new Pagos();
-                oComprobante.Complemento.Pagos = oPagos;
+                //oComprobante.Complemento.Pagos = new Pagos();
+                //oComprobante.Complemento.Pagos = oPagos;
 
                 oComprobante.schemaLocation += @" http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd";
                 string xmlSerealizado = ProcesaCfdi.SerializaXML33(oComprobante);

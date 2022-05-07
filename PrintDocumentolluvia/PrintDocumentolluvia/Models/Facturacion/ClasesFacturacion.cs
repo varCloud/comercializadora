@@ -1451,8 +1451,6 @@ namespace lluviaBackEnd.Models.Facturacion
     public partial class ComprobanteComplemento
     {
 
-        private Pagos pagos;
-
         private TimbreFiscalDigital timbreFiscalDigitalField;
 
         /// <remarks/>
@@ -1469,18 +1467,7 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.sat.gob.mx/Pagos")]
-        public Pagos Pagos
-        {
-            get
-            {
-                return this.pagos;
-            }
-            set
-            {
-                this.pagos = value;
-            }
-        }
+
     }
 
     /// <remarks/>

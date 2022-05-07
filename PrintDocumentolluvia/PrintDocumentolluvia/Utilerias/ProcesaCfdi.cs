@@ -50,7 +50,7 @@ namespace lluviaBackEnd.Utilerias
                 //es lo mismo que el de arriba
                 ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
-                ns.Add("pago10", "http://www.sat.gob.mx/Pagos");
+                //ns.Add("pago10", "http://www.sat.gob.mx/Pagos");
 
                 xmlTextWriter.Formatting = Formatting.Indented;
                 serializer.Serialize(xmlTextWriter, comprobante, ns);
