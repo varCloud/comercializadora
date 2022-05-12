@@ -72,14 +72,18 @@ namespace lluviaBackEnd.DAO
                     c.Receptor.Nombre = receptor.Nombre;
                     c.Receptor.Rfc = receptor.Rfc;
                     c.Receptor.UsoCFDI = receptor.UsoCFDI;
+                    c.Receptor.DomicilioFiscalReceptor = "58149"; //FAC 4.0
+                    c.Receptor.RegimenFiscalReceptor = "601"; //FAC 4.0
+
+
 
                     //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
                     listConceptos = result.Read<ComprobanteConcepto>().ToList();
                     if (listConceptos != null)
                     {
-                        listConceptos.ForEach(data => data.Impuestos = new ComprobanteConceptoImpuestos()
+                        listConceptos.ForEach(data =>  data.Impuestos = new ComprobanteConceptoImpuestos()
                         {
-
+                            
                             Traslados = new ComprobanteConceptoImpuestosTraslados()
                             {
                                 Traslado = new ComprobanteConceptoImpuestosTrasladosTraslado()
@@ -91,8 +95,9 @@ namespace lluviaBackEnd.DAO
                                     Importe = Math.Round((data.Importe * 0.16M), 2, MidpointRounding.AwayFromZero)
                                 }
                             }
-                        });
-                        c.Conceptos = listConceptos.ToArray();
+                        } );
+                        listConceptos.ForEach(data => data.ObjetoImp = "02");
+                       c.Conceptos = listConceptos.ToArray();
                     }
 
                     //OBTENEMOS LOS CONCEPTOS PARA LA ADDENDA
@@ -130,12 +135,15 @@ namespace lluviaBackEnd.DAO
             try
             {
                 decimal TotalImpuestosTrasladados = 0;
+                decimal TotalBaseTrasladados = 0;
                 TotalImpuestosTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Importe);
+                TotalBaseTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Base);
                 ComprobanteImpuestos impuestos = new ComprobanteImpuestos();
                 impuestos.TotalImpuestosTrasladados = TotalImpuestosTrasladados;
                 impuestos.Traslados = new ComprobanteImpuestosTraslados();
                 impuestos.Traslados.Traslado = new ComprobanteImpuestosTrasladosTraslado();
                 impuestos.Traslados.Traslado.Importe = TotalImpuestosTrasladados;
+                impuestos.Traslados.Traslado.Base = TotalBaseTrasladados;
                 impuestos.Traslados.Traslado.Impuesto = "002";
                 impuestos.Traslados.Traslado.TipoFactor = "Tasa";
                 impuestos.Traslados.Traslado.TasaOCuota = 0.160000M;

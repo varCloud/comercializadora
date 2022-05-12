@@ -159,6 +159,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\wsPruevas40\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="DAO\BitacoraDAO.cs" />
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\ComprasDAO.cs" />
@@ -300,6 +305,10 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI.wsdl" />
+    <None Include="Connected Services\wsPruevas40\PrintDocumentolluvia.wsPruevas40.respuestaTimbrado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\wsPruevas40\timbraCFDI.wsdl" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -328,6 +337,7 @@
     <WCFMetadataStorage Include="Connected Services\servicioProduccionCancelaFactura\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivo\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
+    <WCFMetadataStorage Include="Connected Services\wsPruevas40\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\servicioProduccionCancelaFactura\configuration91.svcinfo" />
@@ -376,6 +386,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\wsPruevas40\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\wsPruevas40\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\wsPruevas40\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Magick.NET-Q16-x86.7.20.0\build\net40\Magick.NET-Q16-x86.targets" Condition="Exists('..\packages\Magick.NET-Q16-x86.7.20.0\build\net40\Magick.NET-Q16-x86.targets')" />

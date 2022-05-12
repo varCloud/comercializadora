@@ -40,13 +40,13 @@ namespace lluviaBackEnd.Utilerias
 
                 // se agregan los prefijos para en espacio de nombres 
                 // este espacio de nombres existe en la definicion de las clases 
-                // ejem [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+                // ejem [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
                 // esto lo que hace es de tener <nombre>VICTOR</nombre>  a <cfdi:nombre></cfdi:nombre>
                 // recuerda que debes de tener definido en namespace en la definicion de la clase 
-                ns.Add("cfdi", "http://www.sat.gob.mx/cfd/3");
+                ns.Add("cfdi", "http://www.sat.gob.mx/cfd/4");
 
                 //a todos las propiedades o clases que tengan [XmlAttributeAttribute("schemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
-                //adjuntara el xsi por ejemplo "schemaLocation="http://www.sat.gob.mx/cfd/3 " a "xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 "
+                //adjuntara el xsi por ejemplo "schemaLocation="http://www.sat.gob.mx/cfd/4 " a "xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 "
                 //es lo mismo que el de arriba
                 ns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
@@ -242,6 +242,48 @@ namespace lluviaBackEnd.Utilerias
                     var mapper = configuration.CreateMapper();
                     respuesta = mapper.Map<PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>(respuestaPruebas);
                     return respuesta;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static object TimbrarEdifact40(string xmlSerializadoSAT)
+        {
+            try
+            {
+                PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado respuesta = null;
+                PrintDocumentolluvia.wsPruevas40.respuestaTimbrado respuestaPruebas = null;
+
+                System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                };
+                if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
+                {
+                    PrintDocumentolluvia.servicioTimbradoProductivo.timbrarCFDIPortTypeClient timbrar = new PrintDocumentolluvia.servicioTimbradoProductivo.timbrarCFDIPortTypeClient();
+                    respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    return respuesta;
+                }
+                else
+                {
+                    PrintDocumentolluvia.wsPruevas40.timbrarCFDIPortTypeClient timbrar = new PrintDocumentolluvia.wsPruevas40.timbrarCFDIPortTypeClient();
+                    respuestaPruebas = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    ///////////////////MAPER///////////////////
+                    //var configuration = new MapperConfiguration(cfg =>
+                    //{
+                    //    cfg.CreateMap<PrintDocumentolluvia.servicioTimbrarPruebas.respuestaTimbrado, PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>();
+
+                    //});
+
+                    //configuration.AssertConfigurationIsValid();
+                    //var mapper = configuration.CreateMapper();
+                    //respuesta = mapper.Map<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>(respuestaPruebas);
+                    return respuestaPruebas;
                 }
             }
             catch (Exception ex)

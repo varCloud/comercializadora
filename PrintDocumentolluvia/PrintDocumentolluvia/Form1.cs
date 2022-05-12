@@ -975,6 +975,7 @@ namespace PrintDocumentolluvia
                 //factura.idVenta = "64";
                 factura.idVenta = this.txtNoFactura.Text;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
+                comprobante.Exportacion = "01";
                 comprobante.Folio = factura.folio = factura.idVenta;
                 /*
                 comprobante.Emisor.Rfc = "COVO781128LJ1";
@@ -1003,7 +1004,7 @@ namespace PrintDocumentolluvia
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
                     //TIMBRAR CON EDI-FACT
-                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado));
 
                     if (respuesta.codigoResultado.Equals("100"))
                     {
@@ -1011,7 +1012,7 @@ namespace PrintDocumentolluvia
                         string xmlTimbradoDecodificado = ProcesaCfdi.Base64Decode(respuesta.documentoTimbrado);
 
                         Comprobante comprobanteTimbrado = ManagerSerealization<Comprobante>.DeserializeXMLStringToObject(xmlTimbradoDecodificado);
-                        comprobanteTimbrado.Addenda = new ComprobanteAddenda();
+                        comprobanteTimbrado.Addenda = new lluviaBackEnd.Models.Facturacion.ComprobanteAddenda();
                         comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
                         comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
                         comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();

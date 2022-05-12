@@ -7,15 +7,16 @@ using System.Xml.Serialization;
 namespace lluviaBackEnd.Models.Facturacion
 {
 
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
-    [XmlRoot(Namespace = "http://www.sat.gob.mx/cfd/3", IsNullable = false, ElementName = "Comprobante")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
+    [XmlRoot(Namespace = "http://www.sat.gob.mx/cfd/4", IsNullable = false, ElementName = "Comprobante")]
 
     public partial class Comprobante
     {
         public Comprobante()
         {
-            xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
-           
+            xsiSchemaLocation = "http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd";
+
+
         }
        
         private string xsiSchemaLocation;
@@ -78,6 +79,8 @@ namespace lluviaBackEnd.Models.Facturacion
         private decimal descuentoField = 0;
               
         private ushort lugarExpedicionField;
+
+        private string exportacion;
               
         /// <remarks/>
         public ComprobanteCfdiRelacionados CfdiRelacionados
@@ -169,6 +172,18 @@ namespace lluviaBackEnd.Models.Facturacion
             set
             {
                 this.versionField = value;
+            }
+        }
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Exportacion
+        {
+            get
+            {
+                return this.exportacion;
+            }
+            set
+            {
+                this.exportacion = value;
             }
         }
 
@@ -402,7 +417,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteCfdiRelacionados
     {
 
@@ -441,7 +456,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteCfdiRelacionadosCfdiRelacionado
     {
 
@@ -465,7 +480,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteEmisor
     {
 
@@ -521,7 +536,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute( AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute( AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteReceptor
     {
 
@@ -530,6 +545,36 @@ namespace lluviaBackEnd.Models.Facturacion
         private string nombreField;
 
         private string usoCFDIField;
+
+        private string domicilioFiscalReceptor;
+
+        private string regimenFiscalReceptor;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string RegimenFiscalReceptor
+        {
+            get
+            {
+                return this.regimenFiscalReceptor;
+            }
+            set
+            {
+                this.regimenFiscalReceptor = value;
+            }
+        }
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string DomicilioFiscalReceptor
+        {
+            get
+            {
+                return this.domicilioFiscalReceptor;
+            }
+            set
+            {
+                this.domicilioFiscalReceptor = value;
+            }
+        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -577,7 +622,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConcepto
     {
 
@@ -604,6 +649,20 @@ namespace lluviaBackEnd.Models.Facturacion
         private decimal valorUnitarioField;
 
         private decimal importeField;
+
+        private string objetoImp;
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ObjetoImp
+        {
+            get
+            {
+                return this.objetoImp;
+            }
+            set
+            {
+                this.objetoImp = value;
+            }
+        }
 
         /// <remarks/>
         public ComprobanteConceptoImpuestos Impuestos
@@ -773,7 +832,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoImpuestos
     {
 
@@ -811,7 +870,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoImpuestosTraslados
     {
 
@@ -834,7 +893,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoImpuestosTrasladosTraslado
     {
 
@@ -922,7 +981,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoImpuestosRetenciones
     {
 
@@ -945,7 +1004,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoImpuestosRetencionesRetencion
     {
 
@@ -1033,7 +1092,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoParte
     {
 
@@ -1168,7 +1227,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoParteInformacionAduanera
     {
 
@@ -1192,7 +1251,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoInformacionAduanera
     {
 
@@ -1216,7 +1275,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteConceptoCuentaPredial
     {
 
@@ -1240,7 +1299,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteImpuestos
     {
 
@@ -1312,7 +1371,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteImpuestosRetencion
     {
 
@@ -1352,7 +1411,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteImpuestosTraslados
     {
 
@@ -1375,7 +1434,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteImpuestosTrasladosTraslado
     {
 
@@ -1386,6 +1445,21 @@ namespace lluviaBackEnd.Models.Facturacion
         private decimal tasaOCuotaField;
 
         private decimal importeField;
+
+        private decimal _base;
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public decimal Base
+        {
+            get
+            {
+                return this._base;
+            }
+            set
+            {
+                this._base = value;
+            }
+        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -1447,7 +1521,7 @@ namespace lluviaBackEnd.Models.Facturacion
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     public partial class ComprobanteComplemento
     {
 
