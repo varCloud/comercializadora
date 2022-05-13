@@ -118,31 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="archivoLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\archivoLLuvia2021.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="archivoLLuvia20211" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\archivoLLuvia20211.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="archivopfx" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\archivopfx.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="archivopfx1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\archivopfx1.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="cerLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cerLLuvia2021.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="cerLLuvia20211" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cerLLuvia20211.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="CerProductivo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CerProductivo.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="CerProductivo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CerProductivo1.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="keyProductivo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\keyProductivo.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="keyLLuvia20212" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\keyLLuvia20212.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lluviaArchivoPfx" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lluviaArchivoPfx.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="keyProductivo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\keyProductivo1.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lluviacer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lluviacer.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lluviaArchivoPfx1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lluviaArchivoPfx1.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lluviakey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lluviakey.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lluviacer1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lluviacer1.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="keyLLuvia20211" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\keyLLuvia20211.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lluviakey1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lluviakey1.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

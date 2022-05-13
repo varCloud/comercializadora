@@ -977,11 +977,11 @@ namespace PrintDocumentolluvia
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 comprobante.Exportacion = "01";
                 comprobante.Folio = factura.folio = factura.idVenta;
-                /*
-                comprobante.Emisor.Rfc = "COVO781128LJ1";
-                comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
-                comprobante.Emisor.RegimenFiscal = 621;                
-                */
+                
+                //comprobante.Emisor.Rfc = "COVO781128LJ1";
+                //comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
+                //comprobante.Emisor.RegimenFiscal = 621;                
+                
                // comprobante.MetodoPago = "PPD";
                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))

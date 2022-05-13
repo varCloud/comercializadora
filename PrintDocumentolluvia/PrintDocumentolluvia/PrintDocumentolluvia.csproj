@@ -320,15 +320,24 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\archivoLLuvia2021.pfx" />
+    <None Include="Resources\archivoLLuvia20211.pfx" />
     <None Include="Resources\archivopfx.pfx" />
+    <None Include="Resources\archivopfx1.pfx" />
     <None Include="Resources\cerLLuvia2021.cer" />
+    <None Include="Resources\cerLLuvia20211.cer" />
     <None Include="Resources\CerProductivo.cer" />
+    <None Include="Resources\CerProductivo1.cer" />
     <None Include="Resources\keyLLuvia2021.key" />
     <None Include="Resources\keyLLuvia20211.key" />
+    <None Include="Resources\keyLLuvia20212.key" />
     <None Include="Resources\keyProductivo.key" />
+    <None Include="Resources\keyProductivo1.key" />
     <None Include="Resources\lluviaArchivoPfx.pfx" />
+    <None Include="Resources\lluviaArchivoPfx1.pfx" />
     <None Include="Resources\lluviacer.cer" />
+    <None Include="Resources\lluviacer1.cer" />
     <None Include="Resources\lluviakey.key" />
+    <None Include="Resources\lluviakey1.key" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
