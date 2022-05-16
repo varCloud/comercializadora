@@ -61,7 +61,7 @@ as
 											on a.idCuentaPorCobrar = b.idCuentaPorCobrar and coalesce(b.EsAbonoInicial,cast(0 as bit))=1
 							where	saldoActual > 0 
 								and	a.idCliente = coalesce(@idCliente,a.idCliente)
-								and	p.idEstatusPedidoEspecial in (6)  -- solo considerar aquellos que tienen estatus 6	Pagado			
+								and	p.idEstatusPedidoEspecial not in (9)  -- no considerar los estatus 9 - pedido en ruta
 
 							UNION
 
@@ -71,9 +71,8 @@ as
 							join PedidosEspecialesCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar
 							where 
 							--saldoActual>0
-							/*and*/ coalesce(a.EsAbonoInicial,cast(0 as bit))=0 and a.idCliente=coalesce(@idCliente,a.idCliente)
-						) a
-				
+							/*and*/ coalesce(a.EsAbonoInicial,cast(0 as bit))=0 and a.idCliente=coalesce(@idCliente,a.idCliente)							
+						) a				
 
 					
 				if not exists (select *  from #BALANCE_CTAS)

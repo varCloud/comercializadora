@@ -991,10 +991,10 @@ $(document).ready(function () {
             return;
         }
 
-        if (totalProductosDevueltos >= totalProductosOriginales) {
-            MuestraToast('warning', "No se pueden devolver todos los productos");
-            return;
-        }
+        //if (totalProductosDevueltos >= totalProductosOriginales) {
+        //    MuestraToast('warning', "No se pueden devolver todos los productos");
+        //    return;
+        //}
 
         if (($('#motivoDevolucion').val() == "")) {
             MuestraToast('warning', "Debe escribir el motivo de la devolución");
