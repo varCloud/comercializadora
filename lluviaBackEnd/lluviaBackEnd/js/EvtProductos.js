@@ -409,12 +409,13 @@ function EliminarProducto(idProducto) {
                     data: { idProducto: idProducto, activo: false },
                     method: 'post',
                     dataType: 'json',
-                    async: false,
+                    async: true,
                     beforeSend: function (xhr) {
-                        console.log("Antes ")
+                        ShowLoader("Actualizando Producto...")
                     },
                     success: function (data) {
                         console.log(data);
+                        OcultarLoader()
                         if (data.Estatus==200)
                             MuestraToast('success', data.Mensaje);
                         else
@@ -425,6 +426,7 @@ function EliminarProducto(idProducto) {
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
                         console.log(xhr);
                         console.log(status);
+                        OcultarLoader()
                     }
                 });
 

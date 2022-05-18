@@ -561,9 +561,7 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
-
-
-
+               
         public List<SelectListItem> ObtenerPisos()
         {
             List<SelectListItem> lstPisos = new List<SelectListItem>();
