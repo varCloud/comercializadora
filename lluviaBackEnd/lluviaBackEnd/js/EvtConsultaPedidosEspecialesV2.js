@@ -126,9 +126,10 @@ function onSuccessPedidosEspeciales(data) {
             html += '<a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Almacen</a>';
             if (dato.existe_ticket==true)
                     html += ' <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
-            if (dato.puede_devolver == true)
-                html += '<a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ');" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
-
+            if (dato.puede_devolver == true) {
+                html += '<a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ', false);" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
+                html += '<a class="dropdown-item has-icon" href="javascript:Eliminar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-times"></i>Eliminar</a>';
+            }
             if (dato.puede_facturar == true)
                 //html += ' <a class="dropdown-item has-icon" href="javascript:FacturarPedidoEspecial(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
                 html += ' <a class="dropdown-item has-icon" href="javascript:modalFacturar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
@@ -324,7 +325,11 @@ function MostrarDetalle(idPedidoEspecial) {
 
 }
 
-function MostrarDetalleDevolucion(idPedidoEspecial) {
+function Eliminar(idPedidoEspecial) {
+    MostrarDetalleDevolucion(idPedidoEspecial, true);
+}
+
+function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
     $("#idPedidoEspecial").val(0);
     $(".divSubTotal").html("$0.0");
     $("#motivoDevolucion").val("");
@@ -385,7 +390,7 @@ function MostrarDetalleDevolucion(idPedidoEspecial) {
                 html += '</div>';
                 $("#devolucionPedidoEspecial").html(html);
                 $("#idPedidoEspecial").val(idPedidoEspecial);
-                $('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });                
+                //$('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });                
                 if (tblDevolucionesPedidosEspeciales != null)
                     tblDevolucionesPedidosEspeciales.destroy();
                 InitDataTablePedidosEspecialesDevolucion();
@@ -408,7 +413,41 @@ function MostrarDetalleDevolucion(idPedidoEspecial) {
 
 
                 //});
-                $('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });
+
+                if (esEliminar === true || esEliminar === 'True' || esEliminar === 'true') {
+
+
+                    swal({
+                        title: 'Mensaje',
+                        text: '¿Esta seguro que quiere eliminar todo el pedido?',
+                        icon: 'info',
+                        buttons: ["No", "Sí"],
+                        dangerMode: true,
+                    })
+                        .then((willDelete) => {
+                            if (willDelete) {
+
+                                $('#motivoDevolucion').val('Cancelado');
+                                var tblVtas = document.getElementById('tblDevolucionesPedidosEspeciales');
+                                var rCount = tblVtas.rows.length;
+                                if (rCount >= 2) {
+                                    for (var i = 1; i < rCount; i++) {
+                                        tblVtas.rows[i].cells[6].children[0].value = tblVtas.rows[i].cells[4].innerHTML;
+                                    }
+                                }
+                                actualizarSubTotalDevoluciones();
+                                $("#btnRealizarDevolucion").trigger('click');
+
+                            } else {
+                                console.log("cancelar");
+                            }
+                    });
+
+                }
+                else {
+                    $('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });
+                    
+                }
             }
             else
                 MuestraToast("error", result.Mensaje);

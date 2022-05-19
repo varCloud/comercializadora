@@ -69,9 +69,11 @@ as
 							from 
 							PedidosEspecialesAbonosCuentasPorCobrar a
 							join PedidosEspecialesCuentasPorCobrar b on a.idCuentaPorCobrar=b.idCuentaPorCobrar
+							join PedidosEspeciales pe on pe.idPedidoEspecial = a.idPedidoEspecial
 							where 
 							--saldoActual>0
-							/*and*/ coalesce(a.EsAbonoInicial,cast(0 as bit))=0 and a.idCliente=coalesce(@idCliente,a.idCliente)							
+							/*and*/ coalesce(a.EsAbonoInicial,cast(0 as bit))=0 and a.idCliente=coalesce(@idCliente,a.idCliente)		
+							and pe.liquidado = cast(0 as bit)
 						) a				
 
 					
