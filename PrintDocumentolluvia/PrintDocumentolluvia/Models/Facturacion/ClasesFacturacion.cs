@@ -77,7 +77,7 @@ namespace lluviaBackEnd.Models.Facturacion
         private string condicionesDePagoField;
 
         private decimal descuentoField = 0;
-              
+
         private ushort lugarExpedicionField;
 
         private string exportacion;

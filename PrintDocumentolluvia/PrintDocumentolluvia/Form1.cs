@@ -975,14 +975,14 @@ namespace PrintDocumentolluvia
                 //factura.idVenta = "64";
                 factura.idVenta = this.txtNoFactura.Text;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Exportacion = "01";
+                comprobante.Exportacion = "01"; //FAC 4.0;
                 comprobante.Folio = factura.folio = factura.idVenta;
                 
                 //comprobante.Emisor.Rfc = "COVO781128LJ1";
                 //comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
                 //comprobante.Emisor.RegimenFiscal = 621;                
-                
                // comprobante.MetodoPago = "PPD";
+
                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
