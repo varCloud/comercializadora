@@ -1,4 +1,4 @@
-USE [DB_A57E86_lluviadesarrollo]
+--USE [DB_A57E86_lluviadesarrollo]
 GO
 /****** Object:  StoredProcedure [dbo].[SP_OBTENER_BALCANCE_CUENTAS_X_COBRAR_PEDIDOS_ESPECIALES]    Script Date: 06/05/2022 09:31:15 p. m. ******/
 SET ANSI_NULLS ON

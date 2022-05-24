@@ -128,7 +128,7 @@ function onSuccessPedidosEspeciales(data) {
                     html += ' <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
             if (dato.puede_devolver == true) {
                 html += '<a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ', false);" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
-                html += '<a class="dropdown-item has-icon" href="javascript:Eliminar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-times"></i>Eliminar</a>';
+                html += '<a class="dropdown-item has-icon" href="javascript:Eliminar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-times"></i>Cancelar</a>';
             }
             if (dato.puede_facturar == true)
                 //html += ' <a class="dropdown-item has-icon" href="javascript:FacturarPedidoEspecial(' + dato.idPedidoEspecial + ');" > <i class="fas fa-file-invoice-dollar"></i>Facturar</a>';
@@ -419,7 +419,7 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
 
                     swal({
                         title: 'Mensaje',
-                        text: '¿Esta seguro que quiere eliminar todo el pedido?',
+                        text: '¿Esta seguro que quiere canelar el pedido?',
                         icon: 'info',
                         buttons: ["No", "Sí"],
                         dangerMode: true,
