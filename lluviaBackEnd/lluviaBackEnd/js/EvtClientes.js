@@ -2,12 +2,15 @@
 
 
 function onBeginSubmitGuardarCliente() {
+    ShowLoader();
 }
 
 function onCompleteSubmitGuardarCliente() {
+    OcultarLoader();
 }
 
 function onFailureResultGuardarCliente() {
+    OcultarLoader();
 }
 
 function onSuccessResultGuardarCliente(data) {
@@ -30,18 +33,22 @@ function ObtenerClientes() {
         data: { idCliente: 0 },
         method: 'post',
         dataType: 'html',
-        async: false,
+        async: true,
         beforeSend: function (xhr) {
+            ShowLoader("cargando clientes ...")
         },
         success: function (data) {
+            OcultarLoader();
             tablaClientes.destroy();
             $('#rowTblClientes').html(data);
             InitTableClientes();
+           
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
             console.log(xhr);
             console.log(status);
+            OcultarLoader();
         }
     });
 }
@@ -130,7 +137,7 @@ function VerCliente(idCliente, accion) {
         $('#diasCredito').val(data.Modelo.diasCredito);
         $('#montoMaximoCredito').val(data.Modelo.montoMaximoCredito);
         $('#usarDatosCliente').prop('checked', data.Modelo.usarDatosCliente);
-
+        $('#idRegimenFiscal').val(data.Modelo.idRegimenFiscal);
 
         $("#esPersonaMoral").prop('checked', data.Modelo.esPersonaMoral);
         checkPM(data.Modelo.esPersonaMoral)
@@ -326,4 +333,15 @@ $(document).ready(function () {
     $('#mdlAgregarCliente').on('shown.bs.modal', function (e) {
     })
 
+    //$('#idRegimenFiscal').select2({
+
+    //    language: {
+    //        noResults: function () {
+    //            return "No hay resultado";
+    //        },
+    //        searching: function () {
+    //            return "Buscando..";
+    //        }
+    //    },
+    //});
 });

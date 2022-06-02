@@ -48,7 +48,7 @@ namespace lluviaBackEnd.Models
         public string colonia { get; set; }
 
         public string municipio { get; set; }
-
+        [Required(ErrorMessage = "Este campo no puede estar vacio (obligatorio para facturar)")]
         public string cp { get; set; }
 
         public string estado { get; set; }
@@ -101,6 +101,11 @@ namespace lluviaBackEnd.Models
 
         public int diasTranscurridos { get; set; }
         public string direccion { get; set; }
+
+        
+        
+        [Required(ErrorMessage = "Este campo no puede estar vacio (obligatorio para facturar)")]
+        public int idRegimenFiscal { get; set; }
 
     }
 }

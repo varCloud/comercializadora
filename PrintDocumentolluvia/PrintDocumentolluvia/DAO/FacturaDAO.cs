@@ -72,8 +72,8 @@ namespace lluviaBackEnd.DAO
                     c.Receptor.Nombre = receptor.Nombre;
                     c.Receptor.Rfc = receptor.Rfc;
                     c.Receptor.UsoCFDI = receptor.UsoCFDI;
-                    c.Receptor.DomicilioFiscalReceptor = "58149"; //FAC 4.0
-                    c.Receptor.RegimenFiscalReceptor = "601"; //FAC 4.0
+                    c.Receptor.DomicilioFiscalReceptor = receptor.DomicilioFiscalReceptor; //FAC 4.0
+                    c.Receptor.RegimenFiscalReceptor = receptor.RegimenFiscalReceptor; //FAC 4.0
                     if (c.Receptor.Rfc == "XAXX010101000")
                     {
                         c.Receptor.DomicilioFiscalReceptor = c.LugarExpedicion.ToString();

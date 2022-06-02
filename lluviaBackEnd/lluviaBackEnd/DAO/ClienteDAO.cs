@@ -9,6 +9,7 @@ using Dapper;
 using System.Data;
 using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
+using AccesoDatos;
 
 namespace lluviaBackEnd.DAO
 {
@@ -52,6 +53,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@diasCredito", c.diasCredito);
                 parameters.Add("@montoMaximoCredito", c.montoMaximoCredito);
                 parameters.Add("@usarDatosCliente", c.usarDatosCliente);
+                parameters.Add("@idRegimenFiscal", c.idRegimenFiscal);
 
                 n =  this._db.QuerySingle<Notificacion<Cliente>>("SP_INSERTA_ACTUALIZA_CLIENTES", parameters, commandType:CommandType.StoredProcedure);
 
@@ -245,6 +247,32 @@ namespace lluviaBackEnd.DAO
             }
             return notificacion;
         }
+
+        public List<SelectListItem> ObteneRegimenFiscal()
+        {
+            List<SelectListItem> lstRegimenFiscal = new List<SelectListItem>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    _db.Open();
+                    var result = _db.QueryMultiple("SP_FACTURACION_OBTENER_REGIMEN_FISCAL", null, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        lstRegimenFiscal = result.Read<SelectListItem>().ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            lstRegimenFiscal.Insert(0, new SelectListItem { Text = "-- SELECCIONA --", Value = "" , Selected = true });
+            return lstRegimenFiscal;
+        }
+
+
 
 
         // Referencia para Consulta con dapper y  una clase que contiene otra clase

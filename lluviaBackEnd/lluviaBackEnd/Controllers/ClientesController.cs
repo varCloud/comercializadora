@@ -18,6 +18,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
+                ViewBag.lstRegimens = this.ObtenerRegimens();
                 ViewBag.lstClientes = this.ObtenerClientes(new Cliente() { idCliente = 0 });
                 List<TipoCliente> lst = this.ObtenerTipoClientes(new TipoCliente() { idTipoCliente = 0 });
                 ViewBag.lstTipoClientes = lst;
@@ -127,6 +128,19 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
            
+        }
+
+        private List<SelectListItem> ObtenerRegimens()
+        {
+            try
+            {
+                return new ClienteDAO().ObteneRegimenFiscal();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
 

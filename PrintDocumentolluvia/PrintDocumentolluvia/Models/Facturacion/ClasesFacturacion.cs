@@ -634,7 +634,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         private ComprobanteConceptoCuentaPredial cuentaPredialField;
 
-        private uint claveProdServField;
+        private string claveProdServField;
 
         private string claveUnidadField;
 
@@ -718,7 +718,7 @@ namespace lluviaBackEnd.Models.Facturacion
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public uint ClaveProdServ
+        public string ClaveProdServ
         {
             get
             {

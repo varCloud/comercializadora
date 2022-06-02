@@ -975,14 +975,10 @@ namespace PrintDocumentolluvia
                 //factura.idVenta = "64";
                 factura.idVenta = this.txtNoFactura.Text;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Exportacion = "01"; //FAC 4.0;
+                //comprobante.Exportacion = "01"; //FAC 4.0;
                 comprobante.Folio = factura.folio = factura.idVenta;
-                
-                //comprobante.Emisor.Rfc = "COVO781128LJ1";
-                //comprobante.Emisor.Nombre = "OSEAS AURELIANO CORNEJO VAZQUEZ";
-                //comprobante.Emisor.RegimenFiscal = 621;                
-               // comprobante.MetodoPago = "PPD";
-
+                comprobante.Version = 4.0M;
+                    
                 items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
@@ -1108,7 +1104,7 @@ namespace PrintDocumentolluvia
                 List<ComprobanteConcepto> lstConceptos = new List<ComprobanteConcepto>();
                 ComprobanteConcepto oConcepto = new ComprobanteConcepto();
                 oConcepto.Importe = 0;
-                oConcepto.ClaveProdServ = 84111506; //siempre
+                oConcepto.ClaveProdServ = "84111506"; //siempre
                 oConcepto.Cantidad = 1;
                 oConcepto.ClaveUnidad = "ACT"; //siempre
                 oConcepto.Descripcion = "Pago";

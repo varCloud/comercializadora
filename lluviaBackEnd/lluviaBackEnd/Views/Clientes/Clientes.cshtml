@@ -3,9 +3,21 @@
     ViewBag.Title = "Clientes";
     List<lluviaBackEnd.Models.Cliente> Lstclientes = ViewBag.Lstclientes;
     List<SelectListItem> LstTipoClientes = ViewBag.lstTipoClientes;
+    List<SelectListItem> lstRegimens = ViewBag.lstRegimens;
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+    <style>
+        .modal-open .select2-dropdown {
+            z-index: 10060;
+        }
 
+        .modal-open .select2-close-mask {
+            z-index: 10055;
+        }
+    </style>
+}
 <h2>Clientes</h2>
 
 <div id="rowTblClientes">
@@ -206,6 +218,16 @@
                                 @Html.ValidationMessageFor(x => x.longitud, null, new { @class = "text-danger was" })
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Regimen Fiscal</label>
+                                @Html.DropDownListFor(m => m.idRegimenFiscal, lstRegimens, null, new { @class = " form-control select-multiple", @id = "idRegimenFiscal" })
+                                @Html.ValidationMessageFor(x => x.idRegimenFiscal, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label>Pedidos Especiales</label>
@@ -255,7 +277,7 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class="form-group">
                                 <label>Monto máximo de crédito</label>
-                                @Html.TextBoxFor(x => x.montoMaximoCredito, null, new { @class = "form-control", @id = "montoMaximoCredito" ,onkeypress = "return esDecimal(this, event);" })
+                                @Html.TextBoxFor(x => x.montoMaximoCredito, null, new { @class = "form-control", @id = "montoMaximoCredito", onkeypress = "return esDecimal(this, event);" })
                                 @Html.ValidationMessageFor(x => x.montoMaximoCredito, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -273,7 +295,7 @@
                 }
                 @*</form>*@
             </div>
-        </div>
+                </div>
     </div>
 </div>
 
@@ -292,5 +314,6 @@
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     @Scripts.Render("~/js/EvtClientes.js");
 }
