@@ -250,7 +250,7 @@ namespace lluviaBackEnd.Utilerias
             }
         }
 
-        public static object TimbrarEdifact40(string xmlSerializadoSAT)
+        public static object TimbrarEdifact40(string xmlSerializadoSAT , string pathfileOutputResponse)
         {
             try
             {
@@ -283,8 +283,20 @@ namespace lluviaBackEnd.Utilerias
                     //configuration.AssertConfigurationIsValid();
                     //var mapper = configuration.CreateMapper();
                     //respuesta = mapper.Map<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>(respuestaPruebas);
+                    System.IO.File.WriteAllText(pathfileOutputResponse.Replace("@@", "Response") + ".xml", SerializerManager<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>.SerealizarObjtecToString(respuestaPruebas));
                     return respuestaPruebas;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static string LimpiarCaracteresEspeciales( string cadena) {
+            try
+            {
+                return cadena.Replace("&amp;", "&").Replace("&lt;","<").Replace("&gt;", ">");
             }
             catch (Exception ex)
             {

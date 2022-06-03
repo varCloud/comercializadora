@@ -994,13 +994,15 @@ namespace PrintDocumentolluvia
                     comprobante.NoCertificado = certificados["NoCertificado"];
 
                     string xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
-                    string cadenaOriginal = ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
+                    string cadenaOriginal = ProcesaCfdi.LimpiarCaracteresEspeciales(ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado));
                     comprobante.Sello = ProcesaCfdi.GeneraSello(cadenaOriginal);
                     xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
-                    System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
+                    string pathfile = pathServer + ("@@_Comprobante_" + factura.idVenta + timeStamp);
+                    System.IO.File.WriteAllText( pathfile.Replace("@@","Request")+ ".xml", xmlSerealizado);
                     //TIMBRAR CON EDI-FACT
-                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                    //respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado), pathfile);
+                    PrintDocumentolluvia.wsPruevas40.respuestaTimbrado respuesta = (PrintDocumentolluvia.wsPruevas40.respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado), pathfile);
 
                     if (respuesta.codigoResultado.Equals("100"))
                     {
@@ -1038,7 +1040,7 @@ namespace PrintDocumentolluvia
                         factura.estatusFactura = EnumEstatusFactura.Error;
                         factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
                         System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
-                        ManagerSerealization<respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        ManagerSerealization<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
 
@@ -1055,7 +1057,7 @@ namespace PrintDocumentolluvia
                 }
             }
             catch (Exception ex)
-            {
+             {
 
                 this.txtLog.Text = ex.Message;
             }
