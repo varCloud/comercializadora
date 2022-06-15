@@ -1027,11 +1027,11 @@ namespace PrintDocumentolluvia
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
 
-                        //Task.Factory.StartNew(() =>
-                        //{
-                        //    if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
-                        //});
+                        Task.Factory.StartNew(() =>
+                        {
+                            if (!string.IsNullOrEmpty("sapitopicador@gmail.com"))
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
+                        });
 
 
                     }
