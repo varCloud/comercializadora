@@ -136,6 +136,29 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        #region  APP ADMINISTRACION DE LUQUIDOS
+        public Notificacion<String> agregarProductosLiquidosProduccion(RequestAgregarProductoInventarioLiquidos request)
+        {
+            Notificacion<String> notificacion = null;
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@cantidad", request.cantidad);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_PRODUCCION", param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
+            return notificacion;
+
+        }
+        #endregion
     }
 }

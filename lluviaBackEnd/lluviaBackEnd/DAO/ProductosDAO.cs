@@ -665,6 +665,48 @@ namespace lluviaBackEnd.DAO
         }
 
 
+        #region APP ADMINISTRACION DE LUQUIDOS
+        public Notificacion<List<Producto>> obtenerProductosXLineaProducto(RequestObtenerProductosXLineaProducto request)
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
 
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@idLineaProducto", request.idLineaProducto);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@descripcion", string.IsNullOrEmpty(request.descripcion) ? "" : request.descripcion);
+
+                    var result = db.QueryMultiple("SP_APP_CONSULTA_PRODUCTOS_POR_DESCRIPCION_X_LINEA_PRODUCTO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.estatus == 200)
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto, UnidadCompra, Producto>(mapProductos, splitOn: "idUnidadCompra").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.estatus;
+                        notificacion.Mensaje = r1.mensaje;
+                        //notificacion.Modelo.Clear();// [0] = producto;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
+        #endregion
     }
 }

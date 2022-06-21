@@ -346,7 +346,9 @@
     <Compile Include="Utilerias\SerializerManager.cs" />
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
+    <Compile Include="WebServices\AdminLiquidosController.cs" />
     <Compile Include="WebServices\ApiBackEndVentas\WsBackVentasController.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestAgregarProductoInventarioLiquidos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAprobarPedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
@@ -355,6 +357,7 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosEspecialesXAlmacen.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosXLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestRechazarPedidoInternoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
