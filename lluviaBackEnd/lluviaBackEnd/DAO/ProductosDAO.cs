@@ -708,5 +708,34 @@ namespace lluviaBackEnd.DAO
 
 
         #endregion
+
+
+
+        #region Liquidos
+
+
+        public Notificacion<dynamic> BuscarCargaMercanciaLiquidos(FiltroLiquidos filtroLiquidos)
+        {
+            Notificacion<dynamic> notificacion = new Notificacion<dynamic>();
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idTipoMovInventario", filtroLiquidos.idTipoMovimiento == 0 ? (object)null : filtroLiquidos.idTipoMovimiento);
+                parameters.Add("@idRol", filtroLiquidos.idRol == 0 ? (object)null : filtroLiquidos.idRol);
+                parameters.Add("@idUsuario", filtroLiquidos.idUsuario == 0 ? (object)null : filtroLiquidos.idUsuario);
+                parameters.Add("@fechaIni", filtroLiquidos.fechaIni == DateTime.MinValue ? (object)null : filtroLiquidos.fechaIni);
+                parameters.Add("@fechaFin", filtroLiquidos.fechaFin == DateTime.MinValue ? (object)null : filtroLiquidos.fechaFin);
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_CARGA_MERCANCIA_LIQUIDOS", parameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+
+        #endregion
     }
 }

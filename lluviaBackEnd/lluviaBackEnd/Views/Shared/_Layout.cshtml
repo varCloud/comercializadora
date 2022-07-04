@@ -222,6 +222,21 @@
                                 </ul>
                             </li>
                         }
+
+
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Liquidos && p.tienePermiso) && !ExisteInventarioFisicoActivo)
+                        {
+
+                            <li class="@(ViewBag.Title.ToString() == "Liquidos" ? "dropdown active" : "")">
+                                <a href="@Url.Action("ConsultarLiquidos", "Productos")">
+                                    <i data-feather="droplet"></i><span>Liquidos</span>
+                                    
+                                </a>
+                            </li>
+                        }
+
+
+
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_InventarioFisico && p.tienePermiso))
                         {
                             <li class="@(ViewBag.Title.ToString() == "InventarioFisico" ? "dropdown active" : "")">

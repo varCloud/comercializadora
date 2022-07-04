@@ -89,6 +89,10 @@ namespace lluviaBackEnd.Controllers
                         {
                             controladorAccion = "PedidosEspecialesV2/PedidosEspeciales/";
                         }
+                        else if ( (n.Modelo.idRol == (int)EnumRoles.Encargado_envasado_liquidos) || (n.Modelo.idRol == (int)EnumRoles.Encargado_producción_liquidos))
+                        {
+                            controladorAccion = "PedidosEspecialesV2/PedidosEspeciales/";
+                        }
 
                     }                  
 

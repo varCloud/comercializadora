@@ -10,8 +10,7 @@ using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Utilerias;
-
-
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -645,6 +644,72 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+
+
+
+        public ActionResult ConsultarLiquidos()
+        {
+            try
+            {
+                List<SelectListItem> listRoles = new List<SelectListItem>();
+                listRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
+                listRoles = listRoles.Where(c => (c.Value == "12") || (c.Value == "13") ).ToList();
+                listRoles.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                List<SelectListItem> lstUsuarios = new List<SelectListItem>();
+                lstUsuarios.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                ViewBag.lstRoles = listRoles;
+                ViewBag.lstUsuarios = lstUsuarios;                
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public ActionResult ConsultarUsuariosLiquidos(int idRol)
+        {
+            try
+            {
+                List<Usuario> lstUsuarios = new List<Usuario>();
+                lstUsuarios = new UsuarioDAO().ObtenerUsuarios(new Usuario { idRol = idRol });
+
+                if (idRol == 0)
+                {
+                    lstUsuarios = lstUsuarios.Where(c => (c.idRol == 12) || (c.idRol == 13)).ToList();
+                }
+                                
+                lstUsuarios.Insert(0, new Usuario { nombreCompleto = "TODOS", idUsuario = 0 });
+                Notificacion<List<Usuario>> notificacion = new Notificacion<List<Usuario>>();
+                notificacion.Estatus = 200;
+                notificacion.Modelo = lstUsuarios;
+                var json = Json(notificacion, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = 500000000;
+                return json;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public ActionResult BuscarCargaMercanciaLiquidos(FiltroLiquidos filtroLiquidos)
+        {
+            try
+            {
+                Notificacion<dynamic> liquidos = new ProductosDAO().BuscarCargaMercanciaLiquidos(filtroLiquidos);
+                return Json(JsonConvert.SerializeObject(liquidos), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
 
     }
