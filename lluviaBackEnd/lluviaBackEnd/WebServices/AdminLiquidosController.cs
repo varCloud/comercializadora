@@ -30,7 +30,7 @@ namespace lluviaBackEnd.WebServices
         {
             try
             {
-                return new InventarioDAO().agregarProductosLiquidosProduccion(request);
+                return new InventarioDAO().agregarLiquidosAInventario(request);
             }
             catch (Exception ex)
             {

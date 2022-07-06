@@ -10,13 +10,11 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_ENVASADO
+ALTER PROCEDURE [dbo].SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_ENVASADO
 @idProducto int,
-@idProveedor int,
 @cantidad float,
 @idUsuario int,
-@idAlmacen int,
-@idProductoEnvasado int
+@idAlmacen int
 AS
 BEGIN
 	BEGIN TRY
@@ -25,15 +23,41 @@ BEGIN
 			declare
 			@idUbicacion int ,
 			@cantidadActual float = 0,
-			@idTipoMovInventario int  = 26 /*Actualizacion de Inventario(carga de mercancia por usuario de Producción de líquidos)*/,
+			@idTipoMovInventario int  = 27 /*27	Actualizacion de Inventario(carga de mercancia por usuario de Envasado de líquidos)*/,
 			@cantidadTotal float = 0,
 			@idUnidadMedida int = 0,
-			@cantidadUnidadMedida  float =0
+			@cantidadUnidadMedida  float =0,
+			@idProductoAgranel int = 0,
+			@idProductoEnvase int =0,
+			@valorUnidadMedida int =0,
+			@cantidadReal float =0
+			select 
+				@idProductoEnvase = idProducoEnvase,
+				@idProductoAgranel =idProductoAgranel,
+				@valorUnidadMedida = valorUnidadMedida
+			from ProductosEnvasadosXAgranel where idProductoEnvasado = @idProducto
 
-			if (@idAlmacen is null)
+			-- VALIDAMOS LOS ID DE LOS PRODUCTOS AGRANEL Y DE ENVASE PARA ANALIZAR SI PODEMOS AGREGAR A INVENTARIO
+			SELECT @idProductoEnvase = COALESCE(@idProductoEnvase,0) , @idProductoAgranel =COALESCE(@idProductoAgranel,0)
+			SELECT @cantidadReal = dbo.redondear(@cantidad * @valorUnidadMedida);
+			print('antes')
+			if (@idProductoEnvase = 0)
 			begin 
-				select -1 Estatus , 'El almacen es requerido ' Mensaje
+				select -1 Estatus , 'No existe relación  entre el envase y el producto que deseas agregar ' Mensaje
 				return
+			end
+				
+			
+			if (@idProductoAgranel = 0)
+			begin 
+				select -1 Estatus , 'No existe relación entre el producto a granel y el producto que deseas agregar ' Mensaje
+				return
+			end
+			
+			if dbo.[ExisteCantidadProductoEnAlmancen](@idAlmacen,@idProductoAgranel) < @cantidadReal
+			begin
+					select -1 Estatus , 'No existe suficiente inventario del producto a granel para convertir a envase.' Mensaje
+					return
 			end
 
 			if dbo.[ExisteProductoEnAlmancen](@idAlmacen,@idProducto) = 0
@@ -42,51 +66,41 @@ BEGIN
 					return
 			end
 
-			if exists (select * from Productos where idProducto = @idProducto and idLineaProducto = 27)
-			BEGIN
-					if coalesce(@idProductoEnvasado,0) = 0
-					begin
-						select -1 Estatus , 'Es necesario la medida del envase utilizado para este producto.' Mensaje
-						return
-					end
-					
-					select @cantidadActual  = coalesce(ID.cantidad,0 ) from InventarioDetalle ID join Ubicacion U on ID.idUbicacion  = U.idUbicacion
-					where U.idPasillo =1002 and U.idRaq = 1002 and idProducto = @idProducto
-
-					if (@cantidad > coalesce(@cantidadActual,0))
-					begin
-						select -1 Estatus , 'No existe suficiente inventario en la ubicación de resguardo para liquidos.' Mensaje
-						return
-					end
-			END
+			
+			if not exists (select 1 from InventarioDetalle ID join Ubicacion U on ID.idUbicacion  = U.idUbicacion
+			where U.idPasillo =1002 and U.idRaq = 1002 and idProducto = @idProductoEnvase and coalesce(ID.cantidad,0 ) > @cantidad)
+			begin
+					select -1 Estatus , 'No existen suficientes envases en la ubicacion de resguardo para envase' Mensaje
+					return
+			end
+			
 
 			-- OBTENEMOS EL DETALLE DEL PRODUCTO
-			select @cantidadUnidadMedida = cantidadUnidadMedida, @idUnidadMedida= idUnidadMedida  from Productos where idProducto = @idProducto
+			---SELECT @cantidadUnidadMedida = cantidadUnidadMedida, @idUnidadMedida= idUnidadMedida  from Productos where idProducto = @idProducto
 
 
 		   BEGIN TRAN
 				   BEGIN
-
-					
-
+				   				
 					-- OBTENER LA UBICACION DEL PRODUCTO EN CASO DE QUE EXISTA SI NO LA INSERTAMOS Y LA OBTENEMOS
 					IF EXISTS (SELECT 1 FROM Ubicacion U 
-					where u.idAlmacen =@idAlmacen and U.idPasillo = 1002 and idPiso = 1002 and idRaq = 1002 )
+					where u.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 )
 					begin
 						SELECT @idUbicacion = U.idUbicacion FROM Ubicacion U 
-						where u.idAlmacen =@idAlmacen and U.idPasillo = 1002 and idPiso = 1002 and idRaq = 1002 
+						where u.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 
 					end
 					ELSE
 					begin
-						INSERT INTO Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) VALUES(@idAlmacen,1002,1002,1002)
+						INSERT INTO Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) VALUES(@idAlmacen,1001,1001,1001)
 						select @idUbicacion  = Max(U.idUbicacion) from Ubicacion U  
-						where U.idAlmacen =@idAlmacen and U.idPasillo = 1002 and idPiso = 1002 and idRaq = 1002 
+						where U.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 
 					end
-			
-					-- INSERTAMOS EN INVENTARIO   E INVENTARIO DETALLE UNA VEZ QUE INSERTAMOS LA UBICACION EN 0
+					
+					-- INSERTAMOS EN INVENTARIO  E INVENTARIO DETALLE UNA VEZ QUE INSERTAMOS LA UBICACION EN 0
 					-- LO CUAL QUIERE DECIR QUE AUN NO ESTA ACOMODADA
-					if exists (Select 1 from InventarioDetalle ID where ID.idUbicacion =  @idUbicacion and idProducto = @idProducto )
+					IF exists (Select 1 from InventarioDetalle ID where ID.idUbicacion =  @idUbicacion and idProducto = @idProducto )
 					BEGIN
+					
 						select  @cantidadActual = isnull(ID.cantidad,0) 
 						from InventarioDetalle ID 
 						where ID.idUbicacion =  @idUbicacion and idProducto = @idProducto
@@ -112,6 +126,7 @@ BEGIN
 										@idUsuario,
 										dbo.FechaActual()
 									)
+						
 						 update InventarioDetalle set cantidad =  @cantidadTotal , fechaActualizacion = dbo.FechaActual()
 						 where  idProducto = @idProducto and idUbicacion  = @idUbicacion
 					END
@@ -137,9 +152,10 @@ BEGIN
 														dbo.FechaActual()
 													)
 
-								INSERT INTO InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
-								VALUES (@idProducto , @cantidad , dbo.FechaActual() ,@idUbicacion, dbo.FechaActual())
+						INSERT INTO InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
+						VALUES (@idProducto , @cantidad , dbo.FechaActual() ,@idUbicacion, dbo.FechaActual())
 					END
+					
 
 					--INSERTAMOS EN LA TABLA LOG
 					declare @cantidadAct int
@@ -154,10 +170,10 @@ BEGIN
 					IF exists (select 1 from InventarioGeneral where idProducto = @idProducto)
 					BEGIN
 							update InventarioGeneral
-							Set 
+							SET 
 								cantidad = (cantidad + @cantidad),
 								fechaUltimaActualizacion = dbo.FechaActual()
-							where 
+							WHERE 
 								idProducto = @idProducto
 					END
 					ELSE
@@ -165,6 +181,69 @@ BEGIN
 							 insert into InventarioGeneral (idProducto,cantidad,fechaUltimaActualizacion)
 							 values(@idProducto ,@cantidad , dbo.FechaActual() )
 					END
+					-----------------------------------------------------------
+					--INSERTAMOS LAS SALIDA DE ENVASES Y DEL LIQUIDO A GRANEL---
+					-----------------------------------------------------------
+					DECLARE
+						@cantidadActualEnvase bigint = 0,
+						@cantidadActualAgranel float = 0,
+						@cantidadDespuesDeOPeracionEnvase bigint = 0,
+						@cantidadDespuesDeOperacionAgranel float = 0,
+						@idUbicacionEnvase int = 0,
+						@idUbicacionAgranel int = 8,
+						@idTipoMovInventarioEnvase int = 28 /*SALIDA DE MERCANCIA POR CONVERSION DE LIQUIDOS AGRANEL A ENVASE*/
+						
+						--ENVASE
+						select @idUbicacionEnvase = idUbicacion from Ubicacion 
+						where idPasillo =1002 and idRaq =1002 and idPasillo = 1002
+						
+
+
+						select  @cantidadActualEnvase = isnull(ID.cantidad,0) 
+						from InventarioDetalle ID 
+						where ID.idUbicacion =  @idUbicacionEnvase and idProducto = @idProductoEnvase
+
+						set @cantidadDespuesDeOPeracionEnvase = dbo.redondear(isnull(@cantidadActualEnvase,0) - isnull(@cantidad,0))
+
+						INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
+														,cantidad,cantidadActual
+														,idTipoMovInventario,idUsuario
+														,fechaAlta)
+						VALUES(
+							@idUbicacion,@idProductoEnvase,
+							@cantidad,@cantidadDespuesDeOPeracionEnvase,
+							@idTipoMovInventarioEnvase,@idUsuario,
+							dbo.FechaActual()
+						)
+						 UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOPeracionEnvase , fechaActualizacion = dbo.FechaActual()
+						 where  idProducto = @idProductoEnvase and idUbicacion  = @idUbicacionEnvase
+
+						 UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidad),fechaUltimaActualizacion = dbo.FechaActual()
+						 WHERE idProducto = @idProductoEnvase
+						
+						--AGRANEL
+						select  @cantidadActualAgranel = isnull(ID.cantidad,0) 
+						from InventarioDetalle ID 
+						where ID.idUbicacion =  @idUbicacionAgranel and idProducto = @idProductoAgranel
+
+						set @cantidadDespuesDeOperacionAgranel = isnull(@cantidadActualAgranel,0) - isnull(@cantidadReal,0)
+
+						INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
+								,cantidad,cantidadActual
+								,idTipoMovInventario,idUsuario
+								,fechaAlta)
+						VALUES(
+							@idUbicacionAgranel,@idProductoAgranel,
+							@cantidadReal,@cantidadDespuesDeOperacionAgranel,
+							@idTipoMovInventarioEnvase,@idUsuario,
+							dbo.FechaActual()
+						)
+						 UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOperacionAgranel , fechaActualizacion = dbo.FechaActual()
+						 where  idProducto = @idProductoAgranel and idUbicacion  = @idUbicacionAgranel
+
+						 UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidadReal),fechaUltimaActualizacion = dbo.FechaActual()
+						 WHERE idProducto = @idProductoAgranel
+
 
 				  END
 				COMMIT TRAN
@@ -178,7 +257,8 @@ BEGIN
 			-1 Estatus ,
 			'Ha ocurrido un error al agregar el producto al inventario general' Mensaje,
 			 ERROR_NUMBER() AS ErrorNumber  ,
-			 ERROR_MESSAGE() AS ErrorMessage  
+			 ERROR_MESSAGE() AS ErrorMessage  ,
+			 ERROR_LINE() as error_lin
 	END CATCH
 
 END

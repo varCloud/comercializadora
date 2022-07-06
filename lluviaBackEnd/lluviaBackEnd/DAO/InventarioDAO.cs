@@ -137,7 +137,7 @@ namespace lluviaBackEnd.DAO
         }
 
         #region  APP ADMINISTRACION DE LUQUIDOS
-        public Notificacion<String> agregarProductosLiquidosProduccion(RequestAgregarProductoInventarioLiquidos request)
+        public Notificacion<String> agregarLiquidosAInventario(RequestAgregarProductoInventarioLiquidos request)
         {
             Notificacion<String> notificacion = null;
             try
@@ -148,7 +148,8 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", request.idProducto);
                     parameters.Add("@cantidad", request.cantidad);
                     parameters.Add("@idUsuario", request.idUsuario);
-                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_PRODUCCION", param: parameters, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@idAlmacen", request.idUsuario);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_ENVASADO", param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
