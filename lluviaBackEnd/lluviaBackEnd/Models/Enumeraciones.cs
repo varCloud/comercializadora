@@ -113,8 +113,12 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region InventarioFisico
-        Puede_visualizar_InventarioFisico
+        Puede_visualizar_InventarioFisico,
 
+        #endregion
+
+        #region Liquidos
+        Puede_visualizar_Liquidos
         #endregion
 
     }
@@ -129,7 +133,9 @@ namespace lluviaBackEnd.Models
         Picker,
         Almacenista,
         Usuario_de_Compras,
-        Cajero_Pedidos_Especiales =11
+        Cajero_Pedidos_Especiales =11,
+        Encargado_envasado_liquidos = 12,
+        Encargado_producción_liquidos = 13
     }
 
     public enum EnumEstadoCompras

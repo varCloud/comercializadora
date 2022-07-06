@@ -74,6 +74,9 @@ namespace lluviaBackEnd.Models
 
         public string nombreCompleto { get; set; }
 
+        public DateTime fechaIni { get; set; }
+        public DateTime fechaFin { get; set; }
+
 
     }
 }
