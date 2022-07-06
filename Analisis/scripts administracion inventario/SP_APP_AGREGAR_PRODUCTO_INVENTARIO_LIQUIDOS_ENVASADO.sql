@@ -31,6 +31,7 @@ BEGIN
 			@idProductoEnvase int =0,
 			@valorUnidadMedida int =0,
 			@cantidadReal float =0
+			print('antes')
 			select 
 				@idProductoEnvase = idProducoEnvase,
 				@idProductoAgranel =idProductoAgranel,
@@ -40,7 +41,7 @@ BEGIN
 			-- VALIDAMOS LOS ID DE LOS PRODUCTOS AGRANEL Y DE ENVASE PARA ANALIZAR SI PODEMOS AGREGAR A INVENTARIO
 			SELECT @idProductoEnvase = COALESCE(@idProductoEnvase,0) , @idProductoAgranel =COALESCE(@idProductoAgranel,0)
 			SELECT @cantidadReal = dbo.redondear(@cantidad * @valorUnidadMedida);
-			print('antes')
+			
 			if (@idProductoEnvase = 0)
 			begin 
 				select -1 Estatus , 'No existe relación  entre el envase y el producto que deseas agregar ' Mensaje

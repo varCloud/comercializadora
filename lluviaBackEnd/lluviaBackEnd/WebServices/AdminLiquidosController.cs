@@ -38,25 +38,18 @@ namespace lluviaBackEnd.WebServices
             }
 
         }
-        //// GET api/<controller>/5
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
 
-        //// POST api/<controller>
-        //public void Post([FromBody]string value)
-        //{
-        //}
+        public Notificacion<dynamic> BuscarCargaMercanciaLiquidos(FiltroLiquidos filtroLiquidos)
+        {
+            try
+            {
+                return new ProductosDAO().BuscarCargaMercanciaLiquidos(filtroLiquidos);
+            }
+            catch (Exception ex)
+            {
 
-        //// PUT api/<controller>/5
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE api/<controller>/5
-        //public void Delete(int id)
-        //{
-        //}
+                return WsUtils<dynamic>.RegresaExcepcion(ex, null);
+            }
+        }
     }
 }
