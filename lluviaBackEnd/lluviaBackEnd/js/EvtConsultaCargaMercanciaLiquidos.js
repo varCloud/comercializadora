@@ -28,6 +28,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
             '         <th></th>' +
             '         <th>Ubicacion</th>' +
             '         <th>Producto</th>' +
+            '         <th>Cantidad</th>' +
             '         <th>Usuario</th>' +
             '         <th>Fecha</th>' +
             '         <th>Rol</th>' +
@@ -42,6 +43,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
                 '             <td>' + dato.id + '</td>' +
                 '             <td>' + dato.descripcionUbicacion + '</td>' +
                 '             <td>' + dato.descripcionProducto + '</td>' +
+                '             <td>' + dato.cantidad + '</td>' +
                 '             <td>' + dato.nombreUsuario + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
                 '             <td>' + dato.descripcionRol + '</td>' +
