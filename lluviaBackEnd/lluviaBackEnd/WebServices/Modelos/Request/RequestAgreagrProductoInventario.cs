@@ -23,6 +23,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         ///    6	Actualizacion de Inventario(sobrante del producto sin ubicacion asignada)
         ///    7	Actualizacion de Inventario(salida de mercancia por pedido interno)
         ///    8	Actualizacion de Inventario(carga de mercancia por pedido interno)
+        ///    26	Actualizacion de Inventario(carga de mercancia por usuario de Producción de líquidos)
         /// </summary>
         //public int idTipoMovInventario { get; set; }
     }

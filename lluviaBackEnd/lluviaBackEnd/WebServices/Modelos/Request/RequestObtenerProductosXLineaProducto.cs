@@ -10,5 +10,7 @@ namespace lluviaBackEnd.WebServices.Modelos.Request
         public int idLineaProducto { get; set; }
         public int idUsuario { get; set; }
         public string descripcion { get; set; }
+
+        public string codigoBarras { get; set; }
     }
 }

@@ -678,7 +678,8 @@ namespace lluviaBackEnd.DAO
 
                     parameters.Add("@idLineaProducto", request.idLineaProducto);
                     parameters.Add("@idUsuario", request.idUsuario);
-                    parameters.Add("@descripcion", string.IsNullOrEmpty(request.descripcion) ? "" : request.descripcion);
+                    parameters.Add("@descripcion", string.IsNullOrEmpty(request.descripcion) ? null : request.descripcion);
+                    parameters.Add("@codigoBarras", string.IsNullOrEmpty(request.codigoBarras) ? null : request.codigoBarras);
 
                     var result = db.QueryMultiple("SP_APP_CONSULTA_PRODUCTOS_POR_DESCRIPCION_X_LINEA_PRODUCTO", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();

@@ -13,7 +13,8 @@ GO
 ALTER PROCEDURE [dbo].[SP_APP_CONSULTA_PRODUCTOS_POR_DESCRIPCION_X_LINEA_PRODUCTO]
 @idLineaProducto int,
 @idUsuario int,
-@descripcion varchar (500)
+@descripcion varchar (500) = null,
+@codigoBarras varchar(500) = null
 AS
 BEGIN
 	
@@ -21,7 +22,14 @@ BEGIN
 	 @idRol int 
 	,@idlineaEnvases int = 19 /*19	Linea ENVASES*/
 	select  @idRol = idRol  from Usuarios where idUsuario = @idUsuario
-	IF EXISTS (SELECT 1 FROM Productos P WHERE P.descripcion LIKE '%'+@descripcion+'%' OR P.idLineaProducto = idLineaProducto )
+	
+	if(coalesce(@idLineaProducto,0) = 0)
+	BEGIN
+		select -1 estatus , 'La lienea de producto es requerida' mensaje
+		return
+	END
+	
+	IF EXISTS (SELECT 1 FROM Productos P WHERE P.descripcion LIKE '%'+@descripcion+'%' OR P.idLineaProducto = idLineaProducto OR  P.codigoBarras = coalesce(@codigoBarras , P.codigoBarras) )
 	begin
 		select 200 estatus , 'se encontraron coincidencias' mensaje
 		if @idRol  = 12 
@@ -29,14 +37,19 @@ BEGIN
 			select [dbo].[LineaProductoFraccion](P.idLineaProducto,null) fraccion , P.*
 			from Productos P 
 			where 
-				(descripcion  like '%'+@descripcion+'%' OR P.idLineaProducto in (@idLineaProducto, @idlineaEnvases))  and activo= 1 
+				(descripcion like coalesce('%'+@descripcion+'%',descripcion)
+				and P.idLineaProducto in (@idLineaProducto, @idlineaEnvases) 
+				and P.codigoBarras = coalesce(@codigoBarras , P.codigoBarras)) 
+				and activo= 1 
 			order by descripcion
 		end
 		else
 		begin
 			select [dbo].[LineaProductoFraccion](P.idLineaProducto,null) fraccion ,P.*
 			from Productos P 
-			where 	(descripcion  like '%'+@descripcion+'%' OR P.idLineaProducto in (@idLineaProducto))  and activo= 1 
+			where (descripcion  like coalesce('%'+@descripcion+'%' ,descripcion )
+			AND P.idLineaProducto in (coalesce(@idLineaProducto,P.idLineaProducto)) 
+			AND  P.codigoBarras = coalesce(@codigoBarras , P.codigoBarras))  and activo= 1 
 			order by descripcion
 		end
 	end

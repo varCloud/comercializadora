@@ -76,6 +76,22 @@ BEGIN
 			end
 			
 
+
+			create table #productos_agranel(
+					id int identity(1,1),
+					idProducto int,
+					cantidad float,
+					idAlamcen int, 
+					idUbicacion int,
+			)
+
+			insert into #productos_agranel (idProducto ,cantidad ,idAlamcen ,idUbicacion)
+			select idProducto, SUM(ID.cantidad) cantidad , idAlmacen,ID.idUbicacion  
+			FROM InventarioDetalle ID join Ubicacion U on ID.idUbicacion = U.idUbicacion  
+			where idProducto = @idProductoAgranel and idAlmacen = @idAlmacen and ID.cantidad > 0
+			group by ID.idUbicacion , idAlmacen, idProducto order by cantidad desc
+
+			--select * from #productos_agranel
 			-- OBTENEMOS EL DETALLE DEL PRODUCTO
 			---SELECT @cantidadUnidadMedida = cantidadUnidadMedida, @idUnidadMedida= idUnidadMedida  from Productos where idProducto = @idProducto
 
@@ -185,68 +201,91 @@ BEGIN
 					-----------------------------------------------------------
 					--INSERTAMOS LAS SALIDA DE ENVASES Y DEL LIQUIDO A GRANEL---
 					-----------------------------------------------------------
+					--ENVASE
 					DECLARE
-						@cantidadActualEnvase bigint = 0,
-						@cantidadActualAgranel float = 0,
-						@cantidadDespuesDeOPeracionEnvase bigint = 0,
-						@cantidadDespuesDeOperacionAgranel float = 0,
-						@idUbicacionEnvase int = 0,
-						@idUbicacionAgranel int = 8,
-						@idTipoMovInventarioEnvase int = 28 /*SALIDA DE MERCANCIA POR CONVERSION DE LIQUIDOS AGRANEL A ENVASE*/
+					@cantidadActualEnvase bigint = 0,
+					@cantidadDespuesDeOPeracionEnvase bigint = 0,
+					@idUbicacionEnvase int = 0,
+					@idTipoMovInventarioEnvase int = 28, /*SALIDA DE MERCANCIA POR CONVERSION DE LIQUIDOS AGRANEL A ENVASE*/
+					@cantidadDescuentoAgranel float =0
+					select @idUbicacionEnvase = idUbicacion from Ubicacion 
+					where idPasillo =1002 and idRaq =1002 and idPasillo = 1002
 						
-						--ENVASE
-						select @idUbicacionEnvase = idUbicacion from Ubicacion 
-						where idPasillo =1002 and idRaq =1002 and idPasillo = 1002
+					select  @cantidadActualEnvase = isnull(ID.cantidad,0) 
+					from InventarioDetalle ID 
+					where ID.idUbicacion =  @idUbicacionEnvase and idProducto = @idProductoEnvase
+
+					set @cantidadDespuesDeOPeracionEnvase = dbo.redondear(isnull(@cantidadActualEnvase,0) - isnull(@cantidad,0))
+
+					INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
+													,cantidad,cantidadActual
+													,idTipoMovInventario,idUsuario
+													,fechaAlta)
+					VALUES(
+						@idUbicacion,@idProductoEnvase,
+						@cantidad,@cantidadDespuesDeOPeracionEnvase,
+						@idTipoMovInventarioEnvase,@idUsuario,
+						dbo.FechaActual()
+					)
+					UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOPeracionEnvase , fechaActualizacion = dbo.FechaActual()
+					where  idProducto = @idProductoEnvase and idUbicacion  = @idUbicacionEnvase
+
+					UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidad),fechaUltimaActualizacion = dbo.FechaActual()
+					WHERE idProducto = @idProductoEnvase
+					
+					DECLARE
+					@ini int = 0,
+					@fin int = 0
+					select @ini = min(id), @fin= max(id) from #productos_agranel
+					WHILE ( @ini <= @fin )
+					BEGIN
+						DECLARE
+							@cantidadActualAgranel float = 0,
+							@cantidadDespuesDeOperacionAgranel float = 0,
+							@idUbicacionAgranel int = 0
 						
+							--SET DE VALORES
+							SELECT @idUbicacionAgranel = idUbicacion , @cantidadActualAgranel = cantidad from #productos_agranel where id = @ini
+							--AGRANEL
+							select  @cantidadActualAgranel = isnull(ID.cantidad,0) 
+							from InventarioDetalle ID 
+							where ID.idUbicacion =  @idUbicacionAgranel and idProducto = @idProductoAgranel
 
+							if(@cantidadActualAgranel > @cantidadReal)
+							BEGIN
+								set @cantidadDespuesDeOperacionAgranel = isnull(@cantidadActualAgranel,0) - isnull(@cantidadReal,0)
+								SET @cantidadDescuentoAgranel = @cantidadReal;
+								SET @ini = @fin +1
+							END
+							ELSE
+							BEGIN
+								SELECT 
+									@cantidadDespuesDeOperacionAgranel = 0,
+									@cantidadReal = dbo.redondear(@cantidadReal - isnull(@cantidadActualAgranel,0)),
+									@cantidadDescuentoAgranel = @cantidadActualAgranel
 
-						select  @cantidadActualEnvase = isnull(ID.cantidad,0) 
-						from InventarioDetalle ID 
-						where ID.idUbicacion =  @idUbicacionEnvase and idProducto = @idProductoEnvase
+							END
 
-						set @cantidadDespuesDeOPeracionEnvase = dbo.redondear(isnull(@cantidadActualEnvase,0) - isnull(@cantidad,0))
+							INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
+									,cantidad,cantidadActual
+									,idTipoMovInventario,idUsuario
+									,fechaAlta)
+							VALUES(
+								@idUbicacionAgranel,@idProductoAgranel,
+								@cantidadDescuentoAgranel,@cantidadDespuesDeOperacionAgranel,
+								@idTipoMovInventarioEnvase,@idUsuario,
+								dbo.FechaActual()
+							)
+							 UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOperacionAgranel , fechaActualizacion = dbo.FechaActual()
+							 where  idProducto = @idProductoAgranel and idUbicacion  = @idUbicacionAgranel
 
-						INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
-														,cantidad,cantidadActual
-														,idTipoMovInventario,idUsuario
-														,fechaAlta)
-						VALUES(
-							@idUbicacion,@idProductoEnvase,
-							@cantidad,@cantidadDespuesDeOPeracionEnvase,
-							@idTipoMovInventarioEnvase,@idUsuario,
-							dbo.FechaActual()
-						)
-						 UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOPeracionEnvase , fechaActualizacion = dbo.FechaActual()
-						 where  idProducto = @idProductoEnvase and idUbicacion  = @idUbicacionEnvase
+							 UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidadDescuentoAgranel),fechaUltimaActualizacion = dbo.FechaActual()
+							 WHERE idProducto = @idProductoAgranel
 
-						 UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidad),fechaUltimaActualizacion = dbo.FechaActual()
-						 WHERE idProducto = @idProductoEnvase
-						
-						--AGRANEL
-						select  @cantidadActualAgranel = isnull(ID.cantidad,0) 
-						from InventarioDetalle ID 
-						where ID.idUbicacion =  @idUbicacionAgranel and idProducto = @idProductoAgranel
-
-						set @cantidadDespuesDeOperacionAgranel = isnull(@cantidadActualAgranel,0) - isnull(@cantidadReal,0)
-
-						INSERT INTO InventarioDetalleLog (idUbicacion,idProducto
-								,cantidad,cantidadActual
-								,idTipoMovInventario,idUsuario
-								,fechaAlta)
-						VALUES(
-							@idUbicacionAgranel,@idProductoAgranel,
-							@cantidadReal,@cantidadDespuesDeOperacionAgranel,
-							@idTipoMovInventarioEnvase,@idUsuario,
-							dbo.FechaActual()
-						)
-						 UPDATE InventarioDetalle set cantidad =  @cantidadDespuesDeOperacionAgranel , fechaActualizacion = dbo.FechaActual()
-						 where  idProducto = @idProductoAgranel and idUbicacion  = @idUbicacionAgranel
-
-						 UPDATE InventarioGeneral SET cantidad = (cantidad - @cantidadReal),fechaUltimaActualizacion = dbo.FechaActual()
-						 WHERE idProducto = @idProductoAgranel
-
-
+							 SET @ini = @ini +1;
+					END
 				  END
+				  drop table #productos_agranel;
 				COMMIT TRAN
 				SELECT 200 Estatus , 'Producto agregado correctamente al inventario' Mensaje
 

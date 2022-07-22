@@ -148,7 +148,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idProducto", request.idProducto);
                     parameters.Add("@cantidad", request.cantidad);
                     parameters.Add("@idUsuario", request.idUsuario);
-                    parameters.Add("@idAlmacen", request.idUsuario);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
                     notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_ENVASADO", param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
