@@ -9,7 +9,7 @@ GO
 -- Create date: <Create Date, ,>
 -- Description:	<Description, ,>
 -- =============================================
-CREATE FUNCTION [dbo].[ExisteCantidadProductoEnAlmancen]
+alter FUNCTION [dbo].[ExisteCantidadProductoEnAlmancen]
 (
 @idAlmacen int
 ,@idProducto int

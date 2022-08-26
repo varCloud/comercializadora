@@ -1,4 +1,4 @@
-USE [DB_A57E86_lluviadesarrollo]
+--USE [DB_A57E86_lluviadesarrollo]
 GO
 /****** Object:  StoredProcedure [dbo].[SP_CONSULTA_CARGA_MERCANCIA_LIQUIDOS]    Script Date: 25/06/2022 08:50:06 p. m. ******/
 SET ANSI_NULLS ON

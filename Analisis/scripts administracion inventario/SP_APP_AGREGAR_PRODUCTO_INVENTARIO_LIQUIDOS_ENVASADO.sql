@@ -101,17 +101,18 @@ BEGIN
 				   				
 					-- OBTENER LA UBICACION DEL PRODUCTO EN CASO DE QUE EXISTA SI NO LA INSERTAMOS Y LA OBTENEMOS
 					IF EXISTS (SELECT 1 FROM Ubicacion U 
-					where u.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 )
+					where u.idAlmacen =@idAlmacen and U.idPasillo = 0 and idPiso = 0 and idRaq = 0 )
 					begin
 						SELECT @idUbicacion = U.idUbicacion FROM Ubicacion U 
-						where u.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 
+						where u.idAlmacen =@idAlmacen and U.idPasillo = 0 and idPiso = 0 and idRaq = 0 
 					end
 					ELSE
 					begin
-						INSERT INTO Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) VALUES(@idAlmacen,1001,1001,1001)
+						INSERT INTO Ubicacion (idAlmacen,idPasillo,idRaq,idPiso) VALUES(@idAlmacen,0,0,0)
 						select @idUbicacion  = Max(U.idUbicacion) from Ubicacion U  
-						where U.idAlmacen =@idAlmacen and U.idPasillo = 1001 and idPiso = 1001 and idRaq = 1001 
+						where U.idAlmacen =@idAlmacen and U.idPasillo = 0 and idPiso = 0 and idRaq = 0 
 					end
+					
 					
 					-- INSERTAMOS EN INVENTARIO  E INVENTARIO DETALLE UNA VEZ QUE INSERTAMOS LA UBICACION EN 0
 					-- LO CUAL QUIERE DECIR QUE AUN NO ESTA ACOMODADA
