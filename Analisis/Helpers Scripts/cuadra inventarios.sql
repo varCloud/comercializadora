@@ -1,5 +1,7 @@
 
 
+select * from VentasDetalle where idVenta = 168324
+select * from CatEstatusProductoVenta
 
 select * from InventarioDetalle where idUbicacion = 3860 and cantidad < 0
 
