@@ -556,7 +556,39 @@ namespace lluviaBackEnd.Controllers
         }
 
 
+        //INDICADOR COSTO DE PRODUCCION AGRANEL
 
+        public ActionResult CostoProduccionAgranel()
+        {
+            try
+            {
+                Sesion usuarioSesion = Session["UsuarioActual"] as Sesion;
+                ViewBag.lstLineasDeProductos = new LineaProductoDAO().ObtenerLineasAlmacen(0).ToList();
+                ViewBag.listAlmacen = new UsuarioDAO().ObtenerAlmacenes(0, 0);
+                ViewBag.listMeses = new ReportesDAO().ObtenerMeses(0);
+                ViewBag.listAnios = new ReportesDAO().ObtenerAnios();
+                return View(new CostoProduccionAgranel());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult ObtenerCostoProduccion(Merma merma)
+        {
+            try
+            {
+
+                return PartialView("_ObtenerCostoProduccion", new ReportesDAO().ObtenerReporteCostoProduccionAgranel(merma));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 

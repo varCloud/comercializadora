@@ -1,0 +1,56 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
+
+@model Notificacion<List<CostoProduccionAgranel>>
+
+@if (Model.Estatus != 200)
+{
+
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@Model.Mensaje</h2>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblCostoProduccion">
+            <thead>
+                <tr>
+                    <th>Codigo de Barras</th>
+                    <th>Producto</th>
+                    <th>Lìnea</th>
+                    <th>Cantidad Solicitada</th>
+                    <th>Cantidad Aceptada</th>
+                    <th>Cantidad Restante</th>
+                    <th>Ultimo de costo de compra</th>
+                    <th>Costo de Producción</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (lluviaBackEnd.Models.CostoProduccionAgranel c in Model.Modelo)
+                {
+                <tr>
+                    <td>@c.codigoBarras</td>
+                    <td>@c.descripcionProducto</td>
+                    <td>@c.descripcionLinea</td>
+                    <td>@c.cantidadSolicitadaMesAnt</td>
+                    <td>@c.cantidadAceptadaFinalMesAnt</td>
+                    <td>@Math.Round((c.cantidadSolicitadaMesAnt - c.cantidadAceptadaFinalMesAnt), 2)</td>
+                    <td>@c.ultCostoCompra.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.costoProduccionMerma.ToString("C", new CultureInfo("en-US"))</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+
+
+

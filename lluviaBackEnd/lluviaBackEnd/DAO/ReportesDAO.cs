@@ -656,7 +656,41 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<CostoProduccionAgranel>> ObtenerReporteCostoProduccionAgranel(Merma filtro)
+        {
+            Notificacion<List<CostoProduccionAgranel>> notificacion = new Notificacion<List<CostoProduccionAgranel>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@mesCalculo", filtro.MesCalculo == 0 ? (object)null : filtro.MesCalculo);
+                    parameters.Add("@anioCalculo", filtro.AnioCalculo == 0 ? (object)null : filtro.AnioCalculo);
+                    parameters.Add("@idLinea", filtro.idLineaProducto == 0 ? (object)null : filtro.idLineaProducto);
+                    parameters.Add("@idAlmacen", filtro.idAlmacen == 0 ? (object)null : filtro.idAlmacen);
 
+                    var result = db.QueryMultiple("SP_CONSULTA_COSTO_PRODUCCION", parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = result.ReadFirst();
+                    if (rs1.status == 200)
+                    {
+                        notificacion.Estatus = rs1.status;
+                        notificacion.Mensaje = rs1.mensaje;
+                        notificacion.Modelo = result.Read<CostoProduccionAgranel>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = rs1.status;
+                        notificacion.Mensaje = rs1.mensaje;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
 
 
 

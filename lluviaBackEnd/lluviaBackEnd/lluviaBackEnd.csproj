@@ -275,6 +275,8 @@
     <Compile Include="Models\AjusteInventarioFisico.cs" />
     <Compile Include="Models\CierrePedidosEspeciales.cs" />
     <Compile Include="Models\CompraDetalle.cs" />
+    <Compile Include="Models\CostoProduccionAgranel.cs" />
+    <Compile Include="Models\CostoProduccionAgranelMensual.cs" />
     <Compile Include="Models\DetallePedidoInterno.cs" />
     <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
@@ -348,9 +350,12 @@
     <Compile Include="Utilerias\Utils.cs" />
     <Compile Include="Utilerias\Win32.cs" />
     <Compile Include="WebServices\AdminLiquidosController.cs" />
+    <Compile Include="WebServices\AdminProduccionAgranelController.cs" />
     <Compile Include="WebServices\ApiBackEndVentas\WsBackVentasController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgregarProductoInventarioLiquidos.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestAgregarProductoProduccionAgranel.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAprobarPedidoEspecial.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestAprobarProductosProduccionAgranel.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetallePedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLimitesInventario.cs" />
@@ -358,10 +363,12 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosEspecialesXAlmacen.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosProcesoAgranel.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosXLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestRechazarPedidoInternoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseObtenerProductosProcesoAgranel.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
     <Compile Include="WebServices\WsInventarioFisicoController.cs" />
@@ -1371,6 +1378,8 @@
     <Content Include="Views\PedidosEspecialesV2\PedidosEnRuta.cshtml" />
     <Content Include="Views\PedidosEspecialesV2\_ObtenerPedidosEnRuta.cshtml" />
     <Content Include="Views\Productos\ConsultarLiquidos.cshtml" />
+    <Content Include="Views\Reportes\_ObtenerCostoProduccion.cshtml" />
+    <Content Include="Views\Reportes\CostoProduccionAgranel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

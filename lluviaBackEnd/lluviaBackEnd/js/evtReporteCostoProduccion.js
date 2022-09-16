@@ -1,4 +1,4 @@
-﻿var tblMerma;
+﻿var tblCostoProduccion;
 var tituloReporte;
 var arrayLineasProducto = [];
 var arrayMeses = [];
@@ -40,30 +40,30 @@ $(document).ready(function () {
 });
 
 //busqueda
-function onBeginSubmitMerma() {
+function onBeginSubmitCostoProduccion() {
     ShowLoader("Buscando...");
 }
 
-function onSuccessResultMerma(data) {
-    if (tblMerma != null)
-        tblMerma.destroy();
+function onSuccessResultCostoProduccion(data) {
+    if (tblCostoProduccion != null)
+        tblCostoProduccion.destroy();
 
-    tituloReporte = "Indicador Merma" + " " + $("#idMes option:selected").text() + " " + $("#idAnio option:selected").text();
-    $('#ViewMerma').html(data);
-    if ($("#tblMerma").length > 0)
-        InitDataTableMerma();
+    tituloReporte = "Indicador CostoProduccion" + " " + $("#idMes option:selected").text() + " " + $("#idAnio option:selected").text();
+    $('#ViewCostoProduccion').html(data);
+    if ($("#tblCostoProduccion").length > 0)
+        InitDataTableCostoProduccion();
     OcultarLoader();
 }
 
-function onFailureResultMerma() {
+function onFailureResultCostoProduccion() {
     OcultarLoader();
 }
 
-function InitDataTableMerma() {
-    var NombreTabla = "tblMerma";
-    tblMerma = initDataTable(NombreTabla);
+function InitDataTableCostoProduccion() {
+    var NombreTabla = "tblCostoProduccion";
+    tblCostoProduccion = initDataTable(NombreTabla);
 
-    new $.fn.dataTable.Buttons(tblMerma, {
+    new $.fn.dataTable.Buttons(tblCostoProduccion, {
         buttons: [
             {
                 extend: 'pdfHtml5',
@@ -82,7 +82,7 @@ function InitDataTableMerma() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7]
                 },
             },
             {
@@ -92,15 +92,15 @@ function InitDataTableMerma() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8,9]
+                    columns: [0, 1, 2, 3, 4, 5, 6,7]
                 },
             },
         ],
 
     });
 
-    tblMerma.buttons(0, null).container().prependTo(
-        tblMerma.table().container()
+    tblCostoProduccion.buttons(0, null).container().prependTo(
+        tblCostoProduccion  .table().container()
     );
 }
 

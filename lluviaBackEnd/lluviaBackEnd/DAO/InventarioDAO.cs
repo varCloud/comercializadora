@@ -9,6 +9,9 @@ using Dapper;
 using System.Web;
 using lluviaBackEnd.WebServices.Modelos.Request;
 using lluviaBackEnd.WebServices.Modelos.Response;
+using System.Xml.Serialization;
+using System.Text;
+using System.Xml;
 
 namespace lluviaBackEnd.DAO
 {
@@ -158,6 +161,113 @@ namespace lluviaBackEnd.DAO
             }
 
             return notificacion;
+
+        }
+        #endregion
+
+        #region  APP ADMINISTRACION DE PRODUCCION AGRANAEL CONVERSION DE MPL A PRODUCTROS AGRANEL
+        public Notificacion<String> agregarProductosProduccionAgranel(RequestAgregarProductoProduccionAgranel request)
+        {
+            Notificacion<String> notificacion = null;
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@cantidad", request.cantidad);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_INVENTARIO_AGREGAR_PRODUCTO_PRODUCCION_AGRANEL", param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+
+        }
+
+        public Notificacion<List<ResponseObtenerProductosProduccionAgranel>> obtenerProductosProduccionAgranel(RequestObtenerProductosProduccionAgranel request)
+        {
+            Notificacion <List<ResponseObtenerProductosProduccionAgranel>> notificacion = new Notificacion<List<ResponseObtenerProductosProduccionAgranel>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    parameters.Add("@idUsuario", request.idUsuario == 0 ? null : (object)request.idUsuario);
+                    parameters.Add("@idEstatusProduccionAgranel", request.idEstatusProduccionAgranel == 0 ? null :(object)request.idEstatusProduccionAgranel);
+                    parameters.Add("@fechaIni", request.fechaIni == DateTime.MinValue ? (object)null : request.fechaIni);
+                    parameters.Add("@fechaFin", request.fechaFin == DateTime.MinValue ? (object)null : request.fechaFin);
+                    var rs = this.db.QueryMultiple("SP_APP_OBTENER_PRODUCTOS_PRODUCCION_AGRANEL", param: parameters, commandType: CommandType.StoredProcedure);
+                    
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        notificacion.Estatus = rs1.Estatus;
+                        notificacion.Mensaje = rs1.Mensaje;
+                        notificacion.Modelo = rs.Read<ResponseObtenerProductosProduccionAgranel, Producto, ResponseObtenerProductosProduccionAgranel>((responseObtenerPedidosInternos, producto ) =>
+                        {
+ 
+                            responseObtenerPedidosInternos.producto = producto;
+                            return responseObtenerPedidosInternos;
+
+                        }, splitOn: "idProducto").ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = rs1.Estatus;
+                        notificacion.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+
+        }
+
+        public Notificacion<String> aprobarProductosProduccionAgranel(RequestAprobarProductosProduccionAgranel request)
+        {
+            Notificacion<String> notificacion = new Notificacion<String>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@xmlProductos", SerializeProductos(request.productos));
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    notificacion = db.QuerySingle<Notificacion<String>>("SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL", parameters, commandType: CommandType.StoredProcedure);
+                    //var r  = db.QueryMultiple("SP_APP_ACTUALIZA_ESTATUS_PRODUCTO_COMPRA", parameters, commandType: CommandType.StoredProcedure);
+                    //var r1 = r.ReadFirst();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
+        public string SerializeProductos(List<ProductosProduccionAgranel> precios)
+        {
+            var xmlSerializer = new XmlSerializer(typeof(List<ProductosProduccionAgranel>));
+            var stringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                xmlSerializer.Serialize(xmlWriter, precios);
+            }
+            Console.WriteLine(stringBuilder.ToString());
+            return stringBuilder.ToString();
 
         }
         #endregion

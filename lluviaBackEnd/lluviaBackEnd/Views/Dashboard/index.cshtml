@@ -11,6 +11,7 @@
     Notificacion<List<Categoria>> topProveedores = ViewBag.topTenProveedores;
     Notificacion<List<Categoria>> informacionGeneral = ViewBag.InformacionGlobal;
     Notificacion<List<MermaMensual>> mermaMensual = ViewBag.mermaMensual;
+    Notificacion<List<CostoProduccionAgranelMensual>> costoProduccionAgranel = ViewBag.costoProduccionAgranel;
     Sesion usuario = Session["UsuarioActual"] as Sesion;
 
     float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
@@ -27,6 +28,13 @@
 @section Styles {
 
     <link rel="stylesheet" href="~/assets/bundles/owlcarousel2/dist/assets/owl.carousel.min.css">
+
+    <style>
+        .fas {
+             font-size: 45px !important;
+        }
+    </style>
+    
 
 }
 
@@ -237,6 +245,56 @@
         }
 
 
+        @if (costoProduccionAgranel.Estatus == 200)
+        {
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="card  bg-cyan card-statistic-1">
+                    <div class="info-box7-block">
+                        <div class="card-icon " style="color: #fff;display: flex; justify-content: center; align-items: center;">
+                            <i class="fas fa-dollar-sign" style="font-size:45px"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-center">
+                                    <h4 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@costoProduccionAgranel.Modelo[0].totalCostoProduccion.ToString("C2")
+                                    </h4>
+                                    <span style="color:#FFF; font-weight:900">Costo de Producción Mes Actual</span>
+                                </div>
+                                <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                    <span class="font-weight-bold" style="color:black">@costoProduccionAgranel.Modelo[0].promedioCostoProduccion%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="card bg-green card-statistic-1">
+                    <div class="info-box7-block">
+                        <div class="card-icon " style="display: flex; justify-content: center; align-items: center; color:#fff">
+                            <i class="fas fa-dollar-sign" style="font-size:45px"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="padding-20">
+                                <div class="text-center">
+                                    <h4 class="font-light mb-0">
+                                        <i class="ti-arrow-up text-success"></i>@costoProduccionAgranel.Modelo[1].totalCostoProduccion.ToString("C2")
+                                    </h4>
+                                    <span style="color:#FFF; font-weight:900">Costo de Producción Mes Anterior</span>
+                                </div>
+                                <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                                    <span style="color:black" class=" font-weight-bold">@costoProduccionAgranel.Modelo[1].promedioCostoProduccion%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
 
     </div>
     <!-- GRAFICA -->
@@ -256,23 +314,23 @@
                         @Html.Action("_Grafico", "DashBoard", new { tipoGrafico = lluviaBackEnd.Models.EnumTipoGrafico.VentasPorFecha, tipoReporteGrafico = lluviaBackEnd.Models.EnumTipoReporteGrafico.Semanal })
                     </div>
                     @*<div class="statistic-details mt-1">
-                        <div class="statistic-details-item">
-                            <div class="detail-value">@montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
-                            <div class="detail-name">Hoy</div>
-                        </div>
-                        <div class="statistic-details-item">
-                            <div class="detail-value">@montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
-                            <div class="detail-name">Esta Semana</div>
-                        </div>
-                        <div class="statistic-details-item">
-                            <div class="detail-value">@montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
-                            <div class="detail-name">Este mes</div>
-                        </div>
-                        <div class="statistic-details-item">
-                            <div class="detail-value">@montoTotalAnio.ToString("C", new CultureInfo("en-US"))</div>
-                            <div class="detail-name">Este año</div>
-                        </div>
-                    </div>*@
+                            <div class="statistic-details-item">
+                                <div class="detail-value">@montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
+                                <div class="detail-name">Hoy</div>
+                            </div>
+                            <div class="statistic-details-item">
+                                <div class="detail-value">@montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
+                                <div class="detail-name">Esta Semana</div>
+                            </div>
+                            <div class="statistic-details-item">
+                                <div class="detail-value">@montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
+                                <div class="detail-name">Este mes</div>
+                            </div>
+                            <div class="statistic-details-item">
+                                <div class="detail-value">@montoTotalAnio.ToString("C", new CultureInfo("en-US"))</div>
+                                <div class="detail-name">Este año</div>
+                            </div>
+                        </div>*@
 
                 </div>
             </div>
@@ -336,8 +394,8 @@
 
 
 
-    <!-- TOP TEN INDICADORES -->
-  
+        <!-- TOP TEN INDICADORES -->
+
         <div class="col-12 col-sm-6 col-lg-4">
             <div class="card">
                 <div class="card-header">

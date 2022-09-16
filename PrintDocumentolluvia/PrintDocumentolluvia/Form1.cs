@@ -973,13 +973,14 @@ namespace PrintDocumentolluvia
                 Sesion UsuarioActual = null;
                 Factura factura = new Factura();
                 //factura.idVenta = "64";
-                factura.idVenta = this.txtNoFactura.Text;
+                factura.idVenta = "PE"+this.txtNoFactura.Text;
+                factura.idPedidoEspecial = Convert.ToInt64(this.txtNoFactura.Text.Replace("PE", ""));
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 //comprobante.Exportacion = "01"; //FAC 4.0;
                 comprobante.Folio = factura.folio = factura.idVenta;
                 //comprobante.Version = 4.0M; //FAC 4.0;
 
-                items = facturacionDAO.ObtenerComprobante(factura.idVenta, comprobante);
+                items = facturacionDAO.ObtenerComprobante(factura, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
                     comprobante = (items["comprobante"] as Comprobante);

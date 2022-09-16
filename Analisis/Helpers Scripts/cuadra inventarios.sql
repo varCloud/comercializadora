@@ -8,6 +8,7 @@ select * from InventarioDetalle where idUbicacion = 3860 and cantidad < 0
 select * from InventarioDetalle where idUbicacion = 3860 and cantidad > 0
 
 select * from InventarioDetalle where idUbicacion = 3861 and cantidad > 0
+select * from InventarioDetalle where idUbicacion = 3861 and cantidad < 0
 
 
 select * from PedidosInternos order by fechaAlta desc
