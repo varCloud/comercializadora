@@ -1,0 +1,91 @@
+﻿
+@using lluviaBackEnd.Models
+@{
+    ViewBag.Title = "Producción Agranel";
+}
+
+@model FiltroCostoProduccionAgranel
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Costo de Producción</h4>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("ObtenerListadoCostoProduccion", "Reportes",
+                  new AjaxOptions
+                  {
+                      HttpMethod = "Post",
+                      OnBegin = "onBeginSubmitCostoProduccion",
+                      OnFailure = "onFailureResultCostoProduccion",
+                      OnSuccess = "onSuccessResultCostoProduccion",
+                  },
+                  new { id = "frmBuscarCostoProduccion" }))
+                {
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            @Html.DropDownListFor(x => x.idUsuario, (List<SelectListItem>)ViewBag.lstUsuarios, new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                        <label>Estatus</label>
+                        @Html.DropDownListFor(x => x.idEstatusProcesoProduccionAgranel, (List<SelectListItem>)ViewBag.estatusProduccionAgranel, new { @id = "idLineaProducto", @class = "select-multiple", data_val = "false" })
+                    </div>
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class="form-group">
+                            <label>Rango de Fechas</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                                <input type="text" id="rangeProduccionAgranel" class="form-control daterange-cus">
+                                @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                                @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-left col-lg-2" style="margin-top:30px;">
+                        <button type="submit" id="btnBuscar" class="btn btn-success">Buscar</button>
+                    </div>
+
+                </div>
+                }
+                <hr style="margin-top:0" />
+                <div id="ViewCostoProduccion">
+                    @*@Html.Action("ObtenerMerma", "Reportes")*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtProcesoProduccionAgranel.js"></script>
+}
+

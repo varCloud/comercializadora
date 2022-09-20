@@ -68,6 +68,13 @@ BEGIN
 			begin
 				RAISERROR('La cantidad atendida no puede ser mayor que la cantidad solicitada', 15, 217)				
 			end
+					
+			IF EXISTS (select 1 from #ProductosRecibidos PR  join ProcesoProduccionAgranel PPA on PR.idProcesoProduccionAgranel = PPA.idProcesoProduccionAgranel 
+						where PPA.idEstatusProduccionAgranel in (3,4,5))
+			BEGIN
+				RAISERROR('Existen uno o mas productos que ya fueron aceptados', 15, 217)				
+			END
+			
 
 			/* 1	Ninguno | 2	Alta | 3 Procesado Correctamente | 4.-Rechazo Completo | 5.-Rechazo Parcial */
 			--asignamos el estatus que le corresponde para validar que vengan en estatus correcto
@@ -76,7 +83,7 @@ BEGIN
 				case when COALESCE(pr.cantidadAtendida,0)=0 then 4 
 				     when dbo.redondear(COALESCE(pr.cantidadAtendida,0))=PPA.cantidad then 3
 					 when dbo.redondear(COALESCE(pr.cantidadAtendida,0)) < PPA.cantidad then 5
-					  when dbo.redondear(COALESCE(pr.cantidadAtendida,0)) > PPA.cantidad then 6 /*ERROR*/
+					 when dbo.redondear(COALESCE(pr.cantidadAtendida,0)) > PPA.cantidad then 6 /*ERROR*/
 					 end 
 			from #ProductosRecibidos PR  join   ProcesoProduccionAgranel PPA on PR.idProcesoProduccionAgranel = PPA.idProcesoProduccionAgranel 
 

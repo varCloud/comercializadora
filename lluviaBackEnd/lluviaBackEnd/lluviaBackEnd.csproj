@@ -231,6 +231,7 @@
     <Compile Include="Controllers\FacturaPedidosEspecialesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
+    <Compile Include="Controllers\ProduccionAgranelController.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
     <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
+    <Compile Include="DAO\ProcesoProduccionAgranelDAO.cs" />
     <Compile Include="DAO\TareasProgramadasDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
@@ -1122,8 +1124,10 @@
     <Content Include="js\evtInventarioFisico.js" />
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
+    <Content Include="js\EvtProcesoProduccionAgranel.js" />
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
+    <Content Include="js\evtReporteCostoProduccion.js" />
     <Content Include="js\EvtReporteDevolucionesPedidosEspeciales.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
@@ -1380,6 +1384,9 @@
     <Content Include="Views\Productos\ConsultarLiquidos.cshtml" />
     <Content Include="Views\Reportes\_ObtenerCostoProduccion.cshtml" />
     <Content Include="Views\Reportes\CostoProduccionAgranel.cshtml" />
+    <Content Include="Views\ProduccionAgranel\ProduccionAgranel.cshtml" />
+    <Content Include="Views\ProduccionAgranel\_ObtenerListadoCostoProduccion.cshtml" />
+    <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

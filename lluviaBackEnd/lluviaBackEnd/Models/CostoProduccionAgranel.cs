@@ -5,13 +5,13 @@ using System.Web;
 
 namespace lluviaBackEnd.Models
 {
-    public class CostoProduccionAgranel 
+    public class CostoProduccionAgranel
     {
         public Int64 idReporteCostoProduccion { get; set; }
         public Int64 idProducto { get; set; }
         public float cantidadSolicitadaMesAnt { get; set; }
         public float cantidadAceptadaFinalMesAnt { get; set; }
-               
+
         public float porcCostoProduccion { get; set; }
         public float ultCostoCompra { get; set; }
         public float costoProduccionMerma { get; set; }
@@ -26,5 +26,15 @@ namespace lluviaBackEnd.Models
         public int AnioCalculo { get; set; }
         public int MesCalculo { get; set; }
         public int idAlmacen { get; set; }
+    }
+
+    public class FiltroCostoProduccionAgranel
+    {
+
+        public DateTime fechaIni { get; set; }
+        public DateTime fechaFin { get; set; }
+        public int idUsuario { get; set; }
+
+        public int idEstatusProcesoProduccionAgranel { get; set; }
     }
 }

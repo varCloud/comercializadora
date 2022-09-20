@@ -25,15 +25,19 @@ select * from InventarioDetalle where idProducto  = 2586
 
 select * from Ventas order by fechaAlta desc
 
-select * from InventarioDetalle where idUbicacion = 3860
+select * from InventarioDetalle where idUbicacion = 3053
 select * from InventarioDetalle where idUbicacion = 3861
 select * from Ubicacion where idUbicacion = 3860
+
+select * from InventarioDetalle where idProducto = 3053
+select * from InventarioDetalleLog where idProducto = 3053 order by fechaAlta desc
+
 
 select * from PedidosInternos order by fechaAlta desc
 
 
-
-select ID.* , IG.cantidad , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
+select * from InventarioDetalle where idProducto = 3053
+select ID.* , IG.cantidad canitdadGeneral , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <> ID.cantidad
 
 select * from InventarioDetalle where idProducto = 2586 order by idUbicacion desc

@@ -10,7 +10,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].SP_APP_OBTENER_PRODUCTOS_PRODUCCION_AGRANEL
+ALTER PROCEDURE [dbo].SP_APP_OBTENER_PRODUCTOS_PRODUCCION_AGRANEL
 @idAlmacen int,
 @idUsuario int = null,
 @idEstatusProduccionAgranel int = null,
@@ -38,6 +38,7 @@ BEGIN
 					 PPA.idEstatusProduccionAgranel,
 					 PPA.idProducto, 
 					 P.*, 
+					 PPA.idUbicacion, 
 					 [dbo].[LineaProductoFraccion](P.idLineaProducto,null) fraccion
 					 
 					FROM procesoProduccionAgranel PPA 

@@ -230,7 +230,7 @@
                             <li class="@(ViewBag.Title.ToString() == "Liquidos" ? "dropdown active" : "")">
                                 <a href="@Url.Action("ConsultarLiquidos", "Productos")">
                                     <i data-feather="droplet"></i><span>Liquidos</span>
-                                    
+
                                 </a>
                             </li>
                         }
@@ -245,6 +245,18 @@
                                 </a>
                             </li>
                         }
+
+
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PRODUCCION_AGRANEL && p.tienePermiso))
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Producción Agranel" ? "dropdown active" : "")">
+                                <a href="@Url.Action("ProduccionAgranel", "ProduccionAgranel")">
+                                    <i data-feather="check-square"></i><span>Producción Agranel</span>
+                                </a>
+                            </li>
+                        }
+
+
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Bitacoras && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             <li class="@(ViewBag.Title.ToString() == "Bitacoras" ? "dropdown active" : "")">

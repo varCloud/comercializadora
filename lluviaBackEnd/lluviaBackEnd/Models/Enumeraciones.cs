@@ -118,7 +118,12 @@ namespace lluviaBackEnd.Models
         #endregion
 
         #region Liquidos
-        Puede_visualizar_Liquidos
+        Puede_visualizar_Liquidos,
+        #endregion
+
+
+        #region Produccion Agranel
+        Puede_visualizar_PRODUCCION_AGRANEL =13
         #endregion
 
     }

@@ -1,14 +1,15 @@
 select * from ProcesoProduccionAgranel
+select * from usuarios 
 -- select * from CatTipoMovimientoInventario 
 
 begin tran
-	declare @idProd int = 780
+	declare @idProd int = 854
 	select * from InventarioDetalle where idProducto = @idProd
 	select * from InventarioDetalleLog where idProducto in (@idProd) order by idInventarioDetalleLOG desc
 	exec SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
 	'<ArrayOfProductosProduccionAgranel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	  <ProductosProduccionAgranel>
-		<idProcesoProduccionAgranel>5</idProcesoProduccionAgranel>
+		<idProcesoProduccionAgranel>7</idProcesoProduccionAgranel>
 		<idProducto>854</idProducto>
 		<idUbicacion>3876</idUbicacion>
 		<cantidadAtendida>100</cantidadAtendida>
@@ -23,7 +24,7 @@ begin tran
 	select * from InventarioDetalle where idProducto = @idProd
 	select * from InventarioGeneral where idProducto = @idProd
 	select * from ProcesoProduccionAgranel
-commit tran 
+rollback tran 
 
 
 exec [SP_CONSULTA_COSTO_PRODUCCION]
