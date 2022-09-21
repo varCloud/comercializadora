@@ -144,7 +144,7 @@ BEGIN
 					WHERE indice = @indiceActual;
 
 					--afectamos el inventario
-					IF(@idEstatusProduccionAgranel in (4,3,5) and @cantidadAtendida>0)
+					IF(@idEstatusProduccionAgranel in (4,3,5) and @cantidadAtendida > 0)
 					BEGIN
 
 						--validamos que exista la cantidad atendida en el inventario
@@ -231,6 +231,16 @@ BEGIN
 						--select * from InventarioDetalleLog where idProducto = @idProducto order by fechaAlta desc
 						--select * from InventarioDetalle where idProducto = @idProducto order by fechaAlta desc
 						--select * from InventarioGeneral where idProducto = @idProducto 
+					END
+					ELSE
+					BEGIN
+						UPDATE ProcesoProduccionAgranel 
+						SET 
+							cantidadAceptada = @cantidadAtendida,
+							cantidadRestante = dbo.redondear(cantidad) - dbo.redondear(@cantidadAtendida),
+							fechaUltimaActualizacion = dbo.FechaActual(),
+							idEstatusProduccionAgranel = @idEstatusProduccionAgranel
+						WHERE idProcesoProduccionAgranel = @idProcesoProduccionAgranel
 					END
 
 					select @indiceActual=@indiceActual+1;

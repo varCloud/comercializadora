@@ -3,20 +3,20 @@ select * from usuarios
 -- select * from CatTipoMovimientoInventario 
 
 begin tran
-	declare @idProd int = 854
+	declare @idProd int = 907
 	select * from InventarioDetalle where idProducto = @idProd
 	select * from InventarioDetalleLog where idProducto in (@idProd) order by idInventarioDetalleLOG desc
 	exec SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
 	'<ArrayOfProductosProduccionAgranel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	  <ProductosProduccionAgranel>
-		<idProcesoProduccionAgranel>7</idProcesoProduccionAgranel>
-		<idProducto>854</idProducto>
+		<idProcesoProduccionAgranel>37</idProcesoProduccionAgranel>
+		<idProducto>907</idProducto>
 		<idUbicacion>3876</idUbicacion>
-		<cantidadAtendida>100</cantidadAtendida>
+		<cantidadAtendida>0</cantidadAtendida>
 		<observaciones>todo bien </observaciones>
 		<idEstatusProduccionAgranel>0</idEstatusProduccionAgranel>
 	  </ProductosProduccionAgranel>
-	</ArrayOfProductosProduccionAgranel>',11,2
+	</ArrayOfProductosProduccionAgranel>',45,2
 	
 	select TM.descripcion,IDL.* from InventarioDetalleLog IDL join CatTipoMovimientoInventario TM on IDL.idTipoMovInventario = TM.idTipoMovInventario where idProducto in (@idProd) order by idInventarioDetalleLOG desc
 	select * from Ubicacion where idUbicacion in (

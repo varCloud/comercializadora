@@ -26,6 +26,13 @@ namespace lluviaBackEnd.Models
         public int AnioCalculo { get; set; }
         public int MesCalculo { get; set; }
         public int idAlmacen { get; set; }
+
+        public string descripcionEstatus { get; set; }
+
+        public float cantidad { get; set; }
+        public float cantidadAceptada { get; set; }
+        public float cantidadRestante { get; set; }
+        public string nombreUsuario { get; set; }
     }
 
     public class FiltroCostoProduccionAgranel
@@ -34,7 +41,6 @@ namespace lluviaBackEnd.Models
         public DateTime fechaIni { get; set; }
         public DateTime fechaFin { get; set; }
         public int idUsuario { get; set; }
-
         public int idEstatusProcesoProduccionAgranel { get; set; }
     }
 }

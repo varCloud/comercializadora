@@ -34,7 +34,7 @@
                 {
 
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-lg-4">
+                    <div class="col-12 col-sm-12 col-lg-3">
                         <div class="form-group">
                             <label>Usuario</label>
                             @Html.DropDownListFor(x => x.idUsuario, (List<SelectListItem>)ViewBag.lstUsuarios, new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
@@ -45,7 +45,7 @@
                         <label>Estatus</label>
                         @Html.DropDownListFor(x => x.idEstatusProcesoProduccionAgranel, (List<SelectListItem>)ViewBag.estatusProduccionAgranel, new { @id = "idLineaProducto", @class = "select-multiple", data_val = "false" })
                     </div>
-                    <div class="col-12 col-sm-12 col-lg-4">
+                    <div class="col-12 col-sm-12 col-lg-3">
                         <div class="form-group">
                             <label>Rango de Fechas</label>
                             <div class="input-group">
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="text-left col-lg-2" style="margin-top:30px;">
+                    <div class="text-left col-lg-auto" style="margin-top:30px;">
                         <button type="submit" id="btnBuscar" class="btn btn-success">Buscar</button>
                     </div>
 
@@ -69,7 +69,6 @@
                 }
                 <hr style="margin-top:0" />
                 <div id="ViewCostoProduccion">
-                    @*@Html.Action("ObtenerMerma", "Reportes")*@
                 </div>
             </div>
         </div>

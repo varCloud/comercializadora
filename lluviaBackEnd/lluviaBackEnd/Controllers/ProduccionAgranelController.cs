@@ -25,7 +25,7 @@ namespace lluviaBackEnd.Controllers
         public ActionResult ObtenerListadoCostoProduccion(FiltroCostoProduccionAgranel f )
         {
 
-            return PartialView("_ObtenerListadoCostoProduccion", new Notificacion<List<CostoProduccionAgranel>>() {Estatus=100 });
+            return PartialView("_ObtenerListadoCostoProduccion", new ProcesoProduccionAgranelDAO().ObtenerProcesoProduccion(f));
         }
     }
 }

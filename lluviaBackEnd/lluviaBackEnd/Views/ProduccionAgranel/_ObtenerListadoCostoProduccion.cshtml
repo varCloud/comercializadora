@@ -23,27 +23,29 @@ else
                     <th>Codigo de Barras</th>
                     <th>Producto</th>
                     <th>Lìnea</th>
+                    <th>Usuario</th>
                     <th>Cantidad Solicitada</th>
                     <th>Cantidad Aceptada</th>
                     <th>Cantidad Restante</th>
-                    <th>Ultimo de costo de compra</th>
-                    <th>Costo de Producción</th>
+                    <th>Fecha Alta</th>
+                    <th>Estatus</th>
                 </tr>
             </thead>
             <tbody>
 
                 @foreach (lluviaBackEnd.Models.CostoProduccionAgranel c in Model.Modelo)
                 {
-                    <tr>
-                        <td>@c.codigoBarras</td>
-                        <td>@c.descripcionProducto</td>
-                        <td>@c.descripcionLinea</td>
-                        <td>@c.cantidadSolicitadaMesAnt</td>
-                        <td>@c.cantidadAceptadaFinalMesAnt</td>
-                        <td>@Math.Round((c.cantidadSolicitadaMesAnt - c.cantidadAceptadaFinalMesAnt), 2)</td>
-                        <td>@c.ultCostoCompra.ToString("C", new CultureInfo("en-US"))</td>
-                        <td>@c.costoProduccionMerma.ToString("C", new CultureInfo("en-US"))</td>
-                    </tr>
+                <tr>
+                    <td>@c.codigoBarras</td>
+                    <td>@c.descripcionProducto</td>
+                    <td>@c.descripcionLinea</td>
+                    <td>@c.nombreUsuario</td>
+                    <td>@c.cantidad</td>
+                    <td>@c.cantidadAceptada</td>
+                    <td>@Math.Round((c.cantidad - c.cantidadAceptada), 2)</td>
+                    <td>@c.fechaAlta.ToShortDateString()</td>
+                    <td>@c.descripcionEstatus</td>
+                </tr>
                 }
             </tbody>
         </table>
