@@ -15,7 +15,7 @@ status			200 = ok
 				-1	= error
 */
 
-alter proc [dbo].SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
+create proc [dbo].SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
 @xmlProductos xml,
 @idUsuario int,
 @idAlmacen int

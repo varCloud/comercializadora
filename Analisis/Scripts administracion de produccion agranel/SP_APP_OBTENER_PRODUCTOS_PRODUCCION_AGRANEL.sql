@@ -10,7 +10,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].SP_APP_OBTENER_PRODUCTOS_PRODUCCION_AGRANEL
+create PROCEDURE [dbo].SP_APP_OBTENER_PRODUCTOS_PRODUCCION_AGRANEL
 @idAlmacen int,
 @idUsuario int = null,
 @idEstatusProduccionAgranel int = null,

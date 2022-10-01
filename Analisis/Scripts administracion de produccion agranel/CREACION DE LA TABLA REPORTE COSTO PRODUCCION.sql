@@ -33,7 +33,5 @@ ALTER TABLE [dbo].[ReporteCostoProduccion] ADD  DEFAULT ((0)) FOR [cantidadAcept
 GO
 ALTER TABLE [dbo].[ReporteCostoProduccion] ADD  DEFAULT ((0)) FOR [cantidadSolicitadaMesAnt]
 GO
-ALTER TABLE [dbo].[ReporteCostoProduccion] ADD  DEFAULT ((0)) FOR [totalCompras]
-GO
 
 
