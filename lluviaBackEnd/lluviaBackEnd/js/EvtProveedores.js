@@ -54,6 +54,7 @@ function InitTableProveedores() {
     tablaProveedores = initDataTable(NombreTabla);
 
     new $.fn.dataTable.Buttons(tablaProveedores, {
+        "ordering": true,
         buttons: [
             {
                 extend: 'pdfHtml5',

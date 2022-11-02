@@ -27,6 +27,7 @@ else
                     <th>Cantidad Solicitada</th>
                     <th>Cantidad Aceptada</th>
                     <th>Cantidad Restante</th>
+                    <th>Costo Compra</th>
                     <th>Fecha Alta</th>
                     <th>Estatus</th>
                 </tr>
@@ -43,6 +44,7 @@ else
                     <td>@c.cantidad</td>
                     <td>@c.cantidadAceptada</td>
                     <td>@Math.Round((c.cantidad - c.cantidadAceptada), 2)</td>
+                    <td>@c.ultCostoCompra</td>
                     <td>@c.fechaAlta.ToShortDateString()</td>
                     <td>@c.descripcionEstatus</td>
                 </tr>

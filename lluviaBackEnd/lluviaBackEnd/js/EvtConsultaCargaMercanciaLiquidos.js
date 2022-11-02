@@ -32,6 +32,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
             '         <th>Usuario</th>' +
             '         <th>Fecha</th>' +
             '         <th>Rol</th>' +
+            '         <th>Costo de Compra</th>' +
             '         <th>Movimiento</th>' +
             '     </tr>' +
             ' </thead>' +
@@ -47,6 +48,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
                 '             <td>' + dato.nombreUsuario + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
                 '             <td>' + dato.descripcionRol + '</td>' +
+                '             <td>' + dato.ultimoCostoCompra + '</td>' +
                 '             <td>' + dato.descTipoMovInventario + '</td>' +
             '       </tr>';
         });
@@ -77,7 +79,7 @@ function InitDataTableCargaMercanciaLiquidos() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6,7]
                     },
                 },
             ],

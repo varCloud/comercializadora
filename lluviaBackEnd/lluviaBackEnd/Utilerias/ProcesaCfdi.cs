@@ -122,7 +122,7 @@ namespace lluviaBackEnd.Utilerias
             Dictionary<string, string> certificados = null;
             try
             {
-                X509Certificate2 publicCert = new X509Certificate2(lluviaBackEnd.Resource.cerLLuvia2021);
+                X509Certificate2 publicCert = new X509Certificate2(lluviaBackEnd.Resource.cerLLuvia2022_cer);
                 byte[] data = FromHex(publicCert.GetSerialNumberString());
                 string NoCertificado = Encoding.ASCII.GetString(data);
                 Debug.WriteLine("no certificado :" + NoCertificado);
@@ -167,7 +167,7 @@ namespace lluviaBackEnd.Utilerias
                 foreach (char c in strLlavePwd.ToCharArray())
                     passwordSeguro.AppendChar(c);
 
-                byte[] llavePrivadaBytes = lluviaBackEnd.Resource.keyLLuvia2021;// ARCHIVO .KEY
+                byte[] llavePrivadaBytes = lluviaBackEnd.Resource.keyLLuvia2022_key;// ARCHIVO .KEY
                 RSACryptoServiceProvider rsa = opensslkey.DecodeEncryptedPrivateKeyInfo(llavePrivadaBytes, passwordSeguro);
                 //SHA1CryptoServiceProvider hasher = new SHA1CryptoServiceProvider();
                 SHA256CryptoServiceProvider hash265 = new SHA256CryptoServiceProvider();
@@ -198,7 +198,7 @@ namespace lluviaBackEnd.Utilerias
             try
             {
                 string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
-                X509Certificate2 cert = new X509Certificate2(Resource.archivoLLuvia2021, strLlavePwd);
+                X509Certificate2 cert = new X509Certificate2(Resource.archivo2022_pfx, strLlavePwd);
                 RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
                 SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
                 Reference reference = new Reference() { Uri = String.Empty };

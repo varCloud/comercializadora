@@ -145,4 +145,13 @@
   <data name="archivoLLuvia2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\archivoLLuvia2021.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="archivo2022_pfx" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\archivo2022_pfx.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cerLLuvia2022_cer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cerLLuvia2022_cer.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="keyLLuvia2022_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\keyLLuvia2022_key.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

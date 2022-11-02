@@ -108,7 +108,8 @@ function SetHeaderPDF(titulo) {
 
 function initDataTable(nombreTabla) {
 
-    return $('#' + nombreTabla).DataTable({
+    let dataTable = $('#' + nombreTabla).DataTable({
+
         "language": {
             "lengthMenu": "Muestra _MENU_ registros por pagina",
             "zeroRecords": "No existen registros",
@@ -123,12 +124,17 @@ function initDataTable(nombreTabla) {
                 "previous": "Anterior"
             },
         },
-        "dom": 'frtip',
+        "dom": 'lfrtip',
 
 
         "bDestroy": true, // es necesario para poder ejecutar la funcion LimpiaTabla()
         "ordering": false,
+        "pageLength": 25,
     });
+
+
+    $('#' + nombreTabla + '_length').css("margin-top", "20px");
+    return dataTable;
 
 }
 

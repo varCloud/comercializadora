@@ -63,6 +63,16 @@ namespace PrintDocumentolluvia.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Byte[].
         /// </summary>
+        internal static byte[] archivo2022 {
+            get {
+                object obj = ResourceManager.GetObject("archivo2022", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
         internal static byte[] archivoLLuvia20211 {
             get {
                 object obj = ResourceManager.GetObject("archivoLLuvia20211", resourceCulture);
@@ -93,6 +103,16 @@ namespace PrintDocumentolluvia.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Byte[].
         /// </summary>
+        internal static byte[] cerLLuvia2022 {
+            get {
+                object obj = ResourceManager.GetObject("cerLLuvia2022", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
         internal static byte[] CerProductivo1 {
             get {
                 object obj = ResourceManager.GetObject("CerProductivo1", resourceCulture);
@@ -106,6 +126,16 @@ namespace PrintDocumentolluvia.Properties {
         internal static byte[] keyLLuvia20212 {
             get {
                 object obj = ResourceManager.GetObject("keyLLuvia20212", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] keyLLuvia2022 {
+            get {
+                object obj = ResourceManager.GetObject("keyLLuvia2022", resourceCulture);
                 return ((byte[])(obj));
             }
         }

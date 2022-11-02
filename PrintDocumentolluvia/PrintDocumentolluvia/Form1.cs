@@ -973,7 +973,7 @@ namespace PrintDocumentolluvia
                 Sesion UsuarioActual = null;
                 Factura factura = new Factura();
                 //factura.idVenta = "64";
-                factura.idVenta = "PE"+this.txtNoFactura.Text;
+                factura.idVenta = this.txtNoFactura.Text;
                 factura.idPedidoEspecial = Convert.ToInt64(this.txtNoFactura.Text.Replace("PE", ""));
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
                 //comprobante.Exportacion = "01"; //FAC 4.0;
@@ -1028,11 +1028,11 @@ namespace PrintDocumentolluvia
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
 
-                        Task.Factory.StartNew(() =>
-                        {
-                            if (!string.IsNullOrEmpty("sapitopicador@gmail.com"))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
-                        });
+                        //Task.Factory.StartNew(() =>
+                        //{
+                        //    if (!string.IsNullOrEmpty("sapitopicador@gmail.com"))
+                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + timeStamp + ".xml", factura, string.Empty);
+                        //});
 
 
                     }

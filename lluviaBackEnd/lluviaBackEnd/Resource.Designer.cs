@@ -63,6 +63,16 @@ namespace lluviaBackEnd {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Byte[].
         /// </summary>
+        internal static byte[] archivo2022_pfx {
+            get {
+                object obj = ResourceManager.GetObject("archivo2022_pfx", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
         internal static byte[] archivoLLuvia2021 {
             get {
                 object obj = ResourceManager.GetObject("archivoLLuvia2021", resourceCulture);
@@ -93,6 +103,16 @@ namespace lluviaBackEnd {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Byte[].
         /// </summary>
+        internal static byte[] cerLLuvia2022_cer {
+            get {
+                object obj = ResourceManager.GetObject("cerLLuvia2022_cer", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
         internal static byte[] CerProductivo {
             get {
                 object obj = ResourceManager.GetObject("CerProductivo", resourceCulture);
@@ -106,6 +126,16 @@ namespace lluviaBackEnd {
         internal static byte[] keyLLuvia2021 {
             get {
                 object obj = ResourceManager.GetObject("keyLLuvia2021", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] keyLLuvia2022_key {
+            get {
+                object obj = ResourceManager.GetObject("keyLLuvia2022_key", resourceCulture);
                 return ((byte[])(obj));
             }
         }

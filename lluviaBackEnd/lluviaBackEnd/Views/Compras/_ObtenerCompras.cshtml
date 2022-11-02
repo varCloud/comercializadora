@@ -6,6 +6,26 @@
     int contador = 1;
 }
 
+<style>
+    .finalizada-correcta {
+        background: var(--blue);
+        color: white;
+        font-weight: 600;
+    }
+
+    .badge-cancelada {
+        background: var(--yellow);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .badge-errores {
+        width: 13px !important;
+        height: 13px !important;
+        display: block !important;
+        padding: 0;
+    }
+</style>
 
 @if (Model.Estatus != 200)
 {
@@ -70,19 +90,39 @@ else
                                                     {
                                                         case lluviaBackEnd.Models.EnumEstadoCompras.Ninguno:
                                                             {
-                                                                <div class="badge badge-light badge-shadow">@c.statusCompra.descripcion</div>
+                                                                <div class="badge badge-shadow @Html.Raw(c.statusCompra.idStatus==4 ? "badge-cancelada":" badge-light")">@c.statusCompra.descripcion</div>
+                                                               
                                                             }
                                                             break;
 
                                                         case lluviaBackEnd.Models.EnumEstadoCompras.Correcta:
                                                             {
-                                                                <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
+                                                                if (c.statusCompra.idStatus == 2)
+                                                                {
+                                                                    <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="badge badge-blue badge-shadow finalizada-correcta">@c.statusCompra.descripcion</div>
+                                                                }
                                                             }
                                                             break;
 
                                                         case lluviaBackEnd.Models.EnumEstadoCompras.Incorrecta:
                                                             {
-                                                                <div class="badge badge-danger badge-shadow">@c.statusCompra.descripcion</div>
+                                                                    <div style="display:flex;flex-direction:row; gap:8px">
+                                                                        @if (c.statusCompra.idStatus == 2)
+                                                                        {
+                                                                        <div class="badge badge-success badge-shadow">@c.statusCompra.descripcion</div>
+                                                                        <div class="badge badge-danger badge-shadow badge-errores"></div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                        <div class="badge badge-blue badge-shadow finalizada-correcta">@c.statusCompra.descripcion</div>
+                                                                        <div class="badge badge-danger badge-shadow badge-errores"></div>
+                                                                        }
+                                                                    </div>
+
                                                             }
                                                             break;
                                                         default:
