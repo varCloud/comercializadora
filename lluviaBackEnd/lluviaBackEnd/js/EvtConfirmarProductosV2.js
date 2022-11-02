@@ -24,7 +24,9 @@ $('#btnCancelar').click(function (e) {
 
 });
 
-
+$('#btnCancelarEntregarPedidoEspecial').click(function (e) {
+    onCancelar()
+})
 
 $('#btnGuardarPedidoEspecial').click(function (e) {
 
@@ -499,7 +501,6 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
         },
         success: function (data) {
-            OcultarLoader();
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             if (data.Estatus == 200) {
 
@@ -518,9 +519,10 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
                     facturaPedidoEspecial(idPedidoEspecial, idUsuarioEntrega);
                 }
                 else
-                    window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
+                    window.location.href = rootUrl(redirectPathBack(esPedidoEnRuta));
 
             }
+            OcultarLoader();
             $('#ModalEntregarPedidoEspecial').modal('hide');
 
         },
@@ -535,6 +537,26 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 });
 
+function redirectPathBack(esPedidoEnRuta) {
+    var path = '/PedidosEspecialesV2'
+    if (esPedidoEnRuta == 'false' || esPedidoEnRuta == 'False')
+        path = `${path}/EntregarPedido`
+    else
+        path = `${path}/PedidosEnRuta`
+ 
+    return path
+}
+
+function onCancelar() {
+    var path = '/PedidosEspecialesV2'
+    esPedidoEnRuta = $('#esPedidoEnRuta').val();
+    if (esPedidoEnRuta == null) {
+        path = `${path}/EntregarPedido`
+    } else {
+        path = `${path}/PedidosEnRuta`
+    }
+    window.location.href = rootUrl(redirectPathBack(esPedidoEnRuta));
+}
 
 function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
     $.ajax({
@@ -742,7 +764,6 @@ function checksTipoPagoChecked(status) {
     document.getElementById("chkCreditoConAbono").checked = status;
 }
 
-
 function chkChangeTipoPago(chk) {
     //var formaPago = parseInt($('#formaPago').val());
     if (chk == 'chkLiquidado') {
@@ -784,8 +805,6 @@ function chkChangeTipoPago(chk) {
     }
 
 }
-
-
 
 function validarProductosAceptados() {
 
