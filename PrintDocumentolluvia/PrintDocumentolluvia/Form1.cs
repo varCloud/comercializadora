@@ -994,16 +994,16 @@ namespace PrintDocumentolluvia
                     comprobante.Certificado = certificados["Certificado"];
                     comprobante.NoCertificado = certificados["NoCertificado"];
 
-                    string xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
+                    string xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante,true);
                     string cadenaOriginal = ProcesaCfdi.LimpiarCaracteresEspeciales(ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado));
                     comprobante.Sello = ProcesaCfdi.GeneraSello(cadenaOriginal);
-                    xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante);
+                    xmlSerealizado = ProcesaCfdi.SerializaXML33(comprobante,true);
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     string pathfile = pathServer + ("@@_Comprobante_" + factura.idVenta + timeStamp);
                     System.IO.File.WriteAllText( pathfile.Replace("@@","Request")+ ".xml", xmlSerealizado);
                     //TIMBRAR CON EDI-FACT
-                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
-                    //PrintDocumentolluvia.wsPruevas40.respuestaTimbrado respuesta = (PrintDocumentolluvia.wsPruevas40.respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado), pathfile);
+                    //respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                    PrintDocumentolluvia.wsPruevas40.respuestaTimbrado respuesta = (PrintDocumentolluvia.wsPruevas40.respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado), pathfile);
 
                     if (respuesta.codigoResultado.Equals("100"))
                     {
@@ -1041,13 +1041,14 @@ namespace PrintDocumentolluvia
                         factura.estatusFactura = EnumEstatusFactura.Error;
                         factura.mensajeError = respuesta.codigoResultado + " |" + respuesta.codigoDescripcion;
                         System.IO.File.WriteAllText(pathServer + ("Comprobante_" + factura.idVenta + timeStamp + ".xml"), xmlSerealizado);
-                        ManagerSerealization<PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        ManagerSerealization<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
+                        //ManagerSerealization<PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>.Serealizar(respuesta, pathServer + ("respuesta_" + factura.idVenta));
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
-                    factura.pathArchivoFactura = factura.pathArchivoFactura.Replace(@"D:\Documentos\comercializadora\PrintDocumentolluvia\PrintDocumentolluvia\bin\Debug\", "");
-                    notificacion = new FacturaDAO().GuardarFactura(factura);
-                    notificacion.Mensaje += " " + factura.mensajeError;
-                    this.txtLog.Text += JsonConvert.SerializeObject(notificacion);
+                    //factura.pathArchivoFactura = factura.pathArchivoFactura.Replace(@"D:\Documentos\comercializadora\PrintDocumentolluvia\PrintDocumentolluvia\bin\Debug\", "");
+                    //notificacion = new FacturaDAO().GuardarFactura(factura);
+                    //notificacion.Mensaje += " " + factura.mensajeError;
+                    //this.txtLog.Text += JsonConvert.SerializeObject(notificacion);
                 }
 
                 else

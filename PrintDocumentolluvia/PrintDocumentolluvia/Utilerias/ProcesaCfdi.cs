@@ -26,7 +26,7 @@ namespace lluviaBackEnd.Utilerias
         private static string fileName;
         public static string pathArchivoSAT = string.Empty;
 
-        public static string SerializaXML33(Comprobante comprobante)
+        public static string SerializaXML33(Comprobante comprobante,bool esFacturacion4 = false )
         {
             try
             {
@@ -43,8 +43,10 @@ namespace lluviaBackEnd.Utilerias
                 // ejem [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
                 // esto lo que hace es de tener <nombre>VICTOR</nombre>  a <cfdi:nombre></cfdi:nombre>
                 // recuerda que debes de tener definido en namespace en la definicion de la clase 
-                //ns.Add("cfdi", "http://www.sat.gob.mx/cfd/4");
-                ns.Add("cfdi", "http://www.sat.gob.mx/cfd/3");
+                if(esFacturacion4)
+                    ns.Add("cfdi", "http://www.sat.gob.mx/cfd/4");
+                else
+                    ns.Add("cfdi", "http://www.sat.gob.mx/cfd/3");
 
                 //a todos las propiedades o clases que tengan [XmlAttributeAttribute("schemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
                 //adjuntara el xsi por ejemplo "schemaLocation="http://www.sat.gob.mx/cfd/4 " a "xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 "
