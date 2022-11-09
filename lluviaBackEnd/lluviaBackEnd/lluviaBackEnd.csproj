@@ -224,6 +224,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\wsPruevas40\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\BitacoraController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
@@ -1096,6 +1101,15 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\wsPruevas40\configuration91.svcinfo" />
+    <None Include="Connected Services\wsPruevas40\configuration.svcinfo" />
+    <Content Include="Connected Services\wsPruevas40\lluviaBackEnd.wsPruevas40.respuestaTimbrado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\wsPruevas40\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1219,6 +1233,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Connected Services\servicioTimbrarPruebas\timbraCFDI1.wsdl" />
+    <None Include="Connected Services\wsPruevas40\timbraCFDI.wsdl" />
     <None Include="Properties\PublishProfiles\DeployDesarrolloAdmin.pubxml" />
     <None Include="Properties\PublishProfiles\DeployLocal.pubxml" />
     <None Include="Properties\PublishProfiles\DeployProductivo.pubxml" />
@@ -1433,6 +1448,7 @@
     <WCFMetadataStorage Include="Connected Services\servicioProduccionCancelaFactura\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivo\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
+    <WCFMetadataStorage Include="Connected Services\wsPruevas40\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

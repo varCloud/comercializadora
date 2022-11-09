@@ -77,6 +77,15 @@ namespace lluviaBackEnd.DAO
                     c.Receptor.Nombre = receptor.Nombre;
                     c.Receptor.Rfc = receptor.Rfc;
                     c.Receptor.UsoCFDI = receptor.UsoCFDI;
+                    c.Receptor.DomicilioFiscalReceptor = receptor.DomicilioFiscalReceptor; //FAC 4.0
+                    c.Receptor.RegimenFiscalReceptor = receptor.RegimenFiscalReceptor; //FAC 4.0
+                    //FAC 4.0
+                    if (c.Receptor.Rfc == "XAXX010101000")
+                    {
+                        c.Receptor.DomicilioFiscalReceptor = c.LugarExpedicion.ToString();
+                        c.Receptor.RegimenFiscalReceptor = "616";
+                        c.Receptor.UsoCFDI = "S01";
+                    }
 
                     //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
                     listConceptos = result.Read<ComprobanteConcepto>().ToList();
@@ -97,6 +106,7 @@ namespace lluviaBackEnd.DAO
                                 }
                             }
                         });
+                        listConceptos.ForEach(data => data.ObjetoImp = "02"); // FACT 4.0
                         c.Conceptos = listConceptos.ToArray();
                     }
 
@@ -134,11 +144,14 @@ namespace lluviaBackEnd.DAO
             try
             {
                 decimal TotalImpuestosTrasladados = 0;
+                decimal TotalBaseTrasladados = 0;
                 TotalImpuestosTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Importe);
+                TotalBaseTrasladados = c.Conceptos.ToList().Sum(data => data.Impuestos.Traslados.Traslado.Base);
                 ComprobanteImpuestos impuestos = new ComprobanteImpuestos();
                 impuestos.TotalImpuestosTrasladados = TotalImpuestosTrasladados;
                 impuestos.Traslados = new ComprobanteImpuestosTraslados();
                 impuestos.Traslados.Traslado = new ComprobanteImpuestosTrasladosTraslado();
+                impuestos.Traslados.Traslado.Base = TotalBaseTrasladados;
                 impuestos.Traslados.Traslado.Importe = TotalImpuestosTrasladados;
                 impuestos.Traslados.Traslado.Impuesto = "002";
                 impuestos.Traslados.Traslado.TipoFactor = "Tasa";

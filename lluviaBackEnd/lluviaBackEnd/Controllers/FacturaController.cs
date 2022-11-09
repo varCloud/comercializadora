@@ -13,7 +13,7 @@ using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Models.Facturacion.Produccion;
-using lluviaBackEnd.servicioTimbradoProductivo;
+using lluviaBackEnd.wsPruevas40;
 
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
@@ -171,13 +171,13 @@ namespace lluviaBackEnd.Controllers
                     comprobante.Certificado = certificados["Certificado"];
                     comprobante.NoCertificado = certificados["NoCertificado"];
 
-                    string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                    string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante,true);
                     string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                     comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                    xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante);
+                    xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante,true);
 
                     //TIMBRAR CON EDI-FACT
-                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact(ProcesaCfdi.Base64Encode(xmlSerealizado));
+                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado ));
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     if (respuesta.codigoResultado.Equals("100"))
                     {
@@ -202,11 +202,11 @@ namespace lluviaBackEnd.Controllers
                         factura.fechaTimbrado = comprobanteTimbrado.Complemento.TimbreFiscalDigital.FechaTimbrado;
                         factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
 
-                        Task.Factory.StartNew(() =>
-                        {
-                            if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura ,string.Empty);
-                        });
+                        //Task.Factory.StartNew(() =>
+                        //{
+                        //    if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura ,string.Empty);
+                        //});
 
 
                     }
@@ -219,7 +219,7 @@ namespace lluviaBackEnd.Controllers
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
 
-                    notificacion = new FacturaDAO().GuardarFactura(factura);
+                    //notificacion = new FacturaDAO().GuardarFactura(factura);
                     notificacion.Mensaje += " " + factura.mensajeError; 
                     return Json (notificacion, JsonRequestBehavior.AllowGet);
                 }

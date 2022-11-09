@@ -144,6 +144,7 @@
             this.txtNoFactura.Size = new System.Drawing.Size(100, 20);
             this.txtNoFactura.TabIndex = 10;
             this.txtNoFactura.Text = "54067";
+            this.txtNoFactura.TextChanged += new System.EventHandler(this.txtNoFactura_TextChanged);
             // 
             // btnComplemento
             // 

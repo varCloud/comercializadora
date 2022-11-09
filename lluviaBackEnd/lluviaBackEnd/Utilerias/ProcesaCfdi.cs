@@ -31,7 +31,7 @@ namespace lluviaBackEnd.Utilerias
         private static string fileName;
         public static string pathArchivoSAT = string.Empty;
 
-        public static string SerializaXML33(Comprobante comprobante)
+        public static string SerializaXML33(Comprobante comprobante , bool esFacturacion4 = false)
         {
             try
             {
@@ -48,7 +48,10 @@ namespace lluviaBackEnd.Utilerias
                 // ejem [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/3")]
                 // esto lo que hace es de tener <nombre>VICTOR</nombre>  a <cfdi:nombre></cfdi:nombre>
                 // recuerda que debes de tener definido en namespace en la definicion de la clase 
-                ns.Add("cfdi", "http://www.sat.gob.mx/cfd/3");
+                if (esFacturacion4)
+                    ns.Add("cfdi", "http://www.sat.gob.mx/cfd/4");
+                else
+                    ns.Add("cfdi", "http://www.sat.gob.mx/cfd/3");
 
                 //a todos las propiedades o clases que tengan [XmlAttributeAttribute("schemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
                 //adjuntara el xsi por ejemplo "schemaLocation="http://www.sat.gob.mx/cfd/3 " a "xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 "
@@ -219,6 +222,50 @@ namespace lluviaBackEnd.Utilerias
                 throw ex;
             }
         }
+
+        public static object TimbrarEdifact40(string xmlSerializadoSAT)
+        {
+            try
+            {
+                servicioTimbradoProductivo.respuestaTimbrado respuesta = null;
+                wsPruevas40.respuestaTimbrado respuestaPruebas = null;
+
+                System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                };
+                if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
+                {
+                    servicioTimbradoProductivo.timbrarCFDIPortTypeClient timbrar = new servicioTimbradoProductivo.timbrarCFDIPortTypeClient();
+                    respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    return respuesta;
+                }
+                else
+                {
+                    wsPruevas40.timbrarCFDIPortTypeClient timbrar = new wsPruevas40.timbrarCFDIPortTypeClient();
+                    respuestaPruebas = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
+                    ///////////////////MAPER///////////////////
+                    //var configuration = new MapperConfiguration(cfg =>
+                    //{
+                    //    cfg.CreateMap<PrintDocumentolluvia.servicioTimbrarPruebas.respuestaTimbrado, PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>();
+
+                    //});
+
+                    //configuration.AssertConfigurationIsValid();
+                    //var mapper = configuration.CreateMapper();
+                    //respuesta = mapper.Map<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>(respuestaPruebas);
+                    //System.IO.File.WriteAllText(pathfileOutputResponse.Replace("@@", "Response") + ".xml", SerializerManager<wsPruevas40.respuestaTimbrado>.SerealizarObjtecToString(respuestaPruebas));
+                    return respuestaPruebas;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public static object TimbrarEdifact(string xmlSerializadoSAT)
         {

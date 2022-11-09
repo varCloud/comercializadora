@@ -1169,5 +1169,10 @@ namespace PrintDocumentolluvia
                 this.txtLog.Text = ex.Message;
             }
         }
+
+        private void txtNoFactura_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
