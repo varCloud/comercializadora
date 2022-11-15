@@ -252,7 +252,7 @@ function PintarTabla() {
         data: { idVenta: 0 },
         method: 'post',
         dataType: 'html',
-        async: false,
+        async: true,
         beforeSend: function (xhr) {
         },
         success: function (data) {
@@ -514,10 +514,12 @@ function GenerarFactura(idVenta) {
             ShowLoader()
         },
         success: function (data) {
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-            $('#ModalFacturar').modal('hide');
-            PintarTabla();
+            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            if (data.Estatus == 200) {
+                $('#ModalFacturar').modal('hide');
+                PintarTabla();
+            }
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -606,11 +608,13 @@ function GuardarIVA(idVenta, montoIVA, idCliente, formaPago, usoCFDI) {
             ShowLoader()
         },
         success: function (data) {
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            
             OcultarLoader();
-
             if (data.Estatus == 200) {
+                MuestraToast('success' , 'Se ha actualizado el IVA de la venta');
                 GenerarFactura(idVenta);
+            } else {
+                MuestraToast('error', (data.Mensaje === '' ? 'No se ha actualizado el IVA a la venta no es posible generar la factura' : data.Mensaje ));
             }
             
         },

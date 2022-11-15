@@ -252,6 +252,9 @@ namespace lluviaBackEnd.Utilerias
                                 <td " + tituloIndividual + @" >Domiclio</td> <td colspan ='3'>"+ items["domicilioCliente"].ToString() + @" </td> 
                             </tr>
                             <tr>
+                                <td " + tituloIndividual + @" >Regimen Fiscal</td> <td colspan ='3'>" + items["RegimenFiscalReceptor"].ToString() + " - " + items["descripcionRegimenFiscalReceptor"].ToString() + @" </td> 
+                            </tr>
+                            <tr>
                                 <td  width='15%'></td>
                                 <td  width='35%'></td> 
                                 <td  width='15%'></td> 

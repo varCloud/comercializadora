@@ -13,7 +13,7 @@ using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Models.Facturacion.Produccion;
-using lluviaBackEnd.wsPruevas40;
+using lluviaBackEnd.servicioTimbradoProductivoV4;
 
 using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
@@ -204,8 +204,8 @@ namespace lluviaBackEnd.Controllers
 
                         //Task.Factory.StartNew(() =>
                         //{
-                        //    if(!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura ,string.Empty);
+                        //    if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                        //        Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura, string.Empty);
                         //});
 
 
@@ -219,7 +219,7 @@ namespace lluviaBackEnd.Controllers
                         //Email.NotificacionPagoReferencia("var901106@gmail.com");
                     }
 
-                    //notificacion = new FacturaDAO().GuardarFactura(factura);
+                    notificacion = new FacturaDAO().GuardarFactura(factura);
                     notificacion.Mensaje += " " + factura.mensajeError; 
                     return Json (notificacion, JsonRequestBehavior.AllowGet);
                 }

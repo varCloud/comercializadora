@@ -70,7 +70,10 @@ namespace lluviaBackEnd.DAO
                     items.Add("descripcionFormaPago", receptor.descripcionFormaPago);
                     items.Add("correoCliente", receptor.correo);
                     items.Add("domicilioCliente", receptor.domicilio);
-                    
+                    items.Add("RegimenFiscalReceptor", receptor.RegimenFiscalReceptor);
+                    items.Add("descripcionRegimenFiscalReceptor", receptor.descripcionRegimenFiscalReceptor);
+
+
 
                     ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
                     c.Receptor = new ComprobanteReceptor();
@@ -86,7 +89,7 @@ namespace lluviaBackEnd.DAO
                         c.Receptor.RegimenFiscalReceptor = "616";
                         c.Receptor.UsoCFDI = "S01";
                     }
-
+                    this.validarDataReceptor(c.Receptor);
                     //OBTENEMOS LOS CONCEPTOS PARA TIMBRAR 
                     listConceptos = result.Read<ComprobanteConcepto>().ToList();
                     if (listConceptos != null)
@@ -138,6 +141,16 @@ namespace lluviaBackEnd.DAO
                 _db = null;
             }
             return items;
+        }
+
+        private void  validarDataReceptor(ComprobanteReceptor c)
+        {
+            if (string.IsNullOrEmpty(c.RegimenFiscalReceptor))
+                throw new Exception("Por favor asigne el régimen fiscal del cliente para poder emitir la factura.");
+
+            if (string.IsNullOrEmpty(c.DomicilioFiscalReceptor))
+                throw new Exception("Por favor actualice el Código postal(Domicilio Fiscal) del cliente para poder emitir la factura");
+
         }
         public void ObtenerImpuestosGenerales(ref Comprobante c)
         {

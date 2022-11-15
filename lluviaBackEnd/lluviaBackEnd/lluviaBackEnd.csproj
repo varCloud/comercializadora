@@ -214,6 +214,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\servicioTimbradoProductivoV4\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\servicioTimbradoProductivo\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1081,10 +1086,20 @@
     <Content Include="Client Scripts\MvcFoolproofJQueryValidation.min.js" />
     <Content Include="Client Scripts\MvcFoolproofValidation.js" />
     <Content Include="Client Scripts\MvcFoolproofValidation.min.js" />
+    <None Include="Connected Services\servicioTimbradoProductivoV4\configuration91.svcinfo" />
+    <None Include="Connected Services\servicioTimbradoProductivoV4\configuration.svcinfo" />
+    <Content Include="Connected Services\servicioTimbradoProductivoV4\lluviaBackEnd.servicioTimbradoProductivoV4.respuestaTimbrado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\servicioTimbradoProductivoV4\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Connected Services\servicioTimbradoProductivo\lluviaBackEnd.servicioTimbradoProductivo.respuestaTimbrado.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <None Include="Connected Services\servicioProduccionCancelaFactura\cancelaCFDI.wsdl" />
+    <None Include="Connected Services\servicioTimbradoProductivoV4\timbraCFDI40.wsdl" />
     <None Include="Connected Services\servicioTimbradoProductivo\timbraCFDI.wsdl" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration91.svcinfo" />
     <None Include="Connected Services\servicioTimbrarPruebas\configuration.svcinfo" />
@@ -1446,6 +1461,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\servicioProduccionCancelaFactura\" />
+    <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivoV4\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbradoProductivo\" />
     <WCFMetadataStorage Include="Connected Services\servicioTimbrarPruebas\" />
     <WCFMetadataStorage Include="Connected Services\wsPruevas40\" />

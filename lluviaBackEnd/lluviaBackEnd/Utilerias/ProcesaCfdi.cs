@@ -227,7 +227,7 @@ namespace lluviaBackEnd.Utilerias
         {
             try
             {
-                servicioTimbradoProductivo.respuestaTimbrado respuesta = null;
+                servicioTimbradoProductivoV4.respuestaTimbrado respuesta = null;
                 wsPruevas40.respuestaTimbrado respuestaPruebas = null;
 
                 System.Net.ServicePointManager.SecurityProtocol =
@@ -238,7 +238,7 @@ namespace lluviaBackEnd.Utilerias
                 };
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
-                    servicioTimbradoProductivo.timbrarCFDIPortTypeClient timbrar = new servicioTimbradoProductivo.timbrarCFDIPortTypeClient();
+                    servicioTimbradoProductivoV4.timbrarCFDIPortTypeClient timbrar = new servicioTimbradoProductivoV4.timbrarCFDIPortTypeClient();
                     respuesta = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
                     return respuesta;
                 }
@@ -246,18 +246,18 @@ namespace lluviaBackEnd.Utilerias
                 {
                     wsPruevas40.timbrarCFDIPortTypeClient timbrar = new wsPruevas40.timbrarCFDIPortTypeClient();
                     respuestaPruebas = timbrar.timbrarCFDI("", "", xmlSerializadoSAT);
-                    ///////////////////MAPER///////////////////
-                    //var configuration = new MapperConfiguration(cfg =>
-                    //{
-                    //    cfg.CreateMap<PrintDocumentolluvia.servicioTimbrarPruebas.respuestaTimbrado, PrintDocumentolluvia.servicioTimbradoProductivo.respuestaTimbrado>();
+                    /////////////////MAPER///////////////////
+                    var configuration = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<wsPruevas40.respuestaTimbrado, servicioTimbradoProductivoV4.respuestaTimbrado>();
 
-                    //});
+                    });
 
-                    //configuration.AssertConfigurationIsValid();
-                    //var mapper = configuration.CreateMapper();
-                    //respuesta = mapper.Map<PrintDocumentolluvia.wsPruevas40.respuestaTimbrado>(respuestaPruebas);
+                    configuration.AssertConfigurationIsValid();
+                    var mapper = configuration.CreateMapper();
+                    respuesta = mapper.Map<servicioTimbradoProductivoV4.respuestaTimbrado>(respuestaPruebas);
                     //System.IO.File.WriteAllText(pathfileOutputResponse.Replace("@@", "Response") + ".xml", SerializerManager<wsPruevas40.respuestaTimbrado>.SerealizarObjtecToString(respuestaPruebas));
-                    return respuestaPruebas;
+                    return respuesta;
                 }
             }
             catch (Exception ex)
