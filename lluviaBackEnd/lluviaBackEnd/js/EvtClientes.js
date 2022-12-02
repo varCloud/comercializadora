@@ -138,7 +138,7 @@ function VerCliente(idCliente, accion) {
         $('#montoMaximoCredito').val(data.Modelo.montoMaximoCredito);
         $('#usarDatosCliente').prop('checked', data.Modelo.usarDatosCliente);
         $('#idRegimenFiscal').val(data.Modelo.idRegimenFiscal);
-
+        $("#sociedadMercantil").val(data.Modelo.sociedadMercantil);
         $("#esPersonaMoral").prop('checked', data.Modelo.esPersonaMoral);
         checkPM(data.Modelo.esPersonaMoral)
 
@@ -233,7 +233,7 @@ function InitTableClientes() {
                     });	// fin del doc footer*/	
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
             },
             {
@@ -243,7 +243,7 @@ function InitTableClientes() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
 
             }

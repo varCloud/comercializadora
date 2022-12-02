@@ -93,11 +93,18 @@
                                 @Html.ValidationMessageFor(x => x.razonSocial, null, new { @class = "text-danger was" })
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
+                        <div class="col-12 col-sm-12 col-lg-3">
                             <div class="form-group">
                                 <label>RFC*</label>
                                 @Html.TextBoxFor(x => x.rfcPM, null, new { @class = "form-control", @id = "rfcPM" })
                                 @Html.ValidationMessageFor(x => x.rfcPM, null, new { @class = "text-danger was" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-3">
+                            <div class="form-group">
+                                <label>Sociedad Mercantil*</label>
+                                @Html.TextBoxFor(x => x.sociedadMercantil, null, new { @placeholder = "Ejemplo S.A de C.V.",  @class = "form-control", @id = "sociedadMercantil" })
+                                @Html.ValidationMessageFor(x => x.sociedadMercantil, null, new { @class = "text-danger was",  })
                             </div>
                         </div>
                     </div>

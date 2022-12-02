@@ -1,0 +1,94 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "Relacion Productos Proceso Produccion";
+}
+
+@model lluviaBackEnd.Models.ProductosAgranelAEnvasarModel
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Relacion del proceso de produccion</h4>
+            </div>
+            <div class="card-body">
+                <div id="ViewRelacionProducto">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="mdlAgregarRelacionProceso" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width:1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalRelacion"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("ObtenerListadoCostoProduccion", "Reportes",
+                new AjaxOptions
+                {
+                HttpMethod = "Post",
+                OnBegin = "onBeginSubmitRelacion",
+                OnFailure = "onFailureResultRelacion",
+                OnSuccess = "onSuccessResultRelacion",
+                },
+                new { id = "frmRelacion" }))
+                                {
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <div class="form-group">
+                                <label>MPL</label>
+                                @Html.DropDownListFor(x => x.idProductoAgranel, (List<SelectListItem>)ViewBag.data["dataAgranel"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-4">
+                            <label>Producto a Enavsar</label>
+                            @Html.DropDownListFor(x => x.idProductoEnvasado, (List<SelectListItem>)ViewBag.data["dataLiquidos"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label>Envase</label>
+                            @Html.DropDownListFor(x => x.idProducoEnvase, (List<SelectListItem>)ViewBag.data["dataEnvases"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                        </div>
+
+
+                        <div class="text-left col-lg-auto">
+                            <button type="submit" id="btnBuscar" class="btn btn-success">Agregar</button>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtProcesoProduccionAgranel.js"></script>
+}
+

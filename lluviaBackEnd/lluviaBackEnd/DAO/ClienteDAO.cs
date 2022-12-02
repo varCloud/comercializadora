@@ -44,6 +44,7 @@ namespace lluviaBackEnd.DAO
                 parameters.Add("@idTipoCliente",c.idTipoCliente);
                 parameters.Add("@esPersonaMoral", c.esPersonaMoral);
                 parameters.Add("@nombreContacto", c.nombreContacto);
+                parameters.Add("@sociedadMercantil", c.sociedadMercantil);
                 /******************PEDIDOS ESPECIALES********************************/
                 parameters.Add("@latitud", c.latitud);
                 parameters.Add("@longitud", c.longitud);

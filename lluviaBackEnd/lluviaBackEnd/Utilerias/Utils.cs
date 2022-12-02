@@ -243,7 +243,7 @@ namespace lluviaBackEnd.Utilerias
                                 <td colspan='4'>Datos del cliente</td>    
                             </tr>
                             <tr>
-                                <td " + tituloIndividual + @" >Cliente</td> <td colspan ='3'>" + c.Receptor.Nombre + @"</td>           
+                                <td " + tituloIndividual + @" >Cliente</td> <td colspan ='3'>" + items["nombreReceptor"] + @"</td>           
                             </tr>
                             <tr>
                                  <td " + tituloIndividual + @" >R.F.C </td> <td>" + c.Receptor.Rfc + @"</td> <td " + tituloIndividual + @">Uso CFDI </td><td>" + c.Receptor.UsoCFDI + " - " + c.Addenda.descripcionUsoCFDI + @" </td>  

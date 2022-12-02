@@ -107,5 +107,9 @@ namespace lluviaBackEnd.Models
         [Required(ErrorMessage = "Este campo no puede estar vacio (obligatorio para facturar)")]
         public int idRegimenFiscal { get; set; }
 
+        public string regimenFiscal { get; set; }
+
+        public string sociedadMercantil { get; set; }
+
     }
 }

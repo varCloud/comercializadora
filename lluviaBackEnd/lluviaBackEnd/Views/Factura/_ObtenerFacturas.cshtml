@@ -47,7 +47,7 @@ else
                     <td>@f.montoTotal.ToString("C2")</td>
                     <td>@f.fechaTimbrado.ToShortDateString()</td>
                     <td>@Html.Raw(f.fechaCancelacion == DateTime.MinValue ? "" : f.fechaCancelacion.ToShortDateString())</td>
-                    <td>
+                    <td data-toggle="tooltip" title="@f.mensajeError">
                         @{
                             switch (f.estatusFactura)
                             {

@@ -24,6 +24,7 @@
                                     <th>Telefono</th>
                                     <th>Correo</th>
                                     <th>Tipo Cliente</th>
+                                    <th>Regimen fiscal</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -32,7 +33,7 @@
                                 {
                                 <tr>
                                     <td class="text-center">@item.contador</td>
-                                    <td>@ti.ToTitleCase(@item.nombres.ToLower()) &nbsp;@ti.ToTitleCase(@item.apellidoPaterno.ToLower()) &nbsp; @ti.ToTitleCase(@item.apellidoMaterno.ToLower())</td>
+                                    <td>@ti.ToTitleCase(@item.nombres.ToLower()) &nbsp;@ti.ToTitleCase(@item.apellidoPaterno.ToLower()) &nbsp; @ti.ToTitleCase(@item.apellidoMaterno.ToLower()) &nbsp; @item.sociedadMercantil</td>
                                     <td class="text-center">@item.calle &nbsp; @item.colonia &nbsp; @item.estado</td>
                                     <td>@item.municipio</td>
                                     <td>@item.estado</td>
@@ -73,6 +74,7 @@
                                         }
 
                                     </td>
+                                    <td>@item.regimenFiscal</td>
                                     <td>
                                         <div class="buttons">
                                             <a href="javascript:VerCliente(@item.idCliente ,1);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>

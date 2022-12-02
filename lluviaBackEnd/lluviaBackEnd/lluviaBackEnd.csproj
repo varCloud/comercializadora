@@ -242,6 +242,7 @@
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
     <Compile Include="Controllers\ProduccionAgranelController.cs" />
+    <Compile Include="Controllers\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarController.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
     <Compile Include="DAO\ProcesoProduccionAgranelDAO.cs" />
+    <Compile Include="DAO\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarDAO.cs" />
     <Compile Include="DAO\TareasProgramadasDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
     <Compile Include="DAO\LineaProductoDAO.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="Models\PedidosEspecialesV2.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />
+    <Compile Include="Models\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarModel.cs" />
     <Compile Include="Models\ProductosDevueltosPedidoEspecial.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
@@ -1420,6 +1423,8 @@
     <Content Include="Views\ProduccionAgranel\ProduccionAgranel.cshtml" />
     <Content Include="Views\ProduccionAgranel\_ObtenerListadoCostoProduccion.cshtml" />
     <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
+    <Content Include="Views\ProductosAgranelAEnvasar\ProductosAgranelAEnvasar.cshtml" />
+    <Content Include="Views\ProductosAgranelAEnvasar\_ObtenerCombinacionProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

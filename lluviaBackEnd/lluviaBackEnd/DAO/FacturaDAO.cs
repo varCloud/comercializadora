@@ -72,12 +72,13 @@ namespace lluviaBackEnd.DAO
                     items.Add("domicilioCliente", receptor.domicilio);
                     items.Add("RegimenFiscalReceptor", receptor.RegimenFiscalReceptor);
                     items.Add("descripcionRegimenFiscalReceptor", receptor.descripcionRegimenFiscalReceptor);
+                    items.Add("nombreReceptor", receptor.Nombre +' '+receptor.sociedadMercantil);
 
 
 
                     ////OBTENEMOS LOS DATOS DEL CLIENTE PARA TIMBRAR
                     c.Receptor = new ComprobanteReceptor();
-                    c.Receptor.Nombre = receptor.Nombre;
+                    c.Receptor.Nombre =this.clearNombreReceptor(receptor.Nombre);
                     c.Receptor.Rfc = receptor.Rfc;
                     c.Receptor.UsoCFDI = receptor.UsoCFDI;
                     c.Receptor.DomicilioFiscalReceptor = receptor.DomicilioFiscalReceptor; //FAC 4.0
@@ -141,6 +142,25 @@ namespace lluviaBackEnd.DAO
                 _db = null;
             }
             return items;
+        }
+
+        private string clearNombreReceptor(string nombreReceptor)
+        {
+            try
+            {
+                List<string> razonFiscal = ConfigurationManager.AppSettings["razonFiscal"].Split(',').ToList<string>();
+                razonFiscal.ForEach(f => nombreReceptor = nombreReceptor.Replace(f,""));
+                if(nombreReceptor.Length > 0 && nombreReceptor.EndsWith("."))
+                {
+                    nombreReceptor = nombreReceptor.Substring(0, nombreReceptor.Length - 2);   
+                }
+                return nombreReceptor.Trim();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Por favor asigne elimine la razon social del cliente. Ejemplo S.A DE C.V o sus variantes");
+                return nombreReceptor;
+            }
         }
 
         private void  validarDataReceptor(ComprobanteReceptor c)

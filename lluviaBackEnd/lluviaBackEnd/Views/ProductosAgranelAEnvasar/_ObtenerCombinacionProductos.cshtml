@@ -1,0 +1,61 @@
+﻿
+@model List<lluviaBackEnd.Models.ProductosAgranelAEnvasarModel>
+@{
+    System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
+
+}
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblProductos">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Id de Relacion</th>
+                                    <th>Producto Envasado</th>
+                                    <th>Materia Prima</th>
+                                    <th>Envase</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Valor Unidad de Medida</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{ int inx = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">@inx</td>
+                                        <td class="text-center">@item.idRelacionEnvasadoAgranel</td>
+                                        <td>@item.envasadoDescripcion</td>
+                                        <td>@item.agranelDescripcion</td>
+                                        <td>@item.envaseDescripcion</td>
+                                        <td>@item.unidadMedidad</td>
+                                        <td>@item.valorUnidadMedida</td>
+                                        <td>
+                                            <div class="buttons">
+                                                <a href="javascript:VerCliente(@item.idRelacionEnvasadoAgranel ,1);" class="btn btn-icon btn-info" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+                                                <a href="javascript:VerCliente(@item.idRelacionEnvasadoAgranel,2);" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="javascript:EliminarCliente(@item.idRelacionEnvasadoAgranel);" class="btn btn-icon btn-danger" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {inx++;}
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
