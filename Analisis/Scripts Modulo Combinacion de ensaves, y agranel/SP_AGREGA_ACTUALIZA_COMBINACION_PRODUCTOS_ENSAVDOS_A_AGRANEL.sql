@@ -1,14 +1,12 @@
--- ================================================
--- Template generated from Template Explorer using:
--- Create Procedure (New Menu).SQL
---
--- Use the Specify Values for Template Parameters 
--- command (Ctrl-Shift-M) to fill in the parameter 
--- values below.
---
--- This block of comments will not be included in
--- the definition of the procedure.
--- ================================================
+GO
+IF EXISTS(SELECT 1 FROM sys.procedures 
+          WHERE object_id = OBJECT_ID(N'dbo.SP_AGREGA_ACTUALIZA_COMBINACION_PRODUCTOS_ENSAVDOS_A_AGRANEL'))
+BEGIN
+    DROP PROCEDURE SP_AGREGA_ACTUALIZA_COMBINACION_PRODUCTOS_ENSAVDOS_A_AGRANEL
+END
+
+GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -24,9 +22,12 @@ CREATE PROCEDURE SP_AGREGA_ACTUALIZA_COMBINACION_PRODUCTOS_ENSAVDOS_A_AGRANEL
 @idProductoAgranel int,
 @idProducoEnvase int,
 @unidadMedidad varchar(50),
-@valorUnidadMedida float
+@valorUnidadMedida decimal(18,2),
+@idUnidadMedida int
 AS
 BEGIN
+
+	select  @unidadMedidad = LTRIM(TRIM(UPPER(coalesce(unidadSAT,''))))  from CatUnidadMedida where idUnidadMedida = @idUnidadMedida
 	IF (coalesce(@idRelacionEnvasadoAgranel,0) = 0)
 	BEGIN
 		INSERT INTO ProductosEnvasadosXAgranel(
@@ -34,13 +35,19 @@ BEGIN
 					,idProductoAgranel
 					,idProducoEnvase
 					,unidadMedidad
-					,valorUnidadMedida)
+					,valorUnidadMedida
+					,activo
+					,fechaAlta
+					,idUnidadMedidad)
 		VALUES(
 					@idProductoEnvasado
 					,@idProductoAgranel
 					,@idProducoEnvase
 					,@unidadMedidad
-					,@valorUnidadMedida)
+					,@valorUnidadMedida
+					,1
+					,dbo.FechaActual()
+					,@idUnidadMedida)
 		select  200 estatus, 'Relacion de productos agregado' mensaje
 		select
 			* 
@@ -56,7 +63,8 @@ BEGIN
 				idProductoAgranel =@idProductoAgranel,
 				idProducoEnvase =@idProducoEnvase,
 				unidadMedidad =@unidadMedidad,
-				valorUnidadMedida =@valorUnidadMedida
+				valorUnidadMedida =@valorUnidadMedida,
+				idUnidadMedidad= @idUnidadMedida
 		WHERE idRelacionEnvasadoAgranel = @idRelacionEnvasadoAgranel
 		select  200 estatus, 'Relacion de productos actualizado' mensaje
 	END

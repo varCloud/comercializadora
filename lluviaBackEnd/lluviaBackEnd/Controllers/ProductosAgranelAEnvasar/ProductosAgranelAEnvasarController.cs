@@ -66,5 +66,36 @@ namespace lluviaBackEnd.Controllers.ProductosAgranelAEnvasar
             }
 
         }
+
+
+        public ActionResult GuardarRelacionProductos(ProductosAgranelAEnvasarModel request)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new ProductosAgranelAEnvasarDAO().AgregarCombinacionesMPL(request);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        [HttpPost]
+        public JsonResult DesactivarCombinacionProductosEnvasadosAgranel(int idRelacionEnvasadoAgranel)
+        {
+            try
+            {
+                Notificacion<string> notificacion = new ProductosAgranelAEnvasarDAO().DesactivarCombinacionProductosEnvasadosAgranel(idRelacionEnvasadoAgranel);
+                return Json(notificacion, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+
+        }
     }
 }

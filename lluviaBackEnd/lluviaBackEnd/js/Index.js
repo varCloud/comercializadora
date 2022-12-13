@@ -338,6 +338,10 @@ function InitSelect2() {
         }
     });
 
+    $('.select-multiple').on('change', function () {
+        $(this).trigger('blur');
+    });
+
     // $('#' + item).val("0").trigger('change');
 }
 

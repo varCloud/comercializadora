@@ -28,7 +28,6 @@ function VerUbicacionesProducto(idProducto) {
         }
     });
 }
-
 //busqueda
 function onBeginSubmitProductos() {
     console.log("onBeginSubmit___");
@@ -47,7 +46,6 @@ function onSuccessResultProductos(data) {
 function onFailureResultProductos() {
     console.log("onFailureResult___");
 }
-
 // guardar-modificar
 function onBeginSubmitGuardarProducto() {
     ShowLoader();
@@ -161,7 +159,6 @@ function InitTableProductos() {
     $('#' + NombreTabla + '_filter').append('&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-icon btn-success" name="" id="btnAgregarProducto" data-toggle="tooltip" title="Agregar Producto"><i class="fas fa-plus"></i></a>');
     InitBtnAgregar();
 }
-
 
 function ObtenerProducto(idProducto) {
 

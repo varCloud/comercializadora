@@ -11,4 +11,10 @@ namespace lluviaBackEnd.Models
         public string descripcionUnidadCompra { get; set; }
         public int cantidadUnidadCompra { get; set; }
     }
+
+    public class UnidadMedida
+    {
+        public int idUnidadMedida { get; set; }
+        public string descripcion { get; set; }
+    }
 }

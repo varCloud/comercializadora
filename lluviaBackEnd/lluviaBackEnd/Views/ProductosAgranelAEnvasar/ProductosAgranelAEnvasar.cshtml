@@ -1,6 +1,7 @@
 ﻿@using lluviaBackEnd.Models;
 @{
     ViewBag.Title = "Relacion Productos Proceso Produccion";
+    List<SelectListItem> dataAgranel = (List<SelectListItem>)ViewBag.data["dataAgranel"];
 }
 
 @model lluviaBackEnd.Models.ProductosAgranelAEnvasarModel
@@ -39,37 +40,56 @@
                 </button>
             </div>
             <div class="modal-body">
-                @using (Ajax.BeginForm("ObtenerListadoCostoProduccion", "Reportes",
+                @using (Ajax.BeginForm("GuardarRelacionProductos", " ProductosAgranelAEnvasar",
                 new AjaxOptions
                 {
-                HttpMethod = "Post",
-                OnBegin = "onBeginSubmitRelacion",
-                OnFailure = "onFailureResultRelacion",
-                OnSuccess = "onSuccessResultRelacion",
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitRelacion",
+                    OnFailure = "onFailureResultRelacion",
+                    OnSuccess = "onSuccessResultRelacion",
                 },
                 new { id = "frmRelacion" }))
-                                {
+                {
 
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-4">
-                            <div class="form-group">
-                                <label>MPL</label>
-                                @Html.DropDownListFor(x => x.idProductoAgranel, (List<SelectListItem>)ViewBag.data["dataAgranel"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                            <div class=" form-group ">
+                                <label>Materia Prima / Liquidos</label>
+                                @Html.HiddenFor(x => x.idRelacionEnvasadoAgranel, new { @id = "idRelacionEnvasadoAgranel" })
+                                @Html.DropDownListFor(x => x.idProductoAgranel, dataAgranel, null, new { @class = "form-control select-multiple", @id = "idProductoAgranel", })
+                                @Html.ValidationMessageFor(x => x.idProductoAgranel, null, new { @class = "text-danger was" })
                             </div>
                         </div>
 
                         <div class="form-group col-lg-4">
-                            <label>Producto a Enavsar</label>
-                            @Html.DropDownListFor(x => x.idProductoEnvasado, (List<SelectListItem>)ViewBag.data["dataLiquidos"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                            <label>Producto a Envasar</label>
+                            @Html.DropDownListFor(x => x.idProductoEnvasado, (List<SelectListItem>)ViewBag.data["dataEnvasado"], null, new { @class = "form-control select-multiple", id = "idProductoEnvasado", })
+                            @Html.ValidationMessageFor(x => x.idProductoEnvasado, null, new { @class = "text-danger was" })
                         </div>
                         <div class="form-group col-lg-4">
                             <label>Envase</label>
-                            @Html.DropDownListFor(x => x.idProducoEnvase, (List<SelectListItem>)ViewBag.data["dataEnvases"], new { @class = "select-multiple", id = "idUsuario", data_val = "false" })
+                            @Html.DropDownListFor(x => x.idProducoEnvase, (List<SelectListItem>)ViewBag.data["dataEnvases"], null, new { @class = "form-control select-multiple", id = "idProducoEnvase", })
+                            @Html.ValidationMessageFor(x => x.idProducoEnvase, null, new { @class = "text-danger was" })
                         </div>
-
-
-                        <div class="text-left col-lg-auto">
-                            <button type="submit" id="btnBuscar" class="btn btn-success">Agregar</button>
+                        <div class="form-group col-lg-4">
+                            <label>Unidad de Medida</label>
+                            @Html.DropDownListFor(x => x.idUnidadMedidad, (List<SelectListItem>)ViewBag.data["dataUnidadesMedida"], null, new { @class = "form-control select-multiple", id = "idUnidadMedidad", })
+                            @Html.ValidationMessageFor(x => x.idUnidadMedidad, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label>Unidad de Medida</label>
+                            @Html.HiddenFor(x => x.valorUnidadMedidaConverter, new { @id = "valorUnidadMedidaConverter" })
+                            @Html.TextBoxFor(x => x.valorUnidadMedida, null, new { @class = "form-control", @id = "valorUnidadMedida", onkeypress = "return esDecimal(this, event);" })
+                            @Html.ValidationMessageFor(x => x.valorUnidadMedida, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <label>&nbsp;</label>
+                            <span id="unidadMedidaConverter" class="form-control">0</span>
+                        </div>
+                        <div class="text-left col-lg-auto form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" id="btnBuscar" class="btn btn-success form-control">Agregar</button>
+                            <button type="reset" id="btnReset" class="btn btn-success" style="display:none">btnReset</button>
                         </div>
 
                     </div>
@@ -84,11 +104,29 @@
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/mvcfoolproof.unobtrusive.js"></script>
+
     <script src="~/assets/bundles/datatables/datatables.min.js"></script>
     <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/page/datatables.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    @*<script src="~/assets/js/page/sweetalert.js"></script>*@
     <script src="~/js/EvtProcesoProduccionAgranel.js"></script>
 }
+
+<style>
+    .dataTables_filter > label {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+        .dataTables_filter > label > input {
+            width: 55% !important;
+        }
+</style>
 

@@ -14,7 +14,7 @@ function onFailureResultGuardarCliente() {
 }
 
 function onSuccessResultGuardarCliente(data) {
-    console.log(data);
+    OcultarLoader();
     if (data.Estatus === 200) {
         MuestraToast("success", data.Mensaje)
         ObtenerClientes();
