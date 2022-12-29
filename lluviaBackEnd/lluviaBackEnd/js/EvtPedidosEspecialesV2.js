@@ -191,11 +191,6 @@ function ModalAutorizarPrecioMayoreo() {
     $('#ModalAutorizarPrecioMayoreo').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
-
-
-
-
-
 $('#btnAgregarProducto').click(function (e) {
 
     if (AgregarProducto(producto_value, $('#cantidad').val())) {
@@ -214,8 +209,6 @@ $('#btnAgregarProducto').click(function (e) {
         initInputsTabla();
     }
 });
-
-
 
 function AgregarProducto(producto, cantidad, cotizacion) {
     //console.log(producto);
@@ -331,8 +324,6 @@ function AgregarProducto(producto, cantidad, cotizacion) {
 
     return true;
 }
-
-
 
 function actualizaTicketVenta() {
 
@@ -529,17 +520,12 @@ function actualizaTicketVenta() {
 
 }
 
-
-
-
 $('#btnGuardarPedidoEspecial').click(function (e) {
     
     console.log("#idPedidoEspecial", $('#idPedidoEspecial').val());
     abrirModalGuardarPedidoEspecial(1);
    
 });
-
-
 
 function abrirModalGuardarPedidoEspecial(tipo) {
 
@@ -588,7 +574,6 @@ function abrirModalGuardarPedidoEspecial(tipo) {
     }
 
 }
-
 
 //revision por ticket
 $('#btnRevisionPorTicket').click(function (e) {
@@ -651,8 +636,6 @@ $('#btnCotizar').click(function (e) {
         });
 
 });
-
-
 
 
 function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ticket   /  2-Hand Held
@@ -736,8 +719,6 @@ function GuardarPedidoEspecial(tipoRevision, idEstatusPedidoEspecial ) { // 1-Ti
 }
 
 
-
-
 function ConsultaExistenciasAlmacen( idProducto, idAlmacen ) { 
 
     var dataToPost = JSON.stringify({ idProducto: idProducto, idAlmacen: idAlmacen });
@@ -777,13 +758,6 @@ function ConsultaExistenciasAlmacen( idProducto, idAlmacen ) {
 }
 
 
-
-
-
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //busqueda
 function onBeginSubmitVentas() {
@@ -821,8 +795,6 @@ function preguntaAltaPrecios() {
             }
         });
 }
-
-
 
 function InitSelect2() {
     $('.select-multiple').select2({
@@ -1054,17 +1026,6 @@ $('#btnAgregarEnvase').click(function (e) {
     }
 });
 
-
-
-
-
-
-//function maxed(a, b) {
-//    return a > b;
-//}
-
-
-
 function ObtenerPrecios_(idProducto) {
 
     var result = [];
@@ -1090,7 +1051,6 @@ function ObtenerPrecios_(idProducto) {
 
     return result;
 }
-
 
 function initInputsTabla() {
 
@@ -1125,7 +1085,6 @@ function initInputsTabla() {
 
     });
 }
-
 
 function cuentaSubTotal() {
     //var result = parseFloat(0);
@@ -1238,8 +1197,6 @@ function initTimer() {
     }, 100);
 }
 
-
-
 function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial, ticketFinal) {
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/ImprimeTicket"),
@@ -1264,7 +1221,6 @@ function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecia
         }
     });
 }
-
 
 function eliminaArchivo(rutaArchivo) {
     $.ajax({
@@ -1308,8 +1264,6 @@ function numerico(evt) {
     }
     return true;
 }
-
-
 
 $("#efectivo").on("keyup", function (event) {
 

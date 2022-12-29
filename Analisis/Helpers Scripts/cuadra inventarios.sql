@@ -15,6 +15,7 @@ select * from PedidosInternos order by fechaAlta desc
 
 select * from InventarioGeneral where contador in (799,1898)
 
+select * from InventarioDetalle where cantidad < 0
 -- update  InventarioGeneral set cantidad = 0 where contador in (799,1898)
 
 
@@ -57,11 +58,12 @@ select MAX(idInventarioDetalleLOG) , idUbicacion from InventarioDetalleLog where
 begin tran
 select ID.* , IG.cantidad , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <> ID.cantidad
+
 	update IG
 	set IG.cantidad = ID.cantidad
 	from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 	join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <> ID.cantidad
 
-select ID.* , IG.cantidad , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
+select ID.* , IG.cantidad catidadInventarioGeneral , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <> ID.cantidad
 rollback tran 

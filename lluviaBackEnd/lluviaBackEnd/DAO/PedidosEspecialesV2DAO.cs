@@ -14,6 +14,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace lluviaBackEnd.DAO
 {
@@ -273,7 +274,7 @@ namespace lluviaBackEnd.DAO
             {
                 xmlSerializer.Serialize(xmlWriter, productos);
             }
-
+            Debug.WriteLine(stringBuilder.ToString());
             return stringBuilder.ToString();
 
         }
