@@ -57,7 +57,9 @@ BEGIN
 			
 			if dbo.[ExisteCantidadProductoEnAlmancen](@idAlmacen,@idProductoAgranel) < @cantidadReal
 			begin
-					select -1 Estatus , 'No existe suficiente inventario del producto a granel para convertir a envase.' Mensaje
+					declare @productoDesc varchar(100)
+					select @productoDesc = idProducto from Productos where idProducto = @idProductoAgranel
+					select -1 Estatus , 'No existe suficiente inventario del producto a granel para convertir a envase. idProducto ['+ cast(@productoDesc as varchar) +'] ' Mensaje
 					return
 			end
 

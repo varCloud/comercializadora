@@ -54,9 +54,12 @@ select MAX(idInventarioDetalleLOG) , idUbicacion from InventarioDetalleLog where
 
 select MAX(idInventarioDetalleLOG) , idUbicacion from InventarioDetalleLog where idPedidoInterno = 24257 group by idUbicacion ,idProducto
 
+update InventarioDetalle set cantidad = 0 , fechaActualizacion=dbo.fechaActual() where cantidad < 0
+
+
 /*CUADRA INVENTARIOS*/
 begin tran
-select ID.* , IG.cantidad , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
+select ID.* , IG.cantidad as CantidadInventarioGeneral , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <> ID.cantidad
 
 	update IG

@@ -150,10 +150,10 @@ namespace lluviaBackEnd.DAO
             {
                 List<string> razonFiscal = ConfigurationManager.AppSettings["razonFiscal"].Split(',').ToList<string>();
                 razonFiscal.ForEach(f => nombreReceptor = nombreReceptor.Replace(f,""));
-                if(nombreReceptor.Length > 0 && nombreReceptor.EndsWith("."))
-                {
-                    nombreReceptor = nombreReceptor.Substring(0, nombreReceptor.Length - 2);   
-                }
+                //if(nombreReceptor.Length > 0 && nombreReceptor.EndsWith("."))
+                //{
+                //    nombreReceptor = nombreReceptor.Substring(0, nombreReceptor.Length - 2);   
+                //}
                 return nombreReceptor.Trim();
             }
             catch (Exception ex)

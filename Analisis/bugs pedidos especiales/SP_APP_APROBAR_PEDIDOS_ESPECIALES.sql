@@ -179,7 +179,7 @@ BEGIN
 
 					--obtenemos la ubicacion resguardo
 
-					IF NOT EXISTS (select 1 from Ubicacion where idPasillo=1000 and idRaq=1000 and idPiso=1000 and idAlmacen=@idAlmacenDestino)
+					IF NOT EXISTS (select 1 from Ubicacion where idPasillo=1000 and idRaq=1000 and idPiso=1000 and idAlmacen=@idAlmacenDestino) 
 					begin
 					   INSERT INTO Ubicacion(idAlmacen,idPasillo,idRaq,idPiso)
 					   select @idAlmacenDestino,1000,1000,1000;
@@ -197,6 +197,12 @@ BEGIN
 
 					INSERT INTO InventarioDetalleLog(idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoInterno,idPedidoEspecial)
 					SELECT @idUbicacionResguardo,@idProducto,dbo.redondear(@cantidadAtendida),dbo.redondear(@cantidadDespuesOp),@tipoMovimientoInventarioResguardo,@idUsuario,dbo.FechaActual(),0,0,@idPedidoEspecial
+
+					--VALIDAR SI EL PRODUCTO EXISTE EN INVENTARIO DETALLE SI NO EXISTE LO INSERTAMOS
+					IF NOT EXISTS (SELECT 1 FROM InventarioDetalle WHERE idUbicacion = @idUbicacionResguardo AND idProducto = @idProducto)
+					BEGIN
+						INSERT INTO InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion) VALUES (@idProducto,0,dbo.FechaActual(),@idUbicacionResguardo,dbo.FechaActual()) 
+					END
 
 					UPDATE InventarioDetalle set cantidad=dbo.redondear(@cantidadDespuesOp),fechaActualizacion=dbo.FechaActual() 
 					where idProducto=@idProducto and idUbicacion=@idUbicacionResguardo
