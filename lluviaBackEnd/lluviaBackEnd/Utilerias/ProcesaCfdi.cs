@@ -38,8 +38,8 @@ namespace lluviaBackEnd.Utilerias
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Comprobante));
                 MemoryStream ms = new MemoryStream();
-                Encoding utf8EncodingWithNoByteOrderMark = new UTF8Encoding(false);
-                XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, utf8EncodingWithNoByteOrderMark);
+                Encoding utf8Encoding = new UTF8Encoding(false);
+                XmlTextWriter xmlTextWriter = new XmlTextWriter(ms, utf8Encoding);
 
                 XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
 
@@ -161,6 +161,7 @@ namespace lluviaBackEnd.Utilerias
             string strSello = string.Empty;
             try
             {
+                strCadenaOriginal = strCadenaOriginal.Replace("amp;", "");
                 //PARA GENERAR EL SELLO SE UTILIZA EL MISMO CERTIFICADO  DE PRODUCTIVO LA MISMA CONTRASEÑA Y EL MISMO ARCHIVO.KEY 
                 //LO UNICO QUE CAMBIE ES EN EL WEB SERVICE HAY QUE  APUNTAR AL WEB SERVICE DE PRUEBAS
                 //CON LAS CONTRASEÑAS DE PRUEBAS

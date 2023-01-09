@@ -694,7 +694,7 @@ function modalFacturar(idPedidoEspecial) {
 
     $('#idVentaIVA').val(idPedidoEspecial);
     $('#idClienteFact').val(idCliente).trigger('change');
-    document.getElementById("idClienteFact").disabled = true;
+    //document.getElementById("idClienteFact").disabled = true;
     $('#ModalFacturar').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
