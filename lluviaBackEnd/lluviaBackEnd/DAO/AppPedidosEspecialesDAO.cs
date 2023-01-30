@@ -3,6 +3,7 @@ using lluviaBackEnd.Models;
 using lluviaBackEnd.WebServices.Modelos.Request;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -99,6 +100,7 @@ namespace lluviaBackEnd.DAO
             {
                 xmlSerializer.Serialize(xmlWriter, precios);
             }
+            Debug.WriteLine(stringBuilder.ToString());
             return stringBuilder.ToString();
 
         }

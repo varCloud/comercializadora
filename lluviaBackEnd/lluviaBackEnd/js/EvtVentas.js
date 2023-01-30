@@ -2578,6 +2578,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip()
 
     $('#ModalPrevioVenta').on('shown.bs.modal', function () {
+        $('#efectivo').focus();
         PuedeRealizarVenta = true;
         console.log("puede realizar venta", PuedeRealizarVenta)
     });

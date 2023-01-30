@@ -819,7 +819,7 @@ namespace lluviaBackEnd.Utilerias
                                             <td width='36%'>Descripcion</td>
                                             <td width='15%' style='color:black; text-align:center;'>Cantidad</td>
                                             <td width='17%' style='color:black; text-align:center;'>Precio Unitario</td>
-                                            <td width='25%' style='color:black; text-align:center;'>Precio</td>
+                                            <td width='25%' style='color:black; text-align:center;'>Importe</td>
                                           </tr>
                                         </table>
                                     </td>
@@ -842,14 +842,14 @@ namespace lluviaBackEnd.Utilerias
                                                             <td width='33%'>" + tickets[i].descProducto.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].cantidad.ToString() + @"</td>
                                                             <td width='15%' style='color:black; text-align:center;'>" + tickets[i].precioVenta.ToString() + @"</td>
-                                                            <td width='15%' style='color:black; text-align:right;'>" + (tickets[i].monto + tickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
+                                                            <td width='15%' style='color:black; text-align:right;'>" + tickets[i].PrecioTicket().ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + @"</td>
                                                             <td width='10%' style='color:black; text-align:left;'></td>
                                                           </tr>
                                                         </table>
                                                     </td>
                                                 </tr>";
-
-                    if (tickets[i].ahorro > 0)
+                    //QUITAR EL FALSE SI SE DESEA PINTAR EL MONTO QUE SE AHORRA POR PRODUCTO
+                    if (tickets[i].ahorro > 0 && false)
                     {
                         html += @"   <tr>
                                                         <td style='color:black; '> 

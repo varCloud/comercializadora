@@ -16,6 +16,7 @@ select * from PedidosInternos order by fechaAlta desc
 select * from InventarioGeneral where contador in (799,1898)
 
 select * from InventarioDetalle where cantidad < 0
+select * from InventarioGeneral where cantidad < 0
 -- update  InventarioGeneral set cantidad = 0 where contador in (799,1898)
 
 

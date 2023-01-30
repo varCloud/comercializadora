@@ -45,5 +45,14 @@ namespace lluviaBackEnd.Models
 
         public float ultimoCostoCompra { get; set; }
         public Int64 idPedidoEspecial { get; set; }
+        public float PrecioTicket()
+        {
+            return this.monto;
+        }
+
+        public float PrecioUnitarioTicket()
+        {
+            return this.precioVenta + this.ahorro;
+        }
     }
 }

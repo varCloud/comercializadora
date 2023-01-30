@@ -666,7 +666,7 @@ namespace lluviaBackEnd.Controllers
                 StringFormat izquierda = new StringFormat();
                 izquierda.Alignment = StringAlignment.Near; //Izquierda
                 StringFormat derecha = new StringFormat();
-                derecha.Alignment = StringAlignment.Far; //Izquierda
+                derecha.Alignment = StringAlignment.Far; //Derecha
 
                 //Tipo y tamaño de letra
                 Font font = new Font("Arial", 6.8F, FontStyle.Regular, GraphicsUnit.Point);
@@ -708,17 +708,17 @@ namespace lluviaBackEnd.Controllers
 
                     e.Graphics.DrawString("______________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
-                    e.Graphics.DrawString("#    Descripcion                              Cantidad     Precio       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
+                    e.Graphics.DrawString("#    Descripcion                            Cantidad   Precio           Importe" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 9;
-                    e.Graphics.DrawString("                                                                          Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                    e.Graphics.DrawString("                                                                       Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 6;
                     e.Graphics.DrawString("_____________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 14;
                     datosIndex = new Rectangle(2, datosEnca.Y, 15, 82);
                     datosProducto = new Rectangle(20, datosEnca.Y, 145, 82);
-                    datosCantidad = new Rectangle(167, datosEnca.Y, 30, 82);
-                    datosPrecioU = new Rectangle(205, datosEnca.Y, 30, 82);
-                    datosPrecio = new Rectangle(235, datosEnca.Y, 48, 82);
+                    datosCantidad = new Rectangle(165, datosEnca.Y, 25, 82);
+                    datosPrecioU = new Rectangle(190, datosEnca.Y, 33, 82);
+                    datosPrecio = new Rectangle(223, datosEnca.Y, 65, 82);
 
 
                 }
@@ -726,9 +726,9 @@ namespace lluviaBackEnd.Controllers
                 {
                     datosIndex = new Rectangle(2, 15, 15, 82);
                     datosProducto = new Rectangle(20, 15, 145, 82);
-                    datosCantidad = new Rectangle(177, 15, 30, 82);
-                    datosPrecioU = new Rectangle(205, 15, 30, 82);
-                    datosPrecio = new Rectangle(235, 15, 48, 82);
+                    datosCantidad = new Rectangle(177, 15, 26, 82);
+                    datosPrecioU = new Rectangle(200, 15, 26, 82);
+                    datosPrecio = new Rectangle(233, 15, 54, 82);
                 }
 
                 for (int i = indexProducto; i < lstTickets.Count(); i++)
@@ -736,8 +736,8 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString((indexProducto+1).ToString() + " \n", font, drawBrush, datosIndex, izquierda);
                     e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
-                    e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString(lstTickets[i].precioVenta + " \n", font, drawBrush, datosPrecioU, izquierda);
+                    e.Graphics.DrawString((lstTickets[i].PrecioTicket()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     if (lstTickets[i].descProducto.ToString().Length >= 23)
                     {
@@ -758,16 +758,17 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     // si hay descuentos por mayoreo o rango de precios
-                    if (lstTickets[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecioU.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                        datosIndex.Y += espaciado;
-                    }
+                    // DESCOMENTAR EN CASO DE QUERER MOSTRAR EL DESCUENTO POR PRODUCTO
+                    //if (lstTickets[i].ahorro > 0)
+                    //{
+                    //    e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    //    e.Graphics.DrawString("-" + (lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    datosProducto.Y += espaciado;
+                    //    datosCantidad.Y += espaciado;
+                    //    datosPrecioU.Y += espaciado;
+                    //    datosPrecio.Y += espaciado;
+                    //    datosIndex.Y += espaciado;
+                    //}
 
 
                     Console.WriteLine("indexProducto: " + indexProducto);
@@ -1979,7 +1980,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((lstTickets[i].PrecioTicket()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
@@ -2287,7 +2288,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((lstTickets[i].PrecioTicket()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += notificacion.Modelo[i].monto;
                     montoComisionBancaria += notificacion.Modelo[i].montoComisionBancaria;
@@ -2622,7 +2623,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(lstTickets[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(lstTickets[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(lstTickets[i].precioVenta.ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((lstTickets[i].monto + lstTickets[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((lstTickets[i].PrecioTicket()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     monto += lstTickets[i].monto;
                     montoIVA += lstTickets[i].montoIVA;

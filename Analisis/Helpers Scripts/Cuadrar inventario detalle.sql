@@ -32,8 +32,15 @@ WHERE
 	ID.cantidad < PED.cantidadDeberiaDeEstar 
 	AND U.idUbicacion = ID.idUbicacion
 
+select * from CatTipoMovimientoInventario
 
+select * from InventarioDetalleLog where idProducto = 3295 and idUbicacion = 3802 order by idInventarioDetalleLog desc
+
+select * from InventarioDetalle where  idProducto = 320
 select * from InventarioDetalle where cantidad < 0
+update InventarioDetalle set cantidad = 0  where idUbicacion = 3802  and idProducto = 3295
+
+update InventarioGeneral set cantidad = 0  where  idProducto = 320
 
 select * from CatPiso where idPiso = 1003
 select top 200 U.idPiso, MI.idTipoMovInventario, MI.descripcion, U.idAlmacen, IDL.*
@@ -50,8 +57,14 @@ select idPedidoInterno from PedidosInternos where IdEstatusPedidoInterno = 2
 )
 select * from CatTipoMovimientoInventario
 select top 200 * from InventarioDetalleLog where  idPedidoInterno = 38158 order by idInventarioDetalleLOG desc
-select top 2000 * from InventarioDetalleLog where  idProducto = 581  order by idInventarioDetalleLOG desc
+select top 2000 * from InventarioDetalleLog where  idProducto = 108 and idUbicacion = 3802  order by idInventarioDetalleLOG  desc
+select top 2000 * from InventarioDetalleLog where  idProducto = 108 and idUbicacion = 3802  order by idInventarioDetalleLOG  desc
 
+select top 2000 * from InventarioDetalleLog where  idProducto = 108 and idUbicacion = 3802 and idPedidoEspecial = 6558  order by idInventarioDetalleLOG  desc
+
+select top 2000 * from InventarioDetalleLog where  idProducto = 108 and idUbicacion = 3802 and idTipoMovInventario not in (1,18)
+
+select * from CatTipoMovimientoInventario
 select * from pedidosEspecialesDetalle where idProducto = 581 order by fechaAlta desc
 select * from InventarioDetalle  where idProducto = 581
 
