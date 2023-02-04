@@ -1,5 +1,6 @@
 ﻿var arrayPreciosRangos = [];
 var arrayProductos = [];
+var puedeGuardar = true;
 
 function ValidarAperturaCaja() {
     return true;
@@ -266,6 +267,12 @@ $('#chkFacturarPedido').click(function () {
 });
 
 $('#btnEntregarPedidoEspecial').click(function (e) {
+    console.log('guardando....')
+    if (!puedeGuardar) {
+        console.log('No puede guardar varias veces esta venta')
+        return false
+    }
+    puedeGuardar = false;
 
     var idUsuarioRuteo = $('#idUsuarioRuteo').val() == '' ? 0 : $('#idUsuarioRuteo').val()
     var idUsuarioTaxi = $('#idUsuarioTaxi').val();
@@ -296,12 +303,14 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             if ($('#efectivo').val() == "") {
                 MuestraToast('warning', "Debe escribir con cuanto efectivo le estan pagando.");
                 $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+                puedeGuardar = true
                 return;
             }
 
             if ( (parseFloat(efectivo_) < parseFloat(total_)) && ($("#chkLiquidado").is(":checked")) ) {
                 MuestraToast('warning', "El efectivo no alcanza a cubrir el costo total del pedido: " + total_.toString());
                 $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+                puedeGuardar = true
                 return;
             }
         
@@ -334,6 +343,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     ) {
         MuestraToast('warning', "Debe elegir a quien va a entregar el Pedido Especial");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+        puedeGuardar = true
         return;
     }
 
@@ -344,6 +354,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     ) {
         MuestraToast('warning', "Debe elegir el tipo de pago");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+        puedeGuardar = true
         return;
     }
 
@@ -376,6 +387,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             ) {
             MuestraToast('warning', "Debe elegir el usuario Encargado de Ruteo que recibe el Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            puedeGuardar = true
             return;
         }
         numeroUnidadTaxi = "0";
@@ -391,12 +403,14 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         if (isNaN(parseInt(idUsuarioTaxi))) {
             MuestraToast('warning', "Debe elegir el usuario de Taxi que recibe el Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            puedeGuardar = true
             return;
         }
 
         if (($('#numeroUnidadTaxi').val() == "")) {
             MuestraToast('warning', "Debe elegir el numero de la unidad de Taxi que recibe el Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            puedeGuardar = true
             return;
         }
 
@@ -415,6 +429,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             ) {
             MuestraToast('warning', "Debe escribir el monto total de liquidación");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            puedeGuardar = true
             return;
         }
         //montoTotal = $('#efectivo').val();
@@ -427,6 +442,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
         if (($('#efectivo').val() == "")) {
             MuestraToast('warning', "Debe escribir la cantidad que abono al Pedido Especial");
             $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+            puedeGuardar = true
             return;
         }
         //montoPagado = $('#efectivo').val();
@@ -450,6 +466,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
     if ( (parseFloat(efectivo_) > parseFloat(total_) ) && ( formaPago != 1 ) ) {
         MuestraToast('warning', "No puede abonar mas del total del pedido especial .");
         $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+        puedeGuardar = true
         return;
     }
     //console.log(esPedidoEnRuta);
@@ -524,6 +541,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             }
             OcultarLoader();
             $('#ModalEntregarPedidoEspecial').modal('hide');
+            puedeGuardar = true
 
         },
         error: function (xhr, status) {
@@ -532,6 +550,7 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
             console.log('Hubo un problema al guardar la confirmacion de productos, contactese con el administrador del sistema');
             console.log(xhr);
             console.log(status);
+            puedeGuardar = true
         }
     });
 
@@ -1052,6 +1071,7 @@ $("#efectivo").on("keyup", function (event) {
 
     if (event.keyCode === 13) {
         event.preventDefault();
+        $("#btnEntregarPedidoEspecial").addClass('btn-progress disabled');
         document.getElementById("btnEntregarPedidoEspecial").click();
     }
     else {
