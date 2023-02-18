@@ -36,9 +36,6 @@ select * from CatTipoMovimientoInventario
 
 select * from InventarioDetalleLog where idProducto = 3295 and idUbicacion = 3802 order by idInventarioDetalleLog desc
 
-
-
-
 select * from InventarioDetalle where  idProducto = 320
 select * from InventarioDetalle where cantidad < 0
 update InventarioDetalle set cantidad = 0  where idUbicacion = 3802  and idProducto = 344
