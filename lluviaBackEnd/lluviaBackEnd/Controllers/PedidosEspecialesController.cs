@@ -360,9 +360,9 @@ namespace lluviaBackEnd.Controllers
                     datosEnca.Y += 14;
                     e.Graphics.DrawString("  Descripcion                                             Cantidad       Precio" + " \n", font, drawBrush, datosEnca, izquierda);
                     datosEnca.Y += 8;
+                    e.Graphics.DrawString("                                                                       Unitario       " + " \n", font, drawBrush, datosEnca, izquierda);
+                    datosEnca.Y += 8;
                     e.Graphics.DrawString("___________________________________________________" + " \n", font, drawBrush, datosEnca, izquierda);
-                    //datosEnca.Y += 14;
-
                     float monto = 0;
                     float montoIVA = 0;
                     float montoAhorro = 0;

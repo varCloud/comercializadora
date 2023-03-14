@@ -2340,7 +2340,7 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(ticket.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(ticket.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].precioVenta).ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto) + Convert.ToSingle(ticket.Modelo[i].ahorro)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
 
                     if (ticket.Modelo[i].descProducto.ToString().Length >= 23)
                     {
@@ -2361,16 +2361,17 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     // si hay descuentos por mayoreo o rango de precios
-                    if (ticket.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (ticket.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecioU.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                        datosIndex.Y += espaciado;
-                    }
+                    // DESCOMENTAR EN CASO DE QUERER MOSTRAR EL DESCUENTO POR PRODUCTO
+                    //if (ticket.Modelo[i].ahorro > 0)
+                    //{
+                    //    e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    //    e.Graphics.DrawString("-" + (ticket.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    datosProducto.Y += espaciado;
+                    //    datosCantidad.Y += espaciado;
+                    //    datosPrecioU.Y += espaciado;
+                    //    datosPrecio.Y += espaciado;
+                    //    datosIndex.Y += espaciado;
+                    //}
 
 
                     Console.WriteLine("indexProducto: " + indexProducto);
@@ -2920,8 +2921,8 @@ namespace lluviaBackEnd.Controllers
                     e.Graphics.DrawString(ticket.Modelo[i].descProducto.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(ticket.Modelo[i].cantidad.ToString() + " \n", font, drawBrush, datosCantidad, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].precioVenta).ToString() + " \n", font, drawBrush, datosPrecioU, izquierda);
-                    e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto) + Convert.ToSingle(ticket.Modelo[i].ahorro)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-
+                    //e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto) + Convert.ToSingle(ticket.Modelo[i].ahorro)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);// DESCOMENTAR EN CASO DE QUERER MOSTRAR EL DESCUENTO POR PRODUCTO
+                    e.Graphics.DrawString((Convert.ToSingle(ticket.Modelo[i].monto)).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     if (ticket.Modelo[i].descProducto.ToString().Length >= 23)
                     {
                         datosIndex.Y += espaciado + 10;
@@ -2941,16 +2942,17 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     // si hay descuentos por mayoreo o rango de precios
-                    if (ticket.Modelo[i].ahorro > 0)
-                    {
-                        e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("-" + (ticket.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosCantidad.Y += espaciado;
-                        datosPrecioU.Y += espaciado;
-                        datosPrecio.Y += espaciado;
-                        datosIndex.Y += espaciado;
-                    }
+                    // DESCOMENTAR EN CASO DE QUERER MOSTRAR EL DESCUENTO POR PRODUCTO
+                    //if (ticket.Modelo[i].ahorro > 0)
+                    //{
+                    //    e.Graphics.DrawString("     └Descuento por mayoreo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    //    e.Graphics.DrawString("-" + (ticket.Modelo[i].ahorro).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    //    datosProducto.Y += espaciado;
+                    //    datosCantidad.Y += espaciado;
+                    //    datosPrecioU.Y += espaciado;
+                    //    datosPrecio.Y += espaciado;
+                    //    datosIndex.Y += espaciado;
+                    //}
 
 
                     Console.WriteLine("indexProducto: " + indexProducto);
