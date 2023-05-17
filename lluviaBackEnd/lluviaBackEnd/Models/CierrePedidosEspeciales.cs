@@ -25,5 +25,7 @@ namespace lluviaBackEnd.Models
 		public int NoTicketsEfectivo { get; set; }
 		public int NoTicketsCredito { get; set; }
 		public int NoPedidosEnResguardo { get; set; }
-	}
+        public float TotalEfectivo { get; set; }
+        public float AbonosEfectivo { get; set; }
+    }
 }
