@@ -633,6 +633,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUsuario", cierre.idUsuario == 0 ? (object)null : cierre.idUsuario);                    
                     parameters.Add("@fechaIni", cierre.fechaIni == DateTime.MinValue ? (object)null : cierre.fechaIni);
                     parameters.Add("@fechaFin", cierre.fechaFin == DateTime.MinValue ? (object)null : cierre.fechaFin);
+                    Console.WriteLine(cierre.idUsuario+" " + cierre.fechaIni+" "+ cierre.fechaFin);
                     var result = db.QueryMultiple("SP_REPORTE_CIERRES_PEDIDOS_ESPECIALES", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

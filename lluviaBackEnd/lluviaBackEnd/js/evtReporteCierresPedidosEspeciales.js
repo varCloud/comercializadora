@@ -44,6 +44,8 @@ function onSuccessResultCierresPE(data) {
                         //'<th>No. tickets efectivo</th>' +
                         //'<th>No. tickets credito</th>' +
                         //'<th>No. pedidos en resguardo</th>' +
+                        '<th>Total Ventas Efectivo</th>' +
+                        '<th>Total Abonos Efectivo</th>' +
                         '<th>Imprimir</th>' +
                     '</tr>' +
             ' </thead>' +
@@ -69,6 +71,8 @@ function onSuccessResultCierresPE(data) {
                 //'             <td>' + data[i].NoTicketsEfectivo + '</td>' +
                 //'             <td>' + data[i].NoTicketsCredito + '</td>' +
                 //'             <td>' + data[i].NoPedidosEnResguardo + '</td>' +
+                '             <td>' + formatoMoneda(data[i].TotalEfectivo) + '</td>' +
+                '             <td>' + formatoMoneda(data[i].VentasContado) + '</td>' +
                 '             <td>' +
                 '               <div class="buttons">' +
                 '                   <a href="javascript:ImprimeTicketCierrePE(' + data[i].idCierrePedidoEspecial + ');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Imprimir ticket"><i class="fas fa-print"></i></a>' +
