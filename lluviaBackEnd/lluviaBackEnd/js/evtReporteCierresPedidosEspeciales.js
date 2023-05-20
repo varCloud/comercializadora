@@ -71,8 +71,8 @@ function onSuccessResultCierresPE(data) {
                 //'             <td>' + data[i].NoTicketsEfectivo + '</td>' +
                 //'             <td>' + data[i].NoTicketsCredito + '</td>' +
                 //'             <td>' + data[i].NoPedidosEnResguardo + '</td>' +
-                '             <td>' + formatoMoneda(data[i].TotalEfectivo) + '</td>' +
-                '             <td>' + formatoMoneda(data[i].VentasContado) + '</td>' +
+                '             <td>' + formatoMoneda((data[i].TotalEfectivo - data[i].AbonosEfectivo + data[i].MontoDevoluciones ).toFixed(2) ) + '</td>' +
+                '             <td>' + formatoMoneda(data[i].AbonosEfectivo) + '</td>' +
                 '             <td>' +
                 '               <div class="buttons">' +
                 '                   <a href="javascript:ImprimeTicketCierrePE(' + data[i].idCierrePedidoEspecial + ');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Imprimir ticket"><i class="fas fa-print"></i></a>' +
@@ -115,7 +115,7 @@ function InitDataTableCierresPE() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4,5,6,7]
+                        columns: [0, 1, 2, 3, 4,5,6,7,8,9]
                     },
                 },
             ],

@@ -3537,8 +3537,8 @@ namespace lluviaBackEnd.Controllers
                 {
                     e.Graphics.DrawString("Saldo final en caja tarjeta de crédito y transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoCierreTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                    datosProducto.Y += espaciado + 10;
-                    datosPrecio.Y += espaciado + 10;
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
                     indexProducto++;
