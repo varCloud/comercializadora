@@ -34,12 +34,12 @@ function onSuccessResultCierresPE(data) {
                         //'<th>Total Transferencias</th>' +
                         //'<th>Total otras formas de pago</th>' +
                         //'<th>Total crèdito</th>' +
-                        '<th>Total devoluciones</th>' +
-                        '<th>Ingresos de efectivo</th>' +
-                        '<th>Retiros de efectivo</th>' +
-                        '<th>Saldo final efectivo</th>' +
-                        '<th>Saldo final TC y transferencias</th>' +
-                        '<th>Efectivo entregado</th>' +
+                        '<th>Total Devoluciones</th>' +
+                        '<th>Apertura de Caja</th>' +
+                        '<th>Retiros de Efectivo</th>' +
+                        '<th>Saldo Final Efectivo</th>' +
+                        '<th>Saldo Final TC y Transferencias</th>' +
+                        '<th>Efectivo Entregado</th>' +
                         //'<th>No. devoluciones</th>' +
                         //'<th>No. tickets efectivo</th>' +
                         //'<th>No. tickets credito</th>' +
