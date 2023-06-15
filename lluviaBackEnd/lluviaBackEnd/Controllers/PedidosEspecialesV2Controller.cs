@@ -3449,49 +3449,85 @@ namespace lluviaBackEnd.Controllers
 
                 if (indexProducto == ticket.Modelo.Count + 1)
                 {
+                    double totalEfectivo = 0, totalTDC = 0, totalOtrasFormas = 0, totalVentasCredito = 0, totalDevoluciones = 0;
+
                     for (int i = 0; i < ticket.Modelo.Count; i++)
                     {
-                        e.Graphics.DrawString(" " + ticket.Modelo[i].descripcionSaldo.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString("" + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosPrecio.Y += espaciado;
+                        //e.Graphics.DrawString(" " + ticket.Modelo[i].descripcionSaldo.ToString() + " \n", font, drawBrush, datosProducto, izquierda);
+                        //e.Graphics.DrawString("" + " \n", font, drawBrush, datosPrecio, derecha);
+                        //datosProducto.Y += espaciado;
+                        //datosPrecio.Y += espaciado;
 
-                        e.Graphics.DrawString("  " + "Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasContado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosPrecio.Y += espaciado;
+                        //e.Graphics.DrawString("  " + "Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                        //e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasContado).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        //datosProducto.Y += espaciado;
+                        //datosPrecio.Y += espaciado;
 
-                        e.Graphics.DrawString("  " + "TDC o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTDCTransferencias).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosPrecio.Y += espaciado;
+                        totalEfectivo += Convert.ToSingle(ticket.Modelo[i].VentasContado);
 
-                        e.Graphics.DrawString("  " + "Otras formas de pago" + " \n", font, drawBrush, datosProducto, izquierda);
-                        e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasOtrasFormasPago).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                        datosProducto.Y += espaciado;
-                        datosPrecio.Y += espaciado;
+                        //e.Graphics.DrawString("  " + "TDC o transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                        //e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasTDCTransferencias).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        //datosProducto.Y += espaciado;
+                        //datosPrecio.Y += espaciado;
+
+                        totalTDC += Convert.ToSingle(ticket.Modelo[i].VentasTDCTransferencias);
+
+                        //e.Graphics.DrawString("  " + "Otras formas de pago" + " \n", font, drawBrush, datosProducto, izquierda);
+                        //e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasOtrasFormasPago).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                        //datosProducto.Y += espaciado;
+                        //datosPrecio.Y += espaciado;
+
+                        totalOtrasFormas += Convert.ToSingle(ticket.Modelo[i].VentasOtrasFormasPago);
 
                         if (Convert.ToInt32(ticket.Modelo[i].idAlmacen) > 0)
                         {
-                            e.Graphics.DrawString("  " + "Ventas a crédito" + " \n", font, drawBrush, datosProducto, izquierda);
-                            e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasCredito).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
-                            datosProducto.Y += espaciado;
-                            datosPrecio.Y += espaciado;
+                            //e.Graphics.DrawString("  " + "Ventas a crédito" + " \n", font, drawBrush, datosProducto, izquierda);
+                            //e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[i].VentasCredito).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                            //datosProducto.Y += espaciado;
+                            //datosPrecio.Y += espaciado;
 
+                            totalVentasCredito += Convert.ToSingle(ticket.Modelo[i].VentasCredito);
                         }
 
+                        totalDevoluciones += Convert.ToSingle(ticket.Modelo[i].MontoDevoluciones);
+
                         indexProducto++;
+
                         if (datosProducto.Y >= 1092)
                         {
                             this.paginaActual++;
                             e.HasMorePages = true;
                             return;
                         }
-
                     }
 
+                    e.Graphics.DrawString("  " + "Total Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(totalEfectivo.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("  " + "Total TDC y Transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(totalTDC.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("  " + "Total Otras Formas de Pago" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(totalOtrasFormas.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("  " + "Total Ventas a Crédito" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(totalVentasCredito.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    e.Graphics.DrawString("  " + "Total Devoluciones" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString(totalDevoluciones.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
+                    datosProducto.Y += espaciado;
+                    datosPrecio.Y += espaciado;
+
+                    //datosProducto.Y += espaciado;
+                    //datosPrecio.Y += espaciado;
 
                     indexProducto++;
                 }
@@ -3502,7 +3538,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 2)
                 {
-                    e.Graphics.DrawString("Ingresos efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString("  " + "Apertura de Caja" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoIngresosEfectivo).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
@@ -3513,7 +3549,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 3)
                 {
-                    e.Graphics.DrawString("Retiros efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString("  " + "Retiros Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoRetirosEfectivo).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
@@ -3524,7 +3560,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 4)
                 {
-                    e.Graphics.DrawString("Saldo final en caja efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString("  " + "Saldo Final en Caja Efectivo" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoCierreEfectivo).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
@@ -3535,7 +3571,7 @@ namespace lluviaBackEnd.Controllers
                 if (this.insertaPagina(datosProducto.Y, ref e)) return;
                 if (indexProducto == ticket.Modelo.Count + ticket.Modelo.Count + 5)
                 {
-                    e.Graphics.DrawString("Saldo final en caja tarjeta de crédito y transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
+                    e.Graphics.DrawString("  " + "Saldo Final en Caja TDC y Transferencias" + " \n", font, drawBrush, datosProducto, izquierda);
                     e.Graphics.DrawString(Convert.ToSingle(ticket.Modelo[0].MontoCierreTC).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " \n", font, drawBrush, datosPrecio, derecha);
                     datosProducto.Y += espaciado;
                     datosPrecio.Y += espaciado;
