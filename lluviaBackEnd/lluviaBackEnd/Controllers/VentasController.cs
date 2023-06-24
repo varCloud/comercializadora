@@ -1463,7 +1463,7 @@ namespace lluviaBackEnd.Controllers
 
 
                 Rectangle datosProducto = new Rectangle(5, 240, 180, 82);
-                Rectangle datosPrecio = new Rectangle(220, 240, 48, 82);
+                Rectangle datosPrecio = new Rectangle(180, 240, 88, 82);
 
                 Rectangle datosEnca = new Rectangle(0, 160, 280, 82);
 
