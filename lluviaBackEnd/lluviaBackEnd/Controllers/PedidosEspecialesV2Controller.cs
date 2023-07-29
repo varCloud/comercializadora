@@ -3348,7 +3348,7 @@ namespace lluviaBackEnd.Controllers
 
 
                     datosProducto = new Rectangle(5, datosEnca.Y, 180, 82);
-                    datosPrecio = new Rectangle(220, datosEnca.Y, 48, 82);
+                    datosPrecio = new Rectangle(170, datosEnca.Y, 98, 82);
 
 
                 }
@@ -3356,7 +3356,7 @@ namespace lluviaBackEnd.Controllers
                 {
 
                     datosProducto = new Rectangle(5, 15, 180, 82);
-                    datosPrecio = new Rectangle(220, 15, 48, 82);
+                    datosPrecio = new Rectangle(170, 15, 98, 82);
                 }
 
                 Rectangle datosfooterTitulo = new Rectangle(0, datosProducto.Y, 295, 15);
