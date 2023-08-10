@@ -204,6 +204,7 @@ function EliminarCompra(idCompra) {
 
 function NuevaCompra(idCompra) {
 
+
     $.ajax({
         url: rootUrl("/Compras/_Compra"),
         data: { idCompra: idCompra },
@@ -235,10 +236,11 @@ function NuevaCompra(idCompra) {
             initEnterModalNuevaCompra();
             $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });
            
-
+      
 
         },
         error: function (xhr, status) {
+          
             OcultarLoader();
             console.log('Hubo un problema al intentar mostrar el detalle de la compra, contactese con el administrador del sistema');
             console.log(xhr);
@@ -555,6 +557,8 @@ function InicializaElementosCompra() {
 
                     dataToPost = JSON.stringify({ compra: compra });
 
+                    $(".swal-button--confirm").addClass('btn-progress disabled');
+
                     $.ajax({
                         url: rootUrl("/Compras/GuardarCompra"),
                         data: dataToPost,
@@ -564,6 +568,7 @@ function InicializaElementosCompra() {
                         async: true,
                         beforeSend: function (xhr) {
                             ShowLoader("Guardando Compra.");
+                            $(".swal-button--confirm").addClass('btn-progress disabled');
                         },
                         success: function (data) {
                             OcultarLoader();
@@ -580,10 +585,11 @@ function InicializaElementosCompra() {
                             else
                                 MuestraToast("error", data.Mensaje);
 
-
+                            $(".swal-button--confirm").removeClass('btn-progress disabled');
                         },
                         error: function (xhr, status) {
                             OcultarLoader();
+                            $(".swal-button--confirm").removeClass('btn-progress disabled');
                             console.log('Hubo un problema al guardar la compra, contactese con el administrador del sistema');
                             console.log(xhr);
                             console.log(status);
