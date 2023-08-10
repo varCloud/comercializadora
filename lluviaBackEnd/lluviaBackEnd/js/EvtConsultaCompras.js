@@ -204,7 +204,6 @@ function EliminarCompra(idCompra) {
 
 function NuevaCompra(idCompra) {
 
-    $("#btnGuardarCompra").addClass('btn-progress disabled');
 
     $.ajax({
         url: rootUrl("/Compras/_Compra"),
@@ -214,7 +213,6 @@ function NuevaCompra(idCompra) {
         async: true,
         beforeSend: function (xhr) {
             ShowLoader();
-            $("#btnGuardarCompra").addClass('btn-progress disabled');
         },
         success: function (data) {
             OcultarLoader();
@@ -238,11 +236,11 @@ function NuevaCompra(idCompra) {
             initEnterModalNuevaCompra();
             $('#modalNuevaCompra').modal({ backdrop: 'static', keyboard: false, show: true });
            
-            $("#btnGuardarCompra").removeClass('btn-progress disabled');
+      
 
         },
         error: function (xhr, status) {
-            $("#btnGuardarCompra").removeClass('btn-progress disabled');
+          
             OcultarLoader();
             console.log('Hubo un problema al intentar mostrar el detalle de la compra, contactese con el administrador del sistema');
             console.log(xhr);
