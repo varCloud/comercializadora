@@ -336,9 +336,9 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
-        public Cancelacion ObtenerCancelacionFactura(Factura factura)
+        public CancelarCFDI40 ObtenerCancelacionFactura(Factura factura)
         {
-            Cancelacion c = null;
+            CancelarCFDI40 c = null;
             try
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -356,11 +356,11 @@ namespace lluviaBackEnd.DAO
                         var dataCancelacion = rs.ReadFirst();
                         if (dataCancelacion != null)
                         {
-                            c = new Cancelacion();
+                            c = new CancelarCFDI40();
                             c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                             c.RfcEmisor = dataCancelacion.Rfc;
-                            c.Folios = new Folios();
-                            c.Folios.UUID = dataCancelacion.UUID;
+                            c.Folios = new CancelacionFolios();
+                            c.Folios.Folio = new CancelacionFoliosFolio() { UUID = dataCancelacion.UUID, Motivo = "03" };
                         }
 
                     }

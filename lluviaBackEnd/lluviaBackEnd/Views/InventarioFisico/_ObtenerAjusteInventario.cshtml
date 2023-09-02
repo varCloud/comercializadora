@@ -28,6 +28,7 @@ else
                     <th>Cant. Fisico</th>
                     <th>Cant. Sobrante</th>
                     <th>Cant. Faltante</th>
+                    <th>Error Humano</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,8 +77,9 @@ else
 
 
                     </td>
-                    <td>@Html.Raw(c.cantidadEnFisico>c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                    <td>@Html.Raw(c.cantidadEnFisico > c.cantidadActual ? c.cantidadAAjustar : 0)</td>
                     <td>@Html.Raw(c.cantidadEnFisico < c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                    <td>@Html.Raw(c.errorHumano == 1 ? "Si" : "No")</td>
                 </tr>
                 }
             </tbody>

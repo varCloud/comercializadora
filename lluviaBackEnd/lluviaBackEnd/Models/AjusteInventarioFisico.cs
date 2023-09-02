@@ -21,6 +21,7 @@ namespace lluviaBackEnd.Models
         public Decimal totalCompras { get; set; }
         public float porcMerma { get; set; }
 
+        public int errorHumano { get; set; }
 
         public AjusteInventarioFisico()
         {

@@ -47,64 +47,64 @@ else
 
                                     @foreach (lluviaBackEnd.Models.InventarioFisico c in Model)
                                     {
-                                        <tr>
-                                            <td>@c.idInventarioFisico</td>
-                                            <td><input type="text" name="txtNombre_@c.idInventarioFisico" id="txtNombre_@c.idInventarioFisico" onblur="actualizarInventarioFisico(@c.idInventarioFisico,'@c.Nombre',this.value)" style="border: none; border-color: transparent;  background: transparent;" value="@c.Nombre"></td>
-                                            <td>@c.FechaAlta</td>
-                                            <td>@Html.Raw(c.FechaInicio == DateTime.MinValue ? "" : c.FechaInicio.ToString())</td>
-                                            <td>@Html.Raw(c.FechaFin == DateTime.MinValue ? "" : c.FechaFin.ToString())</td>
-                                            <td>@c.Sucursal.descripcion</td>
-                                            <td>
-                                                @{
-                                                    switch (c.EstatusInventarioFisico.idStatus)
-                                                    {
-                                                        case 1:
-                                                            {
-                                                                <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
-                                                            }
-                                                            break;
+                                    <tr>
+                                        <td>@c.idInventarioFisico</td>
+                                        <td><input type="text" name="txtNombre_@c.idInventarioFisico" id="txtNombre_@c.idInventarioFisico" onblur="actualizarInventarioFisico(@c.idInventarioFisico,'@c.Nombre',this.value)" style="border: none; border-color: transparent;  background: transparent;" value="@c.Nombre"></td>
+                                        <td>@c.FechaAlta</td>
+                                        <td>@Html.Raw(c.FechaInicio == DateTime.MinValue ? "" : c.FechaInicio.ToString())</td>
+                                        <td>@Html.Raw(c.FechaFin == DateTime.MinValue ? "" : c.FechaFin.ToString())</td>
+                                        <td>@c.Sucursal.descripcion</td>
+                                        <td>
+                                            @{
+                                                switch (c.EstatusInventarioFisico.idStatus)
+                                                {
+                                                    case 1:
+                                                        {
+                                                            <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                                        }
+                                                        break;
 
-                                                        case 2:
-                                                            {
-                                                                <div class="badge badge-success badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                                    case 2:
+                                                        {
+                                                            <div class="badge badge-success badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
 
-                                                            }
-                                                            break;
+                                                        }
+                                                        break;
 
-                                                        case 3:
-                                                            {
-                                                                <div class="badge badge-warning badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
-                                                            }
-                                                            break;
+                                                    case 3:
+                                                        {
+                                                            <div class="badge badge-warning badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                                        }
+                                                        break;
 
-                                                        case 4:
-                                                            {
-                                                                <div class="badge badge-danger badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
-                                                            }
-                                                            break;
-                                                        default:
-                                                            {
-                                                                <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
-                                                            }
-                                                            break;
-                                                    }
+                                                    case 4:
+                                                        {
+                                                            <div class="badge badge-danger badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                                        }
+                                                        break;
+                                                    default:
+                                                        {
+                                                            <div class="badge badge-light badge-shadow">@c.EstatusInventarioFisico.descripcion</div>
+                                                        }
+                                                        break;
                                                 }
-                                            </td>
-                                            <td>@c.TipoInventario.ToString()</td>
-                                            <td>@c.Observaciones</td>
-                                            <td>
-                                                <div class="buttons">
-                                                    @if (c.EstatusInventarioFisico.idStatus == 1)
-                                                    {
-                                                        <a href="javascript:ActualizarEstatusInventarioFisico(@c.idInventarioFisico,2,'','iniciar');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Iniciar"><i class="far fa-play-circle"></i></a>
-                                                    }
-                                                    @if (c.EstatusInventarioFisico.idStatus >= 2)
-                                                    {
-                                                        <a href="javascript:VerDetalleInventarioFisico(@c.idInventarioFisico,'@c.Nombre');" onclick="ShowLoader()" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Ver"><i class="far fa-eye"></i></a>
-                                                    }
-                                                </div>
-                                            </td>
-                                        </tr>
+                                            }
+                                        </td>
+                                        <td>@c.TipoInventario.ToString()</td>
+                                        <td>@c.Observaciones</td>
+                                        <td>
+                                            <div class="buttons">
+                                                @if (c.EstatusInventarioFisico.idStatus == 1)
+                                                {
+                                                    <a href="javascript:ActualizarEstatusInventarioFisico(@c.idInventarioFisico,2,'','iniciar');" class="btn btn-icon btn-primary" data-toggle="tooltip" title="Iniciar"><i class="far fa-play-circle"></i></a>
+                                                }
+                                                @if (c.EstatusInventarioFisico.idStatus >= 2)
+                                                {
+                                                    <a href="javascript:VerDetalleInventarioFisico(@c.idInventarioFisico,'@c.Nombre');" onclick="ShowLoader()" class="btn btn-icon btn-warning" data-toggle="tooltip" title="Ver"><i class="far fa-eye"></i></a>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>

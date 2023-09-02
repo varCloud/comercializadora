@@ -41,7 +41,7 @@ namespace lluviaBackEnd.Controllers
         public JsonResult CancelarFactura(Factura factura)
         {
             Notificacion<String> notificacion = new Notificacion<String>();
-            Cancelacion c = null;
+            CancelarCFDI40 c = null;
             Sesion UsuarioActual = null;
             try
             {
@@ -56,7 +56,7 @@ namespace lluviaBackEnd.Controllers
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     log4netRequest.Debug("C es diferente de null");
                     string pathFactura = Utils.ObtnerFolder() + @"/";
-                    string documentoOriginal = Utilerias.ManagerSerealization<Cancelacion>.SerealizarToString(c);
+                    string documentoOriginal = Utilerias.ManagerSerealization<CancelarCFDI40>.SerealizarToString(c);
                     log4netRequest.Debug("pathFactura : " + pathFactura);
                     log4netRequest.Debug("Documento a cancelar : " +  documentoOriginal);
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);

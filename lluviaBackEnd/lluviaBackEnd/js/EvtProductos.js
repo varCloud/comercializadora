@@ -709,8 +709,8 @@ function initSelect(item) {
     $('#' + item).val("0").trigger('change');
 }
 
-function AjustarInventarioProducto(idProducto,idUbicacion,cantidadActual) {
-   
+function AjustarInventarioProducto(idProducto,idUbicacion,cantidadActual,btnCheckID) {
+    const id = '#' + btnCheckID + '';
   
     if ($("#cantidadFisico_" + idUbicacion).val()=="") {
         MuestraToast("error", "Capture la cantidad en fisico");
@@ -735,7 +735,7 @@ function AjustarInventarioProducto(idProducto,idUbicacion,cantidadActual) {
    
     $.ajax({
         url: rootUrl("/Productos/AjustaInventarioProductoUbicacion"),
-        data: { idProducto: idProducto, idUbicacion: idUbicacion, cantidadEnFisico: cantidadEnFisico },
+        data: { idProducto: idProducto, idUbicacion: idUbicacion, cantidadEnFisico: cantidadEnFisico, errorHumano: ($(id).prop('checked') == true ? 1 : 0) },
         method: 'post',
         dataType: 'json',
         async: true,
