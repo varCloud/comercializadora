@@ -28,7 +28,8 @@ else
                     <th>Cant. Fisico</th>
                     <th>Cant. Sobrante</th>
                     <th>Cant. Faltante</th>
-                    <th>Error Humano</th>
+                    <th>Ult. Precio Compra</th>
+                    <th>Error de Proceso</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,6 +80,7 @@ else
                     </td>
                     <td>@Html.Raw(c.cantidadEnFisico > c.cantidadActual ? c.cantidadAAjustar : 0)</td>
                     <td>@Html.Raw(c.cantidadEnFisico < c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                    <td>@c.producto.ultimoCostoCompra.ToString("C2")</td>
                     <td>@Html.Raw(c.errorHumano == 1 ? "Si" : "No")</td>
                 </tr>
                 }
