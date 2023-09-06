@@ -62,7 +62,7 @@ namespace lluviaBackEnd.Controllers
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
                     System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta+timeStamp + ".xml", result);
                     AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
-                    if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
+                    if (cancelacion.CodEstatus.ToString().Equals("201"))
                     {
                         factura.estatusFactura = EnumEstatusFactura.Cancelada;
                         factura.mensajeError = "Cancelada correctamente";
@@ -70,7 +70,7 @@ namespace lluviaBackEnd.Controllers
                     else
                     {
                         factura.estatusFactura = EnumEstatusFactura.Cancelada;
-                        factura.mensajeError = "Ocurrio un error al intentar cancelar la factura, codigo error :" + cancelacion.Folios.EstatusUUID;
+                        factura.mensajeError = "Ocurrio un error al intentar cancelar la factura, codigo error :" + cancelacion.CodEstatus;
                     }
                     notificacion = new FacturaDAO().CancelarFactura(factura);
                 }

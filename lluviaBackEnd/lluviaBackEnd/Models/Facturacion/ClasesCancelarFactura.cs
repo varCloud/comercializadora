@@ -140,6 +140,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.Models.Facturacion
 {
@@ -379,37 +380,23 @@ namespace lluviaBackEnd.Models.Facturacion
 
 
 
-
     // NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false , ElementName ="Acuse")]
+    
     public partial class AcuseCancelacionPruebasResponseWS
     {
 
-        private Folios foliosField;
-
         private Signature signatureField;
+
+        private ushort codEstatusField;
 
         private System.DateTime fechaField;
 
         private string rfcEmisorField;
-
-        /// <remarks/>
-       [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
-        public Folios Folios
-        {
-            get
-            {
-                return this.foliosField;
-            }
-            set
-            {
-                this.foliosField = value;
-            }
-        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.w3.org/2000/09/xmldsig#")]
@@ -422,6 +409,20 @@ namespace lluviaBackEnd.Models.Facturacion
             set
             {
                 this.signatureField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public ushort CodEstatus
+        {
+            get
+            {
+                return this.codEstatusField;
+            }
+            set
+            {
+                this.codEstatusField = value;
             }
         }
 
@@ -453,8 +454,6 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
     }
-
-   
 
     /// <remarks/>
     [System.SerializableAttribute()]
@@ -789,12 +788,12 @@ namespace lluviaBackEnd.Models.Facturacion
     public partial class SignatureKeyInfo
     {
 
-        private ulong keyNameField;
+        private string keyNameField;
 
         private SignatureKeyInfoKeyValue keyValueField;
 
         /// <remarks/>
-        public ulong KeyName
+        public string KeyName
         {
             get
             {

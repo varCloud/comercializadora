@@ -346,7 +346,7 @@ namespace lluviaBackEnd.Utilerias
                 else
                 {
                     cancelaCFDITest.enviaAcuseCancelacion envia4 = new cancelaCFDITest.enviaAcuseCancelacion();
-                    envia4.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    result = envia4.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
                     //lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion enviaCancelacion = new lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion();
                     //result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
                 }
@@ -380,6 +380,7 @@ namespace lluviaBackEnd.Utilerias
                 var configuration = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<AcuseCancelacionPruebasResponseWS, AcuseCancelacionProductivoResponseWs>();
+                    cfg.CreateMap<Folio, AcuseFoliosFolio>();
                     cfg.CreateMap<Folios, AcuseFolios>();
                     cfg.CreateMap<lluviaBackEnd.Models.Facturacion.Signature, lluviaBackEnd.Models.Facturacion.Produccion.Signature>();
                     cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfo, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfo>();

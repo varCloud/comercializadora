@@ -387,6 +387,20 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
 
         private string rfcEmisorField;
 
+        private ushort codEstatusField;
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public ushort CodEstatus
+        {
+            get
+            {
+                return this.codEstatusField;
+            }
+            set
+            {
+                this.codEstatusField = value;
+            }
+        }
         /// <remarks/>
         public AcuseFolios Folios
         {
@@ -449,10 +463,33 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public partial class AcuseFolios
     {
+        private List<AcuseFoliosFolio> folioField;
 
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public List<AcuseFoliosFolio> Folio
+        {
+            get
+            {
+                return this.folioField;
+            }
+            set
+            {
+                this.folioField = value;
+            }
+        }
+    }
+
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
+    public partial class AcuseFoliosFolio {
+
+        //private string estatusUUIDField;
+
+        private string motivoField;
         private string uUIDField;
-
-        private byte estatusUUIDField;
 
         /// <remarks/>
         public string UUID
@@ -467,16 +504,16 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
             }
         }
 
-        /// <remarks/>
-        public byte EstatusUUID
+
+        public string Motivo
         {
             get
             {
-                return this.estatusUUIDField;
+                return this.motivoField;
             }
             set
             {
-                this.estatusUUIDField = value;
+                this.motivoField = value;
             }
         }
     }
@@ -906,10 +943,5 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
         }
     }
 
-
-
-
-
-
-
 }
+
