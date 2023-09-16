@@ -710,6 +710,25 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        [HttpGet]
+        public FileStreamResult reportCsv()
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0, idUsuario = UsuarioActual.idUsuario });
+                var result = lluviaCsvHelper.ExportToCSV(notificacion.Modelo);
+                var memoryStream = new MemoryStream(result);
+                return new FileStreamResult(memoryStream, "text/csv") { FileDownloadName = "export.csv" };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+       
+        }
+
 
 
     }

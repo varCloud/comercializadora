@@ -863,23 +863,11 @@ $(document).ready(function () {
     initSelect('claveProdServBusqueda');
     initSelect('claveUnidadBusqueda');
     initSelect('idUnidadCompra');
-    /*
-    $('#claveUnidadBusqueda').select2();
 
-    $('#claveUnidadBusqueda').on('select2:opening select2:closing', function (event) {
-        //var $searchfield = $(this).parent().find('.select2-search__field');
-        var $searchfield = $(this).parent().parent();
-        console.log('$searchfield', $($searchfield).html())
-        $(".select2-search__field").on("keyup", function (e) {
-            console.log(e.keyCode);
-            if (e.keyCode == 13) {
-                alert();
-            }
-        });
+    $('#btn_export').click(function () {
+        console.log(`btn export`)
+        //$.post(rootUrl('/Productos/reportCsv'));
+        window.location.href = rootUrl('/Productos/reportCsv');
     });
-    */
-   
-    
-   
 
 });
