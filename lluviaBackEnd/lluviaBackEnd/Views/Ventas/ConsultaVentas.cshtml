@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="~/assets/bundles/pretty-checkbox/pretty-checkbox.min.css" />
     <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
-
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css" />
+   
 }
 <h2>Editar Ventas</h2>
-
 <div class="row">
     <div class="col-12 col-sm-12 col-lg-12">
         <div class="card">
@@ -46,19 +46,15 @@
 
                         <div class="row">
 
-
                             <div class="col-12 col-sm-12 col-lg-4">
-
                                 <div class="form-group">
                                     <label>Codigo de Barras: </label>
-                                    @Html.TextBoxFor(model => model.codigoBarrasTicket, null, new { @class = "form-control", @id = "codigoBarrasTicket"})
-
+                                    @Html.TextBoxFor(model => model.codigoBarrasTicket, null, new { @class = "form-control", @id = "codigoBarrasTicket" })
                                     @*
-        @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
+                                        @Html.DropDownListFor(model => model.idProducto, new SelectList(lstProductos, "idProducto", "descripcion"), new { id = "idProducto", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un producto", data_val = "true" })
                                     *@
                                 </div>
                             </div>
-
 
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
@@ -85,14 +81,12 @@
                                 <div class="form-group">
                                     <label>Usuario: </label>
                                     @Html.DropDownListFor(model => model.idUsuario, listUsuarios, "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
-
                                 </div>
                             </div>
                             <div class="col-12 col-sm-12 col-lg-4">
                                 <div class="form-group">
                                     <label>Forma de pago: </label>
                                     @Html.DropDownListFor(model => model.idFactFormaPago, new SelectList(lstFormasPago, "id", "descripcion"), "--TODOS--", new { style = "width:100%", @class = "select-multiple", placeholder = "", data_val = "false" })
-
                                 </div>
                             </div>
                         </div>
@@ -107,13 +101,9 @@
     </div>
 </div>
 
-
 <div id="rowConsultaVentas">
     @Html.Action("_ObtenerVentas", "Ventas", new { fechaIni = DateTime.Now, fechaFin = DateTime.Now })
 </div>
-
-
-
 
 
 @*Modal facturacion *@
@@ -127,16 +117,13 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="row">
-
                     <div class="col-lg-7">
                         <div class="section-title"><strong>Cliente: </strong></div>
                         <input type="hidden" id="idVentaIVA" name="idVentaIVA" value="0">
                         <div class="form-group">
                             @Html.DropDownListFor(model => model.idCliente, lstClientes, new { id = "idClienteIVA", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione un cliente", data_val = "true" })
                         </div>
-
 
                         <div class="row">
                             <div class="col-md-12">
@@ -147,17 +134,14 @@
                                         <br>
                                         <br>
                                         <br>
-
                                     </address>
                                 </div>
                             </div>
                         </div>
-
                         <div class="section-title"><strong>Forma de Pago: </strong></div>
                         <div class="form-group">
                             @Html.DropDownListFor(model => model.formaPago, new SelectList(lstFormasPago, "id", "descripcion"), new { id = "formaPago", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
                         </div>
-
 
                         <div id="divUsoCFDI">
                             <div class="section-title"><strong>Uso del CFDI: </strong></div>
@@ -165,9 +149,7 @@
                                 @Html.DropDownListFor(model => model.usoCFDI, new SelectList(lstUsoCFDI, "id", "descripcion"), new { id = "usoCFDI", style = "width:100%", @class = "select-multiple", placeholder = "", data_val_required = "Seleccione una forma de pago", data_val = "true" })
                             </div>
                         </div>
-
                     </div>
-
                     <div class="col-lg-5 text-right">
                         <div class="invoice-detail-item">
                             <div class="invoice-detail-name"><strong>Total de la Venta:</strong></div>
@@ -195,22 +177,16 @@
                             <div class="invoice-detail-name"><strong>Cambio</strong></div>
                             <div class="invoice-detail-value invoice-detail-value-lg" id="cambio" style="color: #ff4d4d"><h4>$0.0</h4></div>
                         </div>
-
                         @*<hr class="mt-2 mb-2">*@
                         <br />
                         <div class="section-title"><strong>Efectivo: </strong></div>
                         <span class="float-right text-muted">
                             <input id="efectivo" type="text" placeholder="Introduzca la cantidad ($) que está recibiendo" class="form-control" onkeypress="return esDecimal(this, event);">
                         </span>
-
                     </div>
-
                 </div>
-
                 <div class="row mt-4">
-
                 </div>
-
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
@@ -219,17 +195,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -246,9 +215,7 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div id="detallesTickets">  </div>
-
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-12">
                         <div class="text-right" style="margin-top:15px;">
@@ -256,14 +223,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 
 @section scripts {
@@ -277,5 +240,8 @@
     <script src="~/assets/js/page/sweetalert.js"></script>
     <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
     <script src="~/js/EvtConsultaVentas.js"></script>
+
+
 }

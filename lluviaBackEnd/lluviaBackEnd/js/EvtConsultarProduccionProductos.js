@@ -50,7 +50,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
                 '             <td>' + dato.descripcionRol + '</td>' +
                 '             <td>' + dato.ultimoCostoCompra + '</td>' +
                 '             <td>' + dato.descTipoMovInventario + '</td>' +
-            '       </tr>';
+                '       </tr>';
         });
 
         html += ' </tbody>' +
@@ -79,7 +79,7 @@ function InitDataTableCargaMercanciaLiquidos() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6,7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
                     },
                 },
             ],
@@ -98,7 +98,7 @@ $("#idRol").on("change", function () {
 
 function InitSelect2Usuarios() {
 
-    var idRol = $('#idRol').val();    
+    var idRol = $('#idRol').val();
     MuestraToast('info', "Actualizando usuarios...");
     $("#idUsuario").val('');
     var result = '';
@@ -144,7 +144,7 @@ function InitSelect2Usuarios() {
                 return "Buscando..";
             }
         }
-       
+
     });
 }
 
@@ -156,13 +156,13 @@ $(document).ready(function () {
     InitRangePicker('rangeCargaMercanciaLiquidos', 'fechaIni', 'fechaFin');
     $('#fechaIni').val($('#rangeCargaMercanciaLiquidos').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     $('#fechaFin').val($('#rangeCargaMercanciaLiquidos').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    $('#idTipoMovimiento').val(32);
     $("#btnLimpiarForm").click(function (evt) {
         $("#frmBuscarCargaMercanciaLiquidos").trigger("reset");
         $('#fechaIni').val('');
         $('#fechaFin').val('');
         $("#frmBuscarCargaMercanciaLiquidos .select-multiple").trigger("change");
     });
-    $("#btnBuscarCargaMercanciaLiquidos").trigger('click');  
+    $("#btnBuscarCargaMercanciaLiquidos").trigger('click');
 });
-
 

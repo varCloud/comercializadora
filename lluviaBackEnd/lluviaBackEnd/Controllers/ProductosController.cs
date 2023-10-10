@@ -668,6 +668,28 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ConsultarProduccionProductos(string idTipoMovimientoInventario, string name, string contact)
+        {
+            try
+            {
+                List<SelectListItem> listRoles = new List<SelectListItem>();
+                listRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
+                listRoles = listRoles.Where(c => (c.Value == "12") || (c.Value == "13")).ToList();
+                listRoles.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                List<SelectListItem> lstUsuarios = new List<SelectListItem>();
+                lstUsuarios.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                ViewBag.lstRoles = listRoles;
+                ViewBag.lstUsuarios = lstUsuarios;
+                ViewBag.Title = "Produccion_Trapeadores";
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public ActionResult ConsultarUsuariosLiquidos(int idRol)
         {

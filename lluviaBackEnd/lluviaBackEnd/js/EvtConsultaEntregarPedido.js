@@ -322,6 +322,7 @@ function eliminaArchivo(rutaArchivo) {
 
 
 function VerTicket(idVenta) {
+    console.log('Ver ticket')
     $.ajax({
         url: rootUrl("/Ventas/VerTicket"),
         data: { idVenta: idVenta },
@@ -332,6 +333,7 @@ function VerTicket(idVenta) {
             ShowLoader()
         },
         success: function (data) {
+            debugger
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
             console.log(data);

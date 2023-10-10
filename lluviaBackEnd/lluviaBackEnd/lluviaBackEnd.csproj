@@ -250,6 +250,7 @@
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
     <Compile Include="Controllers\ProduccionAgranelController.cs" />
+    <Compile Include="Controllers\ProduccionProductos\ProduccionProductosController.cs" />
     <Compile Include="Controllers\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarController.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
     <Compile Include="DAO\PedidosEspecialesDAO.cs" />
     <Compile Include="DAO\ProcesoProduccionAgranelDAO.cs" />
+    <Compile Include="DAO\ProduccionProductos\ProduccionProductosDAO.cs" />
     <Compile Include="DAO\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarDAO.cs" />
     <Compile Include="DAO\TareasProgramadasDAO.cs" />
     <Compile Include="DAO\VentasDAO.cs" />
@@ -321,6 +323,7 @@
     <Compile Include="Models\PedidosEspecialesV2.cs" />
     <Compile Include="Models\Permiso.cs" />
     <Compile Include="Models\PedidosInternosDetalle.cs" />
+    <Compile Include="Models\ProduccionProductos\ProduccionProductosModel.cs" />
     <Compile Include="Models\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarModel.cs" />
     <Compile Include="Models\ProductosDevueltosPedidoEspecial.cs" />
     <Compile Include="Models\Sucursal.cs" />
@@ -434,6 +437,7 @@
     <Compile Include="WebServices\WsLoginController.cs" />
     <Compile Include="WebServices\Modelos\RequestLogin.cs" />
     <Compile Include="WebServices\WsPedidosEspecialesController.cs" />
+    <Compile Include="WebServices\WsProduccionTrapeadoresController.cs" />
     <Compile Include="WebServices\WsProductosController.cs" />
     <Compile Include="WebServices\WsProveedorController.cs" />
   </ItemGroup>
@@ -1163,6 +1167,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\EvtConsultarProduccionProductos.js" />
     <Content Include="js\EvtAperturaCaja.js" />
     <Content Include="js\evtCierreCajas.js" />
     <Content Include="js\evtCierreCajasPedidosEspeciales.js" />
@@ -1184,6 +1189,7 @@
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\EvtProcesoProduccionAgranel.js" />
+    <Content Include="js\EvtProduccionProductos.js" />
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
     <Content Include="js\evtReporteCostoProduccion.js" />
@@ -1456,6 +1462,8 @@
     <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\ProductosAgranelAEnvasar.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\_ObtenerCombinacionProductos.cshtml" />
+    <Content Include="Views\Productos\ConsultarProduccionProductos.cshtml" />
+    <Content Include="Views\ProduccionProductos\ProduccionProductos.cshtml" />
     <None Include="Web References\cancelaCFDITest\cancelaCFDI.wsdl" />
     <Content Include="Web References\cancelaCFDITest\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>

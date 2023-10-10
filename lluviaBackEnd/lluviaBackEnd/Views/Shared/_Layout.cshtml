@@ -11,7 +11,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Lluvia Artículos de Limpieza</title>
-
     <link rel="stylesheet" href="~/assets/css/app.min.css">
     <link rel="stylesheet" href="~/assets/bundles/izitoast/css/iziToast.min.css" />
     <link rel="stylesheet" href="~/assets/css/style.css">
@@ -38,13 +37,23 @@
             return x;
         };
     </script>
+    <style>
+
+        .menu-item {
+            font-size: 13px !important;
+            margin-left:0;
+        }
+        .sub-menu-item-active {
+            background-color: rgba(146,144,144,0.28) !important;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     <div id="loader-lluvia">
         <div class="loader-lluvia"></div>
         <span id="textLoader">Cargando ...</span>
     </div>
-
     <div class="loader"></div>
     <div id="app">
         <div class="main-wrapper main-wrapper-1">
@@ -69,7 +78,6 @@
                                  class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right pullDown">
-
                             <a href="@Url.Action("CerrarSesion","DashBoard")" class="dropdown-item has-icon text-danger">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
@@ -78,7 +86,6 @@
                     </li>
                 </ul>
             </nav>
-
             <div class="main-sidebar sidebar-style-2">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
@@ -87,12 +94,11 @@
                         @*</a>*@
                     </div>
                     <div class="sidebar-user">
-
                         <div class="sidebar-user-details">
                             <div class="user-name">@sesion.nombre @sesion.apellidoPaterno @sesion.apellidoMaterno</div>
                             <div class="user-role">@sesion.Rol</div>
                             <div class="user-role">@sesion.macAdress</div>
-                            
+
                         </div>
                     </div>
                     <ul class="sidebar-menu">
@@ -104,7 +110,6 @@
                                 </a>
                             </li>
                         }
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Usuarios && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             <li class="@(ViewBag.Title.ToString() == "Usuarios" ? "dropdown active" : "")">
@@ -121,7 +126,6 @@
                                 </a>
                             </li>
                         }
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Proveedores && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             <li class="@(ViewBag.Title.ToString() == "Proveedores" ? "dropdown active" : "")">
@@ -138,12 +142,12 @@
                                 </a>
                             </li>
                             @*<li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
-                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
-                </ul>
-            </li>*@
+                                    <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
+                                    </ul>
+                                </li>*@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
@@ -162,11 +166,9 @@
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas Canceladas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentasCanceladas", "Ventas")">Ventas Canceladas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Facturas" ? "dropdown active" : "")" href="@Url.Action("Facturas", "Factura")">Facturas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Retiros" ? "dropdown active" : "")" href="@Url.Action("Retiros", "Ventas")">Retiros de Efectivo</a></li>
-
                                 </ul>
                             </li>
                         }
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PedidosEspeciales && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             string abrir = string.Empty;
@@ -175,7 +177,7 @@
                                 abrir = "display: block;";
                             }
 
-                            <li class="dropdown">
+                            <li class="dropdown @(ViewBag.Title.ToString() == "Pedidos_Especiales" ? "dropdown active" : "")">
                                 <a href="#" class="menu-toggle nav-link has-dropdown @abrir"><i data-feather="clipboard"></i><span>Pedidos Especiales</span></a>
                                 <ul class="dropdown-menu" style="@abrir">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Pedidos Especiales" ? "dropdown active" : "")" href="@Url.Action("PedidosEspeciales", "PedidosEspecialesV2")">Nuevo Pedido</a></li>
@@ -189,7 +191,6 @@
                                 </ul>
                             </li>
                         }
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Clientes && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
                             string disponible = string.Empty;
@@ -207,11 +208,10 @@
                                 </ul>
                             </li>
                         }
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Productos && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
 
-                            <li class="dropdown">
+                            <li class=" dropdown @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")">
                                 <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
                                 <ul class="dropdown-menu">
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
@@ -219,12 +219,12 @@
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Ubicaciones" ? "dropdown active" : "")" href="@Url.Action("Ubicaciones", "Productos")">Imprimir Ubicaciones</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Codigos de Barras" ? "dropdown active" : "")" href="@Url.Action("CodigosDeBarras", "Productos")">Códigos de Barras</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "LimitesInventario" ? "dropdown active" : "")" href="@Url.Action("LimitesInventario", "Productos")">Límites Inventario</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "LimitesInventario" ? "dropdown active" : "")" href="@Url.Action("ProductosAgranelAEnvasar", "ProductosAgranelAEnvasar")">Relacion de Productos</a></li>
-                                    
+                                    <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos" ? "sub-menu-item-active" : "")" href="@Url.Action("ProductosAgranelAEnvasar", "ProductosAgranelAEnvasar")">Relacion de Productos</a></li>
+                                    <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos_Trapeadores" ? "sub-menu-item-active" : "")" href="@Url.Action("ProduccionProductos", "ProduccionProductos")">Rel. Productos Trapeadores</a></li>
+
                                 </ul>
                             </li>
                         }
-
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Liquidos && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
@@ -232,12 +232,19 @@
                             <li class="@(ViewBag.Title.ToString() == "Liquidos" ? "dropdown active" : "")">
                                 <a href="@Url.Action("ConsultarLiquidos", "Productos")">
                                     <i data-feather="droplet"></i><span>Producción Líquidos</span>
-
                                 </a>
                             </li>
                         }
 
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Liquidos && p.tienePermiso) && !ExisteInventarioFisicoActivo)
+                        {
 
+                            <li class="@(ViewBag.Title.ToString() == "Produccion_Trapeadores" ? "dropdown active" : "")">
+                                <a href="@Url.Action("ConsultarProduccionProductos", "Productos" ,  new { idTipoMovimientoInventario=32, name = "John", contact = "calgary, vancouver" })">
+                                    <i class="fas fa-broom menu-item"></i><span>Producción Trapeadores</span>
+                                </a>
+                            </li>
+                        }
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_InventarioFisico && p.tienePermiso))
                         {
@@ -248,16 +255,14 @@
                             </li>
                         }
 
-
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PRODUCCION_AGRANEL && p.tienePermiso))
                         {
                             <li class="@(ViewBag.Title.ToString() == "Producción Agranel" ? "dropdown active" : "")">
-                                <a href="@Url.Action("ProduccionAgranel", "ProduccionAgranel")">
+                                <a href="@Url.Action("CostoProduccionAgranel", "Reportes")">
                                     <i data-feather="filter"></i><span>Consumo de MPL</span>
                                 </a>
                             </li>
                         }
-
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Bitacoras && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
@@ -275,7 +280,7 @@
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Inventario" ? "dropdown active" : "")" href="@Url.Action("Inventario", "Reportes")">Inventario</a></li>
                                     @*<li><a class="nav-link @(ViewBag.Title.ToString() == "InventarioFisico" ? "dropdown active" : "")" href="@Url.Action("InventarioFisico", "Reportes")">InventarioFisico</a></li>*@
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Merma" ? "dropdown active" : "")" href="@Url.Action("Merma", "Reportes")">Merma</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Costo de Producción Agranel" ? "dropdown active" : "")" href="@Url.Action("CostoProduccionAgranel", "Reportes")">Proceso Producción</a></li>
+                                    <li>@*<a class="nav-link @(ViewBag.Title.ToString() == "Costo de Producción Agranel" ? "dropdown active" : "")" href="@Url.Action("CostoProduccionAgranel", "Reportes")">Proceso Producción</a>*@</li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Reportes")">Compras</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Reportes")">Ventas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Cierres" ? "dropdown active" : "")" href="@Url.Action("Cierres", "Reportes")">Cierres de Caja</a></li>
@@ -291,7 +296,6 @@
                                 </ul>
                             </li>
                         }
-
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Facturación</span></a>
                             <ul class="dropdown-menu" style="display: block;">
@@ -307,11 +311,9 @@
                                 </li>
                             </ul>
                         </li>
-
                     </ul>
                 </aside>
             </div>
-
             <div class="main-content">
                 @RenderBody()
                 <hr />
@@ -340,7 +342,6 @@
     <!-- Custom JS File -->
     <script src="~/assets/js/custom.js"></script>
     <script src="~/js/Index.js"></script>
-
     @RenderSection("scripts", required: false)
 </body>
 </html>

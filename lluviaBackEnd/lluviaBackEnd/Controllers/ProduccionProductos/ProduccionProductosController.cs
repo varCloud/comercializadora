@@ -1,5 +1,7 @@
-﻿using lluviaBackEnd.DAO.ProductosAgranelAEnvasar;
+﻿using lluviaBackEnd.DAO.ProduccionProductos;
+using lluviaBackEnd.DAO.ProductosAgranelAEnvasar;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.Models.ProduccionProductos;
 using lluviaBackEnd.WebServices.Modelos;
 using Newtonsoft.Json;
 using System;
@@ -8,24 +10,24 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace lluviaBackEnd.Controllers.ProductosAgranelAEnvasar
+namespace lluviaBackEnd.Controllers.ProduccionProductos
 {
-    public class ProductosAgranelAEnvasarController : Controller
+    public class ProduccionProductosController : Controller
     {
         // GET: ProductosAgranelAEnvasar
-        public ActionResult ProductosAgranelAEnvasar()
+        public ActionResult ProduccionProductos()
         {
-            ViewBag.data = new ProductosAgranelAEnvasarDAO().ObtenerProductos().Modelo;
-            ViewBag.combinaciones = (new ProductosAgranelAEnvasarDAO().ObtenerCombinaciones()).Modelo;
-            return View(new ProductosAgranelAEnvasarModel());
+            ViewBag.data = new ProduccionProductosDAO().ObtenerProductos().Modelo;
+            ViewBag.combinaciones = (new ProduccionProductosDAO().ObtenerCombinaciones()).Modelo;
+            return View(new ProduccionProductosModel());
         }
-        
+
         [HttpGet]
         public JsonResult ObtenerProductos()
         {
             try
             {
-                Notificacion<Dictionary<string,object>> notificacion = new ProductosAgranelAEnvasarDAO().ObtenerProductos();
+                Notificacion<Dictionary<string, object>> notificacion = new ProductosAgranelAEnvasarDAO().ObtenerProductos();
                 return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

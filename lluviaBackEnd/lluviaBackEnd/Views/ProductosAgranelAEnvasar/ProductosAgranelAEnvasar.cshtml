@@ -1,6 +1,7 @@
 ﻿@using lluviaBackEnd.Models;
 @{
-    ViewBag.Title = "Relacion Productos Proceso Produccion";
+    ViewBag.Title = "Productos";
+    ViewBag.SubTitle = "Relacion_de_Productos";
     List<SelectListItem> dataAgranel = (List<SelectListItem>)ViewBag.data["dataAgranel"];
 }
 
@@ -51,48 +52,55 @@
                 new { id = "frmRelacion" }))
                 {
 
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-4">
-                            <div class=" form-group ">
-                                <label>Materia Prima / Liquidos</label>
-                                @Html.HiddenFor(x => x.idRelacionEnvasadoAgranel, new { @id = "idRelacionEnvasadoAgranel" })
-                                @Html.DropDownListFor(x => x.idProductoAgranel, dataAgranel, null, new { @class = "form-control select-multiple", @id = "idProductoAgranel", })
-                                @Html.ValidationMessageFor(x => x.idProductoAgranel, null, new { @class = "text-danger was" })
-                            </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class=" form-group ">
+                            <label>Linea de Producto</label>
+                            @Html.HiddenFor(x => x.idRelacionEnvasadoAgranel, new { @id = "idRelacionEnvasadoAgranel" })
+                            @Html.DropDownListFor(x => x.idProductoAgranel, dataAgranel, null, new { @class = "form-control select-multiple", @id = "idProductoAgranel", })
+                            @Html.ValidationMessageFor(x => x.idProductoAgranel, null, new { @class = "text-danger was" })
                         </div>
-
-                        <div class="form-group col-lg-4">
-                            <label>Producto a Envasar</label>
-                            @Html.DropDownListFor(x => x.idProductoEnvasado, (List<SelectListItem>)ViewBag.data["dataEnvasado"], null, new { @class = "form-control select-multiple", id = "idProductoEnvasado", })
-                            @Html.ValidationMessageFor(x => x.idProductoEnvasado, null, new { @class = "text-danger was" })
-                        </div>
-                        <div class="form-group col-lg-4">
-                            <label>Envase</label>
-                            @Html.DropDownListFor(x => x.idProducoEnvase, (List<SelectListItem>)ViewBag.data["dataEnvases"], null, new { @class = "form-control select-multiple", id = "idProducoEnvase", })
-                            @Html.ValidationMessageFor(x => x.idProducoEnvase, null, new { @class = "text-danger was" })
-                        </div>
-                        <div class="form-group col-lg-4">
-                            <label>Unidad de Medida</label>
-                            @Html.DropDownListFor(x => x.idUnidadMedidad, (List<SelectListItem>)ViewBag.data["dataUnidadesMedida"], null, new { @class = "form-control select-multiple", id = "idUnidadMedidad", })
-                            @Html.ValidationMessageFor(x => x.idUnidadMedidad, null, new { @class = "text-danger was" })
-                        </div>
-                        <div class="form-group col-lg-4">
-                            <label>Unidad de Medida</label>
-                            @Html.HiddenFor(x => x.valorUnidadMedidaConverter, new { @id = "valorUnidadMedidaConverter" })
-                            @Html.TextBoxFor(x => x.valorUnidadMedida, null, new { @class = "form-control", @id = "valorUnidadMedida", onkeypress = "return esDecimal(this, event);" })
-                            @Html.ValidationMessageFor(x => x.valorUnidadMedida, null, new { @class = "text-danger was" })
-                        </div>
-                        <div class="form-group col-lg-2">
-                            <label>&nbsp;</label>
-                            <span id="unidadMedidaConverter" class="form-control">0</span>
-                        </div>
-                        <div class="text-left col-lg-auto form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" id="btnBuscar" class="btn btn-success form-control">Agregar</button>
-                            <button type="reset" id="btnReset" class="btn btn-success" style="display:none">btnReset</button>
-                        </div>
-
                     </div>
+
+                    <div class="col-12 col-sm-12 col-lg-4">
+                        <div class=" form-group ">
+                            <label>Materia Prima</label>
+                            @Html.HiddenFor(x => x.idRelacionEnvasadoAgranel, new { @id = "idRelacionEnvasadoAgranel" })
+                            @Html.DropDownListFor(x => x.idProductoAgranel, dataAgranel, null, new { @class = "form-control select-multiple", @id = "idProductoAgranel", })
+                            @Html.ValidationMessageFor(x => x.idProductoAgranel, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-4">
+                        <label>Producto a Envasar</label>
+                        @Html.DropDownListFor(x => x.idProductoEnvasado, (List<SelectListItem>)ViewBag.data["dataEnvasado"], null, new { @class = "form-control select-multiple", id = "idProductoEnvasado", })
+                        @Html.ValidationMessageFor(x => x.idProductoEnvasado, null, new { @class = "text-danger was" })
+                    </div>
+                    <div class="form-group col-lg-4">
+                        <label>Envase</label>
+                        @Html.DropDownListFor(x => x.idProducoEnvase, (List<SelectListItem>)ViewBag.data["dataEnvases"], null, new { @class = "form-control select-multiple", id = "idProducoEnvase", })
+                        @Html.ValidationMessageFor(x => x.idProducoEnvase, null, new { @class = "text-danger was" })
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label>Unidad de Medida</label>
+                        @Html.DropDownListFor(x => x.idUnidadMedidad, (List<SelectListItem>)ViewBag.data["dataUnidadesMedida"], null, new { @class = "form-control select-multiple", id = "idUnidadMedidad", })
+                        @Html.ValidationMessageFor(x => x.idUnidadMedidad, null, new { @class = "text-danger was" })
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label>Unidad de Medida</label>
+                        @Html.HiddenFor(x => x.valorUnidadMedidaConverter, new { @id = "valorUnidadMedidaConverter" })
+                        @Html.TextBoxFor(x => x.valorUnidadMedida, null, new { @class = "form-control", @id = "valorUnidadMedida", onkeypress = "return esDecimal(this, event);" })
+                        @Html.ValidationMessageFor(x => x.valorUnidadMedida, null, new { @class = "text-danger was" })
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label>&nbsp;</label>
+                        <span id="unidadMedidaConverter" class="form-control">0</span>
+                    </div>
+                    <div class="text-left col-lg-auto form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" id="btnBuscar" class="btn btn-success form-control">Agregar</button>
+                        <button type="reset" id="btnReset" class="btn btn-success" style="display:none">btnReset</button>
+                    </div>
+                </div>
                 }
             </div>
         </div>
