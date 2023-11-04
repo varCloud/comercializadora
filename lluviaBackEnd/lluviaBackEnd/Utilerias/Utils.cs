@@ -1,5 +1,4 @@
-﻿using ImageMagick;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using lluviaBackEnd.Models;

@@ -204,8 +204,8 @@ namespace lluviaBackEnd.Controllers
 
                         Task.Factory.StartNew(() =>
                         {
-                            if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura, string.Empty);
+                            //if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                            //    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura, string.Empty);
                         });
 
 

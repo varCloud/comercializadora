@@ -12,7 +12,7 @@ namespace lluviaBackEnd.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -30,6 +30,16 @@ namespace lluviaBackEnd.Properties {
         public string lluviaBackEnd_cancelaCFDITest_enviaAcuseCancelacion {
             get {
                 return ((string)(this["lluviaBackEnd_cancelaCFDITest_enviaAcuseCancelacion"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.edifactmx-pac.com:443/serviceCFDI4/cancelaCFDI.php")]
+        public string lluviaBackEnd_cancelaCFDI4Prod_enviaAcuseCancelacion {
+            get {
+                return ((string)(this["lluviaBackEnd_cancelaCFDI4Prod_enviaAcuseCancelacion"]));
             }
         }
     }

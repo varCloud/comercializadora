@@ -339,7 +339,7 @@ namespace lluviaBackEnd.Utilerias
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
 
-                    lluviaBackEnd.Models.Facturacion.Produccion.enviaAcuseCancelacion envia = new Models.Facturacion.Produccion.enviaAcuseCancelacion();
+                    cancelaCFDI4Prod.enviaAcuseCancelacion envia = new cancelaCFDI4Prod.enviaAcuseCancelacion();
                     result = envia.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
 
                 }
@@ -347,8 +347,6 @@ namespace lluviaBackEnd.Utilerias
                 {
                     cancelaCFDITest.enviaAcuseCancelacion envia4 = new cancelaCFDITest.enviaAcuseCancelacion();
                     result = envia4.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
-                    //lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion enviaCancelacion = new lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion();
-                    //result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
                 }
             }
             catch (Exception ex)
