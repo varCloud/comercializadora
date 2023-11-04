@@ -25,5 +25,17 @@ namespace lluviaBackEnd.WebServices
             }
 
         }
+
+        public Notificacion<object> ObtenerProduccionProductos(FiltroLiquidos request)
+        {
+            try
+            {
+                return new InventarioDAO().ObtenerProducionProductos(request);
+            }
+            catch (Exception exception1)
+            {
+                return WsUtils<object>.RegresaExcepcion(exception1, null);
+            }
+        }
     }
 }

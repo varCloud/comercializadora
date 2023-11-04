@@ -55,8 +55,8 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class=" form-group ">
                                 <label>Producto Mantra</label>
-                                @Html.HiddenFor(x => x.id, new { @id = "idRelacionEnvasadoAgranel" })
-                                @Html.DropDownListFor(x => x.idProductoMateria1, (List<SelectListItem>)ViewBag.data["dataMatra"], null, new { @class = "form -control select-multiple", @id = "idProductoAgranel", })
+                                @Html.HiddenFor(x => x.id, new { @id = "idRelacion" })
+                                @Html.DropDownListFor(x => x.idProductoMateria1, (List<SelectListItem>)ViewBag.data["dataMatra"], null, new { @class = "form -control select-multiple", @id = "idProductoMateria1", })
                                 @Html.ValidationMessageFor(x => x.idProductoMateria1, null, new { @class = "text-danger was" })
                             </div>
                         </div>
@@ -64,13 +64,13 @@
                         <div class="col-12 col-sm-12 col-lg-4">
                             <div class=" form-group ">
                                 <label>Baston</label>
-                                @Html.DropDownListFor(x => x.idProductoMateria2, (List<SelectListItem>)ViewBag.data["dataBastones"], null, new { @class = "form -control select-multiple", @id = "idProductoAgranel", })
+                                @Html.DropDownListFor(x => x.idProductoMateria2, (List<SelectListItem>)ViewBag.data["dataBastones"], null, new { @class = "form -control select-multiple", @id = "idProductoMateria2", })
                                 @Html.ValidationMessageFor(x => x.idProductoMateria2, null, new { @class = "text-danger was" })
                             </div>
                         </div>
                         <div class="form-group col-lg-4">
                             <label>Trapeador a fabricar</label>
-                            @Html.DropDownListFor(x => x.idProductoProduccion, (List<SelectListItem>)ViewBag.data["dataTrapeadores"], null, new { @class = "form-control select-multiple", id = "idProductoEnvasado", })
+                            @Html.DropDownListFor(x => x.idProductoProduccion, (List<SelectListItem>)ViewBag.data["dataTrapeadores"], null, new { @class = "form-control select-multiple", id = "idProductoProduccion", })
                             @Html.ValidationMessageFor(x => x.idProductoProduccion, null, new { @class = "text-danger was" })
                         </div>
                         <div class="form-group col-lg-3">
@@ -114,7 +114,7 @@
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
     @*<script src="~/assets/js/page/sweetalert.js"></script>*@
-    <script src="~/js/EvtProcesoProduccionAgranel.js"></script>
+    <script src="~/js/EvtProduccionProductos.js"></script>
 }
 
 <style>

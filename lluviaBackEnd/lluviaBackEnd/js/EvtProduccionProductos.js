@@ -28,7 +28,7 @@ function onSuccessResultRelacion(data) {
 
 function ObtenerCombinacionProductos() {
     $.ajax({
-        url: rootUrl("/ProductosAgranelAEnvasar/_ObtenerCombinacionProductos"),
+        url: rootUrl("/ProduccionProductos/_ObtenerCombinacionProduccionProductos"),
         data: { idCliente: 0 },
         method: 'post',
         dataType: 'html',
@@ -138,12 +138,12 @@ function initTblProductos() {
 
 function resetForm() {
     $('.field-validation-error').html("");
-    $("#idProductoAgranel").val("").trigger('change');
-    $("#idProductoEnvasado").val("").trigger('change');
-    $("#idProducoEnvase").val("").trigger('change');
+    $("#idProductoMateria1").val("").trigger('change');
+    $("#idProductoMateria2").val("").trigger('change');
+    $("#idProductoProduccion").val("").trigger('change');
     $("#idUnidadMedidad").val("").trigger('change');
     $('#btnReset').trigger('click');
-    $('#idRelacionEnvasadoAgranel').val('0');
+    $('#idRelacion').val('0');
     $('#unidadMedidaConverter').html('');
 }
 
@@ -159,8 +159,9 @@ function InitBtnAgregar() {
 function initEvents() {
 
     $("#valorUnidadMedida").keyup(function (e) {
+        console.log($('#idUnidadMedidad').val())
         console.log("keyup", _esDecimal($(this), event), $(this))
-        const unidadMedidaConverterDesc = $('#lstUnidadesMedida').val() == 2 ? 'K' : 'L'
+        const unidadMedidaConverterDesc = getSuffix()
         if (!_esDecimal(this, event)) {
             if (e.which == 13) {
                 console.log($("#valorUnidadMedida").val())
@@ -168,6 +169,7 @@ function initEvents() {
         }
         if ($("#valorUnidadMedida").val()) {
             const value = Number($("#valorUnidadMedida").val()) / CONVERSION_DE_UNIDADES
+            console.log(value)
             $('#unidadMedidaConverter').html(`${value} (${unidadMedidaConverterDesc})`);
             $("#valorUnidadMedidaConverter").val(value)
         } else {//si esta limpio el control
@@ -185,15 +187,16 @@ function initEvents() {
 
 function EditarRelacion(data, accion) {
     resetForm();
+    console.log(`data`, data)
     disabledForm(accion === 'ver')
     $('#TituloModalRelacion').html((accion === 'ver' ? 'Relacion de productos ' : "Actualizar Relacion"));
-    $("#idProductoAgranel").val(data.idProductoAgranel).trigger('change');
-    $("#idProductoEnvasado").val(data.idProductoEnvasado).trigger('change');
-    $("#idProducoEnvase").val(data.idProducoEnvase).trigger('change');
+    $("#idProductoMateria1").val(data.idProductoMateria1).trigger('change');
+    $("#idProductoMateria2").val(data.idProductoMateria2).trigger('change');
+    $("#idProductoProduccion").val(data.idProductoProduccion).trigger('change');
     $("#idUnidadMedidad").val(data.idUnidadMedidad).trigger('change');
-    $('#idRelacionEnvasadoAgranel').val(data.idRelacionEnvasadoAgranel);
+    $('#idRelacion').val(data.idRelacion);
     $('#valorUnidadMedida').val(Number(data.valorUnidadMedida) * CONVERSION_DE_UNIDADES);
-    $('#unidadMedidaConverter').html(data.valorUnidadMedida);
+    $('#unidadMedidaConverter').html(`${data.valorUnidadMedida} (${getSuffix()})` );
     $('#mdlAgregarRelacionProceso').modal({ backdrop: 'static', keyboard: false, show: true });
 }
 
@@ -221,13 +224,13 @@ function EliminarRelacion(id) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: rootUrl("/ProductosAgranelAEnvasar/DesactivarCombinacionProductosEnvasadosAgranel"),
-                    data: { idRelacionEnvasadoAgranel: id },
+                    url: rootUrl("/ProduccionProductos/DesactivarCombinacionProduccionProductos"),
+                    data: { idProductoProduccion: id },
                     method: 'post',
                     dataType: 'json',
                     async: true,
                     beforeSend: function (xhr) {
-                        ShowLoader("cargando clientes ...")
+                        ShowLoader("eliminando relacion...")
                     },
                     success: function (data) {
                         console.log(data.Mensaje)
@@ -259,3 +262,17 @@ $(document).ready(function () {
 });
 
 
+const getSuffix = () => {
+
+    const value = $('#idUnidadMedidad').val()
+    switch (value) {
+        case '1' :
+            return 'Kg'
+            break;
+        case '2' :
+            return 'Gr'
+            break;
+
+        default:
+    }
+}

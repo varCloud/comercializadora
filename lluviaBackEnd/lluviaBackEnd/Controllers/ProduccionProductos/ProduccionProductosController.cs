@@ -22,81 +22,72 @@ namespace lluviaBackEnd.Controllers.ProduccionProductos
             return View(new ProduccionProductosModel());
         }
 
+        public ActionResult _ObtenerCombinacionProduccionProductos()
+        {
+            try
+            {
+                Notificacion<List<ProduccionProductosModel>> notificacion = new ProduccionProductosDAO().ObtenerCombinaciones();
+                return this.PartialView("_ObtenerCombinacionProduccionProductos", notificacion.Modelo);
+            }
+            catch (Exception exception)
+            {
+                return base.Json(WsUtils<string>.RegresaExcepcion(exception, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DesactivarCombinacionProduccionProductos(int idProductoProduccion)
+        {
+            try
+            {
+                Notificacion<string> data = new ProduccionProductosDAO().DesactivarCombinacionProductosProduccionProductos(idProductoProduccion);
+                return base.Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                return base.Json(WsUtils<string>.RegresaExcepcion(exception, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult GuardarRelacionProductos(ProduccionProductosModel request)
+        {
+            try
+            {
+                Notificacion<string> data = new ProduccionProductosDAO().AgregarCombinacionesProduccionProductos(request);
+                return base.Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                return base.Json(WsUtils<string>.RegresaExcepcion(exception, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerCombinacionProduccionProductos()
+        {
+            try
+            {
+                Notificacion<List<ProduccionProductosModel>> notificacion = new ProduccionProductosDAO().ObtenerCombinaciones();
+                return base.Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception exception)
+            {
+                return base.Json(WsUtils<string>.RegresaExcepcion(exception, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpGet]
         public JsonResult ObtenerProductos()
         {
             try
             {
-                Notificacion<Dictionary<string, object>> notificacion = new ProductosAgranelAEnvasarDAO().ObtenerProductos();
-                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+                Notificacion<Dictionary<string, object>> notificacion = new ProduccionProductosDAO().ObtenerProductos();
+                return base.Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-
-                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+                return base.Json(WsUtils<string>.RegresaExcepcion(exception, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
             }
-
-        }
-
-        [HttpGet]
-        public JsonResult ObtenerCombinacionProductos()
-        {
-            try
-            {
-                Notificacion<List<ProductosAgranelAEnvasarModel>> notificacion = new ProductosAgranelAEnvasarDAO().ObtenerCombinaciones();
-                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-
-                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public ActionResult _ObtenerCombinacionProductos()
-        {
-            try
-            {
-                Notificacion<List<ProductosAgranelAEnvasarModel>> notificacion = new ProductosAgranelAEnvasarDAO().ObtenerCombinaciones();
-                return PartialView("_ObtenerCombinacionProductos", notificacion.Modelo);
-            }
-            catch (Exception ex)
-            {
-
-                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public ActionResult GuardarRelacionProductos(ProductosAgranelAEnvasarModel request)
-        {
-            try
-            {
-                Notificacion<string> notificacion = new ProductosAgranelAEnvasarDAO().AgregarCombinacionesMPL(request);
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-
-                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
-            }
-
-        }
-        [HttpPost]
-        public JsonResult DesactivarCombinacionProductosEnvasadosAgranel(int idRelacionEnvasadoAgranel)
-        {
-            try
-            {
-                Notificacion<string> notificacion = new ProductosAgranelAEnvasarDAO().DesactivarCombinacionProductosEnvasadosAgranel(idRelacionEnvasadoAgranel);
-                return Json(notificacion, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-
-                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
-            }
-
         }
     }
 }

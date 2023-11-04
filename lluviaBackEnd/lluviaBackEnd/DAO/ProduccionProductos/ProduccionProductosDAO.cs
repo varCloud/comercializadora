@@ -9,29 +9,33 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.Models.ProduccionProductos;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using ZXing;
+
 namespace lluviaBackEnd.DAO.ProduccionProductos
 {
     public class ProduccionProductosDAO
     {
         private IDbConnection db;
 
-        public Notificacion<string> AgregarCombinacionesMPL(ProductosAgranelAEnvasarModel request)
+        public Notificacion<string> AgregarCombinacionesProduccionProductos(ProduccionProductosModel request)
         {
             Notificacion<string> notificacion = new Notificacion<string>();
             try
             {
-                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                using (this.db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
                 {
-                    var parameters = new DynamicParameters();
-
-                    parameters.Add("@idRelacionEnvasadoAgranel", request.idRelacionEnvasadoAgranel);
-                    parameters.Add("@idProductoEnvasado", request.idProductoEnvasado);
-                    parameters.Add("@idProductoAgranel", request.idProductoAgranel);
-                    parameters.Add("@idProducoEnvase", request.idProducoEnvase);
-                    parameters.Add("@unidadMedidad", request.unidadMedidad);
-                    parameters.Add("@valorUnidadMedida", Convert.ToSingle(request.valorUnidadMedidaConverter));
-                    parameters.Add("@idUnidadMedida", request.idUnidadMedidad);
-                    var result = db.QueryMultiple("SP_AGREGA_ACTUALIZA_COMBINACION_PRODUCTOS_ENSAVDOS_A_AGRANEL", parameters, commandType: CommandType.StoredProcedure);
+                    DynamicParameters param = new DynamicParameters();
+                    param.Add("@idRelacion", request.id );
+                    param.Add("@idProductoMateria1", request.idProductoMateria1 );
+                    param.Add("@idProductoProduccion", request.idProductoProduccion );
+                    param.Add("@idProductoMateria2", request.idProductoMateria2);
+                    param.Add("@unidadMedidad", request.unidadMedidad );
+                    param.Add("@valorUnidadMedida", Convert.ToSingle(request.valorUnidadMedidaConverter));
+                    param.Add("@idUnidadMedida", request.idUnidadMedidad );
+                    var result = this.db.QueryMultiple("SP_AGREGA_ACTUALIZA_COMBINACION_PRODUCCION_PRODUCTOS",param, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.estatus == 200)
                     {
@@ -46,13 +50,13 @@ namespace lluviaBackEnd.DAO.ProduccionProductos
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception1)
             {
-                throw ex;
+                throw exception1;
             }
-
             return notificacion;
         }
+
 
         public Notificacion<List<ProduccionProductosModel>> ObtenerCombinaciones()
         {
@@ -184,6 +188,24 @@ namespace lluviaBackEnd.DAO.ProduccionProductos
             return notificacion;
         }
 
-
+        public Notificacion<string> DesactivarCombinacionProductosProduccionProductos(int idProductoProduccion)
+        {
+            Notificacion<string> notificacion2;
+            Notificacion<string> notificacion = new Notificacion<string>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var param = new DynamicParameters();
+                    param.Add("@idProductoProduccion", idProductoProduccion);
+                    notificacion2 = db.QuerySingle<Notificacion<string>>("SP_DESACTIVAR_COMBINACION_PRODUCTOS_PRODUCCION", param , commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception exception1)
+            {
+                throw exception1;
+            }
+            return notificacion2;
+        }
     }
 }

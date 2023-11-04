@@ -8,7 +8,7 @@ namespace lluviaBackEnd.Models.ProduccionProductos
 {
     public class ProduccionProductosModel
     {
-        public int id{ get; set; }
+        public int id { get; set; }
 
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
         public string idProductoProduccion { get; set; }
@@ -20,6 +20,7 @@ namespace lluviaBackEnd.Models.ProduccionProductos
         public string idProductoMateria2 { get; set; }
 
         public int activo { get; set; }
+
         public DateTime fechaAlta { get; set; }
 
         [Required(ErrorMessage = "Este campo no puede estar vacio")]
@@ -31,8 +32,11 @@ namespace lluviaBackEnd.Models.ProduccionProductos
         public string valorUnidadMedidaConverter { get; set; }
 
         public string productoProducido { get; set; }
+
         public string productoMateria1 { get; set; }
+
         public string productoMateria2 { get; set; }
+
         public string unidadMedidad { get; set; }
     }
 }
