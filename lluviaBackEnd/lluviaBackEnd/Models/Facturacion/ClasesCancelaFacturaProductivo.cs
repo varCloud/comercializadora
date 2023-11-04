@@ -387,20 +387,6 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
 
         private string rfcEmisorField;
 
-        private ushort codEstatusField;
-
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public ushort CodEstatus
-        {
-            get
-            {
-                return this.codEstatusField;
-            }
-            set
-            {
-                this.codEstatusField = value;
-            }
-        }
         /// <remarks/>
         public AcuseFolios Folios
         {
@@ -463,19 +449,33 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public partial class AcuseFolios
     {
-        private List<AcuseFoliosFolio> folioField;
+        private string uUIDField;
+
+        private byte estatusUUIDField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<AcuseFoliosFolio> Folio
+        public string UUID
         {
             get
             {
-                return this.folioField;
+                return this.uUIDField;
             }
             set
             {
-                this.folioField = value;
+                this.uUIDField = value;
+            }
+        }
+
+        /// <remarks/>
+        public byte EstatusUUID
+        {
+            get
+            {
+                return this.estatusUUIDField;
+            }
+            set
+            {
+                this.estatusUUIDField = value;
             }
         }
     }
@@ -944,4 +944,6 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
     }
 
 }
+
+
 

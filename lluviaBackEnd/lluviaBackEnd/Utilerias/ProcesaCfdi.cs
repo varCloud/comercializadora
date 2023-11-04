@@ -338,9 +338,10 @@ namespace lluviaBackEnd.Utilerias
 
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
-
+                    
                     cancelaCFDI4Prod.enviaAcuseCancelacion envia = new cancelaCFDI4Prod.enviaAcuseCancelacion();
                     result = envia.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    
 
                 }
                 else

@@ -64,5 +64,25 @@ namespace lluviaBackEnd.WebServices
             }
             return n;
         }
+
+        [System.Web.Http.HttpGet]
+        public Notificacion<dynamic> ObtenerEstatusFactura(string rfc)
+        {
+            Notificacion<dynamic> n = new Notificacion<dynamic>();
+            try
+            {
+                cancelaCFDI4Prod.enviaAcuseCancelacion obtener = new cancelaCFDI4Prod.enviaAcuseCancelacion();          
+                n.Modelo = obtener.obtenerPeticionesPendientes(rfc);
+                return n;
+
+            }
+            catch (Exception ex)
+            {
+
+                return WsUtils<dynamic>.RegresaExcepcion(ex, null);
+            }
+            return n;
+        }
+        
     }
 }
