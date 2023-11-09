@@ -78,7 +78,7 @@ else
 
 
                     </td>
-                    <td>@Html.Raw(c.cantidadEnFisico > c.cantidadActual ? c.cantidadAAjustar : 0)</td>
+                     <td>@Html.Raw(c.cantidadEnFisico > c.cantidadActual ? c.cantidadAAjustar : 0)</td>
                     <td>@Html.Raw(c.cantidadEnFisico < c.cantidadActual ? c.cantidadAAjustar : 0)</td>
                     <td>@c.producto.ultimoCostoCompra.ToString("C2")</td>
                     <td>@Html.Raw(c.errorHumano == 1 ? "Si" : "No")</td>
