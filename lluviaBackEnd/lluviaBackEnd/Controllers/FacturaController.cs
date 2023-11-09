@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Xml;
+using CsvHelper;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
@@ -19,6 +20,7 @@ using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
 using log4net;
 using Newtonsoft.Json;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -27,7 +29,7 @@ namespace lluviaBackEnd.Controllers
     {
         private readonly ILog log4netRequest;
         public FacturaController()
-        { 
+        {
             log4netRequest = LogManager.GetLogger("LogLluvia");
         }
 
@@ -36,7 +38,7 @@ namespace lluviaBackEnd.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         public JsonResult CancelarFactura(Factura factura)
         {
@@ -58,9 +60,9 @@ namespace lluviaBackEnd.Controllers
                     string pathFactura = Utils.ObtnerFolder() + @"/";
                     string documentoOriginal = Utilerias.ManagerSerealization<CancelarCFDI40>.SerealizarToString(c);
                     log4netRequest.Debug("pathFactura : " + pathFactura);
-                    log4netRequest.Debug("Documento a cancelar : " +  documentoOriginal);
+                    log4netRequest.Debug("Documento a cancelar : " + documentoOriginal);
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
-                    System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta+timeStamp + ".xml", result);
+                    System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + timeStamp + ".xml", result);
                     AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
                     if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
                     {
@@ -104,8 +106,8 @@ namespace lluviaBackEnd.Controllers
                 Sesion UsuarioActual = null;
                 if (Session != null)
                     UsuarioActual = (Sesion)Session["UsuarioActual"];
-  
-                factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;          
+
+                factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobanteTimbrado = SerializerManager<Comprobante>.DeseralizarXML(pathServer + "Timbre_" + factura.idVenta + ".xml");
                 comprobanteTimbrado.Addenda = new ComprobanteAddenda();
                 comprobanteTimbrado.Addenda.conceptosAddenda = (List<ConceptosAddenda>)items["conceptosAddenda"];
@@ -113,7 +115,7 @@ namespace lluviaBackEnd.Controllers
                 comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
                 comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
                 Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + factura.idVenta + ".jpg"));
-                Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items , "");
+                Utils.GenerarFactura(comprobanteTimbrado, pathServer, factura.idVenta, items, "");
                 factura.pathArchivoFactura = pathFactura;
                 factura.estatusFactura = EnumEstatusFactura.Facturada;
                 factura.mensajeError = "OK";
@@ -121,9 +123,9 @@ namespace lluviaBackEnd.Controllers
                 factura.UUID = comprobanteTimbrado.Complemento.TimbreFiscalDigital.UUID;
                 Task.Factory.StartNew(() =>
                 {
-                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura , "");
+                    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + factura.idVenta + ".xml", factura, "");
                 });
-                
+
                 notificacion = new Notificacion<string>()
                 {
                     Estatus = 200,
@@ -156,7 +158,7 @@ namespace lluviaBackEnd.Controllers
                     UsuarioActual = (Sesion)Session["UsuarioActual"];
                 factura.idUsuario = factura.idUsuario == 0 ? UsuarioActual.idUsuario : factura.idUsuario;
                 Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
-                comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") || string.IsNullOrEmpty(factura.idVenta) ? "PE"+factura.idPedidoEspecial : factura.idVenta);
+                comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") || string.IsNullOrEmpty(factura.idVenta) ? "PE" + factura.idPedidoEspecial : factura.idVenta);
                 items = facturacionDAO.ObtenerComprobante(factura, comprobante);
                 if (items["estatus"].ToString().Equals("200"))
                 {
@@ -171,13 +173,13 @@ namespace lluviaBackEnd.Controllers
                     comprobante.Certificado = certificados["Certificado"];
                     comprobante.NoCertificado = certificados["NoCertificado"];
 
-                    string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante,true);
+                    string xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante, true);
                     string cadenaOriginal = Utilerias.ProcesaCfdi.GeneraCadenaOriginal33(xmlSerealizado);
                     comprobante.Sello = Utilerias.ProcesaCfdi.GeneraSello(cadenaOriginal);
-                    xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante,true);
+                    xmlSerealizado = Utilerias.ProcesaCfdi.SerializaXML33(comprobante, true);
 
                     //TIMBRAR CON EDI-FACT
-                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado ));
+                    respuestaTimbrado respuesta = (respuestaTimbrado)ProcesaCfdi.TimbrarEdifact40(ProcesaCfdi.Base64Encode(xmlSerealizado));
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
                     if (respuesta.codigoResultado.Equals("100"))
                     {
@@ -190,10 +192,10 @@ namespace lluviaBackEnd.Controllers
                         comprobanteTimbrado.Addenda.descripcionFormaPago = items["descripcionFormaPago"].ToString();
                         comprobanteTimbrado.Addenda.descripcionUsoCFDI = items["descripcionUsoCFDI"].ToString();
                         comprobanteTimbrado.Addenda.descripcionTipoComprobante = "Ingreso";
-                        
 
-                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + comprobante.Folio+timeStamp+ ".jpg"));
-                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, comprobante.Folio, items , timeStamp);
+
+                        Utils.GenerarQRSAT(comprobanteTimbrado, pathServer + ("Qr_" + comprobante.Folio + timeStamp + ".jpg"));
+                        Utils.GenerarFactura(comprobanteTimbrado, pathServer, comprobante.Folio, items, timeStamp);
                         System.IO.File.WriteAllText(pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", xmlTimbradoDecodificado);
 
                         factura.pathArchivoFactura = pathFactura + "/Factura_" + comprobante.Folio + timeStamp + ".pdf";
@@ -220,8 +222,8 @@ namespace lluviaBackEnd.Controllers
                     }
 
                     notificacion = new FacturaDAO().GuardarFactura(factura);
-                    notificacion.Mensaje += " " + factura.mensajeError; 
-                    return Json (notificacion, JsonRequestBehavior.AllowGet);
+                    notificacion.Mensaje += " " + factura.mensajeError;
+                    return Json(notificacion, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -281,8 +283,8 @@ namespace lluviaBackEnd.Controllers
             {
                 Factura f = new Factura();
                 f.idVenta = idVenta.ToString();
-                Notificacion<dynamic>  notificacion = new FacturaDAO().ObtenerDetalleFactura(f);                
-                return Json(JsonConvert.SerializeObject(notificacion),JsonRequestBehavior.AllowGet);
+                Notificacion<dynamic> notificacion = new FacturaDAO().ObtenerDetalleFactura(f);
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -297,10 +299,10 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<dynamic> notificacion = null;
-                notificacion = f.idPedidoEspecial  == 0 ? new FacturaDAO().ObtenerDetalleFactura(f) : new FacturaDAO().ObtenerDetalleFacturaPE(f);
+                notificacion = f.idPedidoEspecial == 0 ? new FacturaDAO().ObtenerDetalleFactura(f) : new FacturaDAO().ObtenerDetalleFacturaPE(f);
                 string path = System.Web.HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
-                path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/","").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
-                Email.NotificacionPagoReferencia(notificacion.Modelo.correo,path,f ,f.correoAdicional);
+                path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/", "").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
+                Email.NotificacionPagoReferencia(notificacion.Modelo.correo, path, f, f.correoAdicional);
                 notificacion.Mensaje = "Factura reenviada exitosamente";
                 return notificacion;
 
@@ -314,7 +316,21 @@ namespace lluviaBackEnd.Controllers
 
         }
 
+        public string ObtenerComprobanteCFDI4(Factura factura)
+        {
+            Dictionary<string, object> items = null;
+            FacturaDAO facturacionDAO = new FacturaDAO();
+            Comprobante comprobante = facturacionDAO.ObtenerConfiguracionComprobante();
+            comprobante.Folio = factura.folio = (factura.idVenta.Equals("0") || string.IsNullOrEmpty(factura.idVenta) ? "PE" + factura.idPedidoEspecial : factura.idVenta);
+            items = facturacionDAO.ObtenerComprobante(factura, comprobante);
+            if (items["estatus"].ToString().Equals("200"))
+            {
+                comprobante = (items["comprobante"] as Comprobante);
+                return Utils.ExpresionImpresa(comprobante);
+            }
 
+            return "";
+        }
     }
 
 

@@ -1,5 +1,7 @@
 ﻿using lluviaBackEnd.Controllers;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.Models.Facturacion;
+using lluviaBackEnd.Utilerias;
 using lluviaBackEnd.WebServices.Modelos;
 using Newtonsoft.Json;
 using System;
@@ -66,7 +68,7 @@ namespace lluviaBackEnd.WebServices
         }
 
         [System.Web.Http.HttpGet]
-        public Notificacion<dynamic> ObtenerEstatusFactura(string rfc)
+        public Notificacion<dynamic> ObtenerPeticionesPendientes(string rfc)
         {
             Notificacion<dynamic> n = new Notificacion<dynamic>();
             try
@@ -83,6 +85,36 @@ namespace lluviaBackEnd.WebServices
             }
             return n;
         }
-        
+
+        [System.Web.Http.HttpPost]
+        public Notificacion<dynamic> ObtenerEstatusFactura(Factura factura)
+        {
+            Notificacion<dynamic> n = new Notificacion<dynamic>();
+            try
+            {
+                System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                };
+                string pathServer = Utils.ObtnerFolder() + @"/";
+                string path = pathServer + @"Timbre_329074_638344774457284015.xml";
+                Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeseralizarXMLFromPath(path);
+                //string expresionImpresa = new FacturaController().ObtenerComprobanteCFDI4(factura);
+                //Utils.ExpresionImpresa(comprobanteTimbrado);
+                ConsultaEstatusFactura4.ConsultaCFDIServiceClient consultaCFDI = new ConsultaEstatusFactura4.ConsultaCFDIServiceClient();
+                n.Modelo = consultaCFDI.Consulta(Utils.ExpresionImpresa(comprobanteTimbrado));
+                return n;
+
+            }
+            catch (Exception ex)
+            {
+
+                return WsUtils<dynamic>.RegresaExcepcion(ex, null);
+            }
+            return n;
+        }
+
     }
 }
