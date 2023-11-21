@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.Controllers;
+using lluviaBackEnd.DAO;
 using lluviaBackEnd.Models;
 using lluviaBackEnd.Models.Facturacion;
 using lluviaBackEnd.Utilerias;
@@ -9,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Configuration;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Mvc;
@@ -87,7 +90,7 @@ namespace lluviaBackEnd.WebServices
         }
 
         [System.Web.Http.HttpPost]
-        public Notificacion<dynamic> ObtenerEstatusFactura(Factura factura)
+        public Notificacion<dynamic> ActualizaEstatusCancelacionFactura(Factura facturaRequest)
         {
             Notificacion<dynamic> n = new Notificacion<dynamic>();
             try
@@ -98,13 +101,21 @@ namespace lluviaBackEnd.WebServices
                 {
                     return true;
                 };
-                string pathServer = Utils.ObtnerFolder() + @"/";
-                string path = pathServer + @"Timbre_329074_638344774457284015.xml";
+
+                Notificacion<dynamic> factura = new FacturaDAO().ObtenerPathXMLFactura(facturaRequest.id, facturaRequest.esPedidoEspecial);
+                string path = HttpContext.Current.Server.MapPath("~" + factura.Modelo.pathArchivoFactura.Replace(".pdf", ".xml").Replace("Factura_", "Timbre_"));
                 Comprobante comprobanteTimbrado = Utilerias.ManagerSerealization<Comprobante>.DeseralizarXMLFromPath(path);
-                //string expresionImpresa = new FacturaController().ObtenerComprobanteCFDI4(factura);
-                //Utils.ExpresionImpresa(comprobanteTimbrado);
                 ConsultaEstatusFactura4.ConsultaCFDIServiceClient consultaCFDI = new ConsultaEstatusFactura4.ConsultaCFDIServiceClient();
                 n.Modelo = consultaCFDI.Consulta(Utils.ExpresionImpresa(comprobanteTimbrado));
+                if (n.Modelo != null && n.Modelo.Estado == "Cancelado")
+                {
+                    Factura f = new Factura();
+                    f.idPedidoEspecial = (facturaRequest.esPedidoEspecial ? facturaRequest.id : 0);
+                    f.idVenta = (!facturaRequest.esPedidoEspecial ? facturaRequest.id.ToString() : "0");
+                    f.estatusFactura = EnumEstatusFactura.Cancelada;
+                    f.mensajeError = "Cancelado correctamente | "+ n.Modelo.Estado;
+                    new FacturaDAO().CancelarFactura(f);
+                }
                 return n;
 
             }

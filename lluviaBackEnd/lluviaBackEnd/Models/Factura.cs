@@ -29,6 +29,9 @@ namespace lluviaBackEnd.Models
         public decimal montoTotal { get; set; }
 
         public string correoAdicional { get; set; }
+
+        public bool esPedidoEspecial { get; set; }
+        public Int64 id { get; set; }
         public Factura()
         {
             idPedidoEspecial = 0;

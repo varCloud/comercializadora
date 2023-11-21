@@ -42,7 +42,7 @@ namespace lluviaBackEnd.Controllers
         [HttpPost]
         public JsonResult CancelarFactura(Factura factura)
         {
-            Notificacion<String> notificacion = new Notificacion<String>();
+            Notificacion<string> notificacion = new Notificacion<string>();
             CancelarCFDI40 c = null;
             Sesion UsuarioActual = null;
             try
@@ -56,7 +56,6 @@ namespace lluviaBackEnd.Controllers
                 if (c != null)
                 {
                     string timeStamp = "_" + DateTime.Now.Ticks.ToString();
-                    log4netRequest.Debug("C es diferente de null");
                     string pathFactura = Utils.ObtnerFolder() + @"/";
                     string documentoOriginal = Utilerias.ManagerSerealization<CancelarCFDI40>.SerealizarToString(c);
                     log4netRequest.Debug("pathFactura : " + pathFactura);
@@ -64,17 +63,23 @@ namespace lluviaBackEnd.Controllers
                     string result = ProcesaCfdi.CancelarFacturaEdifact(documentoOriginal);
                     System.IO.File.WriteAllText(pathFactura + "Cancelacion_" + factura.idVenta + timeStamp + ".xml", result);
                     AcuseCancelacionProductivoResponseWs cancelacion = ProcesaCfdi.ObtnerAcuseCancelacionFactura(result);
-                    if (cancelacion.Folios.EstatusUUID.ToString().Equals("201"))
+                    string statusCancelacion = cancelacion.Folios.EstatusUUID.ToString();
+                    if (statusCancelacion.Equals("201"))
                     {
-                        factura.estatusFactura = EnumEstatusFactura.Cancelada;
-                        factura.mensajeError = "Cancelada correctamente";
+                        factura.estatusFactura = EnumEstatusFactura.Pendiente_de_cancelacion;
+                        factura.mensajeError = "En proceso de cancelacion.";
+                        notificacion = new FacturaDAO().CancelarFactura(factura);
+                    }
+                    if (statusCancelacion.Equals("202"))
+                    {
+                        notificacion.Estatus = -1;
+                        notificacion.Mensaje = "Factura previamente enviada espere un momento y consulte su estado en el modulo de facturas.";
                     }
                     else
                     {
-                        factura.estatusFactura = EnumEstatusFactura.Cancelada;
-                        factura.mensajeError = "Ocurrio un error al intentar cancelar la factura, codigo error :" + cancelacion.Folios.EstatusUUID.ToString();
+                        notificacion.Estatus = -1;
+                        notificacion.Mensaje = "Espere un momento y vuelva a intentarlo:  [estatus]: "+ statusCancelacion;
                     }
-                    notificacion = new FacturaDAO().CancelarFactura(factura);
                 }
                 else
                 {
@@ -206,8 +211,8 @@ namespace lluviaBackEnd.Controllers
 
                         Task.Factory.StartNew(() =>
                         {
-                            //if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
-                            //    Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura, string.Empty);
+                            if (!string.IsNullOrEmpty(items["correoCliente"].ToString()))
+                                Email.NotificacionPagoReferencia(items["correoCliente"].ToString(), pathServer + "Timbre_" + comprobante.Folio + timeStamp + ".xml", factura, string.Empty);
                         });
 
 

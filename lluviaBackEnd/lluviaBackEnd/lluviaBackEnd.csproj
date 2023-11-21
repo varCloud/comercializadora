@@ -307,6 +307,7 @@
     <Compile Include="Models\ExcesoEfectivo.cs" />
     <Compile Include="Models\Facturacion\CancelarCFDI40.cs" />
     <Compile Include="Models\Facturacion\ClasesCancelaFacturaProductivo.cs" />
+    <Compile Include="Models\Facturacion\FacturacionFactory\Interface1.cs" />
     <Compile Include="Models\FiltroLiquidos.cs" />
     <Compile Include="Models\Filtro.cs" />
     <Compile Include="Models\Grafico.cs" />
@@ -1487,10 +1488,10 @@
     <Content Include="Views\Productos\ConsultarProduccionProductos.cshtml" />
     <Content Include="Views\ProduccionProductos\ProduccionProductos.cshtml" />
     <None Include="Web References\cancelaCFDI4Prod\cancelaCFDI.wsdl" />
-    <Content Include="Web References\cancelaCFDI4Prod\Reference.map">
+    <None Include="Web References\cancelaCFDI4Prod\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
-    </Content>
+    </None>
     <None Include="Web References\cancelaCFDITest\cancelaCFDI.wsdl" />
     <Content Include="Web References\cancelaCFDITest\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -1570,6 +1571,12 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>lluviaBackEnd_cancelaCFDI4Prod_enviaAcuseCancelacion</CachedSettingsPropName>
     </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\UtilsFactura.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

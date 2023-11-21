@@ -409,7 +409,6 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
-
         public Notificacion<dynamic> ObtenerDetalleFacturaPE(Factura f)
         {
             Notificacion<dynamic> facturas = new Notificacion<dynamic>();
@@ -444,6 +443,41 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
+        public Notificacion<dynamic> ObtenerPathXMLFactura(Int64 id , Boolean esPedidoEspecial = false)
+        {
+            Notificacion<dynamic> facturas = new Notificacion<dynamic>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    string sp = "SP_FACTURAS_OBTENER_PATH_ARCHIVO";
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", esPedidoEspecial ? (Object)null : id);
+                    parameters.Add("@idPedidoEspecial", esPedidoEspecial ? id : (Object)null);
+                    var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                        facturas.Modelo = rs.ReadSingle();
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
 
     }
 }

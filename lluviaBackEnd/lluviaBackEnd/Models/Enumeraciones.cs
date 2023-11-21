@@ -17,9 +17,9 @@ namespace lluviaBackEnd.Models
     public enum EnumEstatusFactura
     {
         Facturada = 1,
-        Cancelada,
-        Error,
-
+        Cancelada =2,
+        Error = 3,
+        Pendiente_de_cancelacion = 4
     }
 
     public enum EnumTipoGrafico

@@ -640,60 +640,6 @@ function actualizaTicketVenta() {
     }
 
     actualizarSubTotal();
-
-    //return;
-
-    //dataToPost = JSON.stringify({ precios: productos });
-
-    //$.ajax({
-    //    url: rootUrl("/Ventas/ObtenerPreciosDeProductos"),
-    //    data: dataToPost,
-    //    method: 'POST',
-    //    dataType: 'JSON',
-    //    contentType: "application/json; charset=utf-8",
-    //    async: false,
-    //    beforeSend: function (xhr) {
-    //        ShowLoader("Cargando...");
-    //    },
-    //    success: function (data) {
-    //        OcultarLoader();
-
-    //        if (data.Estatus == 200) {
-
-    //            var j = 0;
-    //            for (j = 0; j < data.Modelo.length; j++) {
-
-    //                var tblVtas = document.getElementById('tablaRepVentas');
-    //                var rCount = tblVtas.rows.length;
-
-    //                if (rCount >= 2) {
-    //                    for (var i = 1; i < rCount; i++) {
-
-    //                        var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
-
-    //                        if ((!tblVtas.rows[i].cells[7].getAttribute("class").includes('esDevolucion')) && (!tblVtas.rows[i].cells[7].getAttribute("class").includes('esAgregarProductos'))) {
-    //                            //console.log(tblVtas.rows[i].cells[7].getAttribute("class"));
-
-    //                            if ((parseInt(tblVtas.rows[i].cells[1].innerHTML)) == (parseInt(data.Modelo[j].idProducto))) {
-    //                                tblVtas.rows[i].cells[3].innerHTML = "$" + parseFloat(data.Modelo[j].costo).toFixed(2);   //precio
-    //                                tblVtas.rows[i].cells[5].innerHTML = "$" + (parseFloat(data.Modelo[j].costo) * cantidad).toFixed(2);   //total
-    //                                tblVtas.rows[i].cells[6].innerHTML = "$" + (parseFloat(data.Modelo[j].descuento) * cantidad).toFixed(2);  //descuento
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    },
-    //    error: function (xhr, status) {
-    //        OcultarLoader();
-    //        console.log('Hubo un problema al consultar los precios de los productos, contactese con el administrador del sistema');
-    //        console.log(xhr);
-    //        console.log(status);
-    //    }
-    //});
-
-    //actualizarSubTotal();
 }
 
 
@@ -779,32 +725,6 @@ function initInputsTabla() {
 
     });
 }
-
-
-//function actualizaPreciosTabla(tabla) {
-
-//    var tblVtas = document.getElementById(tabla);
-//    var rCount = tblVtas.rows.length;
-
-//    if (rCount >= 2) {
-//        for (var i = 1; i < rCount; i++) {
-
-//            var idProducto = parseFloat(tblVtas.rows[i].cells[1].innerHTML);
-//            var cantidad = parseFloat(tblVtas.rows[i].cells[4].children[0].value);
-//            var data = ObtenerProductoPorPrecio(idProducto, cantidad, $("#vaConDescuento").val());
-//            var precio = parseFloat(data.Modelo[0].costo);
-
-//            if (precio == 0) {
-//                console.log("error_precio_" + precio);
-//            }
-//            else {
-//                tblVtas.rows[i].cells[3].innerHTML = "$" + data.Modelo[0].costo;   //precio
-//                tblVtas.rows[i].cells[5].innerHTML = "$" + parseFloat(data.Modelo[0].costo) * cantidad;   //total
-//                tblVtas.rows[i].cells[6].innerHTML = "$" + parseFloat(data.Modelo[0].descuento);  //descuento
-//            }
-//        }
-//    }
-//}
 
 
 function cuentaSubTotal() {

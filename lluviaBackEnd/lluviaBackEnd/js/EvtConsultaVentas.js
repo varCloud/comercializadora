@@ -280,7 +280,7 @@ function VerTicketTest(idVenta) {
 function PintarTabla() {
     $.ajax({
         url: rootUrl("/Ventas/_ObtenerVentas"),
-        data: { idVenta: 0 },
+        data: { idVenta: 0, fechaIni: $('#fechaIni').val() ,  fechaFin: $('#fechaFin').val() },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -413,12 +413,14 @@ function CancelarFactura(idVenta) {
                     async: true,
                     beforeSend: function (xhr) {
                         ShowLoader("Cancelando Factura.");
-                        console.log("Antes ")
                     },
                     success: function (data) {
-                        OcultarLoader();
                         MuestraToast('success', data.Mensaje);
-                        PintarTabla();
+                        setTimeout(() => {
+                            OcultarLoader();
+                            ActualizarEstatusCancelacionFactura(idVenta, false, true, PintarTabla);
+                        }, 500)
+                        
                     },
                     error: function (xhr, status) {
                         OcultarLoader();
@@ -794,7 +796,7 @@ $(document).ready(function () {
     InitRangePicker('rangeConsultaVentas', 'fechaIni', 'fechaFin');
     //$('#rangeConsultaVentas').val('');
     $('#codigoBarrasTicket').focus();
-    //$('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //rangeConsultaVentas$('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });

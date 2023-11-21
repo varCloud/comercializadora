@@ -23,4 +23,9 @@ tr.shown td.details-control {
 }
 
 
-
+.sub-menu-item-active {
+    background: #A4C254 !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    border-radius: 12px !important;
+}

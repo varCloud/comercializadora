@@ -1,4 +1,6 @@
-﻿var tblFacturas
+﻿
+
+var tblFacturas
 $(document).ready(function () {
     if ($("#tblFacturas").length > 0) {
         InitTableFacturas();
@@ -110,20 +112,19 @@ function CancelarFactura(idVenta) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    //url: rootUrl("/Factura/CancelarFactura"),
                     url: pathDominio + "api/WsFactura/CancelarFactura",
                     data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
                     method: 'post',
                     dataType: 'json',
                     async: false,
                     beforeSend: function (xhr) {
-                        console.log("Antes ")
+                        ShowLoader("Cancelando Factura.");
                     },
                     success: function (data) {
-                        MuestraToast('success', data.Mensaje);
-                        PintarTabla();
+                        ActualizaEstatusCancelacionFactura();
                     },
                     error: function (xhr, status) {
+                        OcultarLoader();
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
                         console.log(xhr);
                         console.log(status);
@@ -136,9 +137,30 @@ function CancelarFactura(idVenta) {
         });
 }
 
+function ActualizaEstatusCancelacionFactura(idVenta) {
 
-//reenviar factura
-
+    $.ajax({
+        url: pathDominio + "api/WsFactura/CancelarFactura",
+        data: { id: idVenta, esPedidoEspecial: false },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            
+        },
+        success: function (data) {
+            MuestraToast('success', data.Mensaje);
+            PintarTabla();
+            OcultarLoader();
+        },
+        error: function (xhr, status) {
+            OcultarLoader();
+            console.log('LLUVIA: Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
+            console.log(xhr);
+            console.log(status);
+        }
+    });
+}
 function limpiaModalFactura() {
     $("#idVentaIVA").val("");
 
@@ -215,7 +237,6 @@ $('#btnReenviar').click(function () {
 
 });
     
-
 function modalFactura(idVenta) {
     limpiaModalFactura();
     var data = ConsultaDetalleFactura(idVenta);
