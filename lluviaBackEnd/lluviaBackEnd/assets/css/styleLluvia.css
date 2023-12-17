@@ -23,8 +23,8 @@ tr.shown td.details-control {
 }
 
 
-.sub-menu-item-active {
-    background: #A4C254 !important;
+.light-sidebar:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu > li.active ul.dropdown-menu li a.sub-menu-item-active {
+    background-color: #A4C254 !important;
     font-weight: 600 !important;
     font-size: 13px !important;
     border-radius: 12px !important;

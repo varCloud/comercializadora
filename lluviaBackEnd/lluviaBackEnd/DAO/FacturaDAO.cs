@@ -346,7 +346,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     string sp = factura.idPedidoEspecial == 0 ? "SP_OBTENER_CANCELACION_FACTURA" : "SP_FACTURACION_OBTENER_CANCELACION_FACTURA";
-                    parameters.Add(factura.idPedidoEspecial == 0 ? "@idVenta": "@idPedidoEspecial", factura.idPedidoEspecial == 0 ?factura.idVenta : factura.idPedidoEspecial.ToString());
+                    parameters.Add(factura.idPedidoEspecial == 0 ? "@idVenta": "@idPedidoEspecial", factura.idPedidoEspecial == 0 ? factura.idVenta : factura.idPedidoEspecial.ToString());
 
                     var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();

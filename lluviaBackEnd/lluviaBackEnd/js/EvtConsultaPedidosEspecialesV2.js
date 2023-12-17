@@ -99,7 +99,7 @@ function onSuccessPedidosEspeciales(data) {
 
 
             html += '<tr>' +
-                '             <td class="" idPedidoEspecial="'+dato.idPedidoEspecial+'" ></td>' +
+                '             <td class="" idPedidoEspecial="' + dato.idPedidoEspecial + '" ></td>' +
                 '             <td>' + dato.idPedidoEspecial + '</td>' +
                 '             <td>' + dato.fechaAlta + '</td>' +
                 '             <td>' + dato.nombreCliente + '</td>' +
@@ -116,16 +116,16 @@ function onSuccessPedidosEspeciales(data) {
                 '                   <button class="btn btn-primary dropdown-toggle" type="button" id="menuAccionesVentas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Acciones</button>' +
                 '                       <div class="dropdown-menu">' +
                 '                           <a class="dropdown-item has-icon" href="javascript:MostrarDetalle(' + dato.idPedidoEspecial + ');"><i class="fas fa-eye"></i>Ver Detalle</a>';
-                if (
-                    (dato.idEstatusPedidoEspecial == 6) || // pagado
-                    (dato.idEstatusPedidoEspecial == 7)    // a credito
-                ) {
-                    html += '<a class="dropdown-item has-icon" href="javascript:ImprimeTicket(' + dato.idPedidoEspecial + ',1,0);"><i class="fas fa-print"></i>Ticket Original</a>';
-                }
-            html +='<a class="dropdown-item has-icon" href="javascript:imprimirTicketAlmacenes(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket Almacen </a>';
+            if (
+                (dato.idEstatusPedidoEspecial == 6) || // pagado
+                (dato.idEstatusPedidoEspecial == 7)    // a credito
+            ) {
+                html += '<a class="dropdown-item has-icon" href="javascript:ImprimeTicket(' + dato.idPedidoEspecial + ',1,0);"><i class="fas fa-print"></i>Ticket Original</a>';
+            }
+            html += '<a class="dropdown-item has-icon" href="javascript:imprimirTicketAlmacenes(' + dato.idPedidoEspecial + ');"><i class="fas fa-print"></i>Imprimir Ticket Almacen </a>';
             html += '<a class="dropdown-item has-icon" href="' + rootUrl("PedidosEspecialesV2/VerTicketAlmacenes?idPedidoEspecial=" + dato.idPedidoEspecial + "") + '" target="_blank"><i class="fas fa-eye"></i>Ver Ticket Almacen</a>';
-            if (dato.existe_ticket==true)
-                    html += ' <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
+            if (dato.existe_ticket == true)
+                html += ' <a class="dropdown-item has-icon" href="javascript:Tickets(' + dato.idPedidoEspecial + ');"><i class="fas fa-list"></i>Tickets</a>';
             if (dato.puede_devolver == true) {
                 html += '<a class="dropdown-item has-icon" href="javascript:MostrarDetalleDevolucion(' + dato.idPedidoEspecial + ', false);" > <i class="far fa-minus-square"></i>Devolver Productos</a>';
                 html += '<a class="dropdown-item has-icon" href="javascript:Eliminar(' + dato.idPedidoEspecial + ');" > <i class="fas fa-times"></i>Cancelar</a>';
@@ -148,7 +148,7 @@ function onSuccessPedidosEspeciales(data) {
         if (tblPedidosEspeciales != null)
             tblPedidosEspeciales.destroy();
         InitDataTablePedidosEspeciales();
-       
+
     }
 }
 
@@ -197,7 +197,6 @@ function onFailurePedidosEspeciales() {
     MuestraToast("error", "Ocurrio un error al consultar los cierres");
 }
 
-
 function InitDataTablePedidosEspeciales() {
     var NombreTabla = "tblPedidosEspeciales";
     tblPedidosEspeciales = initDataTable(NombreTabla);
@@ -237,7 +236,7 @@ function MostrarDetalle(idPedidoEspecial) {
             ShowLoader("Cargando...");
         },
         success: function (data) {
-            console.log("data detalle pedido especial" , data )
+            console.log("data detalle pedido especial", data)
             OcultarLoader();
             var html = "";
             var result = JSON.parse(data);
@@ -346,7 +345,7 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
             OcultarLoader();
             var html = "";
             var result = JSON.parse(data);
-            if (result.Estatus === 200) {               
+            if (result.Estatus === 200) {
                 html += '<div class="table-responsive">';
                 html += '<table class="table table-striped" id="tblDevolucionesPedidosEspeciales" style="width: 100%;">';
                 html += '<thead>';
@@ -377,12 +376,12 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
                             '             <td>' + formatoMoneda(dato.monto) + '</td>';
                         if (dato.fraccion)
                             html += '<td><input class="esDevolucion" type="text" onchange="fnActualizaDevolucion(this)" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
-                            //html += '<td><input class="esDevolucion" type="text" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
+                        //html += '<td><input class="esDevolucion" type="text" onkeypress="return esDecimal(this, event);" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
                         else
                             html += '<td><input class="esDevolucion" type="text" onchange="fnActualizaDevolucion(this)" onkeypress="return esNumero(event)" style="text-align: center; border: none; border-color: transparent; background: transparent;" value="0"></td>';
-                        html +='<td style="display: none;">' + dato.idPedidoEspecialDetalle + '</td>' +
-                                '<td style="display: none;">' + dato.montoComisionBancaria + '</td>' +
-                                '</tr>';
+                        html += '<td style="display: none;">' + dato.idPedidoEspecialDetalle + '</td>' +
+                            '<td style="display: none;">' + dato.montoComisionBancaria + '</td>' +
+                            '</tr>';
                     }
                 });
                 html += '</tbody>';
@@ -396,7 +395,7 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
                 InitDataTablePedidosEspecialesDevolucion();
 
                 //$('.esDevolucion input').on('change', function () {
-                    
+
                 //    var thisInput = $(this);
                 //    var cell = $(this).closest('td');
                 //    var row = cell.closest('tr');
@@ -441,12 +440,12 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
                             } else {
                                 console.log("cancelar");
                             }
-                    });
+                        });
 
                 }
                 else {
                     $('#modalDevolucionPedidosEspeciales').modal({ backdrop: 'static', keyboard: false, show: true });
-                    
+
                 }
             }
             else
@@ -464,7 +463,7 @@ function MostrarDetalleDevolucion(idPedidoEspecial, esEliminar) {
 
 }
 
-function fnActualizaDevolucion(input) {    
+function fnActualizaDevolucion(input) {
     var thisInput = $(input);
     var cell = $(input).closest('td');
     var row = cell.closest('tr');
@@ -509,14 +508,14 @@ function InitDataTablePedidosEspecialesDetalle() {
 function InitDataTablePedidosEspecialesDevolucion() {
     var NombreTabla = "tblDevolucionesPedidosEspeciales";
     tblDevolucionesPedidosEspeciales = initDataTable(NombreTabla);
-    
+
 }
 
 function actualizarSubTotalDevoluciones() {
     var cantidadTotalDevelta = parseFloat(0);
     var comisionBancariaDevuelta = parseFloat(0);
     tblDevolucionesPedidosEspeciales.rows().iterator('row', function (context, index) {
-        let node = $(this.row(index).node());        
+        let node = $(this.row(index).node());
         const cantidadDevelta = parseFloat(node[0].cells[6].children[0].value);
         const cantidadInicial = parseFloat(node[0].cells[4].innerHTML);
         const precioVenta = parseFloat(node[0].cells[3].innerHTML.replace('$', ''));
@@ -573,7 +572,7 @@ function Tickets(idPedidoEspecial) {
             console.log(status);
             OcultarLoader();
         }
-    }); 
+    });
 }
 
 function ImprimeTicket(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
@@ -699,7 +698,6 @@ function modalFacturar(idPedidoEspecial) {
 
 }
 
-
 function limpiaModalIVA() {
 
     var row_ = "<address>" +
@@ -727,7 +725,6 @@ function limpiaModalIVA() {
 
 }
 
-
 function ConsultaPedido(idPedidoEspecial) {
 
     var result = '';
@@ -754,8 +751,6 @@ function ConsultaPedido(idPedidoEspecial) {
 
     return result;
 }
-
-
 
 $("#idClienteFact").on("change", function () {
 
@@ -814,8 +809,6 @@ $("#idClienteFact").on("change", function () {
 
 
 });
-
-
 function ObtenerCliente(idCliente) {
     var result = "";//{ "Estatus": -1, "Mensaje": "Espere un momento y vuelva a intentarlo" };
     $.ajax({
@@ -825,7 +818,6 @@ function ObtenerCliente(idCliente) {
         dataType: 'json',
         async: false,
         beforeSend: function (xhr) {
-            console.log("Antes_")
         },
         success: function (data) {
             result = data;
@@ -838,8 +830,6 @@ function ObtenerCliente(idCliente) {
     });
     return result;
 }
-
-
 $("#efectivo").on("keyup", function () {
 
     if (event.keyCode === 13) {
@@ -865,9 +855,8 @@ $("#efectivo").on("keyup", function () {
 
 });
 
-
 $('#btnGuardarIVA').click(function (e) {
-    
+
     var efectivo_ = parseFloat($('#efectivo').val()).toFixed(2);
     var total_ = parseFloat(document.getElementById("previoFinal").innerHTML.replace('<h4>$', '').replace('</h4>', '')).toFixed(2);
 
@@ -896,7 +885,7 @@ $('#btnGuardarIVA').click(function (e) {
     var idCliente = $('#idClienteFact').val();
     var formaPago = $('#formaPago').val();
     var usoCFDI = $('#usoCFDI').val();
-    
+    debugger;
     GuardarIVAPedido(idPedidoEspecial, idCliente, formaPago, usoCFDI);
 
 });
@@ -916,11 +905,11 @@ function GuardarIVAPedido(idPedidoEspecial, idCliente, formaPago, usoCFDI) {
         success: function (data) {
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
-
+            debugger;
             if (data.Estatus == 200) {
-                facturaPedidoEspecial(idPedidoEspecial);
+                UtilsFacturaPedidoEspecial(idPedidoEspecial, undefined, reloadTableConsultaPedidosEspeciales);
+                $('#ModalFacturar').modal('hide');
             }
-
         },
         error: function (xhr, status) {
             console.log('Disculpe, existió un problema');
@@ -934,31 +923,34 @@ function GuardarIVAPedido(idPedidoEspecial, idCliente, formaPago, usoCFDI) {
 
 
 
-function facturaPedidoEspecial(idPedidoEspecial) {
-    $.ajax({
-        url: pathDominio + "api/WsFactura/GenerarFactura",
-        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
-        method: 'post',
-        dataType: 'json',
-        async: true,
-        beforeSend: function (xhr) {
-            ShowLoader("Facturando Venta.");
-        },
-        success: function (data) {
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            OcultarLoader();
-            window.location.href = rootUrl("/PedidosEspecialesV2/ConsultarPedidosEspeciales");
-        },
-        error: function (xhr, status) {
-            //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-            console.log('Disculpe, existió un problema');
-            console.log(xhr);
-            console.log(status);
-            OcultarLoader();
-        }
-    });
-}
+//function facturaPedidoEspecial(idPedidoEspecial) {
+//    $.ajax({
+//        url: pathDominio + "api/WsFactura/GenerarFactura",
+//        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
+//        method: 'post',
+//        dataType: 'json',
+//        async: true,
+//        beforeSend: function (xhr) {
+//            ShowLoader("Facturando Venta.");
+//        },
+//        success: function (data) {
+//            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+//            OcultarLoader();
+//            window.location.href = rootUrl("/PedidosEspecialesV2/ConsultarPedidosEspeciales");
+//        },
+//        error: function (xhr, status) {
+//            //$("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+//            console.log('Disculpe, existió un problema');
+//            console.log(xhr);
+//            console.log(status);
+//            OcultarLoader();
+//        }
+//    });
+//}
 
+function reloadTableConsultaPedidosEspeciales() {
+    $("#btnBuscarPedidosEspeciales").trigger('click');
+}
 
 $(document).ready(function () {
 
@@ -994,24 +986,6 @@ $(document).ready(function () {
             return;
         }
 
-        // si todo bien
-       /* var tblDevoluciones = document.getElementById('tblDevolucionesPedidosEspeciales');
-        var rCount = tblDevoluciones.rows.length;
-
-        if (rCount >= 2) {            
-            for (var i = 1; i < rCount; i++) {
-                totalProductosDevueltos += parseFloat(tblDevoluciones.rows[i].cells[6].children[0].value);
-                totalProductosOriginales += parseFloat(tblDevoluciones.rows[i].cells[4].innerHTML);
-                var row_ = {
-                    idProducto: parseInt(tblDevoluciones.rows[i].cells[0].innerHTML),
-                    cantidad: parseFloat(tblDevoluciones.rows[i].cells[4].innerHTML),
-                    productosDevueltos: parseFloat(tblDevoluciones.rows[i].cells[6].children[0].value),
-                    idPedidoEspecialDetalle: parseInt(tblDevoluciones.rows[i].cells[7].innerHTML),
-                };
-                productos.push(row_);
-            }
-        }*/
-
         tblDevolucionesPedidosEspeciales.rows().iterator('row', function (context, index) {
             let node = $(this.row(index).node());
             totalProductosDevueltos += parseFloat(node[0].cells[6].children[0].value);
@@ -1022,7 +996,7 @@ $(document).ready(function () {
                 productosDevueltos: parseFloat(node[0].cells[6].children[0].value),
                 idPedidoEspecialDetalle: parseInt(node[0].cells[7].innerHTML),
             };
-            productos.push(row_);          
+            productos.push(row_);
         });
 
         if (totalProductosDevueltos <= 0) {
@@ -1040,7 +1014,7 @@ $(document).ready(function () {
             return;
         }
 
-        dataToPost = JSON.stringify({ productos: productos, idPedidoEspecial: $("#idPedidoEspecial").val(), montoDevuelto: montoDevuelto, motivoDevolucion: $('#motivoDevolucion').val()});
+        dataToPost = JSON.stringify({ productos: productos, idPedidoEspecial: $("#idPedidoEspecial").val(), montoDevuelto: montoDevuelto, motivoDevolucion: $('#motivoDevolucion').val() });
         console.log(dataToPost);
 
         $.ajax({
@@ -1051,7 +1025,7 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             async: true,
             beforeSend: function (xhr) {
-                ShowLoader("Realizando devolucion.");                
+                ShowLoader("Realizando devolucion.");
             },
             success: function (data) {
                 OcultarLoader();
@@ -1059,17 +1033,17 @@ $(document).ready(function () {
                 MuestraToast(result.Estatus == 200 ? 'success' : 'error', result.Mensaje);
 
 
-                if (result.Estatus == 200) {                    
+                if (result.Estatus == 200) {
                     ImprimeTicket($("#idPedidoEspecial").val(), 2, 0)
                     $('#modalDevolucionPedidosEspeciales').modal('hide');
-                    $("#btnBuscarPedidosEspeciales").trigger('click');              
+                    $("#btnBuscarPedidosEspeciales").trigger('click');
                     //ConsultExcesoEfectivo();
                 }
-               
+
 
             },
             error: function (xhr, status) {
-                OcultarLoader();               
+                OcultarLoader();
                 console.log('Hubo un problema al realizar la devoluciòn, contactese con el administrador del sistema');
                 console.log(xhr);
                 console.log(status);

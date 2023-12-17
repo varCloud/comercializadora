@@ -70,7 +70,7 @@ namespace lluviaBackEnd.Controllers
                         factura.mensajeError = "En proceso de cancelacion.";
                         notificacion = new FacturaDAO().CancelarFactura(factura);
                     }
-                    if (statusCancelacion.Equals("202"))
+                    else if (statusCancelacion.Equals("202"))
                     {
                         notificacion.Estatus = -1;
                         notificacion.Mensaje = "Factura previamente enviada espere un momento y consulte su estado en el modulo de facturas.";
