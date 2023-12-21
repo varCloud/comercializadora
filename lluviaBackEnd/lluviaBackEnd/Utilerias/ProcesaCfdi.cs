@@ -202,7 +202,7 @@ namespace lluviaBackEnd.Utilerias
             try
             {
                 string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
-                X509Certificate2 cert = new X509Certificate2(Resource.archivo2022_pfx, strLlavePwd);
+                X509Certificate2 cert = new X509Certificate2(lluviaBackEnd.Resource.archivo2022_pfx, strLlavePwd, X509KeyStorageFlags.MachineKeySet);
                 RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
                 SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
                 Reference reference = new Reference() { Uri = String.Empty };

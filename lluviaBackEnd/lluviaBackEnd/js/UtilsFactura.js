@@ -32,6 +32,7 @@
         }
     });
 }
+
 function UtilsFacturaPedidoEspecial(idPedidoEspecial, urlToRedirect = undefined, fn = null) {
     console.log(`UtilsFacturaPedidoEspecial`);
     $.ajax({

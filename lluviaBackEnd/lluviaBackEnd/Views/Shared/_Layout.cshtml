@@ -157,13 +157,13 @@
                             }
 
 
-                            <li class="dropdown">
+                            <li class="dropdown @(ViewBag.Title.ToString().Contains("Ventas") ? "dropdown active" : "") ">
                                 <a href="#" class="menu-toggle nav-link has-dropdown @abrir"><i data-feather="dollar-sign"></i><span>Ventas</span></a>
                                 <ul class="dropdown-menu" style="@abrir">
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Ventas" ? "dropdown active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas Canceladas" ? "dropdown active" : "")" href="@Url.Action("ConsultaVentasCanceladas", "Ventas")">Ventas Canceladas</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Facturas" ? "dropdown active" : "")" href="@Url.Action("Facturas", "Factura")">Facturas</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString().Contains("Nueva venta") ? "dropdown sub-menu-item-active" : "")" href="@Url.Action("Ventas", "Ventas")">Nueva Venta</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString().Contains("Consultar_Ventas") ? "dropdown sub-menu-item-active" : "")" href="@Url.Action("ConsultaVentas", "Ventas")">Editar Ventas</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Ventas Canceladas" ? "dropdown sub-menu-item-active" : "")" href="@Url.Action("ConsultaVentasCanceladas", "Ventas")">Ventas Canceladas</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString().Contains("Facturas") ? "dropdown sub-menu-item-active" : "")" href="@Url.Action("Facturas", "Factura")">Facturas</a></li>
                                     <li><a class="nav-link @(ViewBag.Title.ToString() == "Retiros" ? "dropdown active" : "")" href="@Url.Action("Retiros", "Ventas")">Retiros de Efectivo</a></li>
                                 </ul>
                             </li>
