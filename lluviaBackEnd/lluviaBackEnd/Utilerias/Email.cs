@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.Models;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -326,7 +327,11 @@ namespace lluviaBackEnd.Utilerias
                 mmsg.To.Add(emailUSuario); // cuenta Email a la cual sera dirigido el correo
                 if (!string.IsNullOrEmpty(correoCopia))
                     mmsg.Bcc.Add(correoCopia);
-                mmsg.Bcc.Add(WebConfigurationManager.AppSettings["correoCCFacturas"].ToString());
+
+				WebConfigurationManager.AppSettings["correoCCFacturas"].ToString().Split(',').ForEach(s =>
+				{
+					if (!string.IsNullOrEmpty(s)) { mmsg.Bcc.Add(s); }
+				});
                 mmsg.Subject = asunto; //Asunto del correo
                 mmsg.SubjectEncoding = System.Text.Encoding.UTF8; //cambiamos el tipo de texto a UTF8
                 mmsg.Body = cuerpo; //Cuerpo del mensaje
