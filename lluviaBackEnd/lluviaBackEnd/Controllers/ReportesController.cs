@@ -590,7 +590,90 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ReporteGeneral(int id)
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ReportesDAO().ObtenerReporteGeneral();
+
+                if (notificacion.Modelo != null)
+                {
+                    generaCSVInventario(notificacion.Modelo, id);
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+                return new EmptyResult();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public ActionResult generaCSVInventario(List<Producto> listaProductos, int tipo)
+        {
+            string nombreArchivo = tipo == 1 ? "ReporteInventarioGeneral_" : "ReporteInventarioUbicacion_";
+            DateTime dt = new DateTime();
+            dt = DateTime.Now;
+            nombreArchivo += dt.ToString("ddMMyyyy");
+
+            string data = ""; 
+            string header = "";
+
+            header += "IdProducto" + ",";
+            header += "Descripcion" + ",";
+            header += "Ultimo Costo de Compra" + ",";
+            header += "Precio Individual" + ",";
+            header += "Precio Menudeo" + ",";
+            header += "Cantidad" + ",";
+
+            if (tipo == 2)
+            {
+                header += "IdPasillo" + ",";
+                header += "IdRaq" + ",";
+                header += "IdPiso" + ",";
+            }
+
+            foreach (Producto producto in listaProductos)
+            {
+                data += "\n";
+                data += producto.idProducto + ",";
+
+                if (producto.descripcion.Contains(","))
+                {
+                    producto.descripcion = "\"" + producto.descripcion.Replace("\"", "\"\"") + "\"";
+                }
+
+                data += producto.descripcion + ",";
+                data += producto.ultimoCostoCompra + ",";
+                data += producto.precioIndividual + ",";
+                data += producto.precioMenudeo + ",";
+                data += producto.cantidad + ",";
+                
+                if (tipo == 2) 
+                { 
+                    data += producto.idPasillo + ",";
+                    data += producto.idRaq + ",";
+                    data += producto.idPiso + ",";
+                }
+            }
+
+            data = header + data;
+            Response.Clear();
+            Response.ContentType = "application/CSV";
+            Response.AddHeader("content-disposition", "attachment; filename=\"" + nombreArchivo + ".csv\"");
+            Response.Write(data);
+            Response.End();
+            return new EmptyResult();
+        }
+
+
     }
-
-
 }

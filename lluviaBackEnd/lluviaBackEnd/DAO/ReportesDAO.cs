@@ -693,6 +693,40 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        public Notificacion<List<Producto>> ObtenerReporteGeneral()
+        {
+            Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+
+                    parameters.Add("@tipo", 1);
+                    var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_GENERAL_UBICACION", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                        notificacion.Modelo = result.Read<Producto>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Estatus = r1.status;
+                        notificacion.Mensaje = r1.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+
+        }
+
+
 
 
     }
