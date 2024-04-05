@@ -693,7 +693,7 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
-        public Notificacion<List<Producto>> ObtenerReporteGeneral()
+        public Notificacion<List<Producto>> ObtenerReporteGeneral(int tipo)
         {
             Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
             try
@@ -702,7 +702,7 @@ namespace lluviaBackEnd.DAO
                 {
                     var parameters = new DynamicParameters();
 
-                    parameters.Add("@tipo", 1);
+                    parameters.Add("@tipo", tipo);
                     var result = db.QueryMultiple("SP_CONSULTA_INVENTARIO_GENERAL_UBICACION", parameters, commandType: CommandType.StoredProcedure);
                     var r1 = result.ReadFirst();
                     if (r1.status == 200)

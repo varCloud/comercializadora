@@ -92,8 +92,10 @@
             </div>*@
                         <div class="text-right" style="margin-top:15px;">
                             @*<button type="reset" id="btnLimpiarFiltro" class="btn btn-danger">Limpiar</button>*@
-                            <a href="@Url.Action("ReporteGeneral", "Reportes", new {id=1})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Reporte General"> Reporte General </a>
-                            <a href="@Url.Action("ReporteGeneral", "Reportes", new {id=2})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Reporte por Ubicación"> Reporte por Ubicación </a>
+                            @*<a href="@Url.Action("ReporteGeneral", "Reportes", new {id=1})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Reporte General"> Reporte General </a>*@
+                            <button class="btn btn-info" type="submit" id="ReporteGeneral">Reporte General</button>
+                            <button class="btn btn-info" type="submit" id="ReportePorUbicacion">Reporte por Ubicación</button>
+                            @*<a href="@Url.Action("ReporteGeneral", "Reportes", new {id=2})" class="btn btn-icon btn-info" data-toggle="tooltip" title="Reporte por Ubicación"> Reporte por Ubicación </a>*@
                             <button type="submit" id="btnBuscarProductos" class="btn btn-success">Buscar</button>
                         </div>
                     }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -595,11 +596,13 @@ namespace lluviaBackEnd.Controllers
             try
             {
                 Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
-                notificacion = new ReportesDAO().ObtenerReporteGeneral();
+                notificacion = new ReportesDAO().ObtenerReporteGeneral(id);
 
                 if (notificacion.Modelo != null)
                 {
                     generaCSVInventario(notificacion.Modelo, id);
+                    notificacion.Estatus = 200;
+                    notificacion.Mensaje = "Reporte generado correctamente.";
                 }
                 else
                 {
@@ -607,7 +610,8 @@ namespace lluviaBackEnd.Controllers
                     ViewBag.mensaje = notificacion.Mensaje;
                     return PartialView("_SinResultados");
                 }
-                return new EmptyResult();
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+                //return new EmptyResult();
             }
             catch (Exception ex)
             {
