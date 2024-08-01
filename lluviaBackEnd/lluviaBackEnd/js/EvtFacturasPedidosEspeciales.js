@@ -51,7 +51,7 @@ function InitTableFacturas() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
             {
@@ -60,7 +60,7 @@ function InitTableFacturas() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
         ],

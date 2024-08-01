@@ -57,7 +57,7 @@ function InitTableFacturas() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
             {
@@ -66,7 +66,7 @@ function InitTableFacturas() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
         ],
@@ -135,30 +135,6 @@ function CancelarFactura(idVenta) {
         });
 }
 
-//function ActualizaEstatusCancelacionFactura(idVenta) {
-
-//    $.ajax({
-//        url: pathDominio + "api/WsFactura/CancelarFactura",
-//        data: { id: idVenta, esPedidoEspecial: false },
-//        method: 'post',
-//        dataType: 'json',
-//        async: true,
-//        beforeSend: function (xhr) {
-
-//        },
-//        success: function (data) {
-//            MuestraToast('success', data.Mensaje);
-//            PintarTabla();
-//            OcultarLoader();
-//        },
-//        error: function (xhr, status) {
-//            OcultarLoader();
-//            console.log('LLUVIA: Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
-//            console.log(xhr);
-//            console.log(status);
-//        }
-//    });
-//}
 
 function limpiaModalFactura() {
     $("#idVentaIVA").val("");
