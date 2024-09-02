@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.DAO;
@@ -640,39 +641,56 @@ namespace lluviaBackEnd.Controllers
 
             if (tipo == 2)
             {
+                header += "Almacen" + ",";
+                header += "Pasillo" + ",";
+                header += "Raq" + ",";
+                header += "Piso" + ",";
                 header += "IdPasillo" + ",";
                 header += "IdRaq" + ",";
                 header += "IdPiso" + ",";
             }
 
+            StringBuilder dataBuilder = new StringBuilder();
+
             foreach (Producto producto in listaProductos)
             {
-                data += "\n";
-                data += producto.idProducto + ",";
+                dataBuilder.AppendLine(); // Añade una nueva línea.
 
-                if (producto.descripcion.Contains(","))
+                // Añade idProducto.
+                dataBuilder.Append(producto.idProducto).Append(',');
+
+                // Formatea la descripción si contiene comas.
+                string formattedDescripcion = producto.descripcion.Contains(",")
+                    ? "\"" + producto.descripcion.Replace("\"", "\"\"") + "\""
+                    : producto.descripcion;
+
+                dataBuilder.Append(formattedDescripcion).Append(',');
+
+                // Añade los demás campos.
+                dataBuilder.Append(producto.ultimoCostoCompra).Append(',')
+                           .Append(producto.precioIndividual).Append(',')
+                           .Append(producto.precioMenudeo).Append(',')
+                           .Append(producto.cantidad).Append(',');
+
+                // Añade los campos adicionales si `tipo` es 2.
+                if (tipo == 2)
                 {
-                    producto.descripcion = "\"" + producto.descripcion.Replace("\"", "\"\"") + "\"";
-                }
-
-                data += producto.descripcion + ",";
-                data += producto.ultimoCostoCompra + ",";
-                data += producto.precioIndividual + ",";
-                data += producto.precioMenudeo + ",";
-                data += producto.cantidad + ",";
-                
-                if (tipo == 2) 
-                { 
-                    data += producto.idPasillo + ",";
-                    data += producto.idRaq + ",";
-                    data += producto.idPiso + ",";
+                    dataBuilder.Append(producto.Almacen).Append(',')
+                                .Append(producto.Pasillo).Append(',')
+                                .Append(producto.Raq).Append(",")
+                                .Append(producto.Piso).Append(",")
+                                .Append(producto.idPasillo).Append(',')
+                                .Append(producto.idRaq).Append(',')
+                                .Append(producto.idPiso).Append(',');
                 }
             }
 
-            data = header + data;
+            data = header + dataBuilder.ToString();
             Response.Clear();
             Response.ContentType = "application/CSV";
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
             Response.AddHeader("content-disposition", "attachment; filename=\"" + nombreArchivo + ".csv\"");
+            Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
             Response.Write(data);
             Response.End();
             return new EmptyResult();
