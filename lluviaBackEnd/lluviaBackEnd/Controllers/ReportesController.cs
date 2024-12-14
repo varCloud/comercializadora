@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.Utilerias;
 using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
@@ -649,28 +652,27 @@ namespace lluviaBackEnd.Controllers
                 header += "IdRaq" + ",";
                 header += "IdPiso" + ",";
             }
-
             StringBuilder dataBuilder = new StringBuilder();
 
-            foreach (Producto producto in listaProductos)
+            listaProductos.ForEach(producto =>
             {
-                dataBuilder.AppendLine(); // Añade una nueva línea.
+            dataBuilder.AppendLine(); // Añade una nueva línea.
 
-                // Añade idProducto.
-                dataBuilder.Append(producto.idProducto).Append(',');
+            // Añade idProducto.
+            dataBuilder.Append(producto.idProducto).Append(',');
 
-                // Formatea la descripción si contiene comas.
-                string formattedDescripcion = producto.descripcion.Contains(",")
-                    ? "\"" + producto.descripcion.Replace("\"", "\"\"") + "\""
-                    : producto.descripcion;
+            // Formatea la descripción si contiene comas.
+            string formattedDescripcion = producto.descripcion.Contains(",")
+                ? "\"" + producto.descripcion.Replace("\"", "\"\"") + "\""
+                : producto.descripcion;
 
-                dataBuilder.Append(formattedDescripcion).Append(',');
+            dataBuilder.Append(formattedDescripcion).Append(',');
 
-                // Añade los demás campos.
-                dataBuilder.Append(producto.ultimoCostoCompra).Append(',')
-                           .Append(producto.precioIndividual).Append(',')
-                           .Append(producto.precioMenudeo).Append(',')
-                           .Append(producto.cantidad).Append(',');
+            // Añade los demás campos.
+            dataBuilder.Append(producto.ultimoCostoCompra).Append(',')
+                       .Append(producto.precioIndividual).Append(',')
+                       .Append(producto.precioMenudeo).Append(',')
+                       .Append(producto.cantidad).Append(',');
 
                 // Añade los campos adicionales si `tipo` es 2.
                 if (tipo == 2)
@@ -683,14 +685,22 @@ namespace lluviaBackEnd.Controllers
                                 .Append(producto.idRaq).Append(',')
                                 .Append(producto.idPiso).Append(',');
                 }
-            }
+
+            });
 
             data = header + dataBuilder.ToString();
+            //HILO NUEVO PARA ENVIAR EL CORREO 
+            Task.Factory.StartNew(() =>
+            {
+                byte[] byteArray = Encoding.UTF8.GetBytes(data.ToString());
+                MemoryStream stream = new MemoryStream(byteArray);
+                Email.EnviarCorreoConAdjunto(stream, nombreArchivo+".csv");
+            });
+            
             Response.Clear();
             Response.ContentType = "application/CSV";
             Response.ContentEncoding = System.Text.Encoding.UTF8;
             Response.AddHeader("content-disposition", "attachment; filename=\"" + nombreArchivo + ".csv\"");
-            Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
             Response.Write(data);
             Response.End();
             return new EmptyResult();

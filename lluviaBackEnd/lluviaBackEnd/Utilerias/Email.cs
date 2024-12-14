@@ -2,11 +2,14 @@
 using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using System.Windows.Interop;
 
 namespace lluviaBackEnd.Utilerias
 {
@@ -320,8 +323,8 @@ namespace lluviaBackEnd.Utilerias
         {
             try
             {
-                string correoProveedor = WebConfigurationManager.AppSettings["correoProveedor"].ToString();//"cristian.perez.garcia.54@gmail.com";
-                string contrasenaProveedor = WebConfigurationManager.AppSettings["contrasenaProveedor"].ToString(); //ConfigurationManager.AppSettings["contrasenaCorreoExterno"].ToString(); //"Kaneki_54";
+                string correoProveedor = WebConfigurationManager.AppSettings["correoProveedor"].ToString();
+                string contrasenaProveedor = WebConfigurationManager.AppSettings["contrasenaProveedor"].ToString();
 
                 System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
                 mmsg.To.Add(emailUSuario); // cuenta Email a la cual sera dirigido el correo
@@ -346,7 +349,7 @@ namespace lluviaBackEnd.Utilerias
                 cliente.EnableSsl = true;
                 cliente.UseDefaultCredentials = false;
                 cliente.DeliveryMethod = SmtpDeliveryMethod.Network;
-                cliente.Host = "smtp.gmail.com"; //mail.dominio.com
+                cliente.Host = "smtp.gmail.com"; 
                 cliente.Credentials = new System.Net.NetworkCredential(correoProveedor, contrasenaProveedor);  // Credenciales del correo emisor
                 //smtp
                 cliente.Send(mmsg);
@@ -355,6 +358,51 @@ namespace lluviaBackEnd.Utilerias
             {
                 throw ex;
             }
+        }
+
+        public static void EnviarCorreoConAdjunto(Stream archivoAdjunto, string nombreArchivo)
+        {
+			try
+			{
+				string correoProveedor = WebConfigurationManager.AppSettings["correoProveedor"].ToString();
+				string contrasenaProveedor = WebConfigurationManager.AppSettings["contrasenaProveedor"].ToString();
+				// Configurar el correo electrónico
+				MailMessage mail = new MailMessage();
+				mail.From = new MailAddress(correoProveedor);
+
+				mail.Subject = "Archivo CSV Generado";
+				mail.Body = "Adjunto encontrarás el archivo CSV solicitado.";
+				WebConfigurationManager.AppSettings["correoCCFacturas"].ToString().Split(',').ForEach(s =>
+				{
+					if (!string.IsNullOrEmpty(s)) { mail.Bcc.Add(s); }
+				});
+
+				// Crear el archivo adjunto
+				archivoAdjunto.Position = 0; // Asegurarse de que el stream esté en la posición inicial
+				Attachment attachment = new Attachment(archivoAdjunto, nombreArchivo, "application/csv");
+				mail.Attachments.Add(attachment);
+
+				// Configurar el cliente SMTP
+				SmtpClient cliente = new SmtpClient("smtp.gmail.com");
+				cliente.Port = 587; // Puerto común para SMTP
+				cliente.EnableSsl = true; // Habilitar SSL si es necesario
+				cliente.UseDefaultCredentials = false;
+				cliente.DeliveryMethod = SmtpDeliveryMethod.Network;
+				cliente.Host = "smtp.gmail.com";
+				cliente.Credentials = new System.Net.NetworkCredential(correoProveedor, contrasenaProveedor);
+
+				// Enviar el correo electrónico
+				cliente.Send(mail);
+
+				// Limpiar
+				archivoAdjunto.Dispose();
+				mail.Dispose();
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine("Error al enviar el mail" + ex.Message);
+			}
         }
 
         #endregion FUNCIONES - PRIVADAS
