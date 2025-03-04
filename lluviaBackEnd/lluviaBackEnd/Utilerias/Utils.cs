@@ -1,5 +1,4 @@
-﻿using ImageMagick;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using lluviaBackEnd.Models;
@@ -139,6 +138,16 @@ namespace lluviaBackEnd.Utilerias
                 }*/
 
             }
+        }
+
+        public static string ExpresionImpresa(Comprobante c)
+        {
+            var data = "&id=" + c.Complemento.TimbreFiscalDigital.UUID;
+            data = data + "&re=" + c.Emisor.Rfc;
+            data = data + "&rr=" + c.Receptor.Rfc;
+            data = data + "&tt=" + c.Total.ToString("#.##");
+            data = data + "&fe=" + c.Sello.Substring(c.Sello.Length - 8);
+            return data;
         }
 
         public static string ObtnerFolder()

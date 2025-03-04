@@ -81,6 +81,7 @@ function InitDataTableConsultaPedidosEnRuta() {
 
 
 function VerTicket(idPedidoEspecial, idTipoTicketPedidoEspecial, idTicketPedidoEspecial) {
+    console.log(`VerTicket`)
     $.ajax({
         url: rootUrl("/PedidosEspecialesV2/VerTicket"),
         data: { idPedidoEspecial: idPedidoEspecial, idTipoTicketPedidoEspecial: idTipoTicketPedidoEspecial, idTicketPedidoEspecial: idTicketPedidoEspecial },

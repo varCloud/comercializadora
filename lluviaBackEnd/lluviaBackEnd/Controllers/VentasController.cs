@@ -1692,6 +1692,27 @@ namespace lluviaBackEnd.Controllers
                 throw ex;
             }
         }
+        [HttpPost]
+        public ActionResult VerTicketTest(int idVenta)
+        {
+            Notificacion<String> notificacion = new Notificacion<string>();
+            try
+            {
+                Sesion usuario = Session["UsuarioActual"] as Sesion;
+                Notificacion<List<Ticket>> ticket = new VentasDAO().ObtenerTickets(new Ticket() { idVenta = idVenta });
+                notificacion.Estatus = 200;
+                notificacion.Mensaje = "Ticket generado correctamente.";
+                string pdfCodigos = Convert.ToBase64String(Utilerias.Utils.GeneraTicketPDF(ticket.Modelo, usuario));
+                ViewBag.pdfBase64 = pdfCodigos;
+                ViewBag.title = "Ticket: " + idVenta.ToString(); ;
+                return Json(pdfCodigos, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
 
         public ActionResult VerTodosTickets(int idVenta)
         {

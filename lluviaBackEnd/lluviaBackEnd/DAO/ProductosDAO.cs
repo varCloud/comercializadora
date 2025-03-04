@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using lluviaBackEnd.WebServices.Modelos.Request;
 using System.Xml;
 using System.Xml.Serialization;
+using lluviaBackEnd.Utilerias;
 
 namespace lluviaBackEnd.DAO
 {

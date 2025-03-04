@@ -202,36 +202,11 @@ $('#chkFacturarPedido').click(function () {
     var iva = parseFloat(0).toFixed(2);
     var porcentajeIva = parseFloat(0.16).toFixed(2);
 
-    //if (idCliente == 1) {
-    //    MuestraToast('warning', "Debe seleccionar un cliente diferente a " + $("#idCliente").find("option:selected").text());
-    //    document.getElementById("chkFacturarPedido").checked = false;
-    //    return
-    //}
-
     if ($('#chkFacturarPedido').is(':checked')) {
 
         if (!ValidarClienteParaFacturacion(false)) {
             return;
         }
-        //cliente = listClientes.find(x => x.idCliente == idCliente)
-        //console.log(cliente);
-        //if (cliente) {
-        //    if (!validarEmail(cliente.correo)) {
-        //        MuestraToast('warning', "No es posible facturar a un cliente sin correo electrónico vàlido");
-        //        document.getElementById("chkFacturarPedido").checked = false;
-        //        return false;
-        //    }
-
-        //    if (!validarRFC(cliente.rfc)) {
-        //        MuestraToast('warning', "No es posible facturar a un cliente sin RFC vàlido");
-        //        document.getElementById("chkFacturarPedido").checked = false;
-        //        return false;
-        //    }
-        //} else {
-        //    MuestraToast('warning', "No es posible facturar a  este cliente por favor comuníquese con el administrador web");
-        //    document.getElementById("chkFacturarPedido").checked = false;
-        //    return false;
-        //}
         document.getElementById("divChkLiquidado").style.display = 'block';
         document.getElementById("divChkCredito").style.display = 'none';
         document.getElementById("divChkCreditoConAbono").style.display = 'none';
@@ -533,7 +508,9 @@ $('#btnEntregarPedidoEspecial').click(function (e) {
 
 
                 if ($("#chkFacturarPedido").is(":checked")) {
-                    facturaPedidoEspecial(idPedidoEspecial, idUsuarioEntrega);
+                    const urlRedirect = "/PedidosEspecialesV2/EntregarPedido"
+                    UtilsFacturaPedidoEspecial(idPedidoEspecial, urlRedirect, null);
+                    $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
                 }
                 else
                     window.location.href = rootUrl(redirectPathBack(esPedidoEnRuta));
@@ -602,32 +579,30 @@ function ImprimeTicketPedidoEspecial(idPedidoEspecial, idTipoTicketPedidoEspecia
     });
 }
 
-
-
-function facturaPedidoEspecial(idPedidoEspecial) {
-    $.ajax({
-        url: pathDominio + "api/WsFactura/GenerarFactura",
-        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
-        method: 'post',
-        dataType: 'json',
-        async: true,
-        beforeSend: function (xhr) {
-            ShowLoader("Facturando Venta.");
-        },
-        success: function (data) {
-            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
-            OcultarLoader();
-            window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
-        },
-        error: function (xhr, status) {
-            $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
-            console.log('Disculpe, existió un problema');
-            console.log(xhr);
-            console.log(status);
-            OcultarLoader();
-        }
-    });
-}
+//function facturaPedidoEspecial(idPedidoEspecial) {
+//    $.ajax({
+//        url: pathDominio + "api/WsFactura/GenerarFactura",
+//        data: { idPedidoEspecial: idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
+//        method: 'post',
+//        dataType: 'json',
+//        async: true,
+//        beforeSend: function (xhr) {
+//            ShowLoader("Facturando Venta.");
+//        },
+//        success: function (data) {
+//            MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+//            OcultarLoader();
+//            window.location.href = rootUrl("/PedidosEspecialesV2/EntregarPedido");
+//        },
+//        error: function (xhr, status) {
+//            $("#btnEntregarPedidoEspecial").removeClass('btn-progress disabled');
+//            console.log('Disculpe, existió un problema');
+//            console.log(xhr);
+//            console.log(status);
+//            OcultarLoader();
+//        }
+//    });
+//}
 
 function InitSelect2() {
     $('.select-multiple').select2({
@@ -667,8 +642,6 @@ $('#chkCredito').click(function () {
 $('#chkCreditoConAbono').click(function () {
     chkChangeTipoPago('chkCreditoConAbono');
 });
-
-
 
 function chkChangeEntregar(chk) {
 
@@ -1116,14 +1089,8 @@ function initInputsTabla() {
         var idProducto = parseInt(tblProductos.rows[rowIndex].cells[1].innerHTML);
         var productosSolicitados = parseInt(tblProductos.rows[rowIndex].cells[6].innerHTML);
 
-        //if ((thisInput.val() == "") || (thisInput.val() == "0")) {
-        //    MuestraToast('warning', mensaje);
-        //    //document.execCommand('undo');
-        //}
 
         if ((parseFloat(thisInput.val())) > (parseFloat(productosSolicitados))) {
-            //MuestraToast('warning', "No puedes aceptar una cantidad de productos mayor a la cantidad atendida.");
-            //document.execCommand('undo');
             return;
         }
 

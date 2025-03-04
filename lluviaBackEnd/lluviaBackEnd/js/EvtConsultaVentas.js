@@ -99,7 +99,6 @@ function ImprimeTicketDevolucion(idVenta, idDevolucion) {
             ShowLoader();
         },
         success: function (data) {
-            console.log(data);
             OcultarLoader();
             MuestraToast('success', "Se envio el ticket a la impresora.");
         },
@@ -219,6 +218,7 @@ function eliminaArchivo(rutaArchivo) {
 
 
 function VerTicket(idVenta) {
+    console.log('VerTicket');
     $.ajax({
         url: rootUrl("/Ventas/VerTicket"),
         data: { idVenta: idVenta },
@@ -229,6 +229,7 @@ function VerTicket(idVenta) {
             ShowLoader()
         },
         success: function (data) {
+            console.log(data)
             MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
             OcultarLoader();
             console.log(data);
@@ -245,11 +246,41 @@ function VerTicket(idVenta) {
 }
 
 
+function VerTicketTest(idVenta) {
+    console.log('VerTicket');
+    $.ajax({
+        url: rootUrl("/Ventas/VerTicketTest"),
+        data: { idVenta: idVenta },
+        method: 'post',
+        dataType: 'json',
+        async: true,
+        beforeSend: function (xhr) {
+            ShowLoader()
+        },
+        success: function (data) {
+            console.log(data)
+            printJS({ printable: data, type: 'pdf', base64: true, showModal: false})
+            //MuestraToast(data.Estatus == 200 ? 'success' : 'error', data.Mensaje);
+            OcultarLoader();
+            //console.log(data);
+            //window.open("http://" + window.location.host + data.Modelo, "_blank");
+            //console.log("http://" + window.location.host + data.Modelo);
+        },
+        error: function (xhr, status) {
+            console.log('Disculpe, existió un problema VerTicketTest');
+            console.log(xhr);
+            console.log(status);
+            OcultarLoader();
+        }
+    });
+}
+
+
 
 function PintarTabla() {
     $.ajax({
         url: rootUrl("/Ventas/_ObtenerVentas"),
-        data: { idVenta: 0 },
+        data: { idVenta: 0, fechaIni: $('#fechaIni').val() ,  fechaFin: $('#fechaFin').val() },
         method: 'post',
         dataType: 'html',
         async: true,
@@ -382,12 +413,14 @@ function CancelarFactura(idVenta) {
                     async: true,
                     beforeSend: function (xhr) {
                         ShowLoader("Cancelando Factura.");
-                        console.log("Antes ")
                     },
                     success: function (data) {
-                        OcultarLoader();
                         MuestraToast('success', data.Mensaje);
-                        PintarTabla();
+                        setTimeout(() => {
+                            OcultarLoader();
+                            ActualizarEstatusCancelacionFactura(idVenta, false, true, PintarTabla);
+                        }, 500)
+                        
                     },
                     error: function (xhr, status) {
                         OcultarLoader();
@@ -763,7 +796,7 @@ $(document).ready(function () {
     InitRangePicker('rangeConsultaVentas', 'fechaIni', 'fechaFin');
     //$('#rangeConsultaVentas').val('');
     $('#codigoBarrasTicket').focus();
-    //$('#fechaIni').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+    //rangeConsultaVentas$('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
     //$('#fechaFin').val($('#rangeConsultaVentas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
 });

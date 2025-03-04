@@ -1,7 +1,7 @@
 ﻿
 @using System.Globalization;
 @{
-    ViewBag.Title = "ConsultarPedidosEspeciales";
+    ViewBag.Title = "Pedidos_Especiales | Consultar pedidos especiales";
     List<SelectListItem> listClientes = (List<SelectListItem>)ViewBag.listClientes;
     List<SelectListItem> listUsuarios = (List<SelectListItem>)ViewBag.listUsuarios;
     List<SelectListItem> listEstatus = (List<SelectListItem>)ViewBag.listEstatus;
@@ -102,7 +102,7 @@
 </div>
 
 
-
+@* DIV PRINCIPARA PARA PINTAR LA TABLA *@
 <div class="section-body">
     <div class="row">
         <div class="col-12">
@@ -211,9 +211,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 @*Modal facturacion *@
 <div class="modal fade bd-example-modal-lg" id="ModalFacturar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -333,6 +330,7 @@
     <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
     <script src="~/js/EvtConsultaPedidosEspecialesV2.js"></script>
     <script src="~/js/evtIngresosRetirosEfectivo.js"></script>
+    <script src="~/js/UtilsFactura.js"></script>
 }
 
 

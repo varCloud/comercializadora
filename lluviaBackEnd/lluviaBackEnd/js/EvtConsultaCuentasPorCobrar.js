@@ -321,7 +321,13 @@ function calculaTotales(conReseteoCampos) {
         porcentajeComisionBancaria = parseFloat($('#comisionBancaria').val()).toFixed(2);
     }
 
-    var abono = parseFloat($("#montoAbonar").val()).toFixed(2);   
+    var montoAbonar = $("#montoAbonar").val();
+    
+    if (montoAbonar == ''){
+        montoAbonar = parseFloat(0);
+    }
+    
+    var abono = parseFloat(montoAbonar).toFixed(2);
    
     var comisionBancaria = (parseFloat((abono) * (porcentajeComisionBancaria / 100))).toFixed(2);    
     var iva = parseFloat(0).toFixed(2);

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using lluviaBackEnd.DAO;
 using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
+using lluviaBackEnd.Utilerias;
+using Newtonsoft.Json;
 
 namespace lluviaBackEnd.Controllers
 {
@@ -590,7 +595,117 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ReporteGeneral(int id)
+        {
+            try
+            {
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ReportesDAO().ObtenerReporteGeneral(id);
+
+                if (notificacion.Modelo != null)
+                {
+                    generaCSVInventario(notificacion.Modelo, id);
+                    notificacion.Estatus = 200;
+                    notificacion.Mensaje = "Reporte generado correctamente.";
+                }
+                else
+                {
+                    ViewBag.titulo = "Mensaje: ";
+                    ViewBag.mensaje = notificacion.Mensaje;
+                    return PartialView("_SinResultados");
+                }
+                return Json(JsonConvert.SerializeObject(notificacion), JsonRequestBehavior.AllowGet);
+                //return new EmptyResult();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public ActionResult generaCSVInventario(List<Producto> listaProductos, int tipo)
+        {
+            string nombreArchivo = tipo == 1 ? "ReporteInventarioGeneral_" : "ReporteInventarioUbicacion_";
+            DateTime dt = new DateTime();
+            dt = DateTime.Now;
+            nombreArchivo += dt.ToString("ddMMyyyy");
+
+            string data = ""; 
+            string header = "";
+
+            header += "IdProducto" + ",";
+            header += "Descripcion" + ",";
+            header += "Ultimo Costo de Compra" + ",";
+            header += "Precio Individual" + ",";
+            header += "Precio Menudeo" + ",";
+            header += "Cantidad" + ",";
+
+            if (tipo == 2)
+            {
+                header += "Almacen" + ",";
+                header += "Pasillo" + ",";
+                header += "Raq" + ",";
+                header += "Piso" + ",";
+                header += "IdPasillo" + ",";
+                header += "IdRaq" + ",";
+                header += "IdPiso" + ",";
+            }
+            StringBuilder dataBuilder = new StringBuilder();
+
+            listaProductos.ForEach(producto =>
+            {
+            dataBuilder.AppendLine(); // Añade una nueva línea.
+
+            // Añade idProducto.
+            dataBuilder.Append(producto.idProducto).Append(',');
+
+            // Formatea la descripción si contiene comas.
+            string formattedDescripcion = producto.descripcion.Contains(",")
+                ? "\"" + producto.descripcion.Replace("\"", "\"\"") + "\""
+                : producto.descripcion;
+
+            dataBuilder.Append(formattedDescripcion).Append(',');
+
+            // Añade los demás campos.
+            dataBuilder.Append(producto.ultimoCostoCompra).Append(',')
+                       .Append(producto.precioIndividual).Append(',')
+                       .Append(producto.precioMenudeo).Append(',')
+                       .Append(producto.cantidad).Append(',');
+
+                // Añade los campos adicionales si `tipo` es 2.
+                if (tipo == 2)
+                {
+                    dataBuilder.Append(producto.Almacen).Append(',')
+                                .Append(producto.Pasillo).Append(',')
+                                .Append(producto.Raq).Append(",")
+                                .Append(producto.Piso).Append(",")
+                                .Append(producto.idPasillo).Append(',')
+                                .Append(producto.idRaq).Append(',')
+                                .Append(producto.idPiso).Append(',');
+                }
+
+            });
+
+            data = header + dataBuilder.ToString();
+            //HILO NUEVO PARA ENVIAR EL CORREO 
+            Task.Factory.StartNew(() =>
+            {
+                byte[] byteArray = Encoding.UTF8.GetBytes(data.ToString());
+                MemoryStream stream = new MemoryStream(byteArray);
+                Email.EnviarCorreoConAdjunto(stream, nombreArchivo+".csv");
+            });
+            
+            Response.Clear();
+            Response.ContentType = "application/CSV";
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
+            Response.AddHeader("content-disposition", "attachment; filename=\"" + nombreArchivo + ".csv\"");
+            Response.Write(data);
+            Response.End();
+            return new EmptyResult();
+        }
+
+
     }
-
-
 }

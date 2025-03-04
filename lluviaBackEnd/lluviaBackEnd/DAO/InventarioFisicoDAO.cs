@@ -256,6 +256,7 @@ namespace lluviaBackEnd.DAO
                     parameters.Add("@idUbicacion", ubicacion.idUbicacion);
                     parameters.Add("@idUsuario", idUsuario);
                     parameters.Add("@cantidadEnFisico", ubicacion.cantidadEnFisico);
+                    parameters.Add("@errorHumano", ubicacion.errorHumano);
                     notificacion = db.QuerySingle<Notificacion<string>>("SP_AJUSTA_PRODUCTO_INVENTARIO_FISICO_INDIVIDUAL", parameters, commandType: CommandType.StoredProcedure);
                 }
             }

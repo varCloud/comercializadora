@@ -271,5 +271,53 @@ namespace lluviaBackEnd.DAO
 
         }
         #endregion
+
+        #region  APP ADMINISTRACION DE PRODUCCION DE TRAPEADORES
+        public Notificacion<String> agreagrProductoInventarioTrapeadoresFinalizados(RequestAgregarProductoInventarioLiquidos request)
+        {
+            Notificacion<String> notificacion = null;
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idProducto", request.idProducto);
+                    parameters.Add("@cantidad", request.cantidad);
+                    parameters.Add("@idUsuario", request.idUsuario);
+                    parameters.Add("@idAlmacen", request.idAlmacen);
+                    notificacion = this.db.QuerySingle<Notificacion<String>>("SP_APP_AGREGAR_PRODUCTO_INVENTARIO_TRAPEADORES_FINALIZADOS", param: parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return notificacion;
+        }
+
+        public Notificacion<object> ObtenerProducionProductos(FiltroLiquidos filtroLiquidos)
+        {
+            Notificacion<object> notificacion = new Notificacion<object>();
+            try
+            {
+                DynamicParameters parametros = new DynamicParameters();
+
+                parametros.Add("@idTipoMovInventario", (filtroLiquidos.idTipoMovimiento == 0) ? null : ((object)filtroLiquidos.idTipoMovimiento));
+                parametros.Add("@idRol", (filtroLiquidos.idRol == 0) ? null : ((object)filtroLiquidos.idRol));
+                parametros.Add("@idUsuario", (filtroLiquidos.idUsuario == 0) ? null : ((object)filtroLiquidos.idUsuario));
+                parametros.Add("@fechaIni", (filtroLiquidos.fechaIni == DateTime.MinValue) ? null : ((object)filtroLiquidos.fechaIni));
+                parametros.Add("@fechaFin", (filtroLiquidos.fechaFin == DateTime.MinValue) ? null : ((object)filtroLiquidos.fechaFin));
+                notificacion = ConstructorDapper.Consultar("SP_CONSULTA_CARGA_MERCANCIA_LIQUIDOS", parametros);
+            }
+            catch (Exception exception1)
+            {
+                throw exception1;
+            }
+            return notificacion;
+        }
+
+
+        #endregion
     }
 }

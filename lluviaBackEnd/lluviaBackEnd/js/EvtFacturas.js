@@ -1,12 +1,12 @@
-﻿var tblFacturas
+﻿
+
+var tblFacturas
 $(document).ready(function () {
     if ($("#tblFacturas").length > 0) {
         InitTableFacturas();
     }
     
     InitRangePicker('rangeFacturas', 'fechaIni', 'fechaFin');
-    //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
 
     $('#rangeFacturas').val('');
     $('.select-multiple').select2({
@@ -57,7 +57,7 @@ function InitTableFacturas() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
             {
@@ -66,7 +66,7 @@ function InitTableFacturas() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
         ],
@@ -110,20 +110,19 @@ function CancelarFactura(idVenta) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    //url: rootUrl("/Factura/CancelarFactura"),
                     url: pathDominio + "api/WsFactura/CancelarFactura",
                     data: { idVenta: idVenta, idUsuario: idUsuarioGlobal },
                     method: 'post',
                     dataType: 'json',
                     async: false,
                     beforeSend: function (xhr) {
-                        console.log("Antes ")
+                        ShowLoader("Cancelando Factura.");
                     },
                     success: function (data) {
-                        MuestraToast('success', data.Mensaje);
-                        PintarTabla();
+                        ActualizarEstatusCancelacionFactura(idVenta, false, true, reloadTablasFacturasNormales);
                     },
                     error: function (xhr, status) {
+                        OcultarLoader();
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
                         console.log(xhr);
                         console.log(status);
@@ -136,8 +135,6 @@ function CancelarFactura(idVenta) {
         });
 }
 
-
-//reenviar factura
 
 function limpiaModalFactura() {
     $("#idVentaIVA").val("");
@@ -215,7 +212,6 @@ $('#btnReenviar').click(function () {
 
 });
     
-
 function modalFactura(idVenta) {
     limpiaModalFactura();
     var data = ConsultaDetalleFactura(idVenta);
@@ -280,6 +276,10 @@ function ConsultaDetalleFactura(idVenta) {
     });
 
     return result;
+}
+
+function reloadTablasFacturasNormales() {
+    $("#btnBuscarCompras").trigger('click')
 }
 
 

@@ -1,8 +1,146 @@
-﻿using System;
+﻿
+//// NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
+///// <remarks/>
+//[System.SerializableAttribute()]
+//[System.ComponentModel.DesignerCategoryAttribute("code")]
+//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+//[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
+//public partial class Cancelacion
+//{
+
+//    private CancelacionFolios foliosField;
+
+//    private string fechaField;
+
+//    private string rfcEmisorField;
+
+//    /// <remarks/>
+//    public CancelacionFolios Folios
+//    {
+//        get
+//        {
+//            return this.foliosField;
+//        }
+//        set
+//        {
+//            this.foliosField = value;
+//        }
+//    }
+
+//    /// <remarks/>
+//    [System.Xml.Serialization.XmlAttributeAttribute()]
+//    public string Fecha
+//    {
+//        get
+//        {
+//            return this.fechaField;
+//        }
+//        set
+//        {
+//            this.fechaField = value;
+//        }
+//    }
+
+//    /// <remarks/>
+//    [System.Xml.Serialization.XmlAttributeAttribute()]
+//    public string RfcEmisor
+//    {
+//        get
+//        {
+//            return this.rfcEmisorField;
+//        }
+//        set
+//        {
+//            this.rfcEmisorField = value;
+//        }
+//    }
+//}
+
+///// <remarks/>
+//[System.SerializableAttribute()]
+//[System.ComponentModel.DesignerCategoryAttribute("code")]
+//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+//public partial class CancelacionFolios
+//{
+
+//    private CancelacionFoliosFolio folioField;
+
+//    /// <remarks/>
+//    public CancelacionFoliosFolio Folio
+//    {
+//        get
+//        {
+//            return this.folioField;
+//        }
+//        set
+//        {
+//            this.folioField = value;
+//        }
+//    }
+//}
+
+///// <remarks/>
+//[System.SerializableAttribute()]
+//[System.ComponentModel.DesignerCategoryAttribute("code")]
+//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+//public partial class CancelacionFoliosFolio
+//{
+
+//    private string uUIDField;
+
+//    private string motivoField;
+
+//    private string folioSustitucionField;
+
+//    /// <remarks/>
+//    [System.Xml.Serialization.XmlAttributeAttribute()]
+//    public string UUID
+//    {
+//        get
+//        {
+//            return this.uUIDField;
+//        }
+//        set
+//        {
+//            this.uUIDField = value;
+//        }
+//    }
+
+//    /// <remarks/>
+//    [System.Xml.Serialization.XmlAttributeAttribute()]
+//    public string Motivo
+//    {
+//        get
+//        {
+//            return this.motivoField;
+//        }
+//        set
+//        {
+//            this.motivoField = value;
+//        }
+//    }
+
+//    /// <remarks/>
+//    [System.Xml.Serialization.XmlAttributeAttribute()]
+//    public string FolioSustitucion
+//    {
+//        get
+//        {
+//            return this.folioSustitucionField;
+//        }
+//        set
+//        {
+//            this.folioSustitucionField = value;
+//        }
+//    }
+//}
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace lluviaBackEnd.Models.Facturacion
 {
@@ -74,9 +212,34 @@ namespace lluviaBackEnd.Models.Facturacion
     public partial class Folios
     {
 
-        private string uUIDField;
+        private List<Folio> folioField;
 
-        private string estatusUUIDField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public List<Folio> Folio
+        {
+            get
+            {
+                return this.folioField;
+            }
+            set
+            {
+                this.folioField = value;
+            }
+        }
+
+    }
+
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
+    public partial class Folio
+    {
+        //private string estatusUUIDField;
+
+        private string motivoField;
+        private string uUIDField;
 
         /// <remarks/>
         public string UUID
@@ -91,24 +254,23 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
 
-        /// <remarks/>
-        public string EstatusUUID
+
+        public string Motivo
         {
             get
             {
-                return this.estatusUUIDField;
+                return this.motivoField;
             }
             set
             {
-                this.estatusUUIDField = value;
+                this.motivoField = value;
             }
         }
     }
 
 
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
+        /// <remarks/>
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.6.1055.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name = "enviaAcuseCancelacionBinding", Namespace = "http://edifact.com.mx/xsd")]
@@ -218,37 +380,23 @@ namespace lluviaBackEnd.Models.Facturacion
 
 
 
-
     // NOTA: El código generado puede requerir, como mínimo, .NET Framework 4.5 o .NET Core/Standard 2.0.
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false , ElementName ="Acuse")]
+    
     public partial class AcuseCancelacionPruebasResponseWS
     {
 
-        private Folios foliosField;
-
         private Signature signatureField;
+
+        private ushort codEstatusField;
 
         private System.DateTime fechaField;
 
         private string rfcEmisorField;
-
-        /// <remarks/>
-       [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://cancelacfd.sat.gob.mx")]
-        public Folios Folios
-        {
-            get
-            {
-                return this.foliosField;
-            }
-            set
-            {
-                this.foliosField = value;
-            }
-        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.w3.org/2000/09/xmldsig#")]
@@ -261,6 +409,20 @@ namespace lluviaBackEnd.Models.Facturacion
             set
             {
                 this.signatureField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public ushort CodEstatus
+        {
+            get
+            {
+                return this.codEstatusField;
+            }
+            set
+            {
+                this.codEstatusField = value;
             }
         }
 
@@ -292,8 +454,6 @@ namespace lluviaBackEnd.Models.Facturacion
             }
         }
     }
-
-   
 
     /// <remarks/>
     [System.SerializableAttribute()]
@@ -628,12 +788,12 @@ namespace lluviaBackEnd.Models.Facturacion
     public partial class SignatureKeyInfo
     {
 
-        private ulong keyNameField;
+        private string keyNameField;
 
         private SignatureKeyInfoKeyValue keyValueField;
 
         /// <remarks/>
-        public ulong KeyName
+        public string KeyName
         {
             get
             {

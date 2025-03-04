@@ -5,9 +5,6 @@ $(document).ready(function () {
     }
     
     InitRangePicker('rangeFacturas', 'fechaIni', 'fechaFin');
-    //$('#fechaIni').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-    //$('#fechaFin').val($('#rangeFacturas').data('daterangepicker').startDate.format('YYYY-MM-DD'));
-
     $('#rangeFacturas').val('');
     $('.select-multiple').select2({
         width: "100%",
@@ -31,7 +28,6 @@ $(document).ready(function () {
     });
 
 });
-
 function InitTableFacturas() {
     var NombreTabla = "tblFacturas";
     tblFacturas = initDataTable(NombreTabla);
@@ -55,7 +51,7 @@ function InitTableFacturas() {
                     doc['footer'] = (function (page, pages) { return setFooterPDF(page, pages) });
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
             {
@@ -64,7 +60,7 @@ function InitTableFacturas() {
                 className: '',
                 titleAttr: 'Exportar a Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
             },
         ],
@@ -75,7 +71,6 @@ function InitTableFacturas() {
     );
 
 }
-
 function onBeginSubmitObtenerFacturas() {
     ShowLoader("Buscando...");
 }
@@ -94,10 +89,8 @@ function onSuccessResultObtenerFacturas(data) {
 function onFailureResultObtenerFacturas() {
     OcultarLoader();
 }
-
-
 function CancelarFactura(idPedidoEspecial) {
-
+   
     swal({
         title: 'Mensaje',
         text: 'Estas seguro que deseas cancelar la factura de Venta?',
@@ -108,7 +101,6 @@ function CancelarFactura(idPedidoEspecial) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    //url: rootUrl("/Factura/CancelarFactura"),
                     url: pathDominio + "api/WsFactura/CancelarFactura",
                     data: { idPedidoEspecial:idPedidoEspecial, idVenta: 0, idUsuario: idUsuarioGlobal },
                     method: 'post',
@@ -119,7 +111,7 @@ function CancelarFactura(idPedidoEspecial) {
                     },
                     success: function (data) {
                         MuestraToast('success', data.Mensaje);
-                        PintarTabla();
+                        reloadTablePedidosEspeciales();
                     },
                     error: function (xhr, status) {
                         console.log('Hubo un problema al intentar eliminar al usuario, contactese con el administrador del sistema');
@@ -133,10 +125,6 @@ function CancelarFactura(idPedidoEspecial) {
             }
         });
 }
-
-
-//reenviar factura
-
 function limpiaModalFactura() {
     $("#idVentaIVA").val("");
 
@@ -152,7 +140,6 @@ function limpiaModalFactura() {
     $("#nombreCliente").html(row_);
     $("#FormaPago").html("");
     $("#usoCFDI").html("");
-    //$("#previoTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoSubTotal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoIVA").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
     $("#previoFinal").html("<h4>$" + parseFloat(0).toFixed(2) + "</h4>");
@@ -212,8 +199,6 @@ $('#btnReenviarPE').click(function () {
 
 
 });
-    
-
 function modalFactura(idPedidoEspecial) {
     limpiaModalFactura();
     var data = ConsultaDetalleFactura(idPedidoEspecial);
@@ -251,7 +236,6 @@ function modalFactura(idPedidoEspecial) {
     $('#ModalFactura').modal({ backdrop: 'static', keyboard: false, show: true });
 
 }
-
 function ConsultaDetalleFactura(idPedidoEspecial) {
 
     var result = '';
@@ -278,6 +262,9 @@ function ConsultaDetalleFactura(idPedidoEspecial) {
     });
 
     return result;
+}
+function reloadTablePedidosEspeciales() {
+    $('#btnBuscarCompras').trigger('click');
 }
 
 

@@ -202,7 +202,7 @@ namespace lluviaBackEnd.Utilerias
             try
             {
                 string strLlavePwd = ConfigurationManager.AppSettings["claveGeneraSellolluvia"].ToString();
-                X509Certificate2 cert = new X509Certificate2(Resource.archivo2022_pfx, strLlavePwd);
+                X509Certificate2 cert = new X509Certificate2(lluviaBackEnd.Resource.archivo2022_pfx, strLlavePwd, X509KeyStorageFlags.MachineKeySet);
                 RSACryptoServiceProvider Key = cert.PrivateKey as RSACryptoServiceProvider;
                 SignedXml signedXml = new SignedXml(originalXmlDocument) { SigningKey = Key };
                 Reference reference = new Reference() { Uri = String.Empty };
@@ -338,14 +338,16 @@ namespace lluviaBackEnd.Utilerias
 
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
-                    lluviaBackEnd.Models.Facturacion.Produccion.enviaAcuseCancelacion envia = new Models.Facturacion.Produccion.enviaAcuseCancelacion();
+                    
+                    cancelaCFDI4Prod.enviaAcuseCancelacion envia = new cancelaCFDI4Prod.enviaAcuseCancelacion();
                     result = envia.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    
 
                 }
                 else
                 {
-                    lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion enviaCancelacion = new lluviaBackEnd.Models.Facturacion.enviaAcuseCancelacion();
-                    result = enviaCancelacion.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
+                    cancelaCFDITest.enviaAcuseCancelacion envia4 = new cancelaCFDITest.enviaAcuseCancelacion();
+                    result = envia4.CallenviaAcuseCancelacion(originalXmlDocument.OuterXml);
                 }
             }
             catch (Exception ex)
@@ -377,6 +379,7 @@ namespace lluviaBackEnd.Utilerias
                 var configuration = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<AcuseCancelacionPruebasResponseWS, AcuseCancelacionProductivoResponseWs>();
+                    cfg.CreateMap<Folio, AcuseFoliosFolio>();
                     cfg.CreateMap<Folios, AcuseFolios>();
                     cfg.CreateMap<lluviaBackEnd.Models.Facturacion.Signature, lluviaBackEnd.Models.Facturacion.Produccion.Signature>();
                     cfg.CreateMap<lluviaBackEnd.Models.Facturacion.SignatureSignedInfo, lluviaBackEnd.Models.Facturacion.Produccion.SignatureSignedInfo>();

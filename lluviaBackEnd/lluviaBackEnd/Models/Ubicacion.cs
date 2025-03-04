@@ -37,5 +37,7 @@ namespace lluviaBackEnd.Models
         public int ajustado { get; set; }
 
         public float cantidadEnFisico { get; set; }
+
+        public int errorHumano { get; set; }
     }
 }

@@ -449,7 +449,6 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public partial class AcuseFolios
     {
-
         private string uUIDField;
 
         private byte estatusUUIDField;
@@ -477,6 +476,44 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
             set
             {
                 this.estatusUUIDField = value;
+            }
+        }
+    }
+
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://cancelacfd.sat.gob.mx")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://cancelacfd.sat.gob.mx", IsNullable = false)]
+    public partial class AcuseFoliosFolio {
+
+        //private string estatusUUIDField;
+
+        private string motivoField;
+        private string uUIDField;
+
+        /// <remarks/>
+        public string UUID
+        {
+            get
+            {
+                return this.uUIDField;
+            }
+            set
+            {
+                this.uUIDField = value;
+            }
+        }
+
+
+        public string Motivo
+        {
+            get
+            {
+                return this.motivoField;
+            }
+            set
+            {
+                this.motivoField = value;
             }
         }
     }
@@ -906,10 +943,7 @@ namespace lluviaBackEnd.Models.Facturacion.Produccion
         }
     }
 
-
-
-
-
-
-
 }
+
+
+

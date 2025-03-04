@@ -668,6 +668,28 @@ namespace lluviaBackEnd.Controllers
             }
         }
 
+        public ActionResult ConsultarProduccionProductos(string idTipoMovimientoInventario, string name, string contact)
+        {
+            try
+            {
+                List<SelectListItem> listRoles = new List<SelectListItem>();
+                listRoles = new UsuarioDAO().ObtenerRoles(new Models.Rol() { idRol = 1 });
+                listRoles = listRoles.Where(c => (c.Value == "12") || (c.Value == "13")).ToList();
+                listRoles.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                List<SelectListItem> lstUsuarios = new List<SelectListItem>();
+                lstUsuarios.Insert(0, new SelectListItem { Text = "TODOS", Value = "0" });
+                ViewBag.lstRoles = listRoles;
+                ViewBag.lstUsuarios = lstUsuarios;
+                ViewBag.Title = "Produccion_Trapeadores";
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public ActionResult ConsultarUsuariosLiquidos(int idRol)
         {
@@ -708,6 +730,25 @@ namespace lluviaBackEnd.Controllers
 
                 throw ex;
             }
+        }
+
+        [HttpGet]
+        public FileStreamResult reportCsv()
+        {
+            try
+            {
+                Sesion UsuarioActual = (Sesion)Session["UsuarioActual"];
+                Notificacion<List<Producto>> notificacion = new Notificacion<List<Producto>>();
+                notificacion = new ProductosDAO().ObtenerProductos(new Models.Producto() { idProducto = 0, idUsuario = UsuarioActual.idUsuario });
+                var result = lluviaCsvHelper.ExportToCSV(notificacion.Modelo);
+                var memoryStream = new MemoryStream(result);
+                return new FileStreamResult(memoryStream, "text/csv") { FileDownloadName = "export.csv" };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+       
         }
 
 

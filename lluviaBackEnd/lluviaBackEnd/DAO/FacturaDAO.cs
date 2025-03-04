@@ -336,9 +336,9 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
-        public Cancelacion ObtenerCancelacionFactura(Factura factura)
+        public CancelarCFDI40 ObtenerCancelacionFactura(Factura factura)
         {
-            Cancelacion c = null;
+            CancelarCFDI40 c = null;
             try
             {
                 using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
@@ -346,7 +346,7 @@ namespace lluviaBackEnd.DAO
                     var parameters = new DynamicParameters();
 
                     string sp = factura.idPedidoEspecial == 0 ? "SP_OBTENER_CANCELACION_FACTURA" : "SP_FACTURACION_OBTENER_CANCELACION_FACTURA";
-                    parameters.Add(factura.idPedidoEspecial == 0 ? "@idVenta": "@idPedidoEspecial", factura.idPedidoEspecial == 0 ?factura.idVenta : factura.idPedidoEspecial.ToString());
+                    parameters.Add(factura.idPedidoEspecial == 0 ? "@idVenta": "@idPedidoEspecial", factura.idPedidoEspecial == 0 ? factura.idVenta : factura.idPedidoEspecial.ToString());
 
                     var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
                     var rs1 = rs.ReadFirst();
@@ -356,11 +356,11 @@ namespace lluviaBackEnd.DAO
                         var dataCancelacion = rs.ReadFirst();
                         if (dataCancelacion != null)
                         {
-                            c = new Cancelacion();
+                            c = new CancelarCFDI40();
                             c.Fecha = System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                             c.RfcEmisor = dataCancelacion.Rfc;
-                            c.Folios = new Folios();
-                            c.Folios.UUID = dataCancelacion.UUID;
+                            c.Folios = new CancelacionFolios();
+                            c.Folios.Folio = new CancelacionFoliosFolio() { UUID = dataCancelacion.UUID, Motivo = "03" };
                         }
 
                     }
@@ -409,7 +409,6 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
-
         public Notificacion<dynamic> ObtenerDetalleFacturaPE(Factura f)
         {
             Notificacion<dynamic> facturas = new Notificacion<dynamic>();
@@ -444,6 +443,41 @@ namespace lluviaBackEnd.DAO
             return facturas;
         }
 
+        public Notificacion<dynamic> ObtenerPathXMLFactura(Int64 id , Boolean esPedidoEspecial = false)
+        {
+            Notificacion<dynamic> facturas = new Notificacion<dynamic>();
+            try
+            {
+                using (_db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    string sp = "SP_FACTURAS_OBTENER_PATH_ARCHIVO";
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@idVenta", esPedidoEspecial ? (Object)null : id);
+                    parameters.Add("@idPedidoEspecial", esPedidoEspecial ? id : (Object)null);
+                    var rs = _db.QueryMultiple(sp, parameters, commandType: CommandType.StoredProcedure);
+                    var rs1 = rs.ReadFirst();
+                    if (rs1.Estatus == 200)
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                        facturas.Modelo = rs.ReadSingle();
+
+                    }
+                    else
+                    {
+                        facturas.Estatus = rs1.Estatus;
+                        facturas.Mensaje = rs1.Mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return facturas;
+        }
 
     }
 }

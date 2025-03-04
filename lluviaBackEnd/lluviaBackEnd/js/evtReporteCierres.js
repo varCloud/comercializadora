@@ -95,7 +95,6 @@ function onFailureResultCierres() {
 function InitDataTableCierres() {
     var NombreTabla = "tablaRepCierres";
     tablaCierres = initDataTable(NombreTabla);
-
     if ($("#tablaRepCierres").length > 0) {
         new $.fn.dataTable.Buttons(tablaCierres, {
             buttons: [
@@ -105,7 +104,7 @@ function InitDataTableCierres() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
                     },
                 },
             ],
