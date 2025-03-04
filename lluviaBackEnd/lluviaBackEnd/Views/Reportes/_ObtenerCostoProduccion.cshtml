@@ -20,6 +20,7 @@ else
         <table class="table table-striped" id="tblCostoProduccion">
             <thead>
                 <tr>
+                    <th># Producto</th>
                     <th>Codigo de Barras</th>
                     <th>Producto</th>
                     <th>Lìnea</th>
@@ -35,6 +36,7 @@ else
                 @foreach (lluviaBackEnd.Models.CostoProduccionAgranel c in Model.Modelo)
                 {
                 <tr>
+                    <td>@c.idProducto</td>
                     <td>@c.codigoBarras</td>
                     <td>@c.descripcionProducto</td>
                     <td>@c.descripcionLinea</td>

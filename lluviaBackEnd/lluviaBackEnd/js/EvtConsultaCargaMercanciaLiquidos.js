@@ -25,7 +25,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
             '<table class="table table-striped" id = "tblCargaMercanciaLiquidos">' +
             '    <thead>' +
             '     <tr>' +
-            '         <th></th>' +
+            '         <th>#Producto</th>' +
             '         <th>Ubicacion</th>' +
             '         <th>Producto</th>' +
             '         <th>Cantidad</th>' +
@@ -41,7 +41,7 @@ function onSuccessCargaMercanciaLiquidos(data) {
         $.each(result.Modelo, function (index, dato) {
 
             html += '<tr>' +
-                '             <td>' + dato.id + '</td>' +
+                '             <td>' + dato.idProducto + '</td>' +
                 '             <td>' + dato.descripcionUbicacion + '</td>' +
                 '             <td>' + dato.descripcionProducto + '</td>' +
                 '             <td>' + dato.cantidad + '</td>' +
@@ -79,7 +79,7 @@ function InitDataTableCargaMercanciaLiquidos() {
                     className: '',
                     titleAttr: 'Exportar a Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6,7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                     },
                 },
             ],
