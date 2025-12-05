@@ -67,6 +67,8 @@ namespace lluviaBackEnd.Controllers
 
                         ViewBag.venta = venta;
                         ViewBag.comisionBancaria = usuario.comisionBancaria;
+
+                        
                         return View();
                     }
                 }

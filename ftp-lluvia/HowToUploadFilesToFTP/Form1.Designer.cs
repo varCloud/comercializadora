@@ -108,7 +108,7 @@ namespace HowToUploadFilesToFTP
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(116, 20);
             this.txtPassword.TabIndex = 5;
-            this.txtPassword.Text = "lluvia2021$";
+            this.txtPassword.Text = "crmlluvia-002";
             // 
             // label3
             // 
@@ -125,7 +125,7 @@ namespace HowToUploadFilesToFTP
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(313, 20);
             this.txtAddress.TabIndex = 7;
-            this.txtAddress.Text = "win5230.site4now.net";
+            this.txtAddress.Text = "win8176.site4now.net";
             this.txtAddress.TextChanged += new System.EventHandler(this.txtAddress_TextChanged);
             // 
             // label4
