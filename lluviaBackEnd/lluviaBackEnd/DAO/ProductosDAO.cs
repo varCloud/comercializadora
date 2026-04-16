@@ -16,6 +16,7 @@ using lluviaBackEnd.WebServices.Modelos.Request;
 using System.Xml;
 using System.Xml.Serialization;
 using lluviaBackEnd.Utilerias;
+using lluviaBackEnd.WebServices.Modelos.Response;
 
 namespace lluviaBackEnd.DAO
 {
@@ -708,6 +709,48 @@ namespace lluviaBackEnd.DAO
 
         }
 
+        public Notificacion<ResponseObtenerProductosPaginados> ObtenerProductosPaginados(RequestObtenerProductosPaginados request)
+        {
+            Notificacion<ResponseObtenerProductosPaginados> notificacion = new Notificacion<ResponseObtenerProductosPaginados>();
+
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@PageNumber", request.PageNumber);
+                    parameters.Add("@PageSize", request.PageSize);
+                    parameters.Add("@idLineaProducto", request.idLineaProducto.HasValue ? (object)request.idLineaProducto : (object)null);
+                    parameters.Add("@Descripcion", !string.IsNullOrEmpty(request.Descripcion) ? (object)request.Descripcion : (object)null);
+
+                    var result = db.QueryMultiple("SP_OBTENER_PRODUCTOS_PAGINADOS", parameters, commandType: CommandType.StoredProcedure);
+                    
+                    // Lee la información de paginación (primer result set)
+                    var paginationInfo = result.ReadFirst();
+                    
+                    // Lee la lista de productos (segundo result set)
+                    var productos = result.Read<Producto>().ToList();
+
+                    notificacion.Estatus = 200;
+                    notificacion.Mensaje = "Consulta exitosa";
+                    notificacion.Modelo = new ResponseObtenerProductosPaginados
+                    {
+                        PaginaActual = paginationInfo.PaginaActual,
+                        RegistrosPorPagina = paginationInfo.RegistrosPorPagina,
+                        TotalRegistros = paginationInfo.TotalRegistros,
+                        TotalPaginas = paginationInfo.TotalPaginas,
+                        Productos = productos
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                notificacion.Estatus = -1;
+                notificacion.Mensaje = ex.Message;
+                throw ex;
+            }
+            return notificacion;
+        }
 
         #endregion
 

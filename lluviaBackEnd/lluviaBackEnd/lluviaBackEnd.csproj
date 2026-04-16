@@ -405,11 +405,13 @@
     <Compile Include="WebServices\Modelos\Request\RequestObtenerNotificacionesPedidosInternos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerPedidosEspecialesXAlmacen.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosAjustados.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosPaginados.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosProcesoAgranel.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductosXLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXDescripcion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestRechazarPedidoInternoEspecial.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseObtenerProductosPaginados.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerProductosProcesoAgranel.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />

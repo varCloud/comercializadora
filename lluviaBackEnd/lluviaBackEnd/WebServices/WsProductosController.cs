@@ -2,6 +2,7 @@
 using lluviaBackEnd.Models;
 using lluviaBackEnd.WebServices.Modelos;
 using lluviaBackEnd.WebServices.Modelos.Request;
+using lluviaBackEnd.WebServices.Modelos.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,26 @@ namespace lluviaBackEnd.WebServices
             catch (Exception ex)
             {
                 return WsUtils<List<Producto>>.RegresaExcepcion(ex, null);
+            }
+        }
+
+        [HttpGet]
+        public Notificacion<ResponseObtenerProductosPaginados> ObtenerProductosPaginados(int pageNumber = 1, int pageSize = 10, int? idLineaProducto = null, string descripcion = null)
+        {
+            try
+            {
+                var request = new RequestObtenerProductosPaginados
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    idLineaProducto = idLineaProducto,
+                    Descripcion = descripcion
+                };
+                return new ProductosDAO().ObtenerProductosPaginados(request);
+            }
+            catch (Exception ex)
+            {
+                return WsUtils<ResponseObtenerProductosPaginados>.RegresaExcepcion(ex, null);
             }
         }
     }
