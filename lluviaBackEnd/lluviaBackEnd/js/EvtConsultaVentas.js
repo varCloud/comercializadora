@@ -475,11 +475,12 @@ function modalFacturar(idVenta) {
     // ACUTALIZACION PARA FACTURAR TARJETA de CREDITO Y DEBITO
     // EL TEMA DE COMISIONES  NOS PEGA EN ESTA PARTE YA QUE COBRAMOS COMISIONES POR DESLIZAR LA TARJETA
     // Y CUANDO SE FACTURA DESDE EL MODULO DE VENTAS SE CONDONAN COMISIONES ES POR ESTO QUE HAY QUE CANCELAR VENTA
+    /*
     if (data.Modelo.idFactFormaPago == 4 || data.Modelo.idFactFormaPago == 18) {
         MuestraToast('warning', "Debe primero cancelar esta venta, ya que se han cobrado comisiones por uso de TC/TD");
         return;
     }
-
+    */
     if (data.Modelo.tieneCompleODev == 1) {
         MuestraToast('warning', "No es posible facturar esta venta ya que contiene devoluciones o complementos");
         return;

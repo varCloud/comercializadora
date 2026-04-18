@@ -1,0 +1,5 @@
+node_modules/
+descargas/
+descarga.log
+.env
+.DS_Store

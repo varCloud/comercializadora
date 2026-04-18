@@ -84,32 +84,47 @@ namespace lluviaBackEnd.Utilerias
 
         public static string GeneraCadenaOriginal33(string strXml)
         {
-            //string path = ObtenerPath();
-            string fileXslt = ConfigurationManager.AppSettings["cadenaOriginalXslt"].ToString();
+            string configPath = ConfigurationManager.AppSettings["cadenaOriginalXslt"].ToString();
 
             try
             {
+                string localXsltPath;
+                //AHORA SE CARGAN LOS XSLT DESDE UNA RUTA LOCAL PARA EVITAR PROBLEMAS DE ACCESO EN DIFERENTES CONTEXTOS DE EJECUCIÓN
+                if (System.Web.HttpContext.Current != null)
+                {
+                    // En contexto web (IIS/servidor compartido)
+                    localXsltPath = System.Web.HttpContext.Current.Server.MapPath(configPath);
+                }
+                else
+                {
+                    // Fallback para contexto no web (pruebas, servicios)
+                    localXsltPath = Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        "XSLT\\cadenaoriginal_4_0\\cadenaoriginal_4_0.xslt"
+                    );
+                }
+
                 byte[] byteArrayXml = Encoding.UTF8.GetBytes(strXml);
                 MemoryStream stream = new MemoryStream(byteArrayXml);
 
-                //Cargar el XML
-                //StreamReader reader = new StreamReader(path + fileXml);
+                // Cargar el XML
                 StreamReader reader = new StreamReader(stream);
                 XPathDocument myXPathDoc = new XPathDocument(reader);
 
-                //Cargando el XSLT
+                // Configurar el entorno de seguridad para el XSLT
+                XsltSettings settings = new XsltSettings(true, true);
+
+                // Cargando el XSLT desde la ruta local
                 XslCompiledTransform myXslTrans = new XslCompiledTransform();
-                //myXslTrans.Load(Path.Combine(ProcesaCfdi.pathArchivoSAT, fileXslt));
-                myXslTrans.Load(fileXslt);
+                myXslTrans.Load(localXsltPath, settings, new XmlUrlResolver());
 
                 StringWriter str = new StringWriter();
                 XmlTextWriter myWriter = new XmlTextWriter(str);
 
-                //Aplicando transformacion
+                // Aplicando transformacion
                 myXslTrans.Transform(myXPathDoc, null, myWriter);
 
-                //string p = myWriter.ToString() ;
-                //Resultado
+                // Resultado
                 string result = str.ToString();
 
                 return result;

@@ -1107,6 +1107,7 @@
     <Content Include="assets\limitesInventario.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="XSLT\cadenaoriginal_4_0\cadenaoriginal_4_0.xslt" />
     <None Include="Connected Services\cancelacionPruebas40\cancelaCFDI.wsdl" />
     <None Include="Connected Services\ConsultaEstatusFactura4\ConsultaCFDIService.wsdl" />
     <None Include="Connected Services\ConsultaEstatusFactura4\ConsultaCFDIService.xsd">

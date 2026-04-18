@@ -1,0 +1,16 @@
+{
+  "name": "descgar_xsl_sat",
+  "version": "1.0.0",
+  "description": "Descargador de archivos XSLT del SAT",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["sat", "xslt"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "xml-parser": "^1.2.1"
+  }
+}
