@@ -141,12 +141,12 @@
                                 </a>
                             </li>
                             @*<li class="dropdown">
-                                    <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
-                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
-                                    </ul>
-                                </li>*@
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Compras</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Nueva Compra" ? "dropdown active" : "")" href="@Url.Action("Compra", "Compras")">Nueva Compra</a></li>
+                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Consultar Compras" ? "dropdown active" : "")" href="@Url.Action("Compras", "Compras")">Consultar Compras</a></li>
+                </ul>
+            </li>*@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Ventas && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
@@ -209,20 +209,33 @@
                         }
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Productos && p.tienePermiso) && !ExisteInventarioFisicoActivo)
                         {
+                            //Solo el encargado de almacen puede ver la opcion de codigos de barras, el resto de los roles pueden ver todo el menu de productos
+                            if (Convert.ToInt16(sesion.idRol) == (Int16)EnumRoles.Encargado_de_almacen)
+                            {
+                                <li class=" dropdown @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")">
+                                    <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Codigos de Barras" ? "dropdown active" : "")" href="@Url.Action("CodigosDeBarras", "Productos")">Códigos de Barras</a></li>
+                                    </ul>
+                                </li>
 
-                            <li class=" dropdown @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")">
-                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Ubicaciones" ? "dropdown active" : "")" href="@Url.Action("Ubicaciones", "Productos")">Imprimir Ubicaciones</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Codigos de Barras" ? "dropdown active" : "")" href="@Url.Action("CodigosDeBarras", "Productos")">Códigos de Barras</a></li>
-                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "LimitesInventario" ? "dropdown active" : "")" href="@Url.Action("LimitesInventario", "Productos")">Límites Inventario</a></li>
-                                    <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos" ? "sub-menu-item-active" : "")" href="@Url.Action("ProductosAgranelAEnvasar", "ProductosAgranelAEnvasar")">Relación Liquidos</a></li>
-                                    <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos_Trapeadores" ? "sub-menu-item-active" : "")" href="@Url.Action("ProduccionProductos", "ProduccionProductos")">Relación Trapeadores</a></li>
+                            }
+                            else
+                            {
+                                <li class=" dropdown @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")">
+                                    <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Productos" ? "dropdown active" : "")" href="@Url.Action("Productos", "Productos")">Productos</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Linea de Productos" ? "dropdown active" : "")" href="@Url.Action("LineaProducto", "LineaProducto")">Linea de Productos</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Ubicaciones" ? "dropdown active" : "")" href="@Url.Action("Ubicaciones", "Productos")">Imprimir Ubicaciones</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Codigos de Barras" ? "dropdown active" : "")" href="@Url.Action("CodigosDeBarras", "Productos")">Códigos de Barras</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "LimitesInventario" ? "dropdown active" : "")" href="@Url.Action("LimitesInventario", "Productos")">Límites Inventario</a></li>
+                                        <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos" ? "sub-menu-item-active" : "")" href="@Url.Action("ProductosAgranelAEnvasar", "ProductosAgranelAEnvasar")">Relación Liquidos</a></li>
+                                        <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos_Trapeadores" ? "sub-menu-item-active" : "")" href="@Url.Action("ProduccionProductos", "ProduccionProductos")">Relación Trapeadores</a></li>
 
-                                </ul>
-                            </li>
+                                    </ul>
+                                </li>
+                            }
                         }
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Liquidos && p.tienePermiso) && !ExisteInventarioFisicoActivo)

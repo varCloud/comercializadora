@@ -4,11 +4,13 @@
 /*CUADRA INVENTARIOS*/
 begin tran
 
-select ID.idProducto, ID.cantidad as CantidadInventarioDetalle , IG.cantidad as CantidadInventarioGeneral , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
+select ID.idProducto, ID.cantidad as CantidadInventarioDetalle , IG.cantidad as CantidadInventarioGeneral , IG.fechaUltimaActualizacion
+from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and IG.cantidad <>  ID.cantidad
 
 
-select ID.idProducto, ID.cantidad as CantidadInventarioDetalle , IG.cantidad as CantidadInventarioGeneral , IG.fechaUltimaActualizacion from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
+select ID.idProducto, ID.cantidad as CantidadInventarioDetalle , IG.cantidad as CantidadInventarioGeneral , IG.fechaUltimaActualizacion 
+from  (select idProducto , sum(cantidad) cantidad from InventarioDetalle  group by idProducto) ID
 join InventarioGeneral IG on ID.idProducto = IG.idProducto and dbo.redondear(IG.cantidad) <>  dbo.redondear(ID.cantidad)
 
 	update IG

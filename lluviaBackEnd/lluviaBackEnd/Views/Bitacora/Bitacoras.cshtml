@@ -116,7 +116,7 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body" id="DivtblBitacoras">
-                    @Html.Action("_ObtenerBitacoras", "Bitacora")
+                    @Html.Action("_ObtenerBitacoras", "Bitacora", new { fechaIni = DateTime.Now, fechaFin = DateTime.Now })
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ $(document).ready(function () {
     }
     InitRangePicker('rangeBitacoras', 'fechaIni', 'fechaFin');
 
-    $('#rangeBitacoras').val('');
+    //$('#rangeBitacoras').val('');
     $('.select-multiple').select2({
         width: "100%",
         language: {
