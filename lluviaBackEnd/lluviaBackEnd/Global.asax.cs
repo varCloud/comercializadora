@@ -36,8 +36,8 @@ namespace lluviaBackEnd
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            log4net.Config.XmlConfigurator.Configure();
+            // Necesaria par  log4net
+            //log4net.Config.XmlConfigurator.Configure();
 
 
         }

@@ -86,7 +86,7 @@
                         @Html.ValidationMessageFor(x => x.idUnidadMedidad, null, new { @class = "text-danger was" })
                     </div>
                     <div class="form-group col-lg-3">
-                        <label>Unidad de Medida</label>
+                        <label>Cantidad a envasar</label>
                         @Html.HiddenFor(x => x.valorUnidadMedidaConverter, new { @id = "valorUnidadMedidaConverter" })
                         @Html.TextBoxFor(x => x.valorUnidadMedida, null, new { @class = "form-control", @id = "valorUnidadMedida", onkeypress = "return esDecimal(this, event);" })
                         @Html.ValidationMessageFor(x => x.valorUnidadMedida, null, new { @class = "text-danger was" })

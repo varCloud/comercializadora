@@ -216,6 +216,7 @@
                                     <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="package"></i><span>Productos</span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="nav-link @(ViewBag.Title.ToString() == "Codigos de Barras" ? "dropdown active" : "")" href="@Url.Action("CodigosDeBarras", "Productos")">Códigos de Barras</a></li>
+                                        <li><a class="nav-link @(ViewBag.Title.ToString() == "Ubicaciones" ? "dropdown active" : "")" href="@Url.Action("Ubicaciones", "Productos")">Imprimir Ubicaciones</a></li>
                                     </ul>
                                 </li>
 

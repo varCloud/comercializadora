@@ -25,7 +25,7 @@ namespace lluviaBackEnd.Utilerias
     public static class ProcesaCfdi
     {
 
-        private static readonly ILog log4netRequest = LogManager.GetLogger("LogLluvia");
+        //private static readonly ILog log4netRequest = LogManager.GetLogger("LogLluvia");
     
 
         private static string fileName;
@@ -234,7 +234,7 @@ namespace lluviaBackEnd.Utilerias
             }
             catch (Exception ex)
             {
-                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
+                //log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
                 throw ex;
             }
         }
@@ -330,7 +330,7 @@ namespace lluviaBackEnd.Utilerias
             string result = string.Empty;
             try
             {
-                log4netRequest.Debug("CancelarFacturaEdifact");
+                //log4netRequest.Debug("CancelarFacturaEdifact");
                 XmlDocument originalXmlDocument = new XmlDocument() { PreserveWhitespace = false };
                 originalXmlDocument.LoadXml(documentoOriginal);
 
@@ -367,7 +367,7 @@ namespace lluviaBackEnd.Utilerias
             }
             catch (Exception ex)
             {
-                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
+                //log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
                 throw ex;
             }
                 return result;
@@ -380,7 +380,7 @@ namespace lluviaBackEnd.Utilerias
             AcuseCancelacionPruebasResponseWS cancelacionPruebas = null;
             try
             {
-                log4netRequest.Debug("ObtnerAcuseCancelacionFactura");
+                //log4netRequest.Debug("ObtnerAcuseCancelacionFactura");
                 if (ConfigurationManager.AppSettings["FacturarPro"].ToString().Equals("1"))
                 {
                      cancelacion = ManagerSerealization<AcuseCancelacionProductivoResponseWs>.DeserializeXMLStringToObject(xmlCancelado);
@@ -419,7 +419,7 @@ namespace lluviaBackEnd.Utilerias
             }
             catch (Exception ex)
             {
-                log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
+                //log4netRequest.Debug(ex.Message + "" + ex.StackTrace);
                 throw ex;
             }
         }

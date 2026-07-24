@@ -3180,6 +3180,8 @@ namespace lluviaBackEnd.Utilerias
             string resultado = "";
             try
             {
+                //LOGGING DESHABILITADO
+                /*
                 string fechaHora = "Fecha :" + System.DateTime.Now.ToShortDateString() + "\n" + "Hora :" + System.DateTime.Now.ToShortTimeString() + "\n" + mensaje;
                 fechaHora = fechaHora.Length > 32766 ? fechaHora.Substring(0, 32750) : fechaHora;
 
@@ -3190,6 +3192,7 @@ namespace lluviaBackEnd.Utilerias
                     Directory.CreateDirectory(folder);
 
                 System.IO.File.AppendAllText(Path.Combine(folder, @"Log" + System.DateTime.Now.ToString("yyyyMMdd") + ".txt"), mensaje + "\n" + "\n" + "\n");
+                */
             }
             catch (Exception ex)
             {
