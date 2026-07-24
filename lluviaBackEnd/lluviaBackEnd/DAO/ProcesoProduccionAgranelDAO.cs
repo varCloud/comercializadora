@@ -74,5 +74,40 @@ namespace lluviaBackEnd.DAO
             return lstProcesoProduccion;
         }
 
+        public Notificacion<List<CostoProduccionAgranelPorProducto>> ObtenerCostoProduccionPorProducto(FiltroCostoProduccionAgranel f)
+        {
+            Notificacion<List<CostoProduccionAgranelPorProducto>> notificacion = new Notificacion<List<CostoProduccionAgranelPorProducto>>();
+            try
+            {
+                using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@fechaIni", f.fechaIni == DateTime.MinValue ? (object)null : f.fechaIni);
+                    parameters.Add("@fechaFin", f.fechaFin == DateTime.MinValue ? (object)null : f.fechaFin);
+                    parameters.Add("@idEstatusProduccionAgranel", f.idEstatusProcesoProduccionAgranel == 0 ? (object)null : f.idEstatusProcesoProduccionAgranel);
+                    var result = db.QueryMultiple("SP_CONSULTA_COSTO_PRODUCCION_POR_PRODUCTO", parameters, commandType: CommandType.StoredProcedure);
+                    var r1 = result.ReadFirst();
+
+                    if (r1.status == 200)
+                    {
+                        notificacion.Estatus = 200;
+                        notificacion.Mensaje = "Productos encontrados";
+                        notificacion.Modelo = result.Read<CostoProduccionAgranelPorProducto>().ToList();
+                    }
+                    else
+                    {
+                        notificacion.Mensaje = "No se encotraron resultados ...";
+                        notificacion.Estatus = -1;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return notificacion;
+        }
+
     }
 }

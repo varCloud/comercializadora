@@ -1,4 +1,5 @@
 ﻿using lluviaBackEnd.DAO;
+using lluviaBackEnd.Filters;
 using lluviaBackEnd.Models;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,20 @@ namespace lluviaBackEnd.Controllers
         {
 
             return PartialView("_ObtenerListadoCostoProduccion", new ProcesoProduccionAgranelDAO().ObtenerProcesoProduccion(f));
+        }
+
+        // GET: ProduccionAgranel/MPLIndividual
+        [PermisoAttribute(Permiso = EnumRolesPermisos.Puede_visualizar_PRODUCCION_AGRANEL)]
+        public ActionResult MPLIndividual()
+        {
+            ViewBag.Title = "MPL Individual";
+            ViewBag.estatusProduccionAgranel = new ProcesoProduccionAgranelDAO().ObtenerEstatusProduccionProcesoAgranel();
+            return View(new FiltroCostoProduccionAgranel());
+        }
+
+        public ActionResult ObtenerCostoProduccionPorProducto(FiltroCostoProduccionAgranel f)
+        {
+            return PartialView("_ObtenerCostoProduccionPorProducto", new ProcesoProduccionAgranelDAO().ObtenerCostoProduccionPorProducto(f));
         }
     }
 }

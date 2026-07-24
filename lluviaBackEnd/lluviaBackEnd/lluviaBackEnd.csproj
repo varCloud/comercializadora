@@ -299,6 +299,7 @@
     <Compile Include="Models\CompraDetalle.cs" />
     <Compile Include="Models\CostoProduccionAgranel.cs" />
     <Compile Include="Models\CostoProduccionAgranelMensual.cs" />
+    <Compile Include="Models\CostoProduccionAgranelPorProducto.cs" />
     <Compile Include="Models\DetallePedidoInterno.cs" />
     <Compile Include="Models\DevolucionProveedor.cs" />
     <Compile Include="Models\DiasPromedioInventario.cs" />
@@ -1252,6 +1253,7 @@
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
     <Content Include="js\evtReporteCostoProduccion.js" />
+    <Content Include="js\EvtMPLIndividual.js" />
     <Content Include="js\EvtReporteDevolucionesPedidosEspeciales.js" />
     <Content Include="js\evtReporteDevolucionesProveedor.js" />
     <Content Include="js\evtReporteDropSize.js" />
@@ -1518,6 +1520,8 @@
     <Content Include="Views\Reportes\CostoProduccionAgranel.cshtml" />
     <Content Include="Views\ProduccionAgranel\ProduccionAgranel.cshtml" />
     <Content Include="Views\ProduccionAgranel\_ObtenerListadoCostoProduccion.cshtml" />
+    <Content Include="Views\ProduccionAgranel\MPLIndividual.cshtml" />
+    <Content Include="Views\ProduccionAgranel\_ObtenerCostoProduccionPorProducto.cshtml" />
     <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\ProductosAgranelAEnvasar.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\_ObtenerCombinacionProductos.cshtml" />

@@ -270,10 +270,12 @@
 
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PRODUCCION_AGRANEL && p.tienePermiso))
                         {
-                            <li class="@(ViewBag.Title.ToString() == "Producción Agranel" ? "dropdown active" : "")">
-                                <a href="@Url.Action("CostoProduccionAgranel", "Reportes")">
-                                    <i data-feather="filter"></i><span>Consumo de MPL</span>
-                                </a>
+                            <li class="dropdown @((ViewBag.Title.ToString() == "Costo de Producción Agranel" || ViewBag.Title.ToString() == "MPL Individual") ? "dropdown active" : "")">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="filter"></i><span>Consumo de MPL</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "Costo de Producción Agranel" ? "dropdown active" : "")" href="@Url.Action("CostoProduccionAgranel", "Reportes")">MPL Agrupado</a></li>
+                                    <li><a class="nav-link @(ViewBag.Title.ToString() == "MPL Individual" ? "dropdown active" : "")" href="@Url.Action("MPLIndividual", "ProduccionAgranel")">MPL Individual</a></li>
+                                </ul>
                             </li>
                         }
 
