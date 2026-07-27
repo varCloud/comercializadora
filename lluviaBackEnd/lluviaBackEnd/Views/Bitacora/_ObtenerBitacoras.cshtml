@@ -30,6 +30,7 @@ else
                     <th>Usuario</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
+                    <th>Cantidad Aceptada</th>
                     <th>Fecha</th>
                     <th>Estatus</th>
                 </tr>
@@ -46,6 +47,7 @@ else
                         <td>@c.usuario.nombreCompleto</td>
                         <td>@c.producto.descripcion</td>
                         <td>@c.producto.cantidad</td>
+                        <td>@c.producto.cantidadAceptada</td>
                         <td>@c.fechaAlta.ToShortDateString()</td>
                         <td>
                             @{
