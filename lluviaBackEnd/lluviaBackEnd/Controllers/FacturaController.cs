@@ -305,6 +305,7 @@ namespace lluviaBackEnd.Controllers
             {
                 Notificacion<dynamic> notificacion = null;
                 notificacion = f.idPedidoEspecial == 0 ? new FacturaDAO().ObtenerDetalleFactura(f) : new FacturaDAO().ObtenerDetalleFacturaPE(f);
+                f.folio = (f.idVenta.Equals("0") || string.IsNullOrEmpty(f.idVenta) ? "PE" + f.idPedidoEspecial : f.idVenta);
                 string path = System.Web.HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString());
                 path = (path + notificacion.Modelo.pathArchivoFactura.Replace("Facturas/", "").Replace("Factura_", "Timbre_").Replace("pdf", "xml"));
                 Email.NotificacionPagoReferencia(notificacion.Modelo.correo, path, f, f.correoAdicional);

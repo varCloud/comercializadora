@@ -163,7 +163,7 @@ namespace lluviaBackEnd.Utilerias
 															            <table border='0' cellpadding='0' cellspacing='0' width='100%'>
 															            <tr>
 																            <td>
-                                                                                <b># Ticket: </b>" + factura.idVenta + @"
+                                                                                <b># Ticket: </b>" + (string.IsNullOrEmpty(factura.folio) ? factura.idVenta : factura.folio) + @"
 																            </td>
 															            </tr>
                                                                         <tr>
