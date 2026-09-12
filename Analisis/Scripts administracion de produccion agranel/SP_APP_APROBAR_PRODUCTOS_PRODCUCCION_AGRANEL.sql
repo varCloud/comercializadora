@@ -23,10 +23,23 @@ Objetivo		Fix inventario "fantasma": al Rechazo Completo (estatus 4) la mercanci
 				con el cliente: rechazo completo = regresa al almacen de origen; rechazo
 				parcial = la diferencia es merma (dentro de este asistente de consumo de
 				MPL no hay caso de "sobrante que regresa" en rechazo parcial).
-				
+
+Modificado		2026/09/12
+Objetivo		Regresion introducida por el fix del 2026/09/09: al desplegarse el script
+				completo se reactivo un bloque heredado (de cuando este SP era para
+				"pedidos especiales") que movia la cantidad de consumo normal aceptado
+				(estatus 3) y la porcion aceptada de un rechazo parcial (estatus 5) a la
+				ubicacion de resguardo (1000). Verificado contra InventarioDetalleLog de
+				produccion que ese paso NUNCA se ejecuto entre oct-2022 y 2026 (el SP
+				realmente desplegado durante esos ~4 anios terminaba en el descuento de
+				1004). Confirmado con el cliente (caso LEES 70, 200kg aceptados de 200):
+				el consumo normal debe terminar en el descuento de 1004, sin pasar por
+				resguardo. Se elimina ese bloque; la logica de rechazo completo/parcial
+				del fix anterior no se modifica.
+
 */
 
-create proc [dbo].SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
+alter proc [dbo].SP_APP_APROBAR_PRODUCTOS_PRODCUCCION_AGRANEL
 @xmlProductos xml,
 @idUsuario int,
 @idAlmacen int
@@ -87,7 +100,7 @@ BEGIN
 			END
 
 
-			/* 1	Ninguno | 2	Alta | 3 Procesado Correctamente | 4.-Rechazo Completo | 5.-Rechazo Parcial */
+			/* 1 Ninguno | 2	Alta | 3 Procesado Correctamente | 4.-Rechazo Completo | 5.-Rechazo Parcial */
 			--asignamos el estatus que le corresponde para validar que vengan en estatus correcto
 			UPDATE PR
 			SET idEstatusProduccionAgranel =
@@ -118,9 +131,7 @@ BEGIN
 
 					DECLARE
 					@fechaActual date,
-					@idUbicacionFinal int=0,
 					@tipoMovimientoInventarioSalida int=30,
-					@tipoMovimientoInventarioResguardo int=31,
 					@tipoMovimientoSalidaCancelacion int=34,
 					@tipoMovimientoEntradaCancelacion int=35,
 					@tipoMovimientoMerma int=36,
@@ -134,7 +145,6 @@ BEGIN
 					@observaciones varchar(500),
 					@cantidadActualSistema float,
 					@cantidadDespuesOp float,
-					@idPasilloRackPiso int = 1000,
 					@idUbicacionOrigenCancelada int,
 					@cantidadRestanteProceso float
 
@@ -184,45 +194,18 @@ BEGIN
 						UPDATE InventarioDetalle set cantidad=dbo.redondear(@cantidadDespuesOp),fechaActualizacion=dbo.FechaActual()
 						where idProducto=@idProducto and idUbicacion=@idUbicacion
 
-						--agregamos el inventario a la ubicacion resguardo
-
-						--obtenemos la ubicacion resguardo
-
-						IF NOT EXISTS (select 1 from Ubicacion where idPasillo=@idPasilloRackPiso and idRaq=@idPasilloRackPiso and idPiso=@idPasilloRackPiso and idAlmacen=@idAlmacen)
-						BEGIN
-						   INSERT INTO Ubicacion(idAlmacen,idPasillo,idRaq,idPiso)
-						   SELECT @idAlmacen,@idPasilloRackPiso,@idPasilloRackPiso,@idPasilloRackPiso;
-						end;
-
-						SELECT @idUbicacionFinal=idUbicacion from Ubicacion
-						where idPasillo=@idPasilloRackPiso and idRaq=@idPasilloRackPiso and idPiso=@idPasilloRackPiso and idAlmacen=@idAlmacen;
-
-						SELECT @cantidadActualSistema=0,@cantidadDespuesOp=0;
-
-						--OBTENEMOS LA CANTIDAD ACTUAL DEL SISTEMA
-						SELECT @cantidadActualSistema = cantidad from InventarioDetalle where idUbicacion = @idUbicacionFinal  and idProducto = @idProducto
-
-						--CALCULAMOS LA CANTIDAD A AJUSTAR
-						SET @cantidadDespuesOp = coalesce(@cantidadActualSistema,0) + @cantidadAtendida
-
-						-- VALIDAMOS SI EXISTE REGISTRON EN INVENTARIO DETALLE, SI NO EXISTE ES NECESARIO INSERTARLO
-						IF EXISTS (Select 1 from InventarioDetalle ID where ID.idUbicacion =  @idUbicacionFinal and idProducto = @idProducto )
-						BEGIN
-							UPDATE InventarioDetalle set cantidad =  @cantidadDespuesOp , fechaActualizacion = dbo.FechaActual()
-						    WHERE  idProducto = @idProducto and idUbicacion  = @idUbicacionFinal
-						END
-						ELSE
-						BEGIN
-							INSERT INTO InventarioDetalle (idProducto,cantidad,fechaAlta,idUbicacion,fechaActualizacion)
-							VALUES (@idProducto , @cantidadDespuesOp , dbo.FechaActual() ,@idUbicacionFinal, dbo.FechaActual())
-						END
-
-
-						INSERT INTO InventarioDetalleLog(idUbicacion,idProducto,cantidad,cantidadActual,idTipoMovInventario,idUsuario,fechaAlta,idVenta,idPedidoInterno,idProcesoProduccionAgranel)
-						SELECT @idUbicacionFinal,@idProducto,dbo.redondear(@cantidadAtendida),dbo.redondear(@cantidadDespuesOp),@tipoMovimientoInventarioResguardo,@idUsuario,dbo.FechaActual(),0,0,@idProcesoProduccionAgranel
-
-						UPDATE InventarioDetalle set cantidad=dbo.redondear(@cantidadDespuesOp),fechaActualizacion=dbo.FechaActual()
-						WHERE idProducto=@idProducto and idUbicacion=@idUbicacionFinal
+						-- === CORRECCION 2026-09-12: se elimina el envio automatico a la ubicacion de resguardo (1000) ===
+						-- Este bloque (agregar a Ubicacion resguardo) es codigo heredado de cuando esta SP
+						-- se usaba para "pedidos especiales" (2021/2022). Verificado contra InventarioDetalleLog
+						-- de produccion: el tipo de movimiento 31 (entrada a resguardo) solo ocurrio 2 veces en
+						-- oct-2022 pese a miles de descuentos (tipo 30) desde entonces hasta 2026 — es decir, la
+						-- SP realmente desplegada en produccion durante ~4 anios NUNCA ejecuto este paso; el
+						-- descuento de la ubicacion tecnica (1004) era la operacion final del consumo normal de
+						-- MPL. El fix del 2026-09-09 partio del script (desincronizado del SP real) y al
+						-- desplegarlo completo reactivo este bloque por error, mandando a resguardo cualquier
+						-- consumo aceptado (estatus 3) o la porcion aceptada de un rechazo parcial (estatus 5).
+						-- Confirmado con el cliente (LEES 70, 200kg aceptados de 200): el consumo normal debe
+						-- terminar en el descuento de 1004, sin pasar por resguardo.
 
 						UPDATE ProcesoProduccionAgranel
 						SET
@@ -239,8 +222,6 @@ BEGIN
 						print '@idEstatusProduccionAgranel'+cast(@idEstatusProduccionAgranel as varchar);
 						print '@observaciones'+cast(@observaciones as varchar);
 						print '@cantidadDespuesOp'+cast(@cantidadDespuesOp as varchar);
-						print '@idUbicacionFinal: '+ISNULL(cast(@idUbicacionFinal as varchar),0);
-						print '@cantidadActualSistema: '+ISNULL(cast(@cantidadActualSistema as varchar),0);
 
 						-- UNCOMMENT FOR DEBUG
 						--select * from ProcesoProduccionAgranel where idProcesoProduccionAgranel= @idProcesoProduccionAgranel
