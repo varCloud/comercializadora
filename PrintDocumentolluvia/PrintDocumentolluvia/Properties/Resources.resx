@@ -148,10 +148,19 @@
   <data name="archivo2022" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\archivo2022.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="archivo2026" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\archivo2026.pfx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="cerLLuvia2022" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cerLLuvia2022.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="cerLLuvia2026" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cerLLuvia2026.cer;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="keyLLuvia2022" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\keyLLuvia2022.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="keyLLuvia2026" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\keyLLuvia2026.key;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
