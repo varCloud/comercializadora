@@ -456,7 +456,7 @@ namespace lluviaBackEnd.Controllers
         {
             try
             {
-                Utilerias.Utils.DeleteFile(Utilerias.Utils.ObtnerFolderCodigos() + rutaArchivo);
+                Utilerias.Utils.DeleteArchivoCodigos(rutaArchivo);
             }
             catch (Exception ex)
             {

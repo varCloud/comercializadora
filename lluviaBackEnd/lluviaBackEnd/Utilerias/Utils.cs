@@ -595,6 +595,37 @@ namespace lluviaBackEnd.Utilerias
             return content;
         }
 
+        // REGLA DURA: las facturas (carpeta pathFacturas, XML/PDF del CFDI) NUNCA se borran desde este flujo.
+        private static bool EsArchivoDeFactura(string nombreArchivo)
+        {
+            string nombre = Path.GetFileName(nombreArchivo ?? string.Empty);
+            return Path.GetExtension(nombre).Equals(".xml", StringComparison.OrdinalIgnoreCase)
+                || nombre.StartsWith("Factura_", StringComparison.OrdinalIgnoreCase)
+                || nombre.StartsWith("Timbre_", StringComparison.OrdinalIgnoreCase)
+                || nombre.StartsWith("Comprobante_", StringComparison.OrdinalIgnoreCase)
+                || nombre.StartsWith("respuesta_", StringComparison.OrdinalIgnoreCase);
+        }
+
+        // Borra solo un archivo temporal de la carpeta de codigos. Rechaza rutas, facturas y cualquier archivo fuera de /Codigos/.
+        public static bool DeleteArchivoCodigos(string nombreArchivo)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(nombreArchivo) || !nombreArchivo.Equals(Path.GetFileName(nombreArchivo)) || EsArchivoDeFactura(nombreArchivo))
+                    return false;
+                string carpetaCodigos = Path.GetFullPath(ObtnerFolderCodigos()).TrimEnd('\\') + "\\";
+                string carpetaFacturas = Path.GetFullPath(HttpContext.Current.Server.MapPath("~" + WebConfigurationManager.AppSettings["pathFacturas"].ToString())).TrimEnd('\\') + "\\";
+                if (carpetaCodigos.StartsWith(carpetaFacturas, StringComparison.OrdinalIgnoreCase) || carpetaFacturas.StartsWith(carpetaCodigos, StringComparison.OrdinalIgnoreCase))
+                    return false;
+                DeleteFile(Path.Combine(carpetaCodigos, nombreArchivo));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static void DeleteFile(string nameFile)
         {
             try
@@ -2104,6 +2135,7 @@ namespace lluviaBackEnd.Utilerias
 
         public static Dictionary<string, object> GenerarCodigosBarras(List<Producto> productos, string path)
         {
+            List<string> archivosTemporales = new List<string>();
             byte[] content = null;
             string TamañoLetra = "10px";
             string cssTabla = @"style='text-align:center;font-size:" + TamañoLetra + ";font-family:Arial; color:#3E3E3E'";
@@ -2143,6 +2175,7 @@ namespace lluviaBackEnd.Utilerias
                                 //ubica = "{\"idAlmacen\": \"" + ubicaciones[i].idAlmacen.ToString() + "\", \"idPasillo\": \"" + ubicaciones[i].idPasillo.ToString() + "\", \"Pasillo\": \"" + ubicaciones[i].descripcionPasillo.ToString().Trim() + "\", \"idRack\": \"" + ubicaciones[i].idRaq.ToString() + "\", \"Rack\": \"" + ubicaciones[i].descripcionRaq.ToString() + "\", \"idPiso\": \"" + ubicaciones[i].idPiso.ToString() + "\", \"Piso\": \"" + ubicaciones[i].descripcionPiso.ToString() + "\"}";
                                 nombreArchivo = "Br_" + productos[i].idProducto.ToString() + "_" + productos[i].codigoBarras.ToString().Replace('&','-').Replace("/", "").Replace("'", ""); //"A" + ubicaciones[i].idAlmacen.ToString() + "P" + ubicaciones[i].idPiso.ToString() + "P" + ubicaciones[i].descripcionPasillo.ToString() + "R" + ubicaciones[i].idRaq.ToString() + "";
                                 Utilerias.Utils.GenerarCodigoBarras(productos[i].codigoBarras, nombreArchivo);
+                                archivosTemporales.Add("barras_" + nombreArchivo + "_.jpg");
                             int len = productos[i].descripcion.Count();
                             string tamNombreProducto = len > 35 ? ";font-size:8px;" : ";font-size:10px;";
 
@@ -2236,6 +2269,12 @@ namespace lluviaBackEnd.Utilerias
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                // El PDF ya incrusto las imagenes; los .jpg temporales no se necesitan.
+                foreach (string archivo in archivosTemporales)
+                    DeleteArchivoCodigos(archivo);
             }
             return dic;
         }
