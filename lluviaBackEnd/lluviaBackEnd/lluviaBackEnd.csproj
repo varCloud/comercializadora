@@ -251,6 +251,7 @@
     <Compile Include="Controllers\ProduccionProductos\ProduccionProductosController.cs" />
     <Compile Include="Controllers\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarController.cs" />
     <Compile Include="Controllers\ProcesoProduccionFormula\ProcesoProduccionFormulaController.cs" />
+    <Compile Include="Controllers\InventarioAlmacen\InventarioAlmacenController.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Models\ProduccionProductos\ProduccionProductosModel.cs" />
     <Compile Include="Models\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarModel.cs" />
     <Compile Include="Models\ProcesoProduccionFormula\ProcesoProduccionFormulaModel.cs" />
+    <Compile Include="Models\InventarioAlmacen\InventarioAlmacenModel.cs" />
     <Compile Include="Models\ProductosDevueltosPedidoEspecial.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
@@ -1259,6 +1261,7 @@
     <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\EvtProcesoProduccionAgranel.js" />
     <Content Include="js\EvtProcesoProduccionFormula.js" />
+    <Content Include="js\EvtAgregarInventarioAlmacen.js" />
     <Content Include="js\EvtProduccionProductos.js" />
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
@@ -1541,6 +1544,8 @@
     <Content Include="Views\ProductosAgranelAEnvasar\_ObtenerCombinacionProductos.cshtml" />
     <Content Include="Views\ProcesoProduccionFormula\ProcesoProduccionFormula.cshtml" />
     <Content Include="Views\ProcesoProduccionFormula\_ObtenerFormulas.cshtml" />
+    <Content Include="Views\InventarioAlmacen\AgregarInventarioAlmacen.cshtml" />
+    <Content Include="Views\InventarioAlmacen\_ObtenerUbicaciones.cshtml" />
     <Content Include="Views\Productos\ConsultarProduccionProductos.cshtml" />
     <Content Include="Views\ProduccionProductos\ProduccionProductos.cshtml" />
     <None Include="Web References\cancelaCFDI4Prod\cancelaCFDI.wsdl" />

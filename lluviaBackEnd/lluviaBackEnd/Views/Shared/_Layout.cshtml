@@ -272,6 +272,16 @@
                             </li>
                         }
 
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Inventario && p.tienePermiso) && !ExisteInventarioFisicoActivo)
+                        {
+                            <li class="dropdown @(ViewBag.Title.ToString() == "Inventario" ? "dropdown active" : "")">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="archive"></i><span>Inventario</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Agregar_Inventario_Almacen" ? "sub-menu-item-active" : "")" href="@Url.Action("AgregarInventarioAlmacen", "InventarioAlmacen")">Agregar inventario</a></li>
+                                </ul>
+                            </li>
+                        }
+
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_PRODUCCION_AGRANEL && p.tienePermiso))
                         {
                             <li class="dropdown @((ViewBag.Title.ToString() == "Costo de Producción Agranel" || ViewBag.Title.ToString() == "MPL Individual") ? "dropdown active" : "")">

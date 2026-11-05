@@ -1,0 +1,141 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "Inventario";
+    ViewBag.SubTitle = "Agregar_Inventario_Almacen";
+}
+
+@model lluviaBackEnd.Models.AgregarInventarioAlmacenModel
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Agregar inventario almacén</h4>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("AgregarInventario", "InventarioAlmacen",
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitInventario",
+                    OnFailure = "onFailureResultInventario",
+                    OnSuccess = "onSuccessResultInventario",
+                },
+                new { id = "frmInventario" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-4">
+                            <label>Almacén</label>
+                            @Html.DropDownListFor(x => x.idAlmacen, new List<SelectListItem>(), null, new { @class = "form-control select-multiple", @id = "idAlmacen" })
+                            @Html.ValidationMessageFor(x => x.idAlmacen, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-12 col-lg-8">
+                            <label>Producto</label>
+                            @Html.DropDownListFor(x => x.idProducto, new List<SelectListItem>(), null, new { @class = "form-control select-multiple", @id = "idProducto" })
+                            @Html.ValidationMessageFor(x => x.idProducto, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-5">
+                            <label>Proveedor</label>
+                            @Html.DropDownListFor(x => x.idProveedor, new List<SelectListItem>(), null, new { @class = "form-control select-multiple", @id = "idProveedor" })
+                            @Html.ValidationMessageFor(x => x.idProveedor, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-6 col-lg-2">
+                            <label>Unidad de medida</label>
+                            <input type="text" id="txtUnidadProducto" class="form-control" readonly="readonly" tabindex="-1" />
+                        </div>
+                        <div class="form-group col-6 col-lg-3">
+                            <label>Cantidad</label>
+                            @Html.TextBoxFor(x => x.cantidad, null, new { @class = "form-control", @id = "cantidad", onkeypress = "return esDecimal(this, event);", autocomplete = "off" })
+                            @Html.ValidationMessageFor(x => x.cantidad, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-12 col-lg-2">
+                            <label>&nbsp;</label>
+                            <button type="submit" id="btnAgregarInventario" class="btn btn-success form-control">Agregar</button>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0">La cantidad se agrega al inventario del almacén seleccionado como mercancía sin acomodar; después puede asignarle su ubicación.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Ubicaciones del producto en el almacén</h4>
+                <div class="card-header-action">
+                    <button type="button" id="btnConsultarUbicaciones" class="btn btn-info">Consultar ubicaciones</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="ViewUbicaciones">
+                    <p class="text-muted mb-0">Seleccione el almacén y el producto, o agregue inventario, para ver sus ubicaciones.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="mdlUbicacion" tabindex="-1" role="dialog" aria-labelledby="TituloModalUbicacion" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalUbicacion">Asignar ubicación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hidIdUbicacion" value="0" />
+                <div class="alert alert-light border" role="note">
+                    <div><strong>Producto:</strong> <span id="lblModalProducto"></span></div>
+                    <div><strong>Almacén:</strong> <span id="lblModalAlmacen"></span></div>
+                    <div><strong>Cantidad sin acomodar disponible:</strong> <span id="lblModalDisponible"></span></div>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad a acomodar <span class="text-muted" id="lblCantidadDisponible"></span></label>
+                    <input type="text" id="txtCantidadUbicacion" class="form-control" autocomplete="off" onkeypress="return esDecimal(this, event);" />
+                </div>
+                <div class="form-group">
+                    <label>Pasillo</label>
+                    <select id="selPasillo" class="form-control select-multiple"></select>
+                </div>
+                <div class="form-group">
+                    <label>Raq</label>
+                    <select id="selRaq" class="form-control select-multiple"></select>
+                </div>
+                <div class="form-group">
+                    <label>Piso</label>
+                    <select id="selPiso" class="form-control select-multiple"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnGuardarUbicacion" class="btn btn-success">Asignar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/mvcfoolproof.unobtrusive.js"></script>
+
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/js/EvtAgregarInventarioAlmacen.js"></script>
+}

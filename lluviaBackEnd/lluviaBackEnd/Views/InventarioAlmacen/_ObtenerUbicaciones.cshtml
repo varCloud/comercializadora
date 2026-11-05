@@ -1,0 +1,58 @@
+﻿@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.Ubicacion>>
+@using System.Globalization
+
+@if (Model.Modelo == null || Model.Modelo.Count == 0)
+{
+    <p class="text-muted mb-0">@(string.IsNullOrEmpty(Model.Mensaje) || Model.Estatus == 200 ? "El producto no tiene existencias en este almacén." : Model.Mensaje)</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm" id="tblUbicaciones">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Producto</th>
+                    <th>Almacén</th>
+                    <th>Ubicación</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int inx = 1;}
+                @foreach (var item in Model.Modelo)
+                {
+                    bool sinAcomodar = item.idPasillo == 0 && item.idRaq == 0 && item.idPiso == 0;
+                    <tr>
+                        <td class="text-center">@inx</td>
+                        <td>@item.descripcionProducto</td>
+                        <td>@item.descripcionAlmacen</td>
+                        <td>
+                            @if (sinAcomodar)
+                            {
+                                <span class="badge badge-warning">Sin acomodar</span>
+                            }
+                            else
+                            {
+                                var partes = new List<string>();
+                                if (item.idPasillo > 0) { partes.Add("Pasillo " + item.descripcionPasillo); }
+                                if (item.idRaq > 0) { partes.Add("Raq " + item.descripcionRaq); }
+                                if (item.idPiso > 0) { partes.Add("Piso " + item.descripcionPiso); }
+                                <span>@string.Join(" · ", partes)</span>
+                            }
+                        </td>
+                        <td>@item.cantidad.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                        <td>
+                            @if (sinAcomodar && item.cantidad > 0)
+                            {
+                                <a href="#" class="btn btn-icon btn-primary btn-asignar-ubicacion" data-id-ubicacion="@item.idUbicacion" data-producto="@item.descripcionProducto" data-almacen="@item.descripcionAlmacen"data-cantidad="@item.cantidad.ToString("R", CultureInfo.InvariantCulture)" data-toggle="tooltip" title="Asignar ubicación"><i class="fas fa-map-marker-alt"></i></a>
+                            }
+                        </td>
+                    </tr>
+                    { inx++; }
+                }
+            </tbody>
+        </table>
+    </div>
+}

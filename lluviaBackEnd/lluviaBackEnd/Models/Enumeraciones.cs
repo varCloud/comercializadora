@@ -130,7 +130,14 @@ namespace lluviaBackEnd.Models
         /// <summary>
         /// Permite ver y administrar la pantalla Relación Producción (fórmulas de producción de líquidos). Módulo 15 en CatModulos.
         /// </summary>
-        Puede_visualizar_Relacion_Produccion = 15
+        Puede_visualizar_Relacion_Produccion = 15,
+        #endregion
+
+        #region Inventario
+        /// <summary>
+        /// Permite ver y usar el modulo Inventario (Agregar inventario almacen). Modulo 16 en CatModulos; por ahora solo Administrador.
+        /// </summary>
+        Puede_visualizar_Inventario = 16
         #endregion
 
     }
