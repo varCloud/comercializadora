@@ -1,0 +1,145 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "Productos";
+    ViewBag.SubTitle = "Relacion_Produccion";
+}
+
+@model lluviaBackEnd.Models.ProcesoProduccionFormulaGuardarModel
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Relación Producción</h4>
+            </div>
+            <div class="card-body">
+                <div id="ViewFormulas">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="mdlFormula" tabindex="-1" role="dialog" aria-labelledby="TituloModalFormula" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width:1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalFormula"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("GuardarFormula", "ProcesoProduccionFormula",
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitFormula",
+                    OnFailure = "onFailureResultFormula",
+                    OnSuccess = "onSuccessResultFormula",
+                },
+                new { id = "frmFormula" }))
+                {
+                    @Html.HiddenFor(x => x.idProcesoProduccionFormula, new { @id = "idProcesoProduccionFormula" })
+
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-5">
+                            <label>Producto a producir</label>
+                            @Html.DropDownListFor(x => x.idProducto, new List<SelectListItem>(), null, new { @class = "form-control select-multiple", @id = "idProducto" })
+                            @Html.ValidationMessageFor(x => x.idProducto, null, new { @class = "text-danger was" })
+                        </div>
+                        <div class="form-group col-6 col-lg-3">
+                            <label>Unidad de medida</label>
+                            <input type="text" id="txtUnidadProducto" class="form-control" readonly="readonly" tabindex="-1" />
+                        </div>
+                        <div class="form-group col-6 col-lg-4">
+                            <label>Cantidad del lote</label>
+                            @Html.TextBoxFor(x => x.cantidadLote, null, new { @class = "form-control", @id = "cantidadLote", onkeypress = "return esDecimal(this, event);", autocomplete = "off" })
+                            @Html.ValidationMessageFor(x => x.cantidadLote, null, new { @class = "text-danger was" })
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h6>Materias primas por lote</h6>
+
+                    <div class="row" id="rowAgregarMateriaPrima">
+                        <div class="form-group col-12 col-lg-5">
+                            <label>Materia prima</label>
+                            <select id="selMateriaPrima" class="form-control select-multiple"></select>
+                        </div>
+                        <div class="form-group col-6 col-lg-2">
+                            <label>Unidad</label>
+                            <input type="text" id="txtUnidadMateriaPrima" class="form-control" readonly="readonly" tabindex="-1" />
+                        </div>
+                        <div class="form-group col-6 col-lg-3">
+                            <label>Cantidad por lote</label>
+                            <input type="text" id="txtCantidadMateriaPrima" class="form-control" autocomplete="off" onkeypress="return esDecimal(this, event);" />
+                        </div>
+                        <div class="form-group col-12 col-lg-2">
+                            <label>&nbsp;</label>
+                            <button type="button" id="btnAgregarMateriaPrima" class="btn btn-info form-control">Agregar</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped" id="tblMateriasPrimas">
+                            <thead>
+                                <tr>
+                                    <th>Materia prima</th>
+                                    <th>Unidad</th>
+                                    <th>Cantidad por lote</th>
+                                    <th class="text-center">Quitar</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" id="btnGuardarFormula" class="btn btn-success">Guardar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/mvcfoolproof.unobtrusive.js"></script>
+
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/assets/bundles/sweetalert/sweetalert.min.js"></script>
+    <script src="~/js/EvtProcesoProduccionFormula.js"></script>
+}
+
+<style>
+    .dataTables_filter > label {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+        .dataTables_filter > label > input {
+            width: 55% !important;
+        }
+</style>

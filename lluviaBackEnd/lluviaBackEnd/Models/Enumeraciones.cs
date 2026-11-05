@@ -123,7 +123,14 @@ namespace lluviaBackEnd.Models
 
 
         #region Produccion Agranel
-        Puede_visualizar_PRODUCCION_AGRANEL =13
+        Puede_visualizar_PRODUCCION_AGRANEL =13,
+        #endregion
+
+        #region Relacion Produccion
+        /// <summary>
+        /// Permite ver y administrar la pantalla Relación Producción (fórmulas de producción de líquidos). Módulo 15 en CatModulos.
+        /// </summary>
+        Puede_visualizar_Relacion_Produccion = 15
         #endregion
 
     }

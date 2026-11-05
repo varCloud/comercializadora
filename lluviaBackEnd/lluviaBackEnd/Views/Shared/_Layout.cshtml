@@ -233,6 +233,10 @@
                                         <li><a class="nav-link @(ViewBag.Title.ToString() == "LimitesInventario" ? "dropdown active" : "")" href="@Url.Action("LimitesInventario", "Productos")">Límites Inventario</a></li>
                                         <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos" ? "sub-menu-item-active" : "")" href="@Url.Action("ProductosAgranelAEnvasar", "ProductosAgranelAEnvasar")">Relación Liquidos</a></li>
                                         <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_de_Productos_Trapeadores" ? "sub-menu-item-active" : "")" href="@Url.Action("ProduccionProductos", "ProduccionProductos")">Relación Trapeadores</a></li>
+                                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Relacion_Produccion && p.tienePermiso))
+                                        {
+                                            <li><a class="nav-link  @(ViewBag.SubTitle != null && ViewBag.SubTitle.ToString() == "Relacion_Produccion" ? "sub-menu-item-active" : "")" href="@Url.Action("ProcesoProduccionFormula", "ProcesoProduccionFormula")">Relación Producción</a></li>
+                                        }
 
                                     </ul>
                                 </li>

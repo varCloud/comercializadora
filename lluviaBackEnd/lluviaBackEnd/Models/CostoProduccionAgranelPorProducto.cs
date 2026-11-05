@@ -4,7 +4,8 @@ namespace lluviaBackEnd.Models
 {
     public class CostoProduccionAgranelPorProducto
     {
-        public Int64 idProcesoProduccionAgranel { get; set; }
+        public Int64? idProcesoProduccionAgranel { get; set; }
+        public Int64? idProcesoProduccion { get; set; }
         public int idProducto { get; set; }
         public string codigoBarras { get; set; }
         public string descripcionProducto { get; set; }
@@ -17,5 +18,7 @@ namespace lluviaBackEnd.Models
         public string descripcionEstatus { get; set; }
         public float ultimoCostoCompra { get; set; }
         public float costoProduccion { get; set; }
+        // "Consumo MPL" | "Produccion por formula" (la columna la devuelve el SP)
+        public string origen { get; set; }
     }
 }

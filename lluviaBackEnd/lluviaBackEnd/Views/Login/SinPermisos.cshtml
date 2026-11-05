@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Sin permisos";
+}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h4>Sin permisos</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h6 style="color:red">No tienes permiso para ver esta pantalla.</h6>
+                            <a href="@Url.Action("index", "DashBoard")" class="btn btn-icon btn-success">Regresar al inicio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

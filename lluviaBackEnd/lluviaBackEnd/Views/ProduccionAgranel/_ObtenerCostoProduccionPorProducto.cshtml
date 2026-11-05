@@ -30,6 +30,7 @@ else
                     <th>Estatus</th>
                     <th>Ultimo Costo de Compra</th>
                     <th>Costo de Producción</th>
+                    <th>Origen</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,7 @@ else
                     <td>@c.descripcionEstatus</td>
                     <td>@c.ultimoCostoCompra.ToString("C", new CultureInfo("en-US"))</td>
                     <td>@c.costoProduccion.ToString("C", new CultureInfo("en-US"))</td>
+                    <td>@c.origen</td>
                 </tr>
                 }
             </tbody>

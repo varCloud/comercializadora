@@ -250,6 +250,7 @@
     <Compile Include="Controllers\ProduccionAgranelController.cs" />
     <Compile Include="Controllers\ProduccionProductos\ProduccionProductosController.cs" />
     <Compile Include="Controllers\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarController.cs" />
+    <Compile Include="Controllers\ProcesoProduccionFormula\ProcesoProduccionFormulaController.cs" />
     <Compile Include="Controllers\SesionExpiradaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
@@ -272,6 +273,8 @@
     <Compile Include="DAO\ClienteDAO.cs" />
     <Compile Include="DAO\FacturaDAO.cs" />
     <Compile Include="DAO\InventarioDAO.cs" />
+    <Compile Include="DAO\ProcesoProduccionDAO.cs" />
+    <Compile Include="DAO\ProcesoProduccionFormulaDAO.cs" />
     <Compile Include="DAO\InventarioFisicoDAO.cs" />
     <Compile Include="DAO\LimiteInventarioDAO.cs" />
     <Compile Include="DAO\PedidosEspecialesV2DAO.cs" />
@@ -325,6 +328,7 @@
     <Compile Include="Models\PedidosInternosDetalle.cs" />
     <Compile Include="Models\ProduccionProductos\ProduccionProductosModel.cs" />
     <Compile Include="Models\ProductosAgranelAEnvasar\ProductosAgranelAEnvasarModel.cs" />
+    <Compile Include="Models\ProcesoProduccionFormula\ProcesoProduccionFormulaModel.cs" />
     <Compile Include="Models\ProductosDevueltosPedidoEspecial.cs" />
     <Compile Include="Models\Sucursal.cs" />
     <Compile Include="Models\Almacen.cs" />
@@ -414,6 +418,7 @@
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerPedidosInternosEspeciales.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerProductosPaginados.cs" />
     <Compile Include="WebServices\Modelos\Response\ResponseObtenerProductosProcesoAgranel.cs" />
+    <Compile Include="WebServices\Modelos\Response\ResponseProcesoProduccion.cs" />
     <Compile Include="WebServices\WsFacturaController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequesValidaInventarioFisico.cs" />
     <Compile Include="WebServices\WsInventarioFisicoController.cs" />
@@ -422,6 +427,9 @@
     <Compile Include="WebServices\Modelos\Request\RequestActualizarEstatusPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestActualizarUbicacionInventario.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestAgreagrProductoInventario.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestAgregarProcesoProduccion.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestBuscarProductosFormulaProcesoProduccion.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerHistorialProcesoProduccion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestGenerarPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerCompras.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetalleCompra.cs" />
@@ -436,6 +444,7 @@
     <Compile Include="WebServices\WsLimitesInventarioController.cs" />
     <Compile Include="WebServices\WsPedidoInternoController.cs" />
     <Compile Include="WebServices\WsInventarioController.cs" />
+    <Compile Include="WebServices\WsProcesoProduccionController.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerLineaProducto.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductos.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerProductoXCodigo.cs" />
@@ -1249,6 +1258,7 @@
     <Content Include="js\evtLimitesInventario.js" />
     <Content Include="js\EvtPedidosEspecialesV2.js" />
     <Content Include="js\EvtProcesoProduccionAgranel.js" />
+    <Content Include="js\EvtProcesoProduccionFormula.js" />
     <Content Include="js\EvtProduccionProductos.js" />
     <Content Include="js\evtReporteCierres.js" />
     <Content Include="js\evtReporteCierresPedidosEspeciales.js" />
@@ -1404,6 +1414,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Login\SinPermisos.cshtml" />
     <Content Include="Views\Dashboard\index.cshtml" />
     <Content Include="Views\Usuarios\Usuarios.cshtml" />
     <Content Include="Views\Usuarios\_ObtenerUsuarios.cshtml" />
@@ -1528,6 +1539,8 @@
     <Content Include="Views\Reportes\_ObtenerReporteProductos.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\ProductosAgranelAEnvasar.cshtml" />
     <Content Include="Views\ProductosAgranelAEnvasar\_ObtenerCombinacionProductos.cshtml" />
+    <Content Include="Views\ProcesoProduccionFormula\ProcesoProduccionFormula.cshtml" />
+    <Content Include="Views\ProcesoProduccionFormula\_ObtenerFormulas.cshtml" />
     <Content Include="Views\Productos\ConsultarProduccionProductos.cshtml" />
     <Content Include="Views\ProduccionProductos\ProduccionProductos.cshtml" />
     <None Include="Web References\cancelaCFDI4Prod\cancelaCFDI.wsdl" />

@@ -1,0 +1,54 @@
+﻿@model lluviaBackEnd.Models.Notificacion<List<lluviaBackEnd.Models.ProcesoProduccionFormulaModel>>
+@using System.Globalization
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    @if (Model.Estatus != 200 && !string.IsNullOrEmpty(Model.Mensaje))
+                    {
+                        <p class="text-muted">@Model.Mensaje</p>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tblFormulas">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Producto a producir</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Cantidad del lote</th>
+                                    <th>Fecha de alta</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int inx = 1;}
+                                @foreach (var item in Model.Modelo)
+                                {
+                                    <tr data-id-producto="@item.idProducto" data-cantidad-lote="@item.cantidadLote.ToString("R", CultureInfo.InvariantCulture)">
+                                        <td class="text-center">@inx</td>
+                                        <td>@item.descripcionProducto</td>
+                                        <td>@item.unidadMedida</td>
+                                        <td>@item.cantidadLote.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                                        <td>@item.fechaAlta.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            <div class="buttons">
+                                                <a href="#" class="btn btn-icon btn-info btn-ver-formula" data-id="@item.idProcesoProduccionFormula" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="btn btn-icon btn-primary btn-editar-formula" data-id="@item.idProcesoProduccionFormula" data-toggle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
+                                                <a href="#" class="btn btn-icon btn-danger btn-eliminar-formula" data-id="@item.idProcesoProduccionFormula" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {inx++;}
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
