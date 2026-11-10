@@ -263,6 +263,15 @@
                             </li>
                         }
 
+                        @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_Relacion_Produccion && p.tienePermiso) && !ExisteInventarioFisicoActivo)
+                        {
+                            <li class="@(ViewBag.Title.ToString() == "Produccion_Historial" ? "dropdown active" : "")">
+                                <a href="@Url.Action("ProcesoProduccionHistorial", "ProcesoProduccionFormula")">
+                                    <i class="fas fa-flask menu-item"></i><span>Producción</span>
+                                </a>
+                            </li>
+                        }
+
                         @if (sesion.permisosModulo.Exists(p => p.idModulo == (int)EnumRolesPermisos.Puede_visualizar_InventarioFisico && p.tienePermiso))
                         {
                             <li class="@(ViewBag.Title.ToString() == "InventarioFisico" ? "dropdown active" : "")">

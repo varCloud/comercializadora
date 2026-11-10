@@ -1,0 +1,114 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "Produccion_Historial";
+    ViewBag.SubTitle = "Produccion_Historial";
+}
+
+@model lluviaBackEnd.Models.ProcesoProduccionConsultaFiltroModel
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/bundles/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/assets/bundles/select2/dist/css/select2.min.css" />
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Producción</h4>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("_ObtenerProcesoProduccionHistorial", "ProcesoProduccionFormula",
+                new AjaxOptions
+                {
+                    HttpMethod = "Post",
+                    OnBegin = "onBeginSubmitProduccionHistorial",
+                    OnFailure = "onFailureResultProduccionHistorial",
+                    OnSuccess = "onSuccessResultProduccionHistorial",
+                },
+                new { id = "frmBuscarProduccionHistorial" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-3">
+                            <label>Rango de Fechas</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </div>
+                                <input type="text" id="rangeProduccionHistorial" class="form-control daterange-cus" autocomplete="off">
+                                @Html.HiddenFor(x => x.fechaIni, new { @id = "fechaIni" })
+                                @Html.HiddenFor(x => x.fechaFin, new { @id = "fechaFin" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 col-lg-4">
+                            <label>Producto</label>
+                            @Html.DropDownListFor(x => x.idProducto, (List<SelectListItem>)ViewBag.Productos, new { @id = "idProducto", @class = "select-multiple", data_val = "false" })
+                        </div>
+
+                        <div class="form-group col-12 col-lg-3">
+                            <label>Almacén</label>
+                            @Html.DropDownListFor(x => x.idAlmacen, (List<SelectListItem>)ViewBag.Almacenes, new { @id = "idAlmacen", @class = "select-multiple", data_val = "false" })
+                        </div>
+
+                        <div class="text-left col-12 col-lg-2" style="margin-top:30px;">
+                            <button type="submit" class="btn btn-success">Buscar</button>
+                        </div>
+                    </div>
+                }
+                <hr style="margin-top:0" />
+                <div id="ViewProduccionHistorial">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="mdlDetalleProduccion" tabindex="-1" role="dialog" aria-labelledby="TituloModalDetalleProduccion" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width:900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalDetalleProduccion">Materias primas consumidas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="cuerpoDetalleProduccion">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/bundles/datatables/datatables.min.js"></script>
+    <script src="~/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/page/datatables.js"></script>
+    <script src="~/assets/bundles/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/bundles/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/js/EvtProcesoProduccionHistorial.js"></script>
+}
+
+<style>
+    .dataTables_filter > label {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+        .dataTables_filter > label > input {
+            width: 55% !important;
+        }
+</style>

@@ -44,6 +44,53 @@ namespace lluviaBackEnd.Controllers.ProcesoProduccionFormula
             return View(new ProcesoProduccionFormulaGuardarModel());
         }
 
+        // GET: ProcesoProduccionFormula/ProcesoProduccionHistorial  (pantalla "Produccion": historial de producciones)
+        public ActionResult ProcesoProduccionHistorial()
+        {
+            if (ObtenerSesionConPermiso() == null)
+            {
+                return RedirectToAction("SinPermisos", "Login");
+            }
+
+            List<SelectListItem> productos = new List<SelectListItem> { new SelectListItem { Text = "Todos", Value = "" } };
+            List<SelectListItem> almacenes = new List<SelectListItem> { new SelectListItem { Text = "Todos", Value = "" } };
+            try
+            {
+                Notificacion<List<ProcesoProduccionConsultaProductoModel>> catalogo = new ProcesoProduccionFormulaDAO().ObtenerProductosHistorial();
+                if (catalogo.Estatus == 200)
+                {
+                    productos.AddRange(catalogo.Modelo.Select(p => new SelectListItem { Text = p.descripcion, Value = p.idProducto.ToString() }));
+                }
+                almacenes.AddRange(new UsuarioDAO().ObtenerAlmacenes(0, 0));
+            }
+            catch (Exception)
+            {
+                // Los catalogos son solo filtros opcionales; la pantalla abre con "Todos" y la consulta reporta sus propios errores.
+            }
+            ViewBag.Productos = productos;
+            ViewBag.Almacenes = almacenes;
+            return View(new ProcesoProduccionConsultaFiltroModel());
+        }
+
+        // Tabla del historial (HTML parcial). Sin permiso responde 403 para que el ajax caiga en su handler de error.
+        [HttpPost]
+        public ActionResult _ObtenerProcesoProduccionHistorial(ProcesoProduccionConsultaFiltroModel filtro)
+        {
+            if (ObtenerSesionConPermiso() == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden, MensajeSinPermiso);
+            }
+            try
+            {
+                Notificacion<ProcesoProduccionConsultaResultadoModel> notificacion = new ProcesoProduccionFormulaDAO().ObtenerHistorial(filtro);
+                return PartialView("_ObtenerProcesoProduccionHistorial", notificacion);
+            }
+            catch (Exception ex)
+            {
+                return Json(WsUtils<String>.RegresaExcepcion(ex, "Ocurrio un error: "), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         // Tabla de formulas (HTML parcial). Sin permiso responde 403 para que el ajax caiga en su handler de error.
         [HttpPost]
         public ActionResult _ObtenerFormulas()

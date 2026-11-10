@@ -1,0 +1,87 @@
+﻿@model lluviaBackEnd.Models.Notificacion<lluviaBackEnd.Models.ProcesoProduccionConsultaResultadoModel>
+@using System.Globalization
+@using System.Linq
+
+@if (Model.Estatus != 200 || Model.Modelo == null || Model.Modelo.producciones == null || Model.Modelo.producciones.Count == 0)
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@(string.IsNullOrEmpty(Model.Mensaje) ? "No se encontraron resultados" : Model.Mensaje)</h2>
+    </div>
+}
+else
+{
+    var detallePorProduccion = Model.Modelo.detalle.ToLookup(d => d.idProcesoProduccion);
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="tblProduccionHistorial">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Lotes</th>
+                    <th>Cantidad por lote</th>
+                    <th>Cantidad producida</th>
+                    <th>Unidad de Medida</th>
+                    <th>Usuario</th>
+                    <th>Almacén</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Modelo.producciones)
+                {
+                    <tr>
+                        <td class="text-center">@item.idProcesoProduccion</td>
+                        <td>@item.fechaAlta.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.descripcionProducto</td>
+                        <td>@item.lotes.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                        <td>@item.cantidadLote.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                        <td>@item.cantidadProducida.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                        <td>@item.unidadMedida</td>
+                        <td>@item.nombreUsuario</td>
+                        <td>@item.descripcionAlmacen</td>
+                        <td>
+                            <a href="#" class="btn btn-icon btn-info btn-ver-detalle-produccion" data-id="@item.idProcesoProduccion" data-toggle="tooltip" title="Ver materias primas consumidas"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* Detalle de cada produccion (oculto): el JS copia el bloque elegido al modal *@
+    <div class="d-none">
+        @foreach (var item in Model.Modelo.producciones)
+        {
+            <div id="detalleProduccion_@item.idProcesoProduccion" data-titulo="Producción #@item.idProcesoProduccion - @item.descripcionProducto">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Materia prima</th>
+                                <th>Unidad</th>
+                                <th>Cantidad por lote</th>
+                                <th>Cantidad consumida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in detallePorProduccion[item.idProcesoProduccion])
+                            {
+                                <tr>
+                                    <td>@d.descripcionProducto</td>
+                                    <td>@d.unidadMedida</td>
+                                    <td>@d.cantidadPorLote.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                                    <td>@d.cantidadConsumida.ToString("0.######", CultureInfo.InvariantCulture)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -163,6 +163,75 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        // Historial de producciones registradas (pantalla "Produccion"). Fechas vacias => el SP aplica los ultimos 30 dias.
+        public Notificacion<ProcesoProduccionConsultaResultadoModel> ObtenerHistorial(ProcesoProduccionConsultaFiltroModel filtro)
+        {
+            Notificacion<ProcesoProduccionConsultaResultadoModel> notificacion = new Notificacion<ProcesoProduccionConsultaResultadoModel>();
+            filtro = filtro ?? new ProcesoProduccionConsultaFiltroModel();
+
+            DateTime? fechaIni, fechaFin;
+            if (!TryParseFecha(filtro.fechaIni, out fechaIni) || !TryParseFecha(filtro.fechaFin, out fechaFin))
+            {
+                notificacion.Estatus = -1;
+                notificacion.Mensaje = "El rango de fechas no es valido";
+                return notificacion;
+            }
+            if (fechaIni.HasValue && fechaFin.HasValue && fechaFin.Value < fechaIni.Value)
+            {
+                notificacion.Estatus = -1;
+                notificacion.Mensaje = "La fecha final no puede ser menor a la fecha inicial";
+                return notificacion;
+            }
+
+            using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@fechaIni", fechaIni.HasValue ? (object)fechaIni.Value : null, DbType.Date);
+                parameters.Add("@fechaFin", fechaFin.HasValue ? (object)fechaFin.Value : null, DbType.Date);
+                parameters.Add("@idProducto", filtro.idProducto.HasValue && filtro.idProducto.Value > 0 ? (object)filtro.idProducto.Value : null);
+                parameters.Add("@idAlmacen", filtro.idAlmacen.HasValue && filtro.idAlmacen.Value > 0 ? (object)filtro.idAlmacen.Value : null);
+                var result = db.QueryMultiple("SP_OBTENER_PROCESO_PRODUCCION_FORMULA_HISTORIAL", parameters, commandType: CommandType.StoredProcedure);
+                var r1 = result.ReadFirst();
+                notificacion.Estatus = LeerEstatus(r1);
+                notificacion.Mensaje = LeerMensaje(r1);
+                if (notificacion.Estatus == 200)
+                {
+                    notificacion.Modelo = new ProcesoProduccionConsultaResultadoModel();
+                    notificacion.Modelo.producciones = result.Read<ProcesoProduccionConsultaModel>().ToList();
+                    notificacion.Modelo.detalle = result.Read<ProcesoProduccionConsultaDetalleModel>().ToList();
+                }
+            }
+            return notificacion;
+        }
+
+        // Productos con formula para el filtro de producto de la pantalla "Produccion".
+        public Notificacion<List<ProcesoProduccionConsultaProductoModel>> ObtenerProductosHistorial()
+        {
+            Notificacion<List<ProcesoProduccionConsultaProductoModel>> notificacion = new Notificacion<List<ProcesoProduccionConsultaProductoModel>>();
+            using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var result = db.QueryMultiple("SP_OBTENER_PRODUCTOS_PROCESO_PRODUCCION_HISTORIAL", null, commandType: CommandType.StoredProcedure);
+                var r1 = result.ReadFirst();
+                notificacion.Estatus = LeerEstatus(r1);
+                notificacion.Mensaje = LeerMensaje(r1);
+                notificacion.Modelo = notificacion.Estatus == 200
+                    ? result.Read<ProcesoProduccionConsultaProductoModel>().ToList()
+                    : new List<ProcesoProduccionConsultaProductoModel>();
+            }
+            return notificacion;
+        }
+
+        // Vacio => null (el SP usa su rango por defecto); con valor debe ser yyyy-MM-dd.
+        private static bool TryParseFecha(string texto, out DateTime? fecha)
+        {
+            fecha = null;
+            if (string.IsNullOrWhiteSpace(texto)) return true;
+            DateTime d;
+            if (!DateTime.TryParseExact(texto.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d)) return false;
+            fecha = d.Date;
+            return true;
+        }
+
         private static Notificacion<string> Rechazo(string mensaje)
         {
             return new Notificacion<string>() { Estatus = -1, Mensaje = mensaje, Modelo = "" };
