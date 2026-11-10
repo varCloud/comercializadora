@@ -1,0 +1,45 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
+@{
+    Notificacion<List<Estacion>> estaciones = ViewBag.estaciones;
+}
+@if (estaciones.Estatus != 200)
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <h2>@estaciones.Mensaje</h2>
+    </div>
+}
+else
+{
+    <ul class="list-unstyled list-unstyled-border">
+
+        @foreach (Estacion estacion in estaciones.Modelo)
+        {
+
+            <li class="media">
+                <img alt="image" class="mr-3 rounded-circle" width="50" src="~/assets/img/cash-register.png">
+                <div class="media-body">
+                    <div class="media-title">@estacion.nombre</div>
+                    <div class="text-job text-muted">@estacion.nombreAlmacen</div>
+                </div>
+                <div class="media-items">
+                    <div class="media-item">
+                        <div class="media-value">@estacion.montoTotalDia.ToString("C", new CultureInfo("en-US"))</div>
+                        <div class="media-label">Hoy</div>
+                    </div>
+                    <div class="media-item">
+                        <div class="media-value">@estacion.montoTotalSemana.ToString("C", new CultureInfo("en-US"))</div>
+                        <div class="media-label">Esta Semana</div>
+                    </div>
+                    <div class="media-item">
+                        <div class="media-value">@estacion.montoTotalMes.ToString("C", new CultureInfo("en-US"))</div>
+                        <div class="media-label">Este Mes</div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}

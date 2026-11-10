@@ -1,0 +1,51 @@
+.fas {
+    font-size: 45px !important;
+}
+
+/* Per-section async loader (error state) */
+.section-loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 160px;
+    color: #6c757d;
+}
+
+.section-loader .section-loader-text {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.section-loader .fas {
+    font-size: 28px !important;
+}
+
+/* Skeleton placeholders */
+.sk {
+    background: linear-gradient(90deg, #eceff3 25%, #f6f8fa 37%, #eceff3 63%);
+    background-size: 400% 100%;
+    animation: sk-shimmer 1.4s ease infinite;
+    border-radius: 6px;
+}
+
+@keyframes sk-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+.sk-card { display: flex; align-items: center; padding: 25px 20px; }
+.sk-icon { width: 60px; height: 60px; border-radius: 10px; flex-shrink: 0; }
+.sk-lines { flex: 1; margin-left: 15px; }
+.sk-line { height: 12px; margin: 8px 0; }
+.sk-w70 { width: 70%; }
+.sk-w50 { width: 50%; }
+.sk-w40 { width: 40%; }
+.sk-row { display: flex; align-items: center; padding: 10px 0; }
+.sk-avatar { width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0; }
+.sk-chart { height: 360px; }
+
+#GraficoVentasPorFecha {
+    min-height: 400px;
+}

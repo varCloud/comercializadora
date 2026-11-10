@@ -257,6 +257,7 @@
     <Compile Include="Controllers\PedidosEspecialesController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
+    <Compile Include="Controllers\DashBoardDataController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LineaProductoController.cs" />
@@ -1047,6 +1048,7 @@
     <Content Include="assets\css\components.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\css\graficoPE.css" />
+    <Content Include="assets\css\dashboard.css" />
     <Content Include="assets\css\jquery-ui.css" />
     <Content Include="assets\css\jquery-ui.min.css" />
     <Content Include="assets\css\loader-lluvia.css" />
@@ -1458,6 +1460,8 @@
     <Content Include="Views\Bitacora\_DetalleBitacora.cshtml" />
     <Content Include="Views\Productos\_UbicacionesProducto.cshtml" />
     <Content Include="Views\Dashboard\_Grafico.cshtml" />
+    <Content Include="Views\Dashboard\_Indicadores.cshtml" />
+    <Content Include="Views\Dashboard\_VentasEstaciones.cshtml" />
     <Content Include="Views\Ventas\_ObtenerRetiros.cshtml" />
     <Content Include="Views\Ventas\_ObtenerRetirosV2.cshtml" />
     <Content Include="Views\Productos\_UbicacionesProductoPrecio.cshtml" />

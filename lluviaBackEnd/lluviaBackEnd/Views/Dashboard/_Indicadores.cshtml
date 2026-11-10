@@ -1,0 +1,266 @@
+﻿@using System.Globalization;
+@using lluviaBackEnd.Models;
+@{
+    Notificacion<List<Estacion>> estaciones = ViewBag.estaciones;
+    Notificacion<List<Categoria>> informacionGeneral = ViewBag.InformacionGlobal;
+    Notificacion<List<MermaMensual>> mermaMensual = ViewBag.mermaMensual;
+    Notificacion<List<CostoProduccionAgranelMensual>> costoProduccionAgranel = ViewBag.costoProduccionAgranel;
+
+    float montoTotalDia = 0, montoTotalSemana = 0, montoTotalMes = 0, montoTotalAnio = 0;
+    if (estaciones.Estatus == 200)
+    {
+        montoTotalDia = estaciones.Modelo.Sum(x => x.montoTotalDia);
+        montoTotalSemana = estaciones.Modelo.Sum(x => x.montoTotalSemana);
+        montoTotalMes = estaciones.Modelo.Sum(x => x.montoTotalMes);
+        montoTotalAnio = estaciones.Modelo.Sum(x => x.montoTotalAnio);
+    }
+
+    bool hayMerma = mermaMensual.Estatus == 200 && mermaMensual.Modelo != null && mermaMensual.Modelo.Count >= 2;
+    bool hayCostoProduccion = costoProduccionAgranel.Estatus == 200 && costoProduccionAgranel.Modelo != null && costoProduccionAgranel.Modelo.Count >= 2;
+}
+<!-- Ventas del dia -->
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="card card-statistic-1">
+        <div class="info-box7-block">
+            <div class="card-icon " style="background: linear-gradient(135deg, #05cdd1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="padding-20">
+                    <div class="text-center">
+                        <h4 class="font-light mb-0">
+                            <i class="ti-arrow-up text-success"></i>@montoTotalDia.ToString("C", new CultureInfo("en-US"))
+                        </h4>
+                        <span style="color:#00c4ff; font-weight:900">Ventas del dia</span>
+                    </div>
+                    <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                        &nbsp;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (informacionGeneral.Estatus == 200)
+{
+    foreach (Categoria c in informacionGeneral.Modelo.FindAll(x => x.id != 1))
+    {
+        string icon = "fa-chart-line", bg = "l-bg-orange", style = "";
+        switch (c.id)
+        {
+            case 1:
+                {
+                    icon = "fa-dollar-sign";
+                    bg = "l-bg-cyan";
+                    style = "background:linear-gradient(135deg, #00b92b, #94ec84) !important; color:#fff";
+                }
+                break;
+
+            case 2:
+                {
+                    icon = "fa-shopping-cart";
+                    bg = "l-bg-purple";
+
+
+                }
+                break;
+
+            case 3:
+                {
+                    icon = "fa-briefcase";
+                    bg = "l-bg-green";
+                    style = "background:linear-gradient(135deg, #e90093 0%, #e443e7 100%) !important; color:#fff";
+                }
+                break;
+        }
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="card card-statistic-1">
+                <div class="card-icon @bg" style="display: flex; justify-content: center; align-items: center; @style ">
+                    <i class="fas @icon"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="padding-20">
+                        <div class="text-center">
+                            <h4 class="font-light mb-0">
+                                <i class="ti-arrow-up text-success"></i>@Html.Raw(c.id == 3 ? c.total.ToString() : c.total.ToString("C", new CultureInfo("en-US")))
+                            </h4>
+                            <span class="text-muted">@c.categoria</span>
+                        </div>
+                        <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                            &nbsp;
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="card card-statistic-1">
+        <div class="info-box7-block">
+            <div class="card-icon " style="background: linear-gradient(135deg, #05cdd1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="padding-20">
+                    <div class="text-center">
+                        <h4 class="font-light mb-0">
+                            <i class="ti-arrow-up text-success"></i>@montoTotalSemana.ToString("C", new CultureInfo("en-US"))
+                        </h4>
+                        <span style="color:#00c4ff; font-weight:900">Ventas Esta Semana</span>
+                    </div>
+                    <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                        &nbsp;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="card card-statistic-1">
+        <div class="info-box7-block">
+            <div class="card-icon " style="background: linear-gradient(135deg, #0579d1eb, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="padding-20">
+                    <div class="text-center">
+                        <h4 class="font-light mb-0">
+                            <i class="ti-arrow-up text-success"></i>@montoTotalMes.ToString("C", new CultureInfo("en-US"))
+                        </h4>
+                        <span style="color:#0579d1eb; font-weight:900">Ventas Este Mes</span>
+                    </div>
+                    <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                        &nbsp;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="card card-statistic-1">
+        <div class="info-box7-block">
+            <div class="card-icon " style="background: linear-gradient(135deg, #05d1899e, #00c4ff) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="padding-20">
+                    <div class="text-center">
+                        <h4 class="font-light mb-0">
+                            <i class="ti-arrow-up text-success"></i>@montoTotalAnio.ToString("C", new CultureInfo("en-US"))
+                        </h4>
+                        <span style="color:#05d1899e; font-weight:900">Ventas Este Año</span>
+                    </div>
+                    <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                        &nbsp;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (hayMerma)
+{
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card card-statistic-1">
+            <div class="info-box7-block">
+                <div class="card-icon " style="background: linear-gradient(135deg, #ea5455, #dc354559) !important; color: #fff;display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="padding-20">
+                        <div class="text-center">
+                            <h4 class="font-light mb-0">
+                                <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[0].totalCostoMerma.ToString("C2")
+                            </h4>
+                            <span style="color:#dc3545; font-weight:900">Merma Mes Actual</span>
+                        </div>
+                        <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                            <span class="text-success font-weight-bold">@mermaMensual.Modelo[0].promedioPorcMerma%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card card-statistic-1">
+            <div class="info-box7-block">
+                <div class="card-icon " style="display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #c5ac20, #fbff09) !important; color:#fff">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="padding-20">
+                        <div class="text-center">
+                            <h4 class="font-light mb-0">
+                                <i class="ti-arrow-up text-success"></i>@mermaMensual.Modelo[1].totalCostoMerma.ToString("C2")
+                            </h4>
+                            <span style="color:#dc3545; font-weight:900">Merma Mes Anterior</span>
+                        </div>
+                        <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                            <span class="text-success font-weight-bold">@mermaMensual.Modelo[1].promedioPorcMerma%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (hayCostoProduccion)
+{
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card  bg-cyan card-statistic-1">
+            <div class="info-box7-block">
+                <div class="card-icon " style="color: #fff;display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-dollar-sign" style="font-size:45px"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="padding-20">
+                        <div class="text-center">
+                            <h4 class="font-light mb-0">
+                                <i class="ti-arrow-up text-success"></i>@costoProduccionAgranel.Modelo[0].totalCostoProduccion.ToString("C2")
+                            </h4>
+                            <span style="color:#FFF; font-weight:900">Costo de Producción Mes Actual</span>
+                        </div>
+                        <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                            <span class="font-weight-bold" style="color:black">@costoProduccionAgranel.Modelo[0].promedioCostoProduccion%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card bg-green card-statistic-1">
+            <div class="info-box7-block">
+                <div class="card-icon " style="display: flex; justify-content: center; align-items: center; color:#fff">
+                    <i class="fas fa-dollar-sign" style="font-size:45px"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="padding-20">
+                        <div class="text-center">
+                            <h4 class="font-light mb-0">
+                                <i class="ti-arrow-up text-success"></i>@costoProduccionAgranel.Modelo[1].totalCostoProduccion.ToString("C2")
+                            </h4>
+                            <span style="color:#FFF; font-weight:900">Costo de Producción Mes Anterior</span>
+                        </div>
+                        <p class="mb-0 mt-0 text-muted" style="display: flex;justify-content: end;align-items: center;">
+                            <span style="color:black" class=" font-weight-bold">@costoProduccionAgranel.Modelo[1].promedioCostoProduccion%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,6 +1,5 @@
 ﻿var key;
 function onBeginSubmit() {
-    console.log('onBeginSubmit');
     $("#btnIniciarSesion").addClass('btn-progress disabled');
 }
 function onCompleteSubmit() {
@@ -8,7 +7,6 @@ function onCompleteSubmit() {
 }
 
 function onSuccessResult(data) {
-    console.log("onSuccessResult", JSON.stringify(data));   
     if (data.notificacion.Estatus == 200) {
 
         if (data.notificacion.Modelo.configurado == "0" ) {
@@ -27,7 +25,6 @@ function onSuccessResult(data) {
 }
 
 function onFailureResult() {
-    console.log("onFailureResult");
     $("#btnIniciarSesion").removeClass('btn-progress disabled');
 }
 function InitRecaptcha() {
@@ -35,7 +32,6 @@ function InitRecaptcha() {
     grecaptcha.ready(function () {
         grecaptcha.execute(key, { action: 'homepage' }).then(function (token) {
             $("#Token").val(token);
-            console.log("token: ", token);
         });
         element = document.getElementsByClassName('grecaptcha-badge');
 
