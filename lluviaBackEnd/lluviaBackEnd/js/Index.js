@@ -275,6 +275,18 @@ function _esDecimal(input, evt) {
         }
     }
 }
+// Igual que esDecimal pero permite hasta 3 decimales (ej. 0.001 kg = 1 gramo).
+function esDecimal3(input, evt) {
+    var key = window.Event ? evt.which : evt.keyCode;
+    if (key == 8 || key == 13 || key == 0) {
+        return true;
+    }
+    if ((key >= 48 && key <= 57) || key == 46) {
+        return /^([0-9]+\.?[0-9]{0,3})$/.test(input.value + String.fromCharCode(key));
+    }
+    return false;
+}
+
 function filter(__val__) {
     var preg = /^([0-9]+\.?[0-9]{0,2})$/;
     if (preg.test(__val__) === true) {

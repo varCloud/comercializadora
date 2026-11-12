@@ -17,9 +17,9 @@ Decisiones de SP_APP_AGREGAR_PROCESO_PRODUCCION (corrigen las fallas del modelo 
    dbo.ExisteCantidadProductoEnAlmancen tambien la cuenta), de mayor a menor cantidad, repartiendo el remanente entre
    ubicaciones; si aun asi falta existencia dentro de la transaccion se aborta todo (rollback).
  - Sin PRINTs de depuracion; ROLLBACK solo si hay transaccion; SET XACT_ABORT ON.
- - cantidadProducida y cantidadConsumida se calculan una sola vez con dbo.redondear (2 decimales) y de esas variables
+ - cantidadProducida y cantidadConsumida se calculan una sola vez con ROUND(x, 3) (3 decimales, 1 gramo en kg) y de esas variables
    salen ProcesoProduccion/Detalle y los movimientos de inventario.
- - Si la cantidad consumida de una MPL redondea a 0 (< 0.01) se rechaza: aumentar lotes.
+ - Si la cantidad consumida de una MPL redondea a 0 (< 0.001) se rechaza: aumentar lotes.
 */
 
 -- VERIFICACION PREVIA
@@ -121,19 +121,19 @@ BEGIN
 		IF @msg IS NULL
 		BEGIN
 			-- calculo unico de cantidades
-			SET @cantidadProducida = dbo.redondear(@lotes * @cantidadLote)
+			SET @cantidadProducida = ROUND(@lotes * @cantidadLote, 3)
 			INSERT INTO @mpl (idProducto, cantidadPorLote, cantidadConsumida, idUnidadMedida)
-			SELECT D.idProducto, D.cantidad, dbo.redondear(D.cantidad * @lotes), D.idUnidadMedida
+			SELECT D.idProducto, D.cantidad, ROUND(D.cantidad * @lotes, 3), D.idUnidadMedida
 			FROM ProcesoProduccionFormulaDetalle D WHERE D.idProcesoProduccionFormula = @idFormula
 
-			IF @cantidadProducida <= 0 SET @msg = 'La cantidad a producir es menor a 0.01, aumente los lotes'
+			IF @cantidadProducida <= 0 SET @msg = 'La cantidad a producir es menor a 0.001, aumente los lotes'
 			ELSE IF NOT EXISTS (SELECT 1 FROM @mpl) SET @msg = 'La formula no tiene materias primas'
-			ELSE IF EXISTS (SELECT 1 FROM @mpl WHERE cantidadConsumida <= 0) SET @msg = 'La cantidad de una materia prima a consumir es menor a 0.01, aumente los lotes'
+			ELSE IF EXISTS (SELECT 1 FROM @mpl WHERE cantidadConsumida <= 0) SET @msg = 'La cantidad de una materia prima a consumir es menor a 0.001, aumente los lotes'
 		END
 
 		IF @msg IS NULL
 		BEGIN
-			UPDATE @mpl SET disponible = dbo.redondear(dbo.ExisteCantidadProductoEnAlmancen(@idAlmacen, idProducto))
+			UPDATE @mpl SET disponible = ROUND(dbo.ExisteCantidadProductoEnAlmancen(@idAlmacen, idProducto), 3)
 			INSERT INTO @faltantes
 			SELECT M.idProducto, P.descripcion, M.cantidadConsumida, M.disponible, U.descripcion
 			FROM @mpl M JOIN Productos P ON P.idProducto = M.idProducto JOIN CatUnidadMedida U ON U.idUnidadMedida = M.idUnidadMedida
@@ -178,14 +178,14 @@ BEGIN
 				WHILE @@FETCH_STATUS = 0 AND @restante > 0
 				BEGIN
 					SET @toma = CASE WHEN @cantUbic >= @restante THEN @restante ELSE @cantUbic END
-					SET @nueva = dbo.redondear(@cantUbic - @toma)
+					SET @nueva = ROUND(@cantUbic - @toma, 3)
 
 					INSERT INTO InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idProcesoProduccion)
 					VALUES (@idUbic, @idMpl, @toma, @nueva, @idTipoMovSalida, @idUsuario, @fecha, @idProcesoProduccion)
 
 					UPDATE InventarioDetalle SET cantidad = @nueva, fechaActualizacion = @fecha WHERE idInventarioDetalle = @idInvDet
 
-					SET @restante = dbo.redondear(@restante - @toma)
+					SET @restante = ROUND(@restante - @toma, 3)
 					FETCH NEXT FROM cur2 INTO @idInvDet, @idUbic, @cantUbic
 				END
 				CLOSE cur2
@@ -216,7 +216,7 @@ BEGIN
 
 			DECLARE @cantActualTerm float = null, @cantTotalTerm float
 			SELECT @cantActualTerm = cantidad FROM InventarioDetalle WITH (UPDLOCK, HOLDLOCK) WHERE idUbicacion = @idUbicacion0 AND idProducto = @idProducto
-			SET @cantTotalTerm = dbo.redondear(coalesce(@cantActualTerm, 0) + @cantidadProducida)
+			SET @cantTotalTerm = ROUND(coalesce(@cantActualTerm, 0) + @cantidadProducida, 3)
 
 			INSERT INTO InventarioDetalleLog (idUbicacion, idProducto, cantidad, cantidadActual, idTipoMovInventario, idUsuario, fechaAlta, idProcesoProduccion)
 			VALUES (@idUbicacion0, @idProducto, @cantidadProducida, @cantTotalTerm, @idTipoMovCarga, @idUsuario, @fecha, @idProcesoProduccion)

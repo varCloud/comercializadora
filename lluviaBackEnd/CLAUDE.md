@@ -51,3 +51,11 @@ Avoid the inconsistent alternative that also exists in the codebase: an action t
 **External/precompiled dependency.** The `AccesoDatos` reference (`Reference Include="AccesoDatos"` in the `.csproj`) is a precompiled DLL (`DLL/AccesoDatos.dll`) with no source in this repo — it's a black box.
 
 **Menus and permissions enum.** New screens are gated by `EnumRolesPermisos` (`Models/Enumeraciones.cs`) and wired into `Views/Shared/_Layout.cshtml`'s permission-checked `<li>` blocks. Follow the existing pattern of single-link vs. dropdown-with-sub-`<li>` items already in that file when adding or restructuring a menu entry.
+
+## Hard rules
+
+- **The system is in production: never assume.** Verify in code or in the database, or ask. This matters most for DB changes, stored procedures, reports and money flows (cash closing, invoicing). State only what was verified and say what was not.
+- **Never delete invoices.** No cleanup or file-writing code may delete anything under `/Facturas/` (`pathFacturas`) or any CFDI file (`Factura_*`, `Timbre_*`, `Comprobante_*`, `respuesta_*`, `.xml`). They are fiscal documents and cannot be recovered. Delete temporary files only through `Utils.DeleteArchivoCodigos(nombre)` (`Utilerias/Utils.cs`), which rejects paths and invoice names; never call a raw `DeleteFile` with browser-supplied data.
+- **No CSS in views.** No `<style>` blocks or new reusable `style=` rules in `.cshtml`. New CSS goes in `assets/css/X.css`, linked from `@section Styles` with `<link rel="stylesheet" href="~/assets/css/X.css">`. This is a classic csproj, so every new file also needs its `<Content Include="..." />` entry in `lluviaBackEnd.csproj`. In a `.css` file keyframes use a single `@` (`@@` is only a Razor escape).
+- **No magic numbers.** Roles, statuses, types and permissions use the enums in `Models/Enumeraciones.cs` (`EnumRoles`, `EnumRolesPermisos`, `EnumTipoVenta`, ...), e.g. `idRol == (int)EnumRoles.Administrador`. If the enum does not exist, create it instead of hardcoding the number, and do not repeat the numbers in comments.
+- **New files with accents are UTF-8 with BOM** (`.cshtml`, `.cs`, `.js`), like the existing ones; without BOM accents render as "Ã³".

@@ -16,7 +16,11 @@ namespace lluviaBackEnd.WebServices
         {
             try
             {
-                return new LoginDAO().ValidaUsuario(new Sesion() { usuario = login.Usuario, contrasena = login.Contrasena });
+                Models.Notificacion<Sesion> n = new LoginDAO().ValidaUsuario(new Sesion() { usuario = login.Usuario, contrasena = login.Contrasena });
+                // Contraseña para ver la fórmula en la HH: solo Administrador y Encargado de producción líquidos.
+                if (n.Estatus == 200 && n.Modelo != null && (n.Modelo.idRol == (int)EnumRoles.Administrador || n.Modelo.idRol == (int)EnumRoles.Encargado_producción_liquidos))
+                    n.Modelo.contrasenaFormula = System.Configuration.ConfigurationManager.AppSettings["contrasenaFormula"];
+                return n;
             }
             catch (Exception ex)
             {
