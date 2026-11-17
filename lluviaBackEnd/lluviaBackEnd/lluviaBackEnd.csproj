@@ -244,6 +244,7 @@
     <Compile Include="Controllers\ComprasController.cs" />
     <Compile Include="Controllers\EstacionesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\Configuracion\ConfiguracionController.cs" />
     <Compile Include="Controllers\FacturaPedidosEspecialesController.cs" />
     <Compile Include="Controllers\InventarioFisicoController.cs" />
     <Compile Include="Controllers\PedidosEspecialesV2Controller.cs" />
@@ -434,6 +435,8 @@
     <Compile Include="WebServices\Modelos\Request\RequestAgregarProcesoProduccion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestBuscarProductosFormulaProcesoProduccion.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerHistorialProcesoProduccion.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestObtenerFormulaProducto.cs" />
+    <Compile Include="WebServices\Modelos\Request\RequestValidarNipFormula.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestGenerarPedidoInterno.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerCompras.cs" />
     <Compile Include="WebServices\Modelos\Request\RequestObtenerDetalleCompra.cs" />
@@ -1296,6 +1299,7 @@
     <Content Include="js\EvtVentas.js" />
     <Content Include="js\EvtLineaProductos.js" />
     <Content Include="js\EvtInventario.js" />
+    <Content Include="js\EvtConfiguracion.js" />
     <Content Include="js\EvtProveedores.js" />
     <Content Include="js\EvtProductos.js" />
     <Content Include="js\EvtUsuarios.js" />
@@ -1553,6 +1557,8 @@
     <Content Include="Views\ProcesoProduccionFormula\ProcesoProduccionHistorial.cshtml" />
     <Content Include="Views\ProcesoProduccionFormula\_ObtenerProcesoProduccionHistorial.cshtml" />
     <Content Include="Views\InventarioAlmacen\AgregarInventarioAlmacen.cshtml" />
+    <Content Include="Views\Configuracion\Index.cshtml" />
+    <Content Include="Views\Configuracion\_SeccionNipFormula.cshtml" />
     <Content Include="Views\InventarioAlmacen\_ObtenerUbicaciones.cshtml" />
     <Content Include="Views\Productos\ConsultarProduccionProductos.cshtml" />
     <Content Include="Views\ProduccionProductos\ProduccionProductos.cshtml" />

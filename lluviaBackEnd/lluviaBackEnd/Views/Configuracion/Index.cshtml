@@ -1,0 +1,16 @@
+﻿@using lluviaBackEnd.Models;
+@{
+    ViewBag.Title = "Configuracion";
+    ViewBag.SubTitle = "Configuracion";
+}
+
+@* Contenedor de secciones de configuración. Para agregar una: crear su partial (_SeccionX.cshtml) y renderizarlo aquí. *@
+<div class="row">
+    <div class="col-12 col-lg-6">
+        @Html.Partial("_SeccionNipFormula")
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/EvtConfiguracion.js"></script>
+}

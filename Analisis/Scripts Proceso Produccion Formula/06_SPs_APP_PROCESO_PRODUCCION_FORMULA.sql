@@ -1,10 +1,12 @@
 /*
-Objetivo	SPs de la HH (via servicios web) para Proceso Produccion por formula. CREATE OR ALTER => idempotente.
+Objetivo	SPs de la app movil (via servicios web) para Proceso Produccion por formula. CREATE OR ALTER => idempotente.
 			Primer result set = fila de estatus (status/estatus 200 = ok, -1 = error, mensaje).
 
 			SP_APP_BUSCAR_PRODUCTOS_PROCESO_PRODUCCION_FORMULA
-				set 2: productos linea 20 con formula activa; set 3: sus materias primas (incluye idProcesoProduccionFormula).
+				set 2: productos linea 20 con formula activa (sin materias primas).
 				status -1 si no hay resultados (sin sets adicionales).
+				La formula (materias primas) NO se devuelve aqui: es confidencial y solo se entrega como respuesta de una validacion
+				de NIP correcta (SP_APP_VALIDAR_NIP_FORMULA, script 09). Antes este SP devolvia un set 3 con las MPL de todos los productos.
 			SP_APP_AGREGAR_PROCESO_PRODUCCION
 				status 200 => set 2 = idProcesoProduccion.
 				status -1  => set 2 = lista de faltantes (idProducto, descripcion, requerido, disponible, unidadMedida);
@@ -60,13 +62,6 @@ BEGIN
 
 	SELECT idProducto, codigoBarras, descripcion, idUnidadMedida, unidadMedida, idProcesoProduccionFormula, cantidadLote
 	FROM #productos ORDER BY descripcion
-
-	SELECT D.idProcesoProduccionFormula, D.idProducto, P.descripcion, D.idUnidadMedida, U.descripcion unidadMedida, D.cantidad
-	FROM ProcesoProduccionFormulaDetalle D
-	JOIN #productos X ON X.idProcesoProduccionFormula = D.idProcesoProduccionFormula
-	JOIN Productos P ON P.idProducto = D.idProducto
-	JOIN CatUnidadMedida U ON U.idUnidadMedida = D.idUnidadMedida
-	ORDER BY D.idProcesoProduccionFormula, P.descripcion
 END
 GO
 

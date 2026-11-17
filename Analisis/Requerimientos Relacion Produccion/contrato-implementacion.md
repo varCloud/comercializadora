@@ -21,9 +21,9 @@ Rama de trabajo en ambos repositorios: `feature/ProcesoProduccion`. Nadie hace c
 | SPs | `Analisis/Scripts Proceso Produccion Formula/*.sql` (carpeta nueva) y todo cambio en la BD local |
 | Admin | `Controllers/ProcesoProduccionFormula/`, `Views/ProcesoProduccionFormula/`, `js/EvtProcesoProduccionFormula.js`, `Models/ProcesoProduccionFormula/`, `DAO/ProcesoProduccionFormulaDAO.cs`, `Views/Shared/_Layout.cshtml`, y los cambios de la columna `origen` en el reporte MPL Individual (modelo, vista parcial, JS) |
 | Api | `WebServices/WsProcesoProduccionController.cs`, `WebServices/Modelos/Request/*ProcesoProduccion*`, `WebServices/Modelos/Response/*ProcesoProduccion*` (o la carpeta que ya use el proyecto), `DAO/ProcesoProduccionDAO.cs` |
-| HH | todo `androidMobileLluvia` (repo aparte, rama `feature/ProcesoProduccion`) |
+| APP | todo `androidMobileLluvia` (repo aparte, rama `feature/ProcesoProduccion`) |
 
-Rutas relativas del WMS: `E:\Documents\GitHub\comercializadora\lluviaBackEnd\lluviaBackEnd\`. HH: `E:\Documents\BlueCloud\Proyectos\androidMobileLluvia\`.
+Rutas relativas del WMS: `E:\Documents\GitHub\comercializadora\lluviaBackEnd\lluviaBackEnd\`. APP: `E:\Documents\BlueCloud\Proyectos\androidMobileLluvia\`.
 
 ## 2. Tablas nuevas (estándar de `ProcesoProduccionAgranel` y `VentasDetalle`)
 
@@ -50,7 +50,7 @@ PK `PK_<Tabla>`, FKs `FK_<Tabla>_<Referenciada>` sin cascada, `fechaAlta` y `fec
 - `idProcesoProduccion` bigint identity PK
 - `idProcesoProduccionFormula` bigint FK
 - `idProducto` int FK (producto producido)
-- `lotes` float NOT NULL (> 0) — SUPUESTO: admite decimales (la HH ya tiene selector decimal). Pendiente de confirmar con el usuario.
+- `lotes` float NOT NULL (> 0) — SUPUESTO: admite decimales (la app ya tiene selector decimal). Pendiente de confirmar con el usuario.
 - `cantidadLote` float (copia al momento), `cantidadProducida` float (= lotes × cantidadLote), `idUnidadMedida` int
 - `idUsuario` int FK, `idAlmacen` int FK, `fechaAlta`
 
@@ -77,7 +77,7 @@ PK `PK_<Tabla>`, FKs `FK_<Tabla>_<Referenciada>` sin cascada, `fechaAlta` y `fec
 - `SP_AGREGA_ACTUALIZA_PROCESO_PRODUCCION_FORMULA @idProcesoProduccionFormula bigint (0 = alta), @idProducto int, @cantidadLote float, @idUsuario int, @xmlMateriasPrimas xml`. El XML: `<materiasPrimas><materiaPrima idProducto="907" cantidad="10"/>...</materiasPrimas>`. Valida: lote > 0, al menos una MPL, sin MPL repetida, MPL de línea 12, producto de línea 20, sin otra fórmula activa del mismo producto. Una transacción; al editar reemplaza el detalle. Devuelve `status, mensaje`.
 - `SP_DESACTIVAR_PROCESO_PRODUCCION_FORMULA @idProcesoProduccionFormula bigint, @idUsuario int` (baja lógica). Devuelve `status, mensaje`.
 
-### Para la HH vía servicios web (agente Api los consume)
+### Para la app vía servicios web (agente Api los consume)
 - `SP_APP_BUSCAR_PRODUCTOS_PROCESO_PRODUCCION_FORMULA @idUsuario int, @descripcion varchar(200) = null, @codigoBarras varchar(50) = null`. Set 2: productos línea 20 con fórmula activa: `idProducto, codigoBarras, descripcion, idUnidadMedida, unidadMedida, idProcesoProduccionFormula, cantidadLote`. Set 3: materias primas de esas fórmulas: `idProcesoProduccionFormula, idProducto, descripcion, idUnidadMedida, unidadMedida, cantidad`. Si no hay resultados, `status = -1`.
 - `SP_APP_AGREGAR_PROCESO_PRODUCCION @idProducto int, @lotes float, @idUsuario int, @idAlmacen int`. Una sola transacción (modelo: `SP_APP_AGREGAR_PRODUCTO_INVENTARIO_LIQUIDOS_ENVASADO`):
   - Validaciones sin mover nada: lotes > 0; fórmula activa existe; no hay inventario físico activo; el producto existe en el almacén (`dbo.ExisteProductoEnAlmancen`); inventario suficiente de CADA MPL en el almacén (`dbo.ExisteCantidadProductoEnAlmancen`). Si falta alguna: `status = -1`, mensaje y, como Set 2, la lista de faltantes `idProducto, descripcion, requerido, disponible, unidadMedida`.
@@ -108,7 +108,7 @@ Reglas: respuesta `Models.Notificacion<T>` (Estatus, Mensaje, Modelo); errores c
 - Formulario: producto a producir (línea 20 sin fórmula), unidad automática (solo lectura), cantidad del lote, y tabla de materias primas (línea 12) con unidad automática, cantidad por lote, agregar y quitar; sin repetir MPL. Sin modal duplicado ni campos ligados al mismo id (defecto del original).
 - Reporte MPL Individual: mostrar la columna `origen` nueva (modelo `CostoProduccionAgranelPorProducto`, parcial y JS `EvtMPLIndividual.js`), sin romper la exportación.
 
-## 6. HH (Android) — repo `androidMobileLluvia`
+## 6. APP (Android) — repo `androidMobileLluvia`
 
 - Sigue `CLAUDE.md` del repo (Java puro, Activities, Retrofit `Call<T>`.enqueue, SharedPreferences). Sin dependencias nuevas.
 - Nueva `ProduccionFormulaActivity` + `activity_produccion_formula.xml` copiando `LiquidosActivity`/`activity_liquidos.xml`: pestañas Agregar e Historial; búsqueda por nombre (mín. 3 caracteres) o código; muestra unidad y cantidad del lote; selector de lotes decimal > 0; muestra "Cantidad a producir = lotes × lote" y la lista de MPL a descontar (cantidad × lotes); botón "GUARDAR PRODUCCIÓN" con confirmación que avisa que es definitivo; bloqueo con inventario físico activo (`validarInventarioFisico`); si el servidor devuelve faltantes, mostrarlos.
@@ -123,8 +123,8 @@ Reglas: respuesta `Models.Notificacion<T>` (Estatus, Mensaje, Modelo); errores c
 
 1. SPs publica primero (en su canal) las tablas/SPs ya aplicados en la BD local. Api y Admin escriben su código contra este contrato y, al terminar, verifican con la BD local solo si el canal del agente SPs dice `APLICADO EN LOCAL`; si no, lo dejan como pendiente de integración.
 2. Admin necesita de SPs: los 4 SPs de la sección 3 (WMS) y el cambio de `SP_CONSULTA_COSTO_PRODUCCION_POR_PRODUCTO` (columna `origen`).
-3. Api necesita de SPs: los 3 SPs de la sección 3 (HH).
-4. HH necesita de Api: rutas, request y response de la sección 4. Cualquier cambio de forma lo anuncia Api en su canal ANTES de hacerlo.
+3. Api necesita de SPs: los 3 SPs de la sección 3 (APP).
+4. APP necesita de Api: rutas, request y response de la sección 4. Cualquier cambio de forma lo anuncia Api en su canal ANTES de hacerlo.
 5. Si un agente necesita cambiar algo del contrato, lo escribe en su canal bajo `PROPUESTA DE CAMBIO` y lo reporta; el orquestador decide y lo replica a los demás.
 
 ## 8. Entregable de cada agente (reporte final)
@@ -133,4 +133,4 @@ Archivos creados y modificados (rutas completas), qué verificó y cómo, qué N
 
 ## 9. Canales
 
-Carpeta `Analisis/Requerimientos Relacion Produccion/canales/`. Cada agente escribe SOLO en su archivo (`sps.md`, `admin.md`, `api.md`, `hh.md`) y puede leer los demás. Formato: líneas con prefijo `ESTADO:`, `APLICADO EN LOCAL:`, `PROPUESTA DE CAMBIO:`, `BLOQUEO:`, `ARCHIVOS NUEVOS (para el .csproj):`.
+Carpeta `Analisis/Requerimientos Relacion Produccion/canales/`. Cada agente escribe SOLO en su archivo (`sps.md`, `admin.md`, `api.md`, `app.md`) y puede leer los demás. Formato: líneas con prefijo `ESTADO:`, `APLICADO EN LOCAL:`, `PROPUESTA DE CAMBIO:`, `BLOQUEO:`, `ARCHIVOS NUEVOS (para el .csproj):`.

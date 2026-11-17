@@ -23,6 +23,14 @@ namespace lluviaBackEnd.Filters
 
         #endregion
 
+        // Parametros que nunca deben quedar en el log (secretos). Se registran como "***".
+        private static readonly HashSet<string> ParametrosSensibles = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "nipNuevo",
+            "confirmacionNip"
+        };
+        private const string ValorOculto = "***";
+
         // Método ejecutado justo antes de la ejecución de la acción
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -33,7 +41,8 @@ namespace lluviaBackEnd.Filters
                 base.OnActionExecuting(filterContext);
 
                 // Recorremos los parámetros de la acción y los mostramos
-                IDictionary<string, object> actionParameters = filterContext.ActionParameters;
+                IDictionary<string, object> actionParameters = filterContext.ActionParameters
+                    .ToDictionary(p => p.Key, p => ParametrosSensibles.Contains(p.Key) ? ValorOculto : p.Value);
 
                 HttpContext context = HttpContext.Current;
                 Sesion sesion = (Sesion)context.Session["UsuarioActual"];

@@ -39,7 +39,16 @@ function InitRecaptcha() {
 }
 $(document).ready(function () {
     InitRecaptcha();
-    $("#usuario").focus();    
+    $("#usuario").focus();
+
+    // Ojito: alterna entre ocultar y mostrar la contraseña escrita.
+    $("#btnVerContrasena").on("click", function () {
+        var $campo = $("#contrasena");
+        var mostrar = $campo.attr("type") === "password";
+        $campo.attr("type", mostrar ? "text" : "password");
+        $(this).attr("title", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
+        $(this).find("i").toggleClass("fa-eye", !mostrar).toggleClass("fa-eye-slash", mostrar);
+    });
     //consultarTicketPedidoEspecial();
 
 });

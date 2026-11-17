@@ -221,6 +221,24 @@ namespace lluviaBackEnd.DAO
             return notificacion;
         }
 
+        // Cambia el NIP compartido de la formula. El SP vuelve a validar que el usuario sea Administrador.
+        public Notificacion<string> CambiarNipFormula(int idUsuario, string nipNuevo)
+        {
+            Notificacion<string> notificacion = new Notificacion<string>();
+            using (db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", idUsuario);
+                parameters.Add("@nipNuevo", nipNuevo, DbType.AnsiString, size: 10);
+                var result = db.QueryMultiple("SP_WMS_CAMBIAR_NIP_FORMULA", parameters, commandType: CommandType.StoredProcedure);
+                var r1 = result.ReadFirst();
+                notificacion.Estatus = LeerEstatus(r1);
+                notificacion.Mensaje = LeerMensaje(r1);
+                notificacion.Modelo = "";
+            }
+            return notificacion;
+        }
+
         // Vacio => null (el SP usa su rango por defecto); con valor debe ser yyyy-MM-dd.
         private static bool TryParseFecha(string texto, out DateTime? fecha)
         {

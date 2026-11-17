@@ -11,15 +11,9 @@ using System.Linq;
 
 namespace lluviaBackEnd.DAO
 {
-    // Servicios web de la HH para Proceso Produccion por formula.
+    // Servicios web de la app movil para Proceso Produccion por formula.
     public class ProcesoProduccionDAO
     {
-        // Materia prima con la llave de su formula (set 3 del SP de busqueda).
-        private class MateriaPrimaFormulaFila : MateriaPrimaFormula
-        {
-            public long idProcesoProduccionFormula { get; set; }
-        }
-
         public Notificacion<List<ProductoFormula>> BuscarProductosFormula(RequestBuscarProductosFormulaProcesoProduccion request)
         {
             var notificacion = new Notificacion<List<ProductoFormula>>();
@@ -34,21 +28,8 @@ namespace lluviaBackEnd.DAO
                     LeerEstatus(rs.ReadFirst(), notificacion);
                     if (notificacion.Estatus == 200)
                     {
-                        var productos = rs.Read<ProductoFormula>().ToList();
-                        var materias = rs.Read<MateriaPrimaFormulaFila>().ToLookup(m => m.idProcesoProduccionFormula);
-                        foreach (var p in productos)
-                        {
-                            p.materiasPrimas = materias[p.idProcesoProduccionFormula]
-                                .Select(m => new MateriaPrimaFormula
-                                {
-                                    idProducto = m.idProducto,
-                                    descripcion = m.descripcion,
-                                    idUnidadMedida = m.idUnidadMedida,
-                                    unidadMedida = m.unidadMedida,
-                                    cantidad = m.cantidad
-                                }).ToList();
-                        }
-                        notificacion.Modelo = productos;
+                        // La formula (materias primas) no viaja en la busqueda: solo la entrega ObtenerFormulaProducto (tras validar el NIP).
+                        notificacion.Modelo = rs.Read<ProductoFormula>().ToList();
                     }
                     else
                     {
@@ -110,6 +91,46 @@ namespace lluviaBackEnd.DAO
                     notificacion.Modelo = notificacion.Estatus == 200
                         ? rs.Read<ProcesoProduccionHistorial>().ToList()
                         : new List<ProcesoProduccionHistorial>();
+                }
+            }
+            return notificacion;
+        }
+
+        // NIP compartido para ver la formula en la app movil. El SP valida rol, hash y bloqueo por intentos; aqui nunca se registra el NIP.
+        // Solo devuelve el estatus; un NIP correcto deja una autorizacion corta en BD que consume ObtenerFormulaProducto.
+        public Notificacion<string> ValidarNipFormula(RequestValidarNipFormula request)
+        {
+            var notificacion = new Notificacion<string>();
+            using (var db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", request.idUsuario);
+                parameters.Add("@nip", request.nip, DbType.AnsiString, size: 10);
+                using (var rs = db.QueryMultiple("SP_APP_VALIDAR_NIP_FORMULA", parameters, commandType: CommandType.StoredProcedure))
+                {
+                    LeerEstatus(rs.ReadFirst(), notificacion);
+                    notificacion.Modelo = "";
+                }
+            }
+            return notificacion;
+        }
+
+        // Formula (materias primas por lote) de un producto. El SP exige y consume (un solo uso) la autorizacion que deja un NIP correcto;
+        // sin ella, o en cualquier error, Modelo va vacio.
+        public Notificacion<List<MateriaPrimaFormula>> ObtenerFormulaProducto(RequestObtenerFormulaProducto request)
+        {
+            var notificacion = new Notificacion<List<MateriaPrimaFormula>>();
+            using (var db = new SqlConnection(ConfigurationManager.AppSettings["conexionString"].ToString()))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@idUsuario", request.idUsuario);
+                parameters.Add("@idProducto", request.idProducto);
+                using (var rs = db.QueryMultiple("SP_APP_OBTENER_FORMULA_PRODUCTO", parameters, commandType: CommandType.StoredProcedure))
+                {
+                    LeerEstatus(rs.ReadFirst(), notificacion);
+                    notificacion.Modelo = notificacion.Estatus == 200 && !rs.IsConsumed
+                        ? rs.Read<MateriaPrimaFormula>().ToList()
+                        : new List<MateriaPrimaFormula>();
                 }
             }
             return notificacion;

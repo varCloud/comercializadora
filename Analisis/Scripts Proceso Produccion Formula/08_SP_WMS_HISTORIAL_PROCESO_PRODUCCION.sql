@@ -1,5 +1,5 @@
 ﻿/*
-Objetivo	SPs del WMS (pantalla "Producción" = historial de producciones por formula registradas desde la HH).
+Objetivo	SPs del WMS (pantalla "Producción" = historial de producciones por formula registradas desde la app movil).
 			CREATE OR ALTER => idempotente. Solo lectura. No modifica los SP_APP_* ni los de las tablas.
 			Primer result set = fila de estatus (status/estatus 200 = ok, -1 = error o sin resultados, mensaje); datos desde el segundo.
 			Se devuelven las columnas status Y estatus (los DAOs existentes leen una u otra) y mensaje.

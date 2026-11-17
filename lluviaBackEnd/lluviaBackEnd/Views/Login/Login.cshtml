@@ -84,7 +84,12 @@
                                             </div>
                                         </div>
                                         @Html.HiddenFor(x => x.Token)
-                                        @Html.PasswordFor(x => x.contrasena, new { @class = "form-control", @tabindex = "2" })
+                                        <div class="input-group">
+                                            @Html.PasswordFor(x => x.contrasena, new { @class = "form-control", @tabindex = "2" })
+                                            <div class="input-group-append">
+                                                <button type="button" id="btnVerContrasena" class="btn btn-outline-secondary" tabindex="-1" title="Mostrar contraseña"><i class="fas fa-eye"></i></button>
+                                            </div>
+                                        </div>
                                         @Html.ValidationMessageFor(m => m.contrasena, null, new { @class = "text-danger" })
 
                                     </div>

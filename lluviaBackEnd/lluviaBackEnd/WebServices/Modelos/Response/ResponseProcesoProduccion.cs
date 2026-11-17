@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace lluviaBackEnd.WebServices.Modelos.Response
 {
+    // Materia prima (cantidad POR LOTE) de una formula. Solo se entrega como respuesta de ObtenerFormulaProducto, tras una validacion de NIP correcta.
     public class MateriaPrimaFormula
     {
         public int idProducto { get; set; }
@@ -21,7 +22,6 @@ namespace lluviaBackEnd.WebServices.Modelos.Response
         public string unidadMedida { get; set; }
         public long idProcesoProduccionFormula { get; set; }
         public double cantidadLote { get; set; }
-        public List<MateriaPrimaFormula> materiasPrimas { get; set; }
     }
 
     public class MateriaPrimaFaltante
